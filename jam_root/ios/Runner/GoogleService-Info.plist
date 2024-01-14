@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1017720971935-kf2q76ao6nnidvqn2bp74e2a82g5lrb9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1017720971935-kf2q76ao6nnidvqn2bp74e2a82g5lrb9</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBzTvMDVl1punuJt2o01X1PZE9PGU5uYmw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1017720971935</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.jamRoot</string>
+	<key>PROJECT_ID</key>
+	<string>jamm-10753</string>
+	<key>STORAGE_BUCKET</key>
+	<string>jamm-10753.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1017720971935:ios:dd63505eef528da79538aa</string>
+</dict>
+</plist>

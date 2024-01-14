@@ -1,0 +1,1 @@
+const DEFAULT_APP_BAR_HEIGHT = 60.0;

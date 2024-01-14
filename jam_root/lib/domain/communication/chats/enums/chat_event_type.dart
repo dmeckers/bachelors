@@ -1,0 +1,1 @@
+enum ChatEventType { typing, stopTyping }

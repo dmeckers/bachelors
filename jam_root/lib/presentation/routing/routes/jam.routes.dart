@@ -1,0 +1,61 @@
+import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jam/config/config.dart';
+import 'package:jam/domain/jams/jams.dart';
+import 'package:jam/presentation/presentation.dart';
+
+enum JamRoutes {
+  details(),
+  edit(),
+  jams(),
+  invites(),
+  jamDetails(),
+  jamControlParticipants(),
+  jamEditVibes(),
+  jamEditDetails(),
+  createNew();
+}
+
+final jamRoutes = GoRoute(
+  path: JamRoutes.jams.name,
+  name: JamRoutes.jams.name,
+  builder: (_, state) => const JamPage(),
+  routes: [
+    GoRouteTransitions.holeClipperGoRouterTransition(
+      path: JamRoutes.createNew.name,
+      name: JamRoutes.createNew.name,
+      pageBuilder: (ctx, state) => CreateJamPage(
+        position: (state.extra as LatLng?),
+      ),
+    ),
+    GoRoute(
+      path: JamRoutes.invites.name,
+      name: JamRoutes.invites.name,
+      builder: (_, state) => JamInvitesPage(
+        invites: (state.extra as JamInvites),
+      ),
+    ),
+    GoRoute(
+      path: ":jamId",
+      name: JamRoutes.details.name,
+      builder: (_, state) => JamDetailsPage(
+        jamId: state.pathParameters['jamId']!,
+      ),
+      routes: [
+        GoRoute(
+          path: JamRoutes.edit.name,
+          name: JamRoutes.edit.name,
+          builder: (_, state) => EditJamPage(jam: state.extra as JamModel),
+          routes: [
+            GoRoute(
+              path: JamRoutes.jamEditDetails.name,
+              name: JamRoutes.jamEditDetails.name,
+              builder: (_, state) =>
+                  EditJamDetailsPage(jam: state.extra as JamModel),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+);

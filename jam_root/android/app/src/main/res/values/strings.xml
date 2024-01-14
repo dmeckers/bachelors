@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_id">5361fdbe18cb28e5</string>
+    <!-- <string name="facebook_app_id">208178015487589</string>
+    <string name="facebook_client_token">YOUR_CLIENT_TOKEN</string> -->
+    <string name="google_geo_token">AIzaSyCxLC6MogBqITt53wgS3hcK3SinNBhPGi8</string>
+    <string name="personal_chat_message_channel">personal_chat_message_channel</string>
+</resources>

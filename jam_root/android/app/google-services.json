@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1017720971935",
+    "project_id": "jamm-10753",
+    "storage_bucket": "jamm-10753.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017720971935:android:191199c1d7d9cda69538aa",
+        "android_client_info": {
+          "package_name": "com.dmecker.jam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017720971935-7kl0b4u0cv13ktmnk5686l9eql3iqv91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXYMYokITiCVFjwqyjvyaFVuVjhE-rHrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017720971935-7kl0b4u0cv13ktmnk5686l9eql3iqv91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017720971935:android:3bae9809b34bfbd39538aa",
+        "android_client_info": {
+          "package_name": "com.example.jam_root"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017720971935-7kl0b4u0cv13ktmnk5686l9eql3iqv91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXYMYokITiCVFjwqyjvyaFVuVjhE-rHrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017720971935-7kl0b4u0cv13ktmnk5686l9eql3iqv91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
