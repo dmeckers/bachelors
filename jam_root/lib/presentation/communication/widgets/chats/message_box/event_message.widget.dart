@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -14,7 +15,21 @@ class EventMessageBox extends ConsumerWidget with ChattingProviders {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTapUp: (details) => _showMessagePopupMenu(context, ref, details),
-      child: _buildBox(),
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          padding: const EdgeInsets.all(4.0),
+          width: 200,
+          height: 30,
+          alignment: Alignment.center,
+          color: Colors.black,
+          child: Text(
+            message.messageText ?? 'Event',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
+        ),
+      ),
     );
   }
 
@@ -25,7 +40,6 @@ class EventMessageBox extends ConsumerWidget with ChattingProviders {
   ) {
     final renderBox =
         Overlay.of(context).context.findRenderObject() as RenderBox;
-    // todo check on this one
     final position = renderBox.globalToLocal(details.globalPosition);
     showMenu(
       elevation: 2,
@@ -64,26 +78,6 @@ class EventMessageBox extends ConsumerWidget with ChattingProviders {
           ),
         )
       ],
-    );
-  }
-
-  Container _buildBox() {
-    return Container(
-      padding: const EdgeInsets.all(4.0),
-      child: Align(
-        alignment: Alignment.center,
-        child: Container(
-          width: 200,
-          height: 30,
-          alignment: Alignment.center,
-          color: Colors.black,
-          child: Text(
-            message.messageText ?? 'Event',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
-          ),
-        ),
-      ),
     );
   }
 }

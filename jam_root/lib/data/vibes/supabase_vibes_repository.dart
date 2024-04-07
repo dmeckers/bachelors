@@ -1,11 +1,12 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/vibes/vibe.model.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 final class SupabaseVibesRepository extends VibesRepositoryInterface
     with SupabaseUserGetter {

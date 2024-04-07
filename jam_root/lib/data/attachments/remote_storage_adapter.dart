@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import 'package:jam/config/config.dart';
-import 'package:jam/data/data.dart';
 import 'package:powersync_attachments_helper/powersync_attachments_helper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image/image.dart' as img;
+
+import 'package:jam/config/config.dart';
+import 'package:jam/data/data.dart';
 
 class SupabaseStorageAdapter
     with SupabaseUserGetter

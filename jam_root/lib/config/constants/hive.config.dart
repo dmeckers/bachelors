@@ -28,4 +28,19 @@ final class HiveConstants {
 
   static const JAM_CARD_VIEW_BOX_TYPE_ID = 30;
   static const LOCAL_DB_JAM_CARD_VIEW_KEY = 'jam_card_view';
+
+  static const LAST_MESSAGE_BOX_TYPE_ID = 63;
+
+  static getAllKeys() {
+    return [
+      LOCAL_DB_USER_PROFILE_KEY,
+      LOCAL_DB_FRIEND_INVITES_KEY,
+      LOCAL_DB_CHAT_KEY,
+      LOCAL_DB_REPLY_MESSAGE_KEY,
+      LOCAL_DB_DEFAULT_MESSAGE_KEY,
+      LOCAL_DB_CHAT_STATE_KEY,
+      LOCAL_DB_USER_PRIVACY_SETTINGS_KEY,
+      LOCAL_DB_JAM_CARD_VIEW_KEY,
+    ];
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:jam/domain/user/profile/profile.model.dart';
 
 part 'auth.model.freezed.dart';

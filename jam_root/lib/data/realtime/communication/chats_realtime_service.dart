@@ -1,33 +1,57 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+
+final Map<int, BehaviorSubject<ChatModel>> chatControllers = {};
+final Map<int, RealtimeChannel> sockets = {};
 
 class ChatRealtimeService
     with SupabaseUserGetter
-    implements ChatRealtimeInterface {
-  @override
-  void dispose() {
-    // TODO: implement dispose
-  }
-
-  final Map<int, BehaviorSubject<ChatModel>> _controllers = {};
+    implements ChatRealtimeInterface, FiresEvents<ChatEvent> {
+  const ChatRealtimeService({required this.repository});
 
   @override
-  Stream<Chats> get$({String? channelIdentifier, List<ChatModel>? data}) {
-    for (var element in data!) {
-      _controllers[element.id] = BehaviorSubject<ChatModel>.seeded(element);
+  final ChatRepositoryInterface repository;
 
-      supabase
+  // @override
+  // void dispose() {
+  //   for (var element in chatControllers.values) {
+  //     element.close();
+  //   }
+  //   chatControllers.clear();
+  // }
+
+  @override
+  Stream<Chats> get$() async* {
+    final cahced = localDatabase.get('chats') as List<dynamic>?;
+
+    // chatControllers.forEach((key, value) {
+    //     value.drain()
+
+    // })
+
+    yield cahced?.cast<ChatModel>() ?? [];
+
+    final data = await repository.getChats();
+
+    for (var element in data) {
+      chatControllers[element.id] = BehaviorSubject<ChatModel>.seeded(element);
+
+      sockets[element.id] = supabase
           .channel('chat-${element.id}')
+
+          ///
+          /// CHAT META
+          ///
           .onPostgresChanges(
-            event: PostgresChangeEvent.all,
-            callback: _handleChatEvents,
+            event: PostgresChangeEvent.update,
+            callback: _handleChatUpdate,
             table: 'users_chats',
             filter: PostgresChangeFilter(
               type: PostgresChangeFilterType.eq,
@@ -35,14 +59,18 @@ class ChatRealtimeService
               value: getUserIdOrThrow(),
             ),
           )
+
+          ///
+          /// INTERLOCUTOR
+          ///
           .onPostgresChanges(
             event: PostgresChangeEvent.update,
             callback: (callback) {
               if (!(callback.newRecord['id'] == element.relatedContact.id)) {
                 return;
               }
-              _controllers[element.id]?.add(
-                _controllers[element.id]!.value.copyWith(
+              chatControllers[element.id]?.add(
+                chatControllers[element.id]!.value.copyWith(
                       relatedContact:
                           UserProfileModel.fromJson(callback.newRecord),
                     ),
@@ -55,6 +83,10 @@ class ChatRealtimeService
             ),
             table: 'profiles',
           )
+
+          ///
+          /// MESSAGES
+          ///
           .onPostgresChanges(
             event: PostgresChangeEvent.all,
             callback: _handleMessageEvent,
@@ -64,6 +96,28 @@ class ChatRealtimeService
                 column: 'chat_id',
                 value: element.id),
           )
+
+          ///
+          /// EVENTS
+          ///
+          .onBroadcast(
+            event: RealTime.USER_STOP_TYPING_EVENT,
+            callback: (payload) {
+              chatControllers[element.id]?.value =
+                  chatControllers[element.id]!.value.copyWith(
+                        chatEventType: ChatEventType.stopTyping,
+                      );
+            },
+          )
+          .onBroadcast(
+            event: RealTime.USER_TYPING_EVENT,
+            callback: (payload) {
+              chatControllers[element.id]?.value =
+                  chatControllers[element.id]!.value.copyWith(
+                        chatEventType: ChatEventType.typing,
+                      );
+            },
+          )
           .subscribe(
         (e, _) {
           debugPrint('Chat event: $e');
@@ -71,20 +125,8 @@ class ChatRealtimeService
       );
     }
 
-    return CombineLatestStream.list(
-      _controllers.values.map((e) => e.stream),
-    ).asBroadcastStream();
-  }
-
-  _handleChatEvents(PostgresChangePayload event) {
-    final cb = switch (event.eventType) {
-      PostgresChangeEvent.delete => _handleChatDeleteEvent,
-      PostgresChangeEvent.insert => _handleChatUpsertEvent,
-      PostgresChangeEvent.update => _handleChatUpsertEvent,
-      _ => throw UnimplementedError()
-    };
-
-    cb(event);
+    yield* CombineLatestStream.list(chatControllers.values.map((e) => e.stream))
+        .asBroadcastStream();
   }
 
   void _handleMessageEvent(PostgresChangePayload payload) {
@@ -104,32 +146,53 @@ class ChatRealtimeService
   }
 
   void _handleUpsertEvent(PostgresChangePayload payload) async {
-    if (_controllers[payload.newRecord['chat_id']] == null) return;
+    final data = payload.newRecord;
+    if (chatControllers[data['chat_id']] == null || data['sender_id'] == null) {
+      return;
+    }
 
-    _controllers[payload.newRecord['chat_id']]?.add(
-      _controllers[payload.newRecord['chat_id']]!.value.copyWith(
-            lastMessage: LastMessageModel.fromJson(
-              payload.newRecord..putIfAbsent('message_status', () => 'unread'),
-            ),
-          ),
+    chatControllers[data['chat_id']]?.value =
+        chatControllers[data['chat_id']]!.value.copyWith(
+              lastMessage: LastMessageModel.fromJson(
+                data
+                  ..putIfAbsent('message_status', () => 'unread')
+                  ..putIfAbsent(
+                    'from_me',
+                    () => data['sender_id'] == getUserIdOrThrow(),
+                  ),
+              ),
+            );
+  }
+
+  void _handleChatUpdate(PostgresChangePayload payload) {
+    final data = payload.newRecord;
+
+    if (data['chat_id'] == null) {
+      return;
+    }
+
+    final chatId = payload.newRecord['chat_id'];
+    final previous = chatControllers[chatId]?.value;
+    if (previous?.toHide == data['to_hide']) return;
+
+    chatControllers[chatId]?.value = previous!.copyWith(
+      toHide: data['to_hide'],
     );
   }
 
-  void _handleChatDeleteEvent(PostgresChangePayload payload) {
-    // to do
-  }
-  void _handleChatUpsertEvent(PostgresChangePayload payload) {
-    final chatId = payload.newRecord['chat_id'];
-
-    _controllers[chatId]?.add(
-      _controllers[chatId]!.value.copyWith(
-            isArchived: payload.newRecord['is_archived'],
-            isPinned: payload.newRecord['is_pinned'],
-          ),
+  @override
+  Future<void> fireEvent(ChatEvent event) async {
+    await sockets[event.chatId]?.sendBroadcastMessage(
+      event: event.eventName,
+      payload: event.payload,
     );
   }
 }
 
 final chatRealtimeServiceProvider = Provider<ChatRealtimeInterface>((ref) {
-  return ChatRealtimeService();
+  return ChatRealtimeService(repository: ref.read(chatRepositoryProvider));
 });
+
+final chatStream = StreamProvider(
+  (ref) => ref.read(chatRealtimeServiceProvider).get$(),
+);

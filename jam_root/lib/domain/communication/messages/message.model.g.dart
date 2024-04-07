@@ -29,13 +29,14 @@ class DefaultMessageModelAdapter extends TypeAdapter<_$MessageModelImpl> {
       messageText: fields[9] as String?,
       senderName: fields[10] as String?,
       pinnedState: fields[11] as MessagePinState,
+      fromMe: fields[13] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$MessageModelImpl obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class DefaultMessageModelAdapter extends TypeAdapter<_$MessageModelImpl> {
       ..writeByte(10)
       ..write(obj.senderName)
       ..writeByte(11)
-      ..write(obj.pinnedState);
+      ..write(obj.pinnedState)
+      ..writeByte(13)
+      ..write(obj.fromMe);
   }
 
   @override
@@ -103,6 +106,7 @@ _$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
       messageStatus: $enumDecodeNullable(
               _$MessageDeliveryStatusEnumMap, json['message_status']) ??
           MessageDeliveryStatus.sending,
+      fromMe: json['from_me'] as bool,
     );
 
 Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) {
@@ -126,6 +130,7 @@ Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) {
   val['pinned_state'] = _$MessagePinStateEnumMap[instance.pinnedState]!;
   val['message_status'] =
       _$MessageDeliveryStatusEnumMap[instance.messageStatus];
+  val['from_me'] = instance.fromMe;
   return val;
 }
 

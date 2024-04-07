@@ -1,10 +1,10 @@
-import 'package:flutter_hooks/flutter_hooks.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 enum VisibilityDetectionActions { watchForPinnedMessages }
 
@@ -65,42 +65,41 @@ mixin ChatScrollHelper {
     Messages messages,
     ChatModel chat,
   ) {
-    final p = ref.watch(chattingProvidersProvider);
-    final itemPositionsListener = ref.watch(p.itemPositionsListenerProvider);
+    // final p = ref.watch(chattingProvidersProvider);
+    // final itemPositionsListener = ref.watch(p.itemPositionsListenerProvider);
 
-    final nothingToLoad = useRef(false);
-    final messagesLoaded = useRef(false);
+    // final nothingToLoad = useRef(false);
+    // final messagesLoaded = useRef(false);
     // final offset = useRef(0);
 
-    final listener = useCallback(
-      () {
-        if (messages.length < 50) return;
+    // final listener = useCallback(() {
+    //   if (messages.length < 50) return;
 
-        final messageOnScreenIndex =
-            itemPositionsListener.itemPositions.value.first.index;
-        final isThreshold = messageOnScreenIndex > messages.length - 15;
+    //   final messageOnScreenIndex =
+    //       itemPositionsListener.itemPositions.value.first.index;
+    //   final isThreshold = messageOnScreenIndex > messages.length - 15;
 
-        if (nothingToLoad.value || messagesLoaded.value || !isThreshold) return;
-        messagesLoaded.value = true;
+    //   if (nothingToLoad.value || messagesLoaded.value || !isThreshold) return;
+    //   messagesLoaded.value = true;
 
-        // ref
-        //     .read(messagesRepositoryProvider)
-        //     .loadMoreMessages(chat: chat, offset: offset.value)
-        //     .then(
-        //   (value) {
-        //     nothingToLoad.value = value.isEmpty;
-        //     offset.value = offset.value + 1;
-        //   },
-        // );
-      },
-    );
+    //   ref
+    //       .read(messagesRepositoryProvider)
+    //       .loadMoreMessages(
+    //         chatId: messages.first.chatId!,
+    //         offset: offset.value,
+    //       )
+    //       .then((value) {
+    //     nothingToLoad.value = value.isEmpty;
+    //     offset.value = offset.value + 1;
+    //   });
+    // });
 
-    useEffect(() {
-      messagesLoaded.value = false;
+    // useEffect(() {
+    //   messagesLoaded.value = false;
 
-      itemPositionsListener.itemPositions.addListener(listener);
+    //   itemPositionsListener.itemPositions.addListener(listener);
 
-      return () => itemPositionsListener.itemPositions.removeListener(listener);
-    }, [messages]);
+    //   return () => itemPositionsListener.itemPositions.removeListener(listener);
+    // }, [messages]);
   }
 }

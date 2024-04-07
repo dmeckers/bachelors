@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class ProfileSettingsPage extends HookConsumerWidget
@@ -20,18 +22,7 @@ class ProfileSettingsPage extends HookConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     final iconColor = context.jColor.tertiary;
     final showFAB = useState(false);
-    final profileState = useState(profile);
-
-    ref.listen(
-      currentUserProfileProvider,
-      (_, next) {
-        if (next is AsyncData &&
-            !next.asData!.isLoading &&
-            next.asData!.error == null) {
-          profileState.value = next.value!;
-        }
-      },
-    );
+    final userState = ref.watch(user$);
 
     useEffect(() {
       Future.delayed(
@@ -54,12 +45,12 @@ class ProfileSettingsPage extends HookConsumerWidget
             const SizedBox(height: 20),
             HeroAvatar(
               radius: 60,
-              profile: profileState.value,
-              onTap: () => profileState.value.photoUrls?.isNotEmpty ?? false
+              profile: userState.requireValue,
+              onTap: () => userState.requireValue.photoUrls?.isNotEmpty ?? false
                   ? _showFullScreenImageViewer(
                       context: context,
-                      images: profileState.value.photoUrls!,
-                      mainAvatar: profileState.value.avatar ?? '',
+                      images: userState.requireValue.photoUrls!,
+                      mainAvatar: userState.requireValue.avatar ?? '',
                     )
                   : null,
             ),
@@ -70,22 +61,18 @@ class ProfileSettingsPage extends HookConsumerWidget
                 children: [
                   SettingsTile(
                     leading: Icon(Icons.person, color: iconColor),
-                    title:
-                        profileState.value.username ?? 'Wtf where is my name',
+                    title: userState.requireValue.username ??
+                        'Wtf where is my name',
                     subtitle: 'Username',
                     trailing: Icon(Icons.edit, color: iconColor),
                     onTap: () => _handleChangeTileTap(
                       context,
-                      initialValue:
-                          profileState.value.username ?? 'Wtf where is my name',
+                      initialValue: userState.requireValue.username ??
+                          'Wtf where is my name',
                       onConfirm: (value) async {
-                        profileState.value = profileState.value.copyWith(
-                          username: value,
-                        );
-                        await ref
-                            .read(userProfileRepository)
+                        ref
+                            .read(userStateProvider)
                             .updateUserName(username: value);
-                        ref.invalidate(currentUserProfileProvider);
                       },
                       title: 'Username',
                     ),
@@ -93,20 +80,16 @@ class ProfileSettingsPage extends HookConsumerWidget
                   const JamDivider(),
                   SettingsTile(
                     leading: Icon(Icons.info, color: iconColor),
-                    title: profileState.value.profileStatus ?? 'No status',
+                    title: userState.requireValue.profileStatus ?? 'No status',
                     subtitle: 'Profile status',
                     trailing: Icon(Icons.edit, color: iconColor),
                     onTap: () => _handleChangeTileTap(
                       context,
-                      initialValue: profileState.value.profileStatus ?? '',
+                      initialValue: userState.requireValue.profileStatus ?? '',
                       onConfirm: (value) async {
-                        profileState.value = profileState.value.copyWith(
-                          profileStatus: value,
-                        );
-                        await ref
-                            .read(userProfileRepository)
+                        ref
+                            .read(userStateProvider)
                             .updateProfileStatus(status: value);
-                        ref.invalidate(currentUserProfileProvider);
                       },
                       title: 'Profile status',
                     ),
@@ -168,11 +151,8 @@ class ProfileSettingsPage extends HookConsumerWidget
             if (image == null) return;
 
             await ref
-                .read(userProfileRepository)
-                .images
+                .read(userStateProvider)
                 .addProfilePhoto(image: File(image.path));
-
-            ref.invalidate(currentUserProfileProvider);
           },
         ),
       );

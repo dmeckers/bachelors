@@ -25,9 +25,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "createAccount": MessageLookupByLibrary.simpleMessage("Create account"),
         "dontHaveAccount":
             MessageLookupByLibrary.simpleMessage("Dont have account?"),
+        "enterYourEmailAddressAndWeWillSendYouA":
+            MessageLookupByLibrary.simpleMessage(
+                "Enter your email address and we will send you a link to reset your password."),
         "forgotPassword":
             MessageLookupByLibrary.simpleMessage("Forgot password?"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "passwordRecovery":
+            MessageLookupByLibrary.simpleMessage("Password Recovery"),
         "test": MessageLookupByLibrary.simpleMessage("test")
       };
 }

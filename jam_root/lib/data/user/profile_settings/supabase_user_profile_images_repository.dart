@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,10 +30,10 @@ final class SupabaseUserProfileImagesRepositoryInterface
         await supabase.from('profiles').select('avatar').eq('id', userId);
 
     if (currentAvatar.first['avatar'] == null) {
-      await setMainAvatar(fileName);
+      await setMainAvatar(attachmentService.getLink(filename: fileName));
     }
 
-    return fileName;
+    return attachmentService.getLink(filename: fileName);
   }
 
   @override
@@ -57,26 +58,26 @@ final class SupabaseUserProfileImagesRepositoryInterface
     return list
         .where((element) => !element.name.startsWith('.'))
         .map(
-          (image) => '${attachmentService.getLink(
+          (image) => attachmentService.getLink(
             filename: image.name,
             userId: userId,
-          )}${image.name}',
+          ),
         )
         //like wtf
         .toList();
   }
 
   @override
-  Future<void> setMainAvatar(String? filename) async {
-    final url = filename != null
-        ? filename.startsWith('https://')
-            ? filename
-            : "${attachmentService.getLink(filename: filename)}$filename"
-        : null;
+  Future<void> setMainAvatar(String? url) async {
+    final userId = getUserIdOrThrow();
 
-    await supabase.from('profiles').update({'avatar': url}).eq(
-      'id',
-      getUserIdOrThrow(),
-    );
+    !(await isOnline(_ref))
+        ? await PowerSync.db.execute(
+            'UPDATE profiles SET avatar = ? WHERE id = ?',
+            [url, userId],
+          )
+        : await supabase
+            .from('profiles')
+            .update({'avatar': url}).eq('id', userId);
   }
 }

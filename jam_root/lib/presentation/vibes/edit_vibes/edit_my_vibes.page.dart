@@ -6,11 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
+import 'package:jam/domain/events/map/user_vibes_changed_map_event.dart';
 import 'package:jam/domain/vibes/vibe.model.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam/presentation/vibes/edit_vibes/edit_vibes.controller.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
+import 'package:location/location.dart';
 
 class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
   const EditUserVibes({super.key, this.vibes = const []});
@@ -60,7 +63,8 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
     final selectedVibes$ = ref.watch(userEditVibesControllerProvider);
     final vibes$ = ref.watch(searchVibesControllerProvider);
     final debouncer = useDebouncer(duration: const Duration(milliseconds: 300));
-    final canPop = useState((vibes?.isEmpty ?? true) ? false : true);
+    final vibeState = useState(vibes ?? []);
+    final canPop = useState(vibeState.value.isNotEmpty);
 
     return PopScope(
       canPop: canPop.value,
@@ -70,7 +74,7 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
             'Edit your vibes',
             style: TextStyle(fontSize: 14),
           ),
-          automaticallyImplyLeading: (vibes?.isEmpty ?? true) ? false : true,
+          automaticallyImplyLeading: vibeState.value.isNotEmpty,
         ),
         body: SingleChildScrollView(
           child: selectedVibes$.maybeWhen(
@@ -122,16 +126,14 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(userEditVibesControllerProvider.notifier)
-                              .updateVibes(vibes: selectedVibes);
-
-                          ref.invalidate(currentUserProfileProvider);
-                          isDirty.value = false;
-                          canPop.value = true;
-                          context.pushNamed(SettingsRoutes.account.name);
-                        },
+                        onPressed: () => _handleSubmitVibesChange(
+                          context,
+                          ref,
+                          selectedVibes,
+                          isDirty,
+                          canPop,
+                          vibeState,
+                        ),
                         child: const Text('Save'),
                       ),
                     ),
@@ -143,6 +145,42 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
         ),
       ),
     );
+  }
+
+  _handleSubmitVibesChange(
+    BuildContext context,
+    WidgetRef ref,
+    Vibes selectedVibes,
+    ValueNotifier<bool> isDirty,
+    ValueNotifier<bool> canPop,
+    ValueNotifier<Vibes> vibeState,
+  ) {
+    ref.read(userStateProvider).updateVibes(vibes: selectedVibes);
+
+    ref.invalidate(mapRealtimeProvider);
+
+    Location.instance.getLocation().then(
+          (location) => ref.read(mapRealtimeProvider).fireEvent(
+                UserVibesChangedMapEvent(
+                  latitude: location.latitude!,
+                  longitude: location.longitude!,
+                  userId: supabase.auth.currentUser!.id,
+                  name: localDatabase
+                          .get(
+                            HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
+                          )
+                          ?.name ??
+                      '',
+                  vibes: selectedVibes,
+                ),
+              ),
+        );
+
+    vibeState.value = selectedVibes;
+
+    isDirty.value = false;
+    canPop.value = true;
+    context.pop();
   }
 
   ListTile _buildSearchTypeSwitcher(

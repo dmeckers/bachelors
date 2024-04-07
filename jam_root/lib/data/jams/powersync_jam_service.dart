@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+//TODO refactor to make less requests
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
-//TODO refactor to make less requests
 class PowerSyncJamService {
   Future<(Users users, Vibes vibes)> getJamParticipantsAndVibes({
     required int jamId,

@@ -1,8 +1,9 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final class UserPrivacySettingsRepository
     extends UserPrivacySettingsRepositoryInterface with SupabaseUserGetter {

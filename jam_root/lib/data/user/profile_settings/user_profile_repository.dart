@@ -1,12 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam_utils/jam_utils.dart' as utils;
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final class UserProfileRepository
-    with SupabaseUserGetter
+    with SupabaseUserGetter, Storer
     implements UserProfileRepositoryInterface {
   static const GET_USER_FULL_RPC = 'get_user_full';
 
@@ -30,6 +32,9 @@ final class UserProfileRepository
 
   @override
   Future<UserProfileModel> getCurrentUserProfile() async {
+    final cache = localDatabase.get(HiveConstants.LOCAL_DB_USER_PROFILE_KEY);
+    if (cache != null) return cache;
+
     final userId = getUserIdOrThrow();
     UserProfileModel? profile;
 
@@ -53,7 +58,6 @@ final class UserProfileRepository
     }
 
     return profile.copyWith(
-      friends: await social.getFriends(),
       photoUrls: await images.getUserAvatars(),
     );
   }
@@ -83,13 +87,16 @@ final class UserProfileRepository
     }
 
     if (supaUser == null) return;
-
-    await supabase.from('profiles').update(
-      {
-        'is_online': onlineStatus,
-        'last_sign_in_at': DateTime.now().toString(),
-      },
-    ).eq('id', getUserIdOrThrow());
+    try {
+      await supabase.from('profiles').update(
+        {
+          'is_online': onlineStatus,
+          'last_sign_in_at': DateTime.now().toString(),
+        },
+      ).eq('id', getUserIdOrThrow());
+    } catch (e) {
+      debugPrint('user id lost');
+    }
   }
 
   @override

@@ -21,13 +21,13 @@ class JCherryToastIcon extends StatefulWidget {
   final bool enableAnimation;
 
   const JCherryToastIcon({
-    Key? key,
+    super.key,
     required this.color,
     required this.icon,
     required this.iconSize,
     required this.iconColor,
     required this.enableAnimation,
-  }) : super(key: key);
+  });
 
   @override
   _JCherryToastIconState createState() => _JCherryToastIconState();

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'chat_settings.model.freezed.dart';

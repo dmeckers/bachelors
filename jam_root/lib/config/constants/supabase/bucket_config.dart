@@ -1,5 +1,6 @@
-import 'package:jam/application/application.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:jam/application/application.dart';
 
 final class SupabaseBucketConstants {
   // bucket

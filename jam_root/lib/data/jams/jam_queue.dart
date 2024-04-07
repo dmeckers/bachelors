@@ -1,11 +1,12 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart' as path;
+
 import 'package:jam/application/application.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:uuid/uuid.dart';
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
 
 class JamQueue with SupabaseUserGetter implements JamQueueInterface {
   @override

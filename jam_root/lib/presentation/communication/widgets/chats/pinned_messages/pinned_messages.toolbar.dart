@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class PinnedMessagesTopBar extends HookConsumerWidget with ChattingProviders {
   const PinnedMessagesTopBar({
@@ -24,7 +25,7 @@ class PinnedMessagesTopBar extends HookConsumerWidget with ChattingProviders {
         ref.watch(lastVisiblePinnedMessageProvider(chat.id));
     final pinnedMessages =
         messages.where((element) => element.isPinned).toList();
-    final itemScrollController = ref.watch(itemScrollControllerProvider);
+    final itemScrollController = ref.watch(autoScrollCtrlProvider);
 
     final pinnedMessageIndexNumber = pinnedMessages
             .contains(lastVisiblePinnedMessage ?? pinnedMessages.first)
@@ -89,7 +90,7 @@ class PinnedMessagesTopBar extends HookConsumerWidget with ChattingProviders {
     List<MessageModel> pinnedMessages,
     int pinnedMessageIndexNumber,
     String pinnedMessageContent,
-    ItemScrollController itemScrollController,
+    AutoScrollController itemScrollController,
     WidgetRef ref,
   ) {
     return Expanded(
@@ -98,9 +99,8 @@ class PinnedMessagesTopBar extends HookConsumerWidget with ChattingProviders {
         child: InkWell(
           splashColor: context.jTheme.splashColor,
           onTap: () {
-            itemScrollController.scrollTo(
-              index: messages.indexOf(pinnedMessages[pinnedMessageIndexNumber]),
-              alignment: 0.5,
+            itemScrollController.scrollToIndex(
+              messages.indexOf(pinnedMessages[pinnedMessageIndexNumber]),
               duration: const Duration(microseconds: 100),
             );
 

@@ -2,12 +2,13 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 part 'chatting_providers.g.dart';
 
@@ -94,7 +95,7 @@ Stream<List<MessageModel>> _getChatMessages(
 Future<void> _clearChatMessages(_ClearChatMessagesRef ref,
     {required int chatId, required bool forEveryone}) {
   return ref
-      .read(chatRepositoryProvider)
+      .read(messagesRepositoryProvider)
       .clearChatMessages(chatId: chatId, forEveryone: forEveryone);
 }
 
@@ -255,11 +256,11 @@ mixin class ChattingProviders {
 
   AutoDisposeStateProvider<bool> get showFABProvider => _showFABProvider;
 
-  AutoDisposeProvider<ItemScrollController> get itemScrollControllerProvider =>
-      _itemScrollControllerProvider;
+  // AutoDisposeProvider<ItemScrollController> get itemScrollControllerProvider =>
+  //     _itemScrollControllerProvider;
 
-  AutoDisposeProvider<ItemPositionsListener>
-      get itemPositionsListenerProvider => _itemPositionsListenerProvider;
+  // AutoDisposeProvider<ItemPositionsListener>
+  //     get itemPositionsListenerProvider => _itemPositionsListenerProvider;
 
   AutoDisposeStateProvider<List<MessageModel>> get selectedMessagesProvider =>
       _selectedMessagesProvider;
@@ -299,11 +300,3 @@ mixin class ChattingProviders {
 
 final chattingProvidersProvider =
     Provider<ChattingProviders>((ref) => ChattingProviders());
-
-extension MessageModelExtension on MessageModel {
-  bool get fromMe => supabase.auth.currentUser?.id == senderId ? true : false;
-}
-
-extension LastMessageModelExtension on LastMessageModel {
-  bool get fromMe => supabase.auth.currentUser?.id == senderId ? true : false;
-}

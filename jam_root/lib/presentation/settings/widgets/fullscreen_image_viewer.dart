@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
@@ -146,12 +148,10 @@ class FullScreenImageViewer extends HookWidget with ProfileRepositoryProviders {
     ref
         .read(userProfileRepository)
         .images
-        .deleteProfilePhoto(
-          photoId: imagesState.value[index].split('/').last,
-        )
+        .deleteProfilePhoto(photoId: imagesState.value[index])
         .then(
       (value) {
-        ref.invalidate(currentUserProfileProvider);
+        // ref.invalidate(currentUserProfileProvider);
         if (imagesState.value.length == 1) {
           context.pop();
         }
@@ -175,10 +175,11 @@ class FullScreenImageViewer extends HookWidget with ProfileRepositoryProviders {
   ) async {
     if (mainImageIndexState.value == index) return;
     mainImageIndexState.value = index;
-    await ref
-        .read(userProfileRepository)
-        .images
-        .setMainAvatar(imagesState.value[index]);
-    ref.invalidate(currentUserProfileProvider);
+    ref.read(userStateProvider).setMainAvatar(imagesState.value[index]);
+    // await ref
+    //     .read(userProfileRepository)
+    //     .images
+    //     .setMainAvatar(imagesState.value[index]);
+    // ref.invalidate(currentUserProfileProvider);
   }
 }

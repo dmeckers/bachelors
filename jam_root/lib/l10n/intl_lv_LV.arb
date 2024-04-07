@@ -3,5 +3,6 @@
   "forgotPassword": "Forgot password?",
   "createAccount": "Create account",
   "dontHaveAccount": "Dont have account?",
-  "login": "Ierakstīties"
+  "login": "Ierakstīties",
+  "enterYourEmailAddressAndWeWillSendYouA": "Enter your email address and we will send you a link to reset your password."
 }

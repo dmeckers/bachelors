@@ -99,6 +99,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Enter your email address and we will send you a link to reset your password.`
+  String get enterYourEmailAddressAndWeWillSendYouA {
+    return Intl.message(
+      'Enter your email address and we will send you a link to reset your password.',
+      name: 'enterYourEmailAddressAndWeWillSendYouA',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

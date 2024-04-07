@@ -1,8 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:uuid/uuid.dart';
 
 class MessagesQueue with SupabaseUserGetter implements MessagesQueueInterface {
   @override
@@ -65,6 +66,7 @@ class MessagesQueue with SupabaseUserGetter implements MessagesQueueInterface {
       id: message.sentAt.millisecondsSinceEpoch,
       senderId: getUserIdOrThrow(),
       chatId: chatId,
+      messageStatus: MessageDeliveryStatus.sending,
     );
   }
 
@@ -157,6 +159,31 @@ class MessagesQueue with SupabaseUserGetter implements MessagesQueueInterface {
         chatId,
       ],
     );
+  }
+
+  @override
+  Future<void> queueClearChatMessages({
+    required int chatId,
+    required bool forEveryone,
+  }) {
+    final userId = getUserIdOrThrow();
+
+    const CLEAR_CHAT_FOR_ME_SQL = """
+    INSERT INTO deleted_messages (message_id, user_id)
+    SELECT id, ? FROM messages WHERE chat_id = ?
+    WHERE NOT EXISTS (SELECT 1 FROM deleted_messages WHERE message_id = id AND user_id = ?);
+""";
+
+    const CLEAR_CHAT_FOR_EVERYONE_SQL = """
+    DELETE FROM messages WHERE chat_id = ?;
+  """;
+
+    return forEveryone
+        ? PowerSync.db.execute(CLEAR_CHAT_FOR_EVERYONE_SQL, [chatId])
+        : PowerSync.db.execute(
+            CLEAR_CHAT_FOR_ME_SQL,
+            [userId, chatId, userId],
+          );
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -16,11 +17,13 @@ class MessageBoxBaseWrapper extends ConsumerWidget with ChattingProviders {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final primaryColor = context.jColor.primary;
+
     return Dismissible(
-      key: super.key ?? UniqueKey(),
+      key: super.key ?? ValueKey(message.id),
       direction: DismissDirection.endToStart,
       resizeDuration: const Duration(seconds: 0),
-      background: _buildDismissibleBackground(context),
+      background: _buildDismissibleBackground(context, primaryColor),
       movementDuration: const Duration(milliseconds: 0),
       dismissThresholds: const {
         DismissDirection.endToStart: 0.3,
@@ -36,14 +39,14 @@ class MessageBoxBaseWrapper extends ConsumerWidget with ChattingProviders {
     );
   }
 
-  Widget _buildDismissibleBackground(BuildContext context) {
+  Widget _buildDismissibleBackground(BuildContext context, Color primaryColor) {
     return SizedBox(
       width: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CircleAvatar(
-            backgroundColor: context.jColor.primary,
+            backgroundColor: primaryColor,
             child: const Icon(
               Icons.reply,
               color: Colors.white,
@@ -57,7 +60,12 @@ class MessageBoxBaseWrapper extends ConsumerWidget with ChattingProviders {
 
   _buildWrapper(BuildContext context) {
     return Container(
-      constraints: _constraints(context, message),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.65,
+        minWidth: 10,
+        maxHeight: 500,
+        minHeight: 30,
+      ),
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
@@ -73,22 +81,4 @@ class MessageBoxBaseWrapper extends ConsumerWidget with ChattingProviders {
       child: child,
     );
   }
-
-  _constraints(BuildContext context, MessageModel message) =>
-      switch (message.messageType) {
-        MessageType.text => BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.65,
-            minWidth: 10,
-            maxHeight: 500,
-            minHeight: 30,
-          ),
-        MessageType.audio_message => BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width * 0.65,
-            maxHeight: 70,
-          ),
-        _ => BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.65,
-            maxHeight: 500,
-          ),
-      };
 }

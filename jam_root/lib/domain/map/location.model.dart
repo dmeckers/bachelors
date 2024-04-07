@@ -1,7 +1,8 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:jam/domain/domain.dart';
 
-enum LocationType { user, jam }
+enum LocationType { user, jam, spottedJam }
 
 abstract class LocationAbstactModel {
   abstract final double latitude;

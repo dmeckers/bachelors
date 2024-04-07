@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:jam/config/config.dart';
@@ -42,10 +43,18 @@ class SupabaseServices {
 
         switch (event.event) {
           case AuthChangeEvent.signedIn:
+            final ref = ProviderContainer();
+            final userRepo = ref
+                .read(profileRepositoryProvidersProvider)
+                .userProfileRepository;
+
+            ref.read(userRepo).getCurrentUserProfile();
+
             await initNotifications();
+            ref.dispose();
             break;
           case AuthChangeEvent.signedOut:
-            _logoutHook();
+            await _logoutHook();
             break;
           default:
             break;
@@ -65,8 +74,8 @@ class SupabaseServices {
     // PushNotificationsService.initFirebaseOnAppOpenStrategy();
   }
 
-  static _logoutHook() {
-    localDatabase.clear();
-    SecureStorage.instance.deleteAll();
+  static _logoutHook() async {
+    await localDatabase.clear();
+    chatControllers.clear();
   }
 }

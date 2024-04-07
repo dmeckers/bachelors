@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -134,19 +135,20 @@ class _PickLocationPageState extends State<PickLocationPage> {
 
   Positioned _buildLocationMarker(double maxHeight, double maxWidth) {
     return Positioned(
-        bottom: maxHeight / 2,
-        right: (maxWidth - 30) / 2,
-        child: Container(
-          width: 50,
-          height: 50,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                ImagePathConstants.MAP_CURRENT_USER_MARKER_IMAGE_PATH,
-              ),
+      bottom: maxHeight / 2,
+      right: (maxWidth - 30) / 2,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              ImagePathConstants.MAP_CURRENT_USER_MARKER_IMAGE_PATH,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   GoogleMap _buildMap() {
@@ -181,8 +183,7 @@ class _PickLocationPageState extends State<PickLocationPage> {
               color: Colors.black.withOpacity(0.2),
               spreadRadius: 1,
               blurRadius: 5,
-
-              offset: const Offset(0, 3), // changes position of shadow
+              offset: const Offset(0, 3),
             ),
           ],
         ),

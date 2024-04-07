@@ -1,6 +1,7 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/data/data.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class ProfileQueue with SupabaseUserGetter implements ProfileQueueInterface {
   updateQuery({required String field}) {

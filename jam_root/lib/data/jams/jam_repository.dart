@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
-import 'package:jam/data/attachments/supabase_attachment_service.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -40,6 +40,7 @@ final class JamsRepository extends JamRepositoryInterface
 
     final json = jamWithoutImage.backfilled.toJson();
     final jamId = await supabase.rpc(POST_RPC, params: json);
+    final userId = getUserIdOrThrow();
 
     if (jam.image != null) {
       final fileName = await attachmentService.upload(file: jam.image!);
@@ -48,7 +49,7 @@ final class JamsRepository extends JamRepositoryInterface
           .update({'background_url': fileName}).eq('id', jamId);
     }
 
-    return jam.copyWith(id: jamId);
+    return jam.copyWith(id: jamId, creatorId: userId);
   }
 
   @override

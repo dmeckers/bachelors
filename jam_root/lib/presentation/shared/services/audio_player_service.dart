@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/application/application.dart';
 
 class AudioPlayerAdapter implements AudioPlayerService {

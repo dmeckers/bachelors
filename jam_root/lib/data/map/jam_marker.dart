@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:jam/config/config.dart';
 
 class JamMarker {
@@ -8,6 +9,7 @@ class JamMarker {
   static Uint8List _friendsMarkerBytes = Uint8List(0);
   static Uint8List _jamMarkerBytes = Uint8List(0);
   static Uint8List _userJamMarkerBytes = Uint8List(0);
+  static Uint8List _spotJamMarkerBytes = Uint8List(0);
 
   static Future<void> initializeMarkers() async {
     ByteData jamMarkerAsset = await rootBundle.load(
@@ -30,11 +32,16 @@ class JamMarker {
       ImagePathConstants.MAP_USERS_JAM_MARKER_IMAGE_PATH,
     );
 
+    ByteData spotJamMarker = await rootBundle.load(
+      ImagePathConstants.MAP_SPOT_JAM_MARKER_IMAGE_PATH,
+    );
+
     _userMarkerBytes = userMarkerAsset.buffer.asUint8List();
     _jamMarkerBytes = jamMarkerAsset.buffer.asUint8List();
     _currentUserMarkerBytes = currentUserMarkerAsset.buffer.asUint8List();
     _friendsMarkerBytes = friendsMarkerAsset.buffer.asUint8List();
     _userJamMarkerBytes = userJamMarkerAsset.buffer.asUint8List();
+    _spotJamMarkerBytes = spotJamMarker.buffer.asUint8List();
   }
 
   static BitmapDescriptor getUserMarker() {
@@ -55,5 +62,9 @@ class JamMarker {
 
   static BitmapDescriptor getUserJamMarker() {
     return BitmapDescriptor.fromBytes(_userJamMarkerBytes);
+  }
+
+  static BitmapDescriptor getSpotJamMarker() {
+    return BitmapDescriptor.fromBytes(_spotJamMarkerBytes);
   }
 }

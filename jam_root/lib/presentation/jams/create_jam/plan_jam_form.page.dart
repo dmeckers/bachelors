@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -79,7 +80,7 @@ class PlanJamFormPage extends HookConsumerWidget {
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               _buildSectionTitle('When?'),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
                 child: JamDatePicker(jamModel: jam),
               ),
               _buildSectionTitle('Where?', bottomPadding: 20, topPadding: 20),
@@ -97,7 +98,11 @@ class PlanJamFormPage extends HookConsumerWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, bottom: 20),
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  bottom: 20,
+                  right: 20,
+                ),
                 child: JamLocationPicker(jamModel: jam),
               ),
               SizedBox(
@@ -123,6 +128,10 @@ class PlanJamFormPage extends HookConsumerWidget {
                               child: Text(
                                 showExtraInfo.value ? 'Nah' : 'Yes please!',
                                 textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),

@@ -3,7 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
+
 import 'package:jam/data/data.dart';
+import 'package:jam/domain/communication/chats/chat.model.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -16,9 +19,19 @@ class ChatsPage extends HookConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedChats = ref.watch(selectedChatsProvider);
-    final chatStream$ = ref.watch(chatStream);
+    final c$ = ref.watch(chatsState$);
+
+    useEffect(() {
+      final chatsListener = ref.listenManual(chatsState$, (previous, next) {});
+
+      return () => chatsListener.close();
+    }, []);
 
     _initOnlineStatusObserver(ref);
+
+    final usermeta = supaAuth.currentUser!.userMetadata;
+
+    debugPrint(usermeta.toString());
 
     return Scaffold(
       backgroundColor: context.jTheme.primaryColor,
@@ -38,16 +51,29 @@ class ChatsPage extends HookConsumerWidget
         onPressed: () => context.pushNamed(ChatRoutes.friendList.name),
         child: const FaIcon(FontAwesomeIcons.message),
       ),
-      body: chatStream$.when(
-        data: (data) => ChatList(
-          chats: data,
-        ),
-        error: (error, _) => const JamErrorBox(
-          errorMessage: 'Whoops! Something went wrong while loading the chats',
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+      body: c$.maybeWhen(
+        data: (chats) {
+          if (chats.isEmpty) {
+            return const Center(
+              child: NotFoundPlaceholder(message: 'No chats found'),
+            );
+          }
+
+          final archivedChats =
+              chats.where((element) => element.isArchived).toList();
+          final sortedChats = chats.toList()..sort(compareChats);
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                if (archivedChats.isNotEmpty) ArchivedChatsTile(chats: chats),
+                for (final chat in sortedChats)
+                  if (chat.isArchived == false) ChatTile(chatModel: chat),
+              ],
+            ),
+          );
+        },
+        orElse: () => const Center(child: CircularProgressIndicator()),
       ),
     );
   }
@@ -62,4 +88,20 @@ class ChatsPage extends HookConsumerWidget
         },
         const [],
       );
+
+  int compareChats(ChatModel a, ChatModel b) {
+    if (a.isPinned == b.isPinned) {
+      if (a.lastMessage != null && b.lastMessage != null) {
+        return b.lastMessage!.sentAt.compareTo(a.lastMessage!.sentAt);
+      } else if (a.lastMessage != null) {
+        return -1;
+      } else if (b.lastMessage != null) {
+        return 1;
+      } else {
+        return 0;
+      }
+    } else {
+      return a.isPinned ? -1 : 1;
+    }
+  }
 }

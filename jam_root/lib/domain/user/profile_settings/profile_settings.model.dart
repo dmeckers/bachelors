@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jam/domain/user/profile_settings/privacy/profile_privacy_settings.model.dart';
+
+import 'package:jam/domain/domain.dart';
 
 part 'profile_settings.model.freezed.dart';
 part 'profile_settings.model.g.dart';

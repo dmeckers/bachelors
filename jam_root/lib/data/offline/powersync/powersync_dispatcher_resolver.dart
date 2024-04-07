@@ -1,8 +1,9 @@
+import 'package:powersync/powersync.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:powersync/powersync.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 typedef PowerSyncEventHandler = Future Function(
     PostgrestClient rest, CrudEntry entry);

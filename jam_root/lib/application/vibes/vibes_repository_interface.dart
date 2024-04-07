@@ -1,4 +1,4 @@
-import 'package:jam/domain/vibes/vibe.model.dart';
+import 'package:jam/domain/domain.dart';
 
 abstract class VibesRepositoryInterface {
   Future<List<VibeModel>> searchVibesAI({required String query});

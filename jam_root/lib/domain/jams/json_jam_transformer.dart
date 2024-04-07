@@ -11,7 +11,7 @@ final class JsonJamTransformer {
 
     List<String> digits = matches.map((match) => match.group(0)!).toList();
 
-    return 'POINT(${digits[1]} ${digits[0]})';
+    return 'POINT(${digits[0]} ${digits[1]})';
   }
 
   static List<VibeModel> listStub(List<VibeModel>? value) {

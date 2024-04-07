@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'friend_invites.model.g.dart';

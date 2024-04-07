@@ -1,16 +1,23 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+
 import 'package:jam/domain/domain.dart';
 
 class MapData {
-  final Position currentPosition;
+  final LocationData currentPosition;
   final List<LocationAbstactModel> locations;
-  // final List<UserLocation> otherPeople;
-  // final List<JamLocation> jams;
 
   MapData({
     required this.currentPosition,
     required this.locations,
-    // required this.otherPeople,
-    // required this.jams,
   });
+
+  MapData copyWith({
+    LocationData? currentPosition,
+    List<LocationAbstactModel>? locations,
+  }) {
+    return MapData(
+      currentPosition: currentPosition ?? this.currentPosition,
+      locations: locations ?? this.locations,
+    );
+  }
 }

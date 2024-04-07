@@ -313,7 +313,7 @@ class _UpdateJamProviderElement extends AutoDisposeFutureProviderElement<Jams>
   JamModel get jam => (origin as UpdateJamProvider).jam;
 }
 
-String _$createJamHash() => r'65ad35ff6e13f7aa4cf68cedb8f2a7c2e7bce96c';
+String _$createJamHash() => r'609b98394f5657a4e33a0e83c1ed06605bc49357';
 
 /// See also [createJam].
 @ProviderFor(createJam)

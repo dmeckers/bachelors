@@ -1,12 +1,16 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
+import 'package:jam/application/application.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'vibe.model.freezed.dart';
 part 'vibe.model.g.dart';
 
 @freezed
-class VibeModel with _$VibeModel implements Jsonable<VibeModel> {
+class VibeModel
+    with _$VibeModel
+    implements Jsonable<VibeModel>, Identifiable<int> {
   @HiveType(typeId: 15)
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory VibeModel({

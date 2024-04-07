@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'jam_invite.model.g.dart';

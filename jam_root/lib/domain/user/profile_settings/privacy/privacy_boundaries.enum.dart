@@ -16,4 +16,19 @@ enum PrivacyBoundaries {
   final String displayName;
 
   const PrivacyBoundaries(this.displayName);
+
+  static PrivacyBoundaries fromIndex(int index) {
+    switch (index) {
+      case 0:
+        return PrivacyBoundaries.everyone;
+      case 1:
+        return PrivacyBoundaries.friendsOnly;
+      case 2:
+        return PrivacyBoundaries.noOne;
+      case 3:
+        return PrivacyBoundaries.rangeOfUsers;
+      default:
+        throw Exception('Invalid index');
+    }
+  }
 }

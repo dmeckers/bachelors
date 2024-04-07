@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:jam/presentation/communication/other_user_profile/other_user_profile.dart';
+
+import 'package:jam/presentation/presentation.dart';
 
 enum WatchOtherUsersRoutes {
   otherUserProfilePage('userId');

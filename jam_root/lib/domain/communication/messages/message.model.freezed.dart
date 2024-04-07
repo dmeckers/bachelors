@@ -12,7 +12,7 @@ part of 'message.model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
   return _MessageModel.fromJson(json);
@@ -49,6 +49,8 @@ mixin _$MessageModel {
   MessagePinState get pinnedState => throw _privateConstructorUsedError;
   MessageDeliveryStatus? get messageStatus =>
       throw _privateConstructorUsedError;
+  @HiveField(13)
+  bool get fromMe => throw _privateConstructorUsedError;
 
   ///
   /// extra field for queue in case we try to reply
@@ -83,6 +85,7 @@ abstract class $MessageModelCopyWith<$Res> {
       @HiveField(10) @JsonKey(includeToJson: false) String? senderName,
       @HiveField(11) MessagePinState pinnedState,
       MessageDeliveryStatus? messageStatus,
+      @HiveField(13) bool fromMe,
       @JsonKey(
           includeFromJson: false, includeToJson: false, includeIfNull: false)
       DateTime? repliedToDate});
@@ -116,6 +119,7 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
     Object? senderName = freezed,
     Object? pinnedState = null,
     Object? messageStatus = freezed,
+    Object? fromMe = null,
     Object? repliedToDate = freezed,
   }) {
     return _then(_value.copyWith(
@@ -171,6 +175,10 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
           ? _value.messageStatus
           : messageStatus // ignore: cast_nullable_to_non_nullable
               as MessageDeliveryStatus?,
+      fromMe: null == fromMe
+          ? _value.fromMe
+          : fromMe // ignore: cast_nullable_to_non_nullable
+              as bool,
       repliedToDate: freezed == repliedToDate
           ? _value.repliedToDate
           : repliedToDate // ignore: cast_nullable_to_non_nullable
@@ -213,6 +221,7 @@ abstract class _$$MessageModelImplCopyWith<$Res>
       @HiveField(10) @JsonKey(includeToJson: false) String? senderName,
       @HiveField(11) MessagePinState pinnedState,
       MessageDeliveryStatus? messageStatus,
+      @HiveField(13) bool fromMe,
       @JsonKey(
           includeFromJson: false, includeToJson: false, includeIfNull: false)
       DateTime? repliedToDate});
@@ -245,6 +254,7 @@ class __$$MessageModelImplCopyWithImpl<$Res>
     Object? senderName = freezed,
     Object? pinnedState = null,
     Object? messageStatus = freezed,
+    Object? fromMe = null,
     Object? repliedToDate = freezed,
   }) {
     return _then(_$MessageModelImpl(
@@ -300,6 +310,10 @@ class __$$MessageModelImplCopyWithImpl<$Res>
           ? _value.messageStatus
           : messageStatus // ignore: cast_nullable_to_non_nullable
               as MessageDeliveryStatus?,
+      fromMe: null == fromMe
+          ? _value.fromMe
+          : fromMe // ignore: cast_nullable_to_non_nullable
+              as bool,
       repliedToDate: freezed == repliedToDate
           ? _value.repliedToDate
           : repliedToDate // ignore: cast_nullable_to_non_nullable
@@ -327,6 +341,7 @@ class _$MessageModelImpl extends _MessageModel {
       @HiveField(10) @JsonKey(includeToJson: false) this.senderName,
       @HiveField(11) this.pinnedState = MessagePinState.no_one,
       this.messageStatus = MessageDeliveryStatus.sending,
+      @HiveField(13) required this.fromMe,
       @JsonKey(
           includeFromJson: false, includeToJson: false, includeIfNull: false)
       this.repliedToDate})
@@ -379,6 +394,9 @@ class _$MessageModelImpl extends _MessageModel {
   @override
   @JsonKey()
   final MessageDeliveryStatus? messageStatus;
+  @override
+  @HiveField(13)
+  final bool fromMe;
 
   ///
   /// extra field for queue in case we try to reply
@@ -390,7 +408,7 @@ class _$MessageModelImpl extends _MessageModel {
 
   @override
   String toString() {
-    return 'MessageModel(id: $id, chatId: $chatId, mediaContentUrl: $mediaContentUrl, sentAt: $sentAt, messageType: $messageType, senderId: $senderId, repliedTo: $repliedTo, editedAt: $editedAt, forwardedFrom: $forwardedFrom, messageText: $messageText, senderName: $senderName, pinnedState: $pinnedState, messageStatus: $messageStatus, repliedToDate: $repliedToDate)';
+    return 'MessageModel(id: $id, chatId: $chatId, mediaContentUrl: $mediaContentUrl, sentAt: $sentAt, messageType: $messageType, senderId: $senderId, repliedTo: $repliedTo, editedAt: $editedAt, forwardedFrom: $forwardedFrom, messageText: $messageText, senderName: $senderName, pinnedState: $pinnedState, messageStatus: $messageStatus, fromMe: $fromMe, repliedToDate: $repliedToDate)';
   }
 
   @override
@@ -421,6 +439,7 @@ class _$MessageModelImpl extends _MessageModel {
                 other.pinnedState == pinnedState) &&
             (identical(other.messageStatus, messageStatus) ||
                 other.messageStatus == messageStatus) &&
+            (identical(other.fromMe, fromMe) || other.fromMe == fromMe) &&
             (identical(other.repliedToDate, repliedToDate) ||
                 other.repliedToDate == repliedToDate));
   }
@@ -442,6 +461,7 @@ class _$MessageModelImpl extends _MessageModel {
       senderName,
       pinnedState,
       messageStatus,
+      fromMe,
       repliedToDate);
 
   @JsonKey(ignore: true)
@@ -473,6 +493,7 @@ abstract class _MessageModel extends MessageModel {
       @HiveField(10) @JsonKey(includeToJson: false) final String? senderName,
       @HiveField(11) final MessagePinState pinnedState,
       final MessageDeliveryStatus? messageStatus,
+      @HiveField(13) required final bool fromMe,
       @JsonKey(
           includeFromJson: false, includeToJson: false, includeIfNull: false)
       final DateTime? repliedToDate}) = _$MessageModelImpl;
@@ -522,6 +543,9 @@ abstract class _MessageModel extends MessageModel {
   MessagePinState get pinnedState;
   @override
   MessageDeliveryStatus? get messageStatus;
+  @override
+  @HiveField(13)
+  bool get fromMe;
   @override
 
   ///

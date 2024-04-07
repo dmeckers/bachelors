@@ -12,7 +12,7 @@ part of 'profile.model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) {
   return _UserProfileModel.fromJson(json);
@@ -26,6 +26,10 @@ mixin _$UserProfileModel {
   String? get username => throw _privateConstructorUsedError;
   @HiveField(2)
   String? get fullName => throw _privateConstructorUsedError;
+
+  ///
+  /// Bucket links to user's photos
+  ///
   @HiveField(3)
   @JsonKey(
       includeIfNull: false,
@@ -33,37 +37,78 @@ mixin _$UserProfileModel {
       includeFromJson: false,
       includeToJson: false)
   List<String>? get photoUrls => throw _privateConstructorUsedError;
+
+  ///
+  /// Checks both isonline and lastActiveAt
+  /// @see lastActiveAt
+  ///
   @JsonKey(includeToJson: false)
   bool get isOnline => throw _privateConstructorUsedError;
   ContactStatus get status => throw _privateConstructorUsedError;
   @HiveField(4)
   String? get profileStatus =>
       throw _privateConstructorUsedError; // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   @HiveField(5)
   @JsonKey(includeFromJson: true, includeToJson: false, includeIfNull: false)
   List<UserProfileModel> get friends => throw _privateConstructorUsedError;
+
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   @HiveField(6)
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<JamModel> get jams => throw _privateConstructorUsedError;
-  @HiveField(7)
-  @JsonKey(includeFromJson: false, includeToJson: false)
+
+  /// Future feature
+  /// @HiveField(7)
+  /// @JsonKey(includeFromJson: false, includeToJson: false)
+  /// @Default([])
+  /// List<CommunityModel> communities,
+  ///
+  /// Internal collection (may in future return from database)
+  ///
   @HiveField(8)
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<ChatModel> get chats => throw _privateConstructorUsedError;
+
+  ///
+  /// User's vibes
+  ///
   @HiveField(9)
   @JsonKey(includeToJson: false)
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
+
+  ///
+  /// link from database to bucket main avatar
+  ///
   @HiveField(10)
   String? get avatar => throw _privateConstructorUsedError;
   @HiveField(11)
   @JsonKey(includeToJson: false)
   DateTime? get lastSignInAt => throw _privateConstructorUsedError;
+
+  ///
+  /// chat id linked to interlocutor
+  ///
   @HiveField(12)
   @JsonKey(includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
   int? get rootChatId => throw _privateConstructorUsedError;
+
+  ///
+  /// Public key (inactive for now)
+  ///
   @HiveField(13)
   @JsonKey(includeToJson: false)
   String? get publicKey => throw _privateConstructorUsedError;
+
+  ///
+  /// Last active at
+  ///
+  @HiveField(14)
+  DateTime get lastActiveAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -98,8 +143,6 @@ abstract class $UserProfileModelCopyWith<$Res> {
       @HiveField(6)
       @JsonKey(includeFromJson: false, includeToJson: false)
       List<JamModel> jams,
-      @HiveField(7)
-      @JsonKey(includeFromJson: false, includeToJson: false)
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
       List<ChatModel> chats,
@@ -110,7 +153,8 @@ abstract class $UserProfileModelCopyWith<$Res> {
       @JsonKey(
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       int? rootChatId,
-      @HiveField(13) @JsonKey(includeToJson: false) String? publicKey});
+      @HiveField(13) @JsonKey(includeToJson: false) String? publicKey,
+      @HiveField(14) DateTime lastActiveAt});
 }
 
 /// @nodoc
@@ -141,6 +185,7 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
     Object? lastSignInAt = freezed,
     Object? rootChatId = freezed,
     Object? publicKey = freezed,
+    Object? lastActiveAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -203,6 +248,10 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.publicKey
           : publicKey // ignore: cast_nullable_to_non_nullable
               as String?,
+      lastActiveAt: null == lastActiveAt
+          ? _value.lastActiveAt
+          : lastActiveAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -236,8 +285,6 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
       @HiveField(6)
       @JsonKey(includeFromJson: false, includeToJson: false)
       List<JamModel> jams,
-      @HiveField(7)
-      @JsonKey(includeFromJson: false, includeToJson: false)
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
       List<ChatModel> chats,
@@ -248,7 +295,8 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
       @JsonKey(
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       int? rootChatId,
-      @HiveField(13) @JsonKey(includeToJson: false) String? publicKey});
+      @HiveField(13) @JsonKey(includeToJson: false) String? publicKey,
+      @HiveField(14) DateTime lastActiveAt});
 }
 
 /// @nodoc
@@ -277,6 +325,7 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
     Object? lastSignInAt = freezed,
     Object? rootChatId = freezed,
     Object? publicKey = freezed,
+    Object? lastActiveAt = null,
   }) {
     return _then(_$UserProfileModelImpl(
       id: null == id
@@ -339,6 +388,10 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.publicKey
           : publicKey // ignore: cast_nullable_to_non_nullable
               as String?,
+      lastActiveAt: null == lastActiveAt
+          ? _value.lastActiveAt
+          : lastActiveAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -347,7 +400,7 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
 
 @HiveType(typeId: 2, adapterName: 'ProfileModelAdapter')
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$UserProfileModelImpl implements _UserProfileModel {
+class _$UserProfileModelImpl extends _UserProfileModel {
   const _$UserProfileModelImpl(
       {@HiveField(0) required this.id,
       @HiveField(1) this.username,
@@ -369,8 +422,6 @@ class _$UserProfileModelImpl implements _UserProfileModel {
       @HiveField(6)
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<JamModel> jams = const [],
-      @HiveField(7)
-      @JsonKey(includeFromJson: false, includeToJson: false)
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<ChatModel> chats = const [],
@@ -383,12 +434,14 @@ class _$UserProfileModelImpl implements _UserProfileModel {
       @JsonKey(
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       this.rootChatId,
-      @HiveField(13) @JsonKey(includeToJson: false) this.publicKey})
+      @HiveField(13) @JsonKey(includeToJson: false) this.publicKey,
+      @HiveField(14) required this.lastActiveAt})
       : _photoUrls = photoUrls,
         _friends = friends,
         _jams = jams,
         _chats = chats,
-        _vibes = vibes;
+        _vibes = vibes,
+        super._();
 
   factory _$UserProfileModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserProfileModelImplFromJson(json);
@@ -402,7 +455,15 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   @override
   @HiveField(2)
   final String? fullName;
+
+  ///
+  /// Bucket links to user's photos
+  ///
   final List<String>? _photoUrls;
+
+  ///
+  /// Bucket links to user's photos
+  ///
   @override
   @HiveField(3)
   @JsonKey(
@@ -418,6 +479,10 @@ class _$UserProfileModelImpl implements _UserProfileModel {
     return EqualUnmodifiableListView(value);
   }
 
+  ///
+  /// Checks both isonline and lastActiveAt
+  /// @see lastActiveAt
+  ///
   @override
   @JsonKey(includeToJson: false)
   final bool isOnline;
@@ -428,8 +493,14 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   @HiveField(4)
   final String? profileStatus;
 // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   final List<UserProfileModel> _friends;
 // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   @override
   @HiveField(5)
   @JsonKey(includeFromJson: true, includeToJson: false, includeIfNull: false)
@@ -439,7 +510,14 @@ class _$UserProfileModelImpl implements _UserProfileModel {
     return EqualUnmodifiableListView(_friends);
   }
 
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   final List<JamModel> _jams;
+
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   @override
   @HiveField(6)
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -449,10 +527,25 @@ class _$UserProfileModelImpl implements _UserProfileModel {
     return EqualUnmodifiableListView(_jams);
   }
 
+  /// Future feature
+  /// @HiveField(7)
+  /// @JsonKey(includeFromJson: false, includeToJson: false)
+  /// @Default([])
+  /// List<CommunityModel> communities,
+  ///
+  /// Internal collection (may in future return from database)
+  ///
   final List<ChatModel> _chats;
+
+  /// Future feature
+  /// @HiveField(7)
+  /// @JsonKey(includeFromJson: false, includeToJson: false)
+  /// @Default([])
+  /// List<CommunityModel> communities,
+  ///
+  /// Internal collection (may in future return from database)
+  ///
   @override
-  @HiveField(7)
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @HiveField(8)
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<ChatModel> get chats {
@@ -461,7 +554,14 @@ class _$UserProfileModelImpl implements _UserProfileModel {
     return EqualUnmodifiableListView(_chats);
   }
 
+  ///
+  /// User's vibes
+  ///
   final List<VibeModel> _vibes;
+
+  ///
+  /// User's vibes
+  ///
   @override
   @HiveField(9)
   @JsonKey(includeToJson: false)
@@ -471,6 +571,9 @@ class _$UserProfileModelImpl implements _UserProfileModel {
     return EqualUnmodifiableListView(_vibes);
   }
 
+  ///
+  /// link from database to bucket main avatar
+  ///
   @override
   @HiveField(10)
   final String? avatar;
@@ -478,18 +581,33 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   @HiveField(11)
   @JsonKey(includeToJson: false)
   final DateTime? lastSignInAt;
+
+  ///
+  /// chat id linked to interlocutor
+  ///
   @override
   @HiveField(12)
   @JsonKey(includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
   final int? rootChatId;
+
+  ///
+  /// Public key (inactive for now)
+  ///
   @override
   @HiveField(13)
   @JsonKey(includeToJson: false)
   final String? publicKey;
 
+  ///
+  /// Last active at
+  ///
+  @override
+  @HiveField(14)
+  final DateTime lastActiveAt;
+
   @override
   String toString() {
-    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey)';
+    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt)';
   }
 
   @override
@@ -519,7 +637,9 @@ class _$UserProfileModelImpl implements _UserProfileModel {
             (identical(other.rootChatId, rootChatId) ||
                 other.rootChatId == rootChatId) &&
             (identical(other.publicKey, publicKey) ||
-                other.publicKey == publicKey));
+                other.publicKey == publicKey) &&
+            (identical(other.lastActiveAt, lastActiveAt) ||
+                other.lastActiveAt == lastActiveAt));
   }
 
   @JsonKey(ignore: true)
@@ -540,7 +660,8 @@ class _$UserProfileModelImpl implements _UserProfileModel {
       avatar,
       lastSignInAt,
       rootChatId,
-      publicKey);
+      publicKey,
+      lastActiveAt);
 
   @JsonKey(ignore: true)
   @override
@@ -557,7 +678,7 @@ class _$UserProfileModelImpl implements _UserProfileModel {
   }
 }
 
-abstract class _UserProfileModel implements UserProfileModel {
+abstract class _UserProfileModel extends UserProfileModel {
   const factory _UserProfileModel(
       {@HiveField(0) required final String id,
       @HiveField(1) final String? username,
@@ -579,8 +700,6 @@ abstract class _UserProfileModel implements UserProfileModel {
       @HiveField(6)
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<JamModel> jams,
-      @HiveField(7)
-      @JsonKey(includeFromJson: false, includeToJson: false)
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<ChatModel> chats,
@@ -593,9 +712,10 @@ abstract class _UserProfileModel implements UserProfileModel {
       @JsonKey(
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       final int? rootChatId,
-      @HiveField(13)
-      @JsonKey(includeToJson: false)
-      final String? publicKey}) = _$UserProfileModelImpl;
+      @HiveField(13) @JsonKey(includeToJson: false) final String? publicKey,
+      @HiveField(14)
+      required final DateTime lastActiveAt}) = _$UserProfileModelImpl;
+  const _UserProfileModel._() : super._();
 
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) =
       _$UserProfileModelImpl.fromJson;
@@ -610,6 +730,10 @@ abstract class _UserProfileModel implements UserProfileModel {
   @HiveField(2)
   String? get fullName;
   @override
+
+  ///
+  /// Bucket links to user's photos
+  ///
   @HiveField(3)
   @JsonKey(
       includeIfNull: false,
@@ -618,6 +742,11 @@ abstract class _UserProfileModel implements UserProfileModel {
       includeToJson: false)
   List<String>? get photoUrls;
   @override
+
+  ///
+  /// Checks both isonline and lastActiveAt
+  /// @see lastActiveAt
+  ///
   @JsonKey(includeToJson: false)
   bool get isOnline;
   @override
@@ -626,24 +755,46 @@ abstract class _UserProfileModel implements UserProfileModel {
   @HiveField(4)
   String? get profileStatus;
   @override // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   @HiveField(5)
   @JsonKey(includeFromJson: true, includeToJson: false, includeIfNull: false)
   List<UserProfileModel> get friends;
   @override
+
+  ///
+  /// TODO wait wasn't this supposed to be returned from db?
+  ///
   @HiveField(6)
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<JamModel> get jams;
   @override
-  @HiveField(7)
-  @JsonKey(includeFromJson: false, includeToJson: false)
+
+  /// Future feature
+  /// @HiveField(7)
+  /// @JsonKey(includeFromJson: false, includeToJson: false)
+  /// @Default([])
+  /// List<CommunityModel> communities,
+  ///
+  /// Internal collection (may in future return from database)
+  ///
   @HiveField(8)
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<ChatModel> get chats;
   @override
+
+  ///
+  /// User's vibes
+  ///
   @HiveField(9)
   @JsonKey(includeToJson: false)
   List<VibeModel> get vibes;
   @override
+
+  ///
+  /// link from database to bucket main avatar
+  ///
   @HiveField(10)
   String? get avatar;
   @override
@@ -651,13 +802,28 @@ abstract class _UserProfileModel implements UserProfileModel {
   @JsonKey(includeToJson: false)
   DateTime? get lastSignInAt;
   @override
+
+  ///
+  /// chat id linked to interlocutor
+  ///
   @HiveField(12)
   @JsonKey(includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
   int? get rootChatId;
   @override
+
+  ///
+  /// Public key (inactive for now)
+  ///
   @HiveField(13)
   @JsonKey(includeToJson: false)
   String? get publicKey;
+  @override
+
+  ///
+  /// Last active at
+  ///
+  @HiveField(14)
+  DateTime get lastActiveAt;
   @override
   @JsonKey(ignore: true)
   _$$UserProfileModelImplCopyWith<_$UserProfileModelImpl> get copyWith =>

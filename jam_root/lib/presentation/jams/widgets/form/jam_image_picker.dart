@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -42,7 +43,7 @@ class JamImagePicker extends ConsumerWidget {
           style: context.jText.bodySmall,
         ),
         leading: const Icon(Icons.image),
-        onTap: () => showBottomSheet<XFile?>(
+        onTap: () => showBottomSheet(
           context: context,
           builder: (ctx) => PickImageBottomSheet(
             onImagePicked: (image) => _handleImagePicked(

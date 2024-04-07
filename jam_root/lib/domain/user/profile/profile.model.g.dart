@@ -24,19 +24,20 @@ class ProfileModelAdapter extends TypeAdapter<_$UserProfileModelImpl> {
       profileStatus: fields[4] as String?,
       friends: (fields[5] as List).cast<UserProfileModel>(),
       jams: (fields[6] as List).cast<JamModel>(),
-      chats: (fields[7] as List).cast<ChatModel>(),
+      chats: (fields[8] as List).cast<ChatModel>(),
       vibes: (fields[9] as List).cast<VibeModel>(),
       avatar: fields[10] as String?,
       lastSignInAt: fields[11] as DateTime?,
       rootChatId: fields[12] as int?,
       publicKey: fields[13] as String?,
+      lastActiveAt: fields[14] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$UserProfileModelImpl obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,13 +54,15 @@ class ProfileModelAdapter extends TypeAdapter<_$UserProfileModelImpl> {
       ..write(obj.rootChatId)
       ..writeByte(13)
       ..write(obj.publicKey)
+      ..writeByte(14)
+      ..write(obj.lastActiveAt)
       ..writeByte(3)
       ..write(obj.photoUrls)
       ..writeByte(5)
       ..write(obj.friends)
       ..writeByte(6)
       ..write(obj.jams)
-      ..writeByte(7)
+      ..writeByte(8)
       ..write(obj.chats)
       ..writeByte(9)
       ..write(obj.vibes);
@@ -105,6 +108,7 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
       rootChatId:
           _ProfileJsonTransformer.readChatId(json, 'root_chat_id') as int?,
       publicKey: json['public_key'] as String?,
+      lastActiveAt: DateTime.parse(json['last_active_at'] as String),
     );
 
 Map<String, dynamic> _$$UserProfileModelImplToJson(
@@ -116,6 +120,7 @@ Map<String, dynamic> _$$UserProfileModelImplToJson(
       'status': _$ContactStatusEnumMap[instance.status]!,
       'profile_status': instance.profileStatus,
       'avatar': instance.avatar,
+      'last_active_at': instance.lastActiveAt.toIso8601String(),
     };
 
 const _$ContactStatusEnumMap = {

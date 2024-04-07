@@ -6,21 +6,6 @@ part of 'map_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getMapDataStreamHash() => r'3d7b0f2bdaa2ab87fa4b7b204325a44c679d19cb';
-
-/// See also [getMapDataStream].
-@ProviderFor(getMapDataStream)
-final getMapDataStreamProvider = AutoDisposeStreamProvider<MapData>.internal(
-  getMapDataStream,
-  name: r'getMapDataStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getMapDataStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef GetMapDataStreamRef = AutoDisposeStreamProviderRef<MapData>;
 String _$checkUserHasFriendInviteHash() =>
     r'2fe947fb20c245dadb431959a6ff4359a10a7709';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -21,20 +22,20 @@ class MessageBoxContainer extends HookConsumerWidget with ChattingProviders {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final toHighlight = useState(false);
+    final highlightedMessageId = ref.watch(highLightedMessageProvider);
 
-    ref.listen(highLightedMessageProvider, (_, next) {
-      toHighlight.value = next == message.id;
+    useEffect(() {
+      toHighlight.value = highlightedMessageId == message.id;
       if (toHighlight.value) {
         Future.delayed(const Duration(seconds: 2), () {
           ref.invalidate(highLightedMessageProvider);
         });
       }
-    });
+      return null;
+    }, [highlightedMessageId]);
 
     return AnimatedContainer(
-      duration: toHighlight.value
-          ? const Duration(milliseconds: 500)
-          : const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       padding: const EdgeInsets.symmetric(horizontal: 5),
       width: double.infinity,
       color: toHighlight.value

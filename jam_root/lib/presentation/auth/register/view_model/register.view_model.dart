@@ -1,7 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/shared/shared.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 part 'register.view_model.freezed.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -29,19 +30,15 @@ class JamListWidget extends HookConsumerWidget {
 
     final viewState = ref.watch(jamCardViewStateProvider);
 
-    return ListView.builder(
-      itemBuilder: (ctx, i) => FadeIn(
-        offset: fadeInOffset,
-        delay: DURATION_100_MS * i,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: switch (viewState) {
-            JamCardView.big => BigJamCard(jam: jams[i]),
-            JamCardView.small => SmallJamCard(jam: jams[i]),
-          },
-        ),
+    return AnimatedSwitcher(
+      duration: DURATION_200_MS,
+      child: ListView.builder(
+        itemBuilder: (ctx, i) => switch (viewState) {
+          JamCardView.big => BigJamCard(jam: jams[i]),
+          JamCardView.small => SmallJamCard(jam: jams[i]),
+        },
+        itemCount: jams.length,
       ),
-      itemCount: jams.length,
     );
   }
 

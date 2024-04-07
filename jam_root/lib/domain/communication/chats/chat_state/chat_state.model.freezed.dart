@@ -12,7 +12,7 @@ part of 'chat_state.model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ChatState {
@@ -22,6 +22,10 @@ mixin _$ChatState {
   ChatInputMode? get inputMode => throw _privateConstructorUsedError;
   @HiveField(2)
   MessageModel? get model => throw _privateConstructorUsedError;
+  @HiveField(3, defaultValue: 0)
+  int get page => throw _privateConstructorUsedError;
+  @HiveField(4, defaultValue: 0)
+  int get totalPages => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChatStateCopyWith<ChatState> get copyWith =>
@@ -36,7 +40,9 @@ abstract class $ChatStateCopyWith<$Res> {
   $Res call(
       {@HiveField(0) String? messageDraft,
       @HiveField(1) ChatInputMode? inputMode,
-      @HiveField(2) MessageModel? model});
+      @HiveField(2) MessageModel? model,
+      @HiveField(3, defaultValue: 0) int page,
+      @HiveField(4, defaultValue: 0) int totalPages});
 
   $MessageModelCopyWith<$Res>? get model;
 }
@@ -57,6 +63,8 @@ class _$ChatStateCopyWithImpl<$Res, $Val extends ChatState>
     Object? messageDraft = freezed,
     Object? inputMode = freezed,
     Object? model = freezed,
+    Object? page = null,
+    Object? totalPages = null,
   }) {
     return _then(_value.copyWith(
       messageDraft: freezed == messageDraft
@@ -71,6 +79,14 @@ class _$ChatStateCopyWithImpl<$Res, $Val extends ChatState>
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
               as MessageModel?,
+      page: null == page
+          ? _value.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -98,7 +114,9 @@ abstract class _$$ChatStateImplCopyWith<$Res>
   $Res call(
       {@HiveField(0) String? messageDraft,
       @HiveField(1) ChatInputMode? inputMode,
-      @HiveField(2) MessageModel? model});
+      @HiveField(2) MessageModel? model,
+      @HiveField(3, defaultValue: 0) int page,
+      @HiveField(4, defaultValue: 0) int totalPages});
 
   @override
   $MessageModelCopyWith<$Res>? get model;
@@ -118,6 +136,8 @@ class __$$ChatStateImplCopyWithImpl<$Res>
     Object? messageDraft = freezed,
     Object? inputMode = freezed,
     Object? model = freezed,
+    Object? page = null,
+    Object? totalPages = null,
   }) {
     return _then(_$ChatStateImpl(
       messageDraft: freezed == messageDraft
@@ -132,6 +152,14 @@ class __$$ChatStateImplCopyWithImpl<$Res>
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
               as MessageModel?,
+      page: null == page
+          ? _value.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -143,7 +171,9 @@ class _$ChatStateImpl implements _ChatState {
   const _$ChatStateImpl(
       {@HiveField(0) this.messageDraft,
       @HiveField(1) this.inputMode,
-      @HiveField(2) this.model});
+      @HiveField(2) this.model,
+      @HiveField(3, defaultValue: 0) this.page = 0,
+      @HiveField(4, defaultValue: 0) this.totalPages = 0});
 
   @override
   @HiveField(0)
@@ -154,10 +184,18 @@ class _$ChatStateImpl implements _ChatState {
   @override
   @HiveField(2)
   final MessageModel? model;
+  @override
+  @JsonKey()
+  @HiveField(3, defaultValue: 0)
+  final int page;
+  @override
+  @JsonKey()
+  @HiveField(4, defaultValue: 0)
+  final int totalPages;
 
   @override
   String toString() {
-    return 'ChatState(messageDraft: $messageDraft, inputMode: $inputMode, model: $model)';
+    return 'ChatState(messageDraft: $messageDraft, inputMode: $inputMode, model: $model, page: $page, totalPages: $totalPages)';
   }
 
   @override
@@ -169,11 +207,15 @@ class _$ChatStateImpl implements _ChatState {
                 other.messageDraft == messageDraft) &&
             (identical(other.inputMode, inputMode) ||
                 other.inputMode == inputMode) &&
-            (identical(other.model, model) || other.model == model));
+            (identical(other.model, model) || other.model == model) &&
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, messageDraft, inputMode, model);
+  int get hashCode => Object.hash(
+      runtimeType, messageDraft, inputMode, model, page, totalPages);
 
   @JsonKey(ignore: true)
   @override
@@ -186,7 +228,9 @@ abstract class _ChatState implements ChatState {
   const factory _ChatState(
       {@HiveField(0) final String? messageDraft,
       @HiveField(1) final ChatInputMode? inputMode,
-      @HiveField(2) final MessageModel? model}) = _$ChatStateImpl;
+      @HiveField(2) final MessageModel? model,
+      @HiveField(3, defaultValue: 0) final int page,
+      @HiveField(4, defaultValue: 0) final int totalPages}) = _$ChatStateImpl;
 
   @override
   @HiveField(0)
@@ -197,6 +241,12 @@ abstract class _ChatState implements ChatState {
   @override
   @HiveField(2)
   MessageModel? get model;
+  @override
+  @HiveField(3, defaultValue: 0)
+  int get page;
+  @override
+  @HiveField(4, defaultValue: 0)
+  int get totalPages;
   @override
   @JsonKey(ignore: true)
   _$$ChatStateImplCopyWith<_$ChatStateImpl> get copyWith =>

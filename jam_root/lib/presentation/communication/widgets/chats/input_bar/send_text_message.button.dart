@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 
@@ -38,6 +39,7 @@ class SendTextMessageButton extends ConsumerWidget with ChattingProviders {
         sentAt: DateTime.now(),
         repliedTo: replyToMessage?.id,
         repliedToDate: replyToMessage?.sentAt,
+        fromMe: true,
       );
 
       ref.read(userTextInputControllerProvider.notifier).state.clear();

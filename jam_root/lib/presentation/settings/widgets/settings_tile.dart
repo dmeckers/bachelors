@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+
 import 'package:jam_ui/jam_ui.dart';
 
 class SettingsTile extends StatelessWidget {
-  const SettingsTile(
-      {super.key,
-      this.leading,
-      this.child,
-      this.trailing,
-      this.title,
-      this.subtitle,
-      this.onTap,
-      this.shakable = true,
-      this.danger = false});
+  const SettingsTile({
+    super.key,
+    this.leading,
+    this.child,
+    this.trailing,
+    this.title,
+    this.subtitle,
+    this.onTap,
+    this.shakable = true,
+    this.danger = false,
+  });
 
   final bool shakable;
   final Widget? leading;

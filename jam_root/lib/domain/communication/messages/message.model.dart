@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'message.model.freezed.dart';
@@ -28,6 +29,7 @@ abstract class MessageModel
       MessagePinState pinnedState,
       @Default(MessageDeliveryStatus.sending)
       MessageDeliveryStatus? messageStatus,
+      @HiveField(13) required bool fromMe,
 
       ///
       /// extra field for queue in case we try to reply

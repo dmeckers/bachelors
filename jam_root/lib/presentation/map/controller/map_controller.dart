@@ -1,42 +1,15 @@
-import 'package:jam/data/data.dart';
-import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/shared/shared.dart';
+import 'package:location/location.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
+
+import 'package:jam/data/data.dart';
 
 part 'map_controller.g.dart';
 
-@riverpod
-Stream<MapData> getMapDataStream(GetMapDataStreamRef ref) {
-  final location$ =
-      ref.read(positionStreamProvider.future).asStream().asBroadcastStream();
-
-  location$.debounceTime(const Duration(seconds: 5)).listen(
-    (location) {
-      ref.read(mapRepositoryProvider).updateUserLocation(
-            latitude: location.longitude,
-            longitude: location.latitude,
-          );
-    },
-  );
-
-  return location$.flatMap(
-    (value) => ref
-        .read(mapRepositoryProvider)
-        .getMapData$(
-          userLatitude: value.longitude,
-          userLongitude: value.latitude,
-        )
-
-        /// TODO can map to differ location on meter so that markers would not overlap
-        .map(
-          (locations) => MapData(
-            currentPosition: value,
-            locations: locations,
-          ),
-        ),
-  );
-}
+final locatorServiceProvider = Provider<Location>((ref) => Location());
+final currentLocationStreamProvider = StreamProvider(
+  (ref) =>
+      ref.read(locatorServiceProvider).onLocationChanged.asBroadcastStream(),
+);
 
 @riverpod
 Future<bool> checkUserHasFriendInvite(

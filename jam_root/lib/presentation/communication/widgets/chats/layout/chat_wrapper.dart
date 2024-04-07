@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -13,7 +14,7 @@ class ChatWrapper extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.only(top: DEFAULT_APP_BAR_HEIGHT * 1.5),
+      // padding: const EdgeInsets.only(top: DEFAULT_APP_BAR_HEIGHT * 1.5),
       decoration: BoxDecoration(
         image: chat == null
             ? _getDefault(context)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/jams/jam.model.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -23,7 +24,7 @@ final class EditJamPage extends HookConsumerWidget {
             Colors.amber,
             ImagePathConstants.JAM_CHOOSING_COSTUME_IMAGE_PATH,
             'Change vibes',
-            'TODO think fancy stuff here',
+            '',
             MediaQuery.of(context).size.height * 0.29,
           ),
           _buildSection(
@@ -31,7 +32,7 @@ final class EditJamPage extends HookConsumerWidget {
             Colors.blue,
             ImagePathConstants.JAM_FACE_CONTROL_IMAGE_PATH,
             'Control participants',
-            'TODO think fancy stuff here',
+            'Restrictions, poilicies and more',
             MediaQuery.of(context).size.height * 0.29,
           ),
           _buildSection(
@@ -39,7 +40,7 @@ final class EditJamPage extends HookConsumerWidget {
             Colors.green,
             ImagePathConstants.JAM_AT_TABLE_IMAGE_PATH,
             'Change some details',
-            'TODO think fancy stuff here',
+            'Change the name, date and more',
             MediaQuery.of(context).size.height * 0.303,
             false,
             () => context.pushNamed(

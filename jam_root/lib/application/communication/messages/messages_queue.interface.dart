@@ -25,4 +25,9 @@ abstract class MessagesQueueInterface {
   Future queueUnpinAll({required int chatId});
 
   Future queueUnpin({required MessageModel message});
+
+  Future<void> queueClearChatMessages({
+    required int chatId,
+    required bool forEveryone,
+  });
 }

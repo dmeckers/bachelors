@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -24,9 +25,16 @@ class MessageBoxActionButtonsWrapper extends HookConsumerWidget
     final selectedMessages = ref.watch(selectedMessagesProvider);
 
     return GestureDetector(
-      onLongPress: () => _handleLongTap(selectedMessages, ref),
-      onTapUp: (details) =>
-          _handleTapUp(context, details, selectedMessages, ref),
+      onLongPress: () => _handleLongTap(
+        selectedMessages,
+        ref,
+      ),
+      onTapUp: (details) => _handleTapUp(
+        context,
+        details,
+        selectedMessages,
+        ref,
+      ),
       child: child,
     );
   }

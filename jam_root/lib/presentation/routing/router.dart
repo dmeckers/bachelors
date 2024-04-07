@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jam/config/config.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,7 +13,7 @@ final routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 @riverpod
 GoRouter router(RouterRef ref) {
   final isAuth = ValueNotifier<AsyncValue<bool>>(const AsyncLoading());
-  var userHasVibes = false;
+  var hasVibes = true;
 
   ref
     ..onDispose(isAuth.dispose)
@@ -20,10 +22,17 @@ GoRouter router(RouterRef ref) {
         (value) => value.whenData((value) => value.isAuthenticated),
       ),
       (_, next) async {
-        if (!next.hasError && next.hasValue && next.value == true) {
-          userHasVibes = await ref
-              .read(vibesRepositoryProvider)
-              .doesCurrentUserHaveVibes();
+        final iss = supaAuth.currentUser?.userMetadata?['iss'] as String?;
+        if (iss?.contains('google') ?? false) {
+          final cached = localDatabase.get('hasVibes');
+
+          if (cached != null) {
+            hasVibes = cached;
+          } else {
+            hasVibes = await ref
+                .read(vibesRepositoryProvider)
+                .doesCurrentUserHaveVibes();
+          }
         }
 
         isAuth.value = next;
@@ -53,7 +62,7 @@ GoRouter router(RouterRef ref) {
       final isAuthenticated = isAuth.value.requireValue;
       final isSplash = state.uri.path == "/${GuestRoutes.splash.name}";
 
-      if (isAuthenticated && !userHasVibes) {
+      if (isAuthenticated && !hasVibes) {
         return "/${HomeRoutes.home.name}/${VibeRoutes.editMyVibes.name}";
       }
 

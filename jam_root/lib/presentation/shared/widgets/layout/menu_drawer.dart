@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -14,7 +16,7 @@ class MenuDrawer extends HookConsumerWidget with ProfileRepositoryProviders {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(currentUserProfileProvider).maybeWhen(
+      ref.watch(user$).maybeWhen(
             data: (data) => Drawer(
               shape:
                   const RoundedRectangleBorder(borderRadius: BorderRadius.zero),

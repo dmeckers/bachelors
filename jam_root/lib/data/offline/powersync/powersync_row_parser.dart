@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:powersync/sqlite3.dart' as sqlite;
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:powersync/sqlite3.dart' as sqlite;
 
 final class PowerSyncRowParser {
   static MessageModel parseMessage(sqlite.Row row) {
@@ -120,6 +121,7 @@ final class PowerSyncRowParser {
 
     return model.copyWith(
       creator: UserProfileModel(
+        lastActiveAt: DateTime.parse(row['last_active_at']),
         id: row['creator_id'],
         avatar: row['avatar'],
         fullName: row['full_name'],

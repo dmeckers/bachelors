@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/domain/domain.dart';
 
@@ -21,7 +22,7 @@ class ChatModel
     @JsonKey(includeToJson: false)
     int unreadMessagesCount,
     @HiveField(7) @JsonKey(includeToJson: false) DateTime? clearedAt,
-    @JsonKey(includeToJson: false) LastMessageModel? lastMessage,
+    @HiveField(8) @JsonKey(includeToJson: false) LastMessageModel? lastMessage,
     @HiveField(4)
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default('')
@@ -34,6 +35,7 @@ class ChatModel
     ChatEventType? chatEventType,
     @HiveField(12) @Default(false) bool isPinned,
     @HiveField(13) @Default(false) bool isArchived,
+    @Default(false) bool toHide,
   }) = _ChatModel;
 
   const ChatModel._();

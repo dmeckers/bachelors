@@ -20,19 +20,25 @@ class ChatStateAdapter extends TypeAdapter<_$ChatStateImpl> {
       messageDraft: fields[0] as String?,
       inputMode: fields[1] as ChatInputMode?,
       model: fields[2] as MessageModel?,
+      page: fields[3] == null ? 0 : fields[3] as int,
+      totalPages: fields[4] == null ? 0 : fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$ChatStateImpl obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.messageDraft)
       ..writeByte(1)
       ..write(obj.inputMode)
       ..writeByte(2)
-      ..write(obj.model);
+      ..write(obj.model)
+      ..writeByte(3)
+      ..write(obj.page)
+      ..writeByte(4)
+      ..write(obj.totalPages);
   }
 
   @override

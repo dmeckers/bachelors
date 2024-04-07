@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -27,7 +28,7 @@ class ChatTileLeading extends StatelessWidget {
           ),
         ),
         Visibility(
-          visible: isSelected || friend.isOnline,
+          visible: isSelected || friend.isOnlineAndActive,
           child: Positioned(
             top: 35,
             bottom: 0,

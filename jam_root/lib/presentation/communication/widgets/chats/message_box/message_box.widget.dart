@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -36,11 +37,9 @@ class ActionlessMessageBox extends ConsumerWidget with ChattingProviders {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            child: Text(
-              message.messageText ?? '',
-              style: context.jText.bodySmall,
-            ),
+          Text(
+            message.messageText ?? '',
+            style: context.jText.bodySmall,
           ),
           const SizedBox(height: 6),
           MessageBoxMetaInfo(message: message)

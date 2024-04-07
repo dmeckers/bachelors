@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
@@ -38,7 +39,7 @@ class HeroAvatar extends HookConsumerWidget
                 maxRadius: radius,
               ),
               Visibility(
-                visible: profile.isOnline && !isPersonal,
+                visible: profile.isOnlineAndActive && !isPersonal,
                 child: Positioned(
                   bottom: 0,
                   right: 0,

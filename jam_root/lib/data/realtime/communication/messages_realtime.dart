@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MessagesRealtimeService
     with SupabaseUserGetter
@@ -48,6 +49,16 @@ class MessagesRealtimeService
             value: data.id,
           ),
         )
+        .onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          table: 'deleted_messages',
+          callback: _handlePutInDeleted,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'chat_id',
+            value: data.id,
+          ),
+        )
         .subscribe(
       (e, _) {
         debugPrint(e.name);
@@ -72,6 +83,14 @@ class MessagesRealtimeService
     _delete(payload.oldRecord);
   }
 
+  void _handlePutInDeleted(PostgresChangePayload payload) {
+    _controller!.add(
+      _controller!.value
+          .where((msg) => msg.id != payload.newRecord['message_id'])
+          .toList(),
+    );
+  }
+
   void _handleInsertEvent(PostgresChangePayload payload) async {
     if (payload.newRecord['sender_id'] == getUserIdOrThrow() &&
         payload.newRecord['message_type'] != MessageType.event.name) {
@@ -92,8 +111,10 @@ class MessagesRealtimeService
       _controller!.add([message, ..._controller!.value]);
 
   @override
-  void pushMessages(Messages messages) =>
-      _controller!.add([..._controller!.value, ...messages]);
+  void pushMessages(Messages messages) {
+    final updatedState = [..._controller!.value, ...messages];
+    _controller!.value = updatedState;
+  }
 
   @override
   void pushDeleteMessage(MessageModel message) => _controller!.add(
@@ -129,6 +150,11 @@ class MessagesRealtimeService
           .map((e) => e.copyWith(pinnedState: MessagePinState.no_one))
           .toList(),
     );
+  }
+
+  @override
+  void flushMessages() {
+    _controller!.value = [];
   }
 }
 

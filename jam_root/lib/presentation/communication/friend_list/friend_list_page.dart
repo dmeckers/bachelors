@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -91,9 +92,9 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
         child: Align(
           alignment: Alignment.centerRight,
           child: Text(
-            user.isOnline
+            user.isOnlineAndActive
                 ? 'Online'
-                : 'Last seen ${user.lastSignInAt?.toNTimeAgo()}',
+                : 'Last seen ${user.lastActiveAt.toNTimeAgo()}',
             style: context.jText.bodySmall?.copyWith(
               fontSize: 11,
               color: ColorHelper.colorContrast(

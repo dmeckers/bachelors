@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
@@ -98,10 +99,10 @@ class ChatAppBar extends ConsumerWidget
   }
 
   Widget _buildChatSubtitle(BuildContext context, ChatModel chat) {
-    final isOnline = chat.relatedContact.isOnline;
+    final isOnline = chat.relatedContact.isOnlineAndActive;
     final subtitleText = isOnline
         ? 'Online'
-        : 'Last seen ${chat.relatedContact.lastSignInAt?.toNTimeAgo() ?? 'recently'}';
+        : 'Last seen ${chat.relatedContact.lastActiveAt.toNTimeAgo()}';
     final isTyping = chat.chatEventType == ChatEventType.typing;
 
     return isTyping

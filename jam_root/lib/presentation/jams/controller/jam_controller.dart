@@ -1,7 +1,12 @@
+import 'package:jam/domain/events/map/jam_deleted_map_event.dart';
+import 'package:jam/domain/events/map/jam_updated_map_event.dart';
+import 'package:jam/presentation/presentation.dart';
+import 'package:jam_utils/jam_utils.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jam_controller.g.dart';
 
@@ -44,17 +49,46 @@ Future<Jams> updateJam(
   UpdateJamRef ref, {
   required JamModel jam,
 }) async {
-  return [await ref.read(jamRepositoryProvider).updateJamDetails(jam)];
+  final updated = await ref.read(jamRepositoryProvider).updateJamDetails(jam);
+  await ref
+      .read(mapRealtimeProvider)
+      .fireEvent(JamUpdatedEvent.fromModel(updated));
+  ref.invalidate(userJamControllerProvider);
+
+  return [updated];
 }
 
 @riverpod
 Future<JamModel> createJam(CreateJamRef ref, {required JamModel jam}) async {
-  return await ref.read(jamRepositoryProvider).createJam(jam);
+  final jamModel = await ref.read(jamRepositoryProvider).createJam(jam);
+
+  ref.invalidate(userJamControllerProvider);
+
+  final coords = jam.location.extractCords();
+
+  ref.read(locationStateProvider).pushJam(
+        jamLocation: jamModel.toLocationModel().copyWith(
+              marker: JamMarker.getUserJamMarker(),
+              latitude: coords.lat,
+              longitude: coords.lon,
+            ),
+        popTempMarker: true,
+      );
+
+  ref
+      .read(mapRealtimeProvider)
+      .fireEvent(NewJamCreatedEvent.fromModel(jamModel));
+
+  return jamModel;
 }
 
 @riverpod
 Future<void> deleteJam(DeleteJamRef ref, {required int jamId}) async {
   await ref.read(jamRepositoryProvider).deleteJam(jamId: jamId);
+  await ref.read(mapRealtimeProvider).fireEvent(
+        JamDeletedMapEvent.fromModel(jamId),
+      );
+  ref.invalidate(userJamControllerProvider);
 }
 
 @riverpod

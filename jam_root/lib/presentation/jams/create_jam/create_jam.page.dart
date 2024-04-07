@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -136,8 +137,6 @@ final class CreateJamPage extends ConsumerWidget {
         .read(createJamProvider(jam: viewModel.castToModel().backfilled).future)
         .then(
       (value) {
-        ref.invalidate(userJamControllerProvider);
-
         showDialog(
           context: context,
           builder: (ctx) => OkPopup(

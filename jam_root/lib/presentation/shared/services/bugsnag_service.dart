@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:jam/config/config.dart';
 
 class BugSnagService {

@@ -371,7 +371,7 @@ class _GetChatMessagesProviderElement
   ChatModel get chat => (origin as _GetChatMessagesProvider).chat;
 }
 
-String _$clearChatMessagesHash() => r'9f15a38766e55235bd8676452788dbfd34f9775f';
+String _$clearChatMessagesHash() => r'5124e21d5fd10660e32fdee5bc960b4e61c7a849';
 
 /// See also [_clearChatMessages].
 @ProviderFor(_clearChatMessages)

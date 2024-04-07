@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:jam/domain/domain.dart';
 
 late Box localDatabase;
@@ -19,6 +20,8 @@ final class HiveService {
     Hive.registerAdapter(PrivacyBoundariesAdapter());
     Hive.registerAdapter(JamCardViewAdapter());
     Hive.registerAdapter(MessagePinStateAdapter());
+    Hive.registerAdapter(LastMessageModelAdapter());
+    Hive.registerAdapter(MessageDeliveryStatusAdapter());
 
     localDatabase = await Hive.openBox('localDatabase');
   }

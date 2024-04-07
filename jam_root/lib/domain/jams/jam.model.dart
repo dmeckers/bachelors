@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:annotations/annotations.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:annotations/annotations.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
@@ -94,6 +95,20 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
 
   @override
   String getJsonClassId() => jsonClassId;
+
+  JamLocation toLocationModel() {
+    return JamLocation(
+      jamId: id!,
+      name: name ?? 'Anonymous Jam',
+      description: description ?? 'No description this time',
+      locationName: locationName ?? 'Unknown',
+      date: date,
+      latitude: lat!,
+      longitude: lon!,
+      vibes: relatedVibes,
+      creatorId: creatorId!,
+    );
+  }
 }
 
 //presentation layer specific todo move to presentation layer

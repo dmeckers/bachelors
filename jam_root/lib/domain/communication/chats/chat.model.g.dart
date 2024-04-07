@@ -22,6 +22,7 @@ class ChatModelAdapter extends TypeAdapter<_$ChatModelImpl> {
       messages: (fields[3] as List).cast<MessageModel>(),
       unreadMessagesCount: fields[6] as int,
       clearedAt: fields[7] as DateTime?,
+      lastMessage: fields[8] as LastMessageModel?,
       iconUrl: fields[4] as String,
       settings: fields[5] as PersonalChatSettingsModel?,
       isPinned: fields[12] as bool,
@@ -32,7 +33,7 @@ class ChatModelAdapter extends TypeAdapter<_$ChatModelImpl> {
   @override
   void write(BinaryWriter writer, _$ChatModelImpl obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(2)
@@ -41,6 +42,8 @@ class ChatModelAdapter extends TypeAdapter<_$ChatModelImpl> {
       ..write(obj.unreadMessagesCount)
       ..writeByte(7)
       ..write(obj.clearedAt)
+      ..writeByte(8)
+      ..write(obj.lastMessage)
       ..writeByte(4)
       ..write(obj.iconUrl)
       ..writeByte(5)
@@ -87,6 +90,7 @@ _$ChatModelImpl _$$ChatModelImplFromJson(Map<String, dynamic> json) =>
               json['last_message'] as Map<String, dynamic>),
       isPinned: json['is_pinned'] as bool? ?? false,
       isArchived: json['is_archived'] as bool? ?? false,
+      toHide: json['to_hide'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
@@ -96,4 +100,5 @@ Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
       'messages': instance.messages.map((e) => e.toJson()).toList(),
       'is_pinned': instance.isPinned,
       'is_archived': instance.isArchived,
+      'to_hide': instance.toHide,
     };

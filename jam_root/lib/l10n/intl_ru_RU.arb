@@ -3,5 +3,6 @@
   "forgotPassword": "Забыли пароль?",
   "createAccount": "Create account",
   "dontHaveAccount": "Dont have account?",
-  "login": "Логин"
+  "login": "Логин",
+  "enterYourEmailAddressAndWeWillSendYouA": "Enter your email address and we will send you a link to reset your password."
 }

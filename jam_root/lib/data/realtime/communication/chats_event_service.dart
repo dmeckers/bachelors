@@ -1,22 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ChatsEventsService
     with SupabaseUserGetter
-    implements EventServiceInterface<ChatEvents, ChatEvent> {
+    implements EventServiceInterface<ChatEvents, ChatEvent, dynamic> {
   final Map<int, RealtimeChannel> _sockets = {};
   final Map<int, BehaviorSubject<ChatEvent>> _controllers = {};
 
   @override
   Future<void> fireEvent(ChatEvent event) async {
     await _sockets[event.chatId]?.sendBroadcastMessage(
-      event: event.name,
+      event: event.eventName,
       payload: event.payload,
     );
   }
@@ -68,6 +69,6 @@ class ChatsEventsService
 }
 
 final chatsEventsProvider =
-    Provider<EventServiceInterface<ChatEvents, ChatEvent>>(
+    Provider<EventServiceInterface<ChatEvents, ChatEvent, dynamic>>(
   (ref) => ChatsEventsService(),
 );

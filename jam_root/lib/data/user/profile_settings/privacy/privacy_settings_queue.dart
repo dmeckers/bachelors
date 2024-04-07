@@ -1,7 +1,7 @@
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
-import 'package:jam/domain/user/profile_settings/privacy/privacy_boundaries.enum.dart';
+import 'package:jam/domain/domain.dart';
 
 class PrivacySettingsQueue
     with SupabaseUserGetter

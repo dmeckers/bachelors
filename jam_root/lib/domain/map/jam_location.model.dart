@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'jam_location.model.freezed.dart';

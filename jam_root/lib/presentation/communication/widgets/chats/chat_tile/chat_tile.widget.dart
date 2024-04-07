@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -28,8 +29,12 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
       },
       onDismissed: (direction) async {
         chatModel.isArchived
-            ? ref.read(unarchiveChatProvider(chat: chatModel))
-            : ref.read(archiveChatProvider(chat: chatModel));
+            ? ref
+                .read(chatsStateProvider)
+                .unarchiveChats(selectedChats: [chatModel])
+            : ref
+                .read(chatsStateProvider)
+                .archiveChats(selectedChats: [chatModel]);
       },
       background: Container(
         color: Colors.blue,

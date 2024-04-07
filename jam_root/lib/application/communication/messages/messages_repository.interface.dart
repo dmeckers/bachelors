@@ -38,4 +38,12 @@ abstract class MessagesRepositoryInterface {
     required ChatModel chat,
     required int offset,
   });
+
+  Future<List<MessageModel>> loadMoreMessages({
+    required int chatId,
+  });
+  Future<void> clearChatMessages({
+    required int chatId,
+    required bool forEveryone,
+  });
 }

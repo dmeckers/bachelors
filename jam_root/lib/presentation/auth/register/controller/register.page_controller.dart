@@ -1,6 +1,7 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register.page_controller.g.dart';
 

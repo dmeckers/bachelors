@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jam/application/application.dart';
-import 'package:jam/config/config.dart';
-import 'package:jam/data/data.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
+
+import 'package:jam/application/application.dart';
+import 'package:jam/config/config.dart';
+import 'package:jam/data/data.dart';
 
 class SupabaseAttachmentService
     with SupabaseUserGetter
@@ -53,9 +54,17 @@ class SupabaseAttachmentService
     required String filename,
     String? userId,
     Identifiable? model,
+    int? width,
+    int? height,
   }) {
     return supaBucket.getPublicUrl(
-      bucket.getFullPath(userId ?? getUserIdOrThrow(), model),
+      '${bucket.getFullPath(userId ?? getUserIdOrThrow(), model)}/$filename',
+      // gotta pay money for this
+      // transform: TransformOptions(
+      //   resize: ResizeMode.cover,
+      //   width: width ?? 300,
+      //   height: height ?? 300,
+      // ),
     );
   }
 }

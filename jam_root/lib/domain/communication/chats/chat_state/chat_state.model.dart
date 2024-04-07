@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'chat_state.model.freezed.dart';
@@ -12,5 +13,7 @@ abstract class ChatState with _$ChatState {
     @HiveField(0) String? messageDraft,
     @HiveField(1) ChatInputMode? inputMode,
     @HiveField(2) MessageModel? model,
+    @HiveField(3, defaultValue: 0) @Default(0) int page,
+    @HiveField(4, defaultValue: 0) @Default(0) int totalPages,
   }) = _ChatState;
 }

@@ -1,7 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'package:jam/domain/domain.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
-import 'package:jam/domain/domain.dart';
 
 class PowerSyncMessagesService with SupabaseUserGetter {
   Stream<Messages> messages$(int chatId) async* {

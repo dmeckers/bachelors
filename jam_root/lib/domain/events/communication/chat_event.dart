@@ -6,7 +6,7 @@ abstract class ChatEvent implements Event {
   ChatEventType toChatEventType();
 
   @override
-  final String name = 'CHAT_EVENT';
+  final String eventName = 'CHAT_EVENT';
 
   @override
   final Map<String, dynamic> payload;

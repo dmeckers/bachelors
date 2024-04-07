@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
@@ -14,18 +16,7 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = useState(profile);
-
-    ref.listen(
-      currentUserProfileProvider,
-      (_, next) {
-        if (next is AsyncData &&
-            !next.asData!.isLoading &&
-            next.asData!.error == null) {
-          profileState.value = next.value!;
-        }
-      },
-    );
+    final userState = ref.watch(user$);
 
     return Scaffold(
       appBar: const SimpleAppBar(title: 'Settings'),
@@ -40,25 +31,25 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
                 ShakesOnNoLongPress(
                     child: ListTile(
                   leading: HeroAvatar(
-                    profile: profileState.value,
+                    profile: userState.requireValue,
                     radius: 40,
                   ),
                   onTap: () => context.pushNamed(
                     SettingsRoutes.profile.name,
-                    extra: profileState.value,
+                    extra: userState.requireValue,
                   ),
                   horizontalTitleGap: 6,
                   contentPadding: const EdgeInsets.symmetric(vertical: 5),
                   title: Text(
-                    profileState.value.username ??
-                        profileState.value.fullName ??
+                    userState.requireValue.username ??
+                        userState.requireValue.fullName ??
                         'Wtf where is my name',
                     style: context.jText.bodyMedium,
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      profileState.value.profileStatus ?? '',
+                      userState.requireValue.profileStatus ?? '',
                       style: context.jText.bodySmall?.copyWith(
                         fontSize: 12,
                         color: context.jColor.tertiary,

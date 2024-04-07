@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/config/config.dart';
+import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 
@@ -14,25 +16,34 @@ class ChatList extends ConsumerWidget with ChattingProviders {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final archivedChats = chats.where((element) => element.isArchived).toList();
-    final sortedChats = chats.toList()..sort(compareChats);
+    final chats$ = ref.watch(chatStream);
 
-    return chats.isNotEmpty
-        ? SingleChildScrollView(
-            child: Column(
-              children: [
-                if (archivedChats.isNotEmpty) ArchivedChatsTile(chats: chats),
-                for (final chat in sortedChats)
-                  if (chat.isArchived == false) ChatTile(chatModel: chat),
-              ],
-            ),
-          )
-        : SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: const Center(
-              child: Text('No chats found'),
-            ),
-          );
+    return chats$.maybeWhen(
+      orElse: () => const SizedBox(),
+      data: (chats) {
+        final archivedChats =
+            chats.where((element) => element.isArchived).toList();
+        final sortedChats = chats.toList()..sort(compareChats);
+
+        return chats.isNotEmpty
+            ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (archivedChats.isNotEmpty)
+                      ArchivedChatsTile(chats: chats),
+                    for (final chat in sortedChats)
+                      if (chat.isArchived == false) ChatTile(chatModel: chat),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: const Center(
+                  child: Text('No chats found'),
+                ),
+              );
+      },
+    );
   }
 
   int compareChats(ChatModel a, ChatModel b) {

@@ -6,7 +6,7 @@ mixin class Storer {
   static const Map<Type, String> _typeKeys = {
     UserProfileModel: HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
     FriendInviteModel: HiveConstants.LOCAL_DB_FRIEND_INVITES_KEY,
-    ChatModel: HiveConstants.LOCAL_DB_CHAT_KEY,
+    List<ChatModel>: HiveConstants.LOCAL_DB_CHAT_KEY,
     Map<int, ChatState>: HiveConstants.LOCAL_DB_CHAT_STATE_KEY,
     UserProfilePrivacySettingsModel:
         HiveConstants.LOCAL_DB_USER_PRIVACY_SETTINGS_KEY,
@@ -23,7 +23,8 @@ mixin class Storer {
   }
 
   T? get<T>() {
-    return localDatabase.get(_typeKeys[T]);
+    final data = localDatabase.get(_typeKeys[T]);
+    return data is List ? data.cast<T?>().toList() : data;
   }
 
   void remove<T>() {

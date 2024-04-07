@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/presentation/presentation.dart';
 
 class ScrollDownFAB extends ConsumerWidget with ChattingProviders {
@@ -24,7 +25,7 @@ class ScrollDownFAB extends ConsumerWidget with ChattingProviders {
               ),
               // messagesData.indexOf(messagesData.first)
               onPressed: () =>
-                  ref.read(itemScrollControllerProvider).jumpTo(index: 0),
+                  ref.read(autoScrollCtrlProvider).scrollToIndex(0),
             )
           : const SizedBox(),
     );

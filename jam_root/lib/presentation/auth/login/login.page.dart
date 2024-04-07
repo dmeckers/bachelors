@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/generated/l10n.dart';
@@ -70,15 +72,19 @@ class LoginPage extends HookConsumerWidget {
                         subtitle.value,
                         style: context.jText.headlineMedium,
                       ),
-                      const SizedBox(height: 60),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16),
+                            vertical: 7.0, horizontal: 16),
                         child: JTextFormInput(
                           viewModel: loginPageModel.emailFormModel,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16),
@@ -86,7 +92,9 @@ class LoginPage extends HookConsumerWidget {
                           viewModel: loginPageModel.passwordFormModel,
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
                       _buildButton(context, ref, loginPageModel),
                       const SizedBox(height: 10),
                       Row(

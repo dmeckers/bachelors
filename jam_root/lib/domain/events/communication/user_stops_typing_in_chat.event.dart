@@ -9,7 +9,7 @@ class UserStopsTypingInChatEvent implements ChatEvent {
   final String userId;
 
   @override
-  final String name = RealTime.USER_STOP_TYPING_EVENT;
+  final String eventName = RealTime.USER_STOP_TYPING_EVENT;
 
   @override
   Map<String, dynamic> get payload => {

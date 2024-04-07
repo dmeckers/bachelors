@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:jam/domain/domain.dart';
 
 extension MessageDeliveryStatusEnumExtension on MessageDeliveryStatus? {

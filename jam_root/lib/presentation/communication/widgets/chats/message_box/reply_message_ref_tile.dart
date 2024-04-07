@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
   const ReplyMessageRefTile({
@@ -24,7 +25,7 @@ class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = ref.watch(itemScrollControllerProvider);
+    final scrollController = ref.watch(autoScrollCtrlProvider);
     //this is so bad
     final repliedToName = repliedMessage.senderName ??
         (repliedMessage.senderId == chat.relatedContact.id
@@ -89,13 +90,12 @@ class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
   }
 
   _handleNavigateToMessage(
-    ItemScrollController scrollController,
+    AutoScrollController scrollController,
     int repliedIndex,
     WidgetRef ref,
   ) {
-    scrollController.scrollTo(
-      index: repliedIndex,
-      alignment: 0.5,
+    scrollController.scrollToIndex(
+      repliedIndex,
       duration: const Duration(microseconds: 100),
     );
 

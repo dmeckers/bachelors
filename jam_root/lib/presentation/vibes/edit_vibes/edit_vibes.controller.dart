@@ -1,7 +1,8 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam_utils/connectivity_checker.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'edit_vibes.controller.g.dart';
 

@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'chat_state_map.model.g.dart';

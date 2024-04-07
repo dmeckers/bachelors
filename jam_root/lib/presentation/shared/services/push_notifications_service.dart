@@ -56,6 +56,7 @@ class PushNotificationsService {
     }
 
     final messageModel = MessageModel(
+      fromMe: false,
       messageText: message.data['body'],
       senderId: message.data['senderId'],
       sentAt: DateTime.now(),
@@ -89,6 +90,7 @@ class PushNotificationsService {
         if (fromChat) return;
 
         final messageModel = MessageModel(
+          fromMe: false,
           messageText: message.data['body'],
           senderId: message.data['senderId'],
           chatId: int.parse(message.data['chatId']),

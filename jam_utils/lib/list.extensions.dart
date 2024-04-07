@@ -3,6 +3,15 @@ import 'dart:math';
 
 enum ItemPositionInList { last, first, middle }
 
+extension SetExtensions<T> on Set<T> {
+  Set<T> addIfNotNull(T? item) {
+    if (item != null) {
+      add(item);
+    }
+    return this;
+  }
+}
+
 extension MapWithIndex<T> on List<T> {
   Iterable<E> mapWithIndex<E>(
     E Function(int index, T item, ItemPositionInList positionInList) map,
@@ -26,20 +35,17 @@ extension MapWithIndex<T> on List<T> {
     copy.sort(compare);
     return copy;
   }
-
-  ///
-  /// Watch out this method is not type safe
-  /// it must have an id property
-  ///
-  List<T> intersectById(List<T> other) {
-    return where((element) => other.any((otherElement) =>
-        (otherElement as dynamic).id == (element as dynamic).id)).toList();
-  }
 }
 
 extension FlattenExtension on List {
   List<Map<String, dynamic>> flattenByKey({required String key}) {
     return map<Map<String, dynamic>>((item) => item[key]).toList();
+  }
+
+  dublicate(int times) {
+    return List.generate(times, (_) => this)
+        .expand((element) => element)
+        .toList();
   }
 
   get second => this[1];

@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
+
 import 'package:jam/domain/domain.dart';
 
 part 'last_chat_message.model.freezed.dart';
@@ -9,16 +11,19 @@ abstract class LastMessageModel
     with _$LastMessageModel
     implements AbstractMessageModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
+  @HiveType(typeId: 63, adapterName: 'LastMessageModelAdapter')
   const factory LastMessageModel({
-    required int id,
-    required int chatId,
-    required DateTime sentAt,
-    required MessageType messageType,
-    required String senderId,
-    required String? messageText,
+    @HiveField(0) required int id,
+    @HiveField(1) required int chatId,
+    @HiveField(2) required DateTime sentAt,
+    @HiveField(3) required MessageType messageType,
+    @HiveField(4) required String senderId,
+    @HiveField(5) required String? messageText,
     @Default(MessageDeliveryStatus.sending)
+    @HiveField(6)
     MessageDeliveryStatus? messageStatus,
-    String? mediaContentUrl,
+    @HiveField(7) String? mediaContentUrl,
+    @HiveField(8) required bool fromMe,
   }) = _LastMessageModel;
 
   const LastMessageModel._();

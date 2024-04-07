@@ -12,7 +12,7 @@ part of 'last_chat_message.model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LastMessageModel _$LastMessageModelFromJson(Map<String, dynamic> json) {
   return _LastMessageModel.fromJson(json);
@@ -20,15 +20,25 @@ LastMessageModel _$LastMessageModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LastMessageModel {
+  @HiveField(0)
   int get id => throw _privateConstructorUsedError;
+  @HiveField(1)
   int get chatId => throw _privateConstructorUsedError;
+  @HiveField(2)
   DateTime get sentAt => throw _privateConstructorUsedError;
+  @HiveField(3)
   MessageType get messageType => throw _privateConstructorUsedError;
+  @HiveField(4)
   String get senderId => throw _privateConstructorUsedError;
+  @HiveField(5)
   String? get messageText => throw _privateConstructorUsedError;
+  @HiveField(6)
   MessageDeliveryStatus? get messageStatus =>
       throw _privateConstructorUsedError;
+  @HiveField(7)
   String? get mediaContentUrl => throw _privateConstructorUsedError;
+  @HiveField(8)
+  bool get fromMe => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,14 +53,15 @@ abstract class $LastMessageModelCopyWith<$Res> {
       _$LastMessageModelCopyWithImpl<$Res, LastMessageModel>;
   @useResult
   $Res call(
-      {int id,
-      int chatId,
-      DateTime sentAt,
-      MessageType messageType,
-      String senderId,
-      String? messageText,
-      MessageDeliveryStatus? messageStatus,
-      String? mediaContentUrl});
+      {@HiveField(0) int id,
+      @HiveField(1) int chatId,
+      @HiveField(2) DateTime sentAt,
+      @HiveField(3) MessageType messageType,
+      @HiveField(4) String senderId,
+      @HiveField(5) String? messageText,
+      @HiveField(6) MessageDeliveryStatus? messageStatus,
+      @HiveField(7) String? mediaContentUrl,
+      @HiveField(8) bool fromMe});
 }
 
 /// @nodoc
@@ -74,6 +85,7 @@ class _$LastMessageModelCopyWithImpl<$Res, $Val extends LastMessageModel>
     Object? messageText = freezed,
     Object? messageStatus = freezed,
     Object? mediaContentUrl = freezed,
+    Object? fromMe = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -108,6 +120,10 @@ class _$LastMessageModelCopyWithImpl<$Res, $Val extends LastMessageModel>
           ? _value.mediaContentUrl
           : mediaContentUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      fromMe: null == fromMe
+          ? _value.fromMe
+          : fromMe // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -121,14 +137,15 @@ abstract class _$$LastMessageModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id,
-      int chatId,
-      DateTime sentAt,
-      MessageType messageType,
-      String senderId,
-      String? messageText,
-      MessageDeliveryStatus? messageStatus,
-      String? mediaContentUrl});
+      {@HiveField(0) int id,
+      @HiveField(1) int chatId,
+      @HiveField(2) DateTime sentAt,
+      @HiveField(3) MessageType messageType,
+      @HiveField(4) String senderId,
+      @HiveField(5) String? messageText,
+      @HiveField(6) MessageDeliveryStatus? messageStatus,
+      @HiveField(7) String? mediaContentUrl,
+      @HiveField(8) bool fromMe});
 }
 
 /// @nodoc
@@ -150,6 +167,7 @@ class __$$LastMessageModelImplCopyWithImpl<$Res>
     Object? messageText = freezed,
     Object? messageStatus = freezed,
     Object? mediaContentUrl = freezed,
+    Object? fromMe = null,
   }) {
     return _then(_$LastMessageModelImpl(
       id: null == id
@@ -184,6 +202,10 @@ class __$$LastMessageModelImplCopyWithImpl<$Res>
           ? _value.mediaContentUrl
           : mediaContentUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      fromMe: null == fromMe
+          ? _value.fromMe
+          : fromMe // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -191,42 +213,55 @@ class __$$LastMessageModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
+@HiveType(typeId: 63, adapterName: 'LastMessageModelAdapter')
 class _$LastMessageModelImpl extends _LastMessageModel {
   const _$LastMessageModelImpl(
-      {required this.id,
-      required this.chatId,
-      required this.sentAt,
-      required this.messageType,
-      required this.senderId,
-      required this.messageText,
-      this.messageStatus = MessageDeliveryStatus.sending,
-      this.mediaContentUrl})
+      {@HiveField(0) required this.id,
+      @HiveField(1) required this.chatId,
+      @HiveField(2) required this.sentAt,
+      @HiveField(3) required this.messageType,
+      @HiveField(4) required this.senderId,
+      @HiveField(5) required this.messageText,
+      @HiveField(6) this.messageStatus = MessageDeliveryStatus.sending,
+      @HiveField(7) this.mediaContentUrl,
+      @HiveField(8) required this.fromMe})
       : super._();
 
   factory _$LastMessageModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LastMessageModelImplFromJson(json);
 
   @override
+  @HiveField(0)
   final int id;
   @override
+  @HiveField(1)
   final int chatId;
   @override
+  @HiveField(2)
   final DateTime sentAt;
   @override
+  @HiveField(3)
   final MessageType messageType;
   @override
+  @HiveField(4)
   final String senderId;
   @override
+  @HiveField(5)
   final String? messageText;
   @override
   @JsonKey()
+  @HiveField(6)
   final MessageDeliveryStatus? messageStatus;
   @override
+  @HiveField(7)
   final String? mediaContentUrl;
+  @override
+  @HiveField(8)
+  final bool fromMe;
 
   @override
   String toString() {
-    return 'LastMessageModel(id: $id, chatId: $chatId, sentAt: $sentAt, messageType: $messageType, senderId: $senderId, messageText: $messageText, messageStatus: $messageStatus, mediaContentUrl: $mediaContentUrl)';
+    return 'LastMessageModel(id: $id, chatId: $chatId, sentAt: $sentAt, messageType: $messageType, senderId: $senderId, messageText: $messageText, messageStatus: $messageStatus, mediaContentUrl: $mediaContentUrl, fromMe: $fromMe)';
   }
 
   @override
@@ -246,13 +281,14 @@ class _$LastMessageModelImpl extends _LastMessageModel {
             (identical(other.messageStatus, messageStatus) ||
                 other.messageStatus == messageStatus) &&
             (identical(other.mediaContentUrl, mediaContentUrl) ||
-                other.mediaContentUrl == mediaContentUrl));
+                other.mediaContentUrl == mediaContentUrl) &&
+            (identical(other.fromMe, fromMe) || other.fromMe == fromMe));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, chatId, sentAt, messageType,
-      senderId, messageText, messageStatus, mediaContentUrl);
+      senderId, messageText, messageStatus, mediaContentUrl, fromMe);
 
   @JsonKey(ignore: true)
   @override
@@ -271,35 +307,47 @@ class _$LastMessageModelImpl extends _LastMessageModel {
 
 abstract class _LastMessageModel extends LastMessageModel {
   const factory _LastMessageModel(
-      {required final int id,
-      required final int chatId,
-      required final DateTime sentAt,
-      required final MessageType messageType,
-      required final String senderId,
-      required final String? messageText,
-      final MessageDeliveryStatus? messageStatus,
-      final String? mediaContentUrl}) = _$LastMessageModelImpl;
+      {@HiveField(0) required final int id,
+      @HiveField(1) required final int chatId,
+      @HiveField(2) required final DateTime sentAt,
+      @HiveField(3) required final MessageType messageType,
+      @HiveField(4) required final String senderId,
+      @HiveField(5) required final String? messageText,
+      @HiveField(6) final MessageDeliveryStatus? messageStatus,
+      @HiveField(7) final String? mediaContentUrl,
+      @HiveField(8) required final bool fromMe}) = _$LastMessageModelImpl;
   const _LastMessageModel._() : super._();
 
   factory _LastMessageModel.fromJson(Map<String, dynamic> json) =
       _$LastMessageModelImpl.fromJson;
 
   @override
+  @HiveField(0)
   int get id;
   @override
+  @HiveField(1)
   int get chatId;
   @override
+  @HiveField(2)
   DateTime get sentAt;
   @override
+  @HiveField(3)
   MessageType get messageType;
   @override
+  @HiveField(4)
   String get senderId;
   @override
+  @HiveField(5)
   String? get messageText;
   @override
+  @HiveField(6)
   MessageDeliveryStatus? get messageStatus;
   @override
+  @HiveField(7)
   String? get mediaContentUrl;
+  @override
+  @HiveField(8)
+  bool get fromMe;
   @override
   @JsonKey(ignore: true)
   _$$LastMessageModelImplCopyWith<_$LastMessageModelImpl> get copyWith =>

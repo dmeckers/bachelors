@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
-import 'package:jam/data/attachments/supabase_attachment_service.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 

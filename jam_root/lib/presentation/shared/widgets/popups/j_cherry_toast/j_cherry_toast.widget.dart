@@ -10,7 +10,7 @@ class JCherryToast extends StatefulWidget {
   OverlayEntry? overlayEntry;
 
   JCherryToast({
-    Key? key,
+    super.key,
     this.title,
     required this.icon,
     required this.themeColor,
@@ -43,7 +43,7 @@ class JCherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
-  }) : super(key: key) {
+  }) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
@@ -51,7 +51,7 @@ class JCherryToast extends StatefulWidget {
   }
 
   JCherryToast.success({
-    Key? key,
+    super.key,
     this.title,
     this.action,
     this.actionHandler,
@@ -80,7 +80,7 @@ class JCherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
-  }) : super(key: key) {
+  }) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
@@ -90,7 +90,7 @@ class JCherryToast extends StatefulWidget {
   }
 
   JCherryToast.error({
-    Key? key,
+    super.key,
     this.title,
     this.action,
     this.actionHandler,
@@ -119,7 +119,7 @@ class JCherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
-  }) : super(key: key) {
+  }) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
@@ -129,7 +129,7 @@ class JCherryToast extends StatefulWidget {
   }
 
   JCherryToast.warning({
-    Key? key,
+    super.key,
     this.title,
     this.action,
     this.actionHandler,
@@ -158,7 +158,7 @@ class JCherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
-  }) : super(key: key) {
+  }) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
@@ -168,7 +168,7 @@ class JCherryToast extends StatefulWidget {
   }
 
   JCherryToast.info({
-    Key? key,
+    super.key,
     this.title,
     this.action,
     this.actionHandler,
@@ -197,7 +197,7 @@ class JCherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
-  }) : super(key: key) {
+  }) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',

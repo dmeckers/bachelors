@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
@@ -31,31 +32,6 @@ class ChatQueue with SupabaseUserGetter implements ChatQueueInterface {
         getUserIdOrThrow(),
       ],
     );
-  }
-
-  @override
-  Future<void> queueClearChatMessages({
-    required int chatId,
-    required bool forEveryone,
-  }) {
-    final userId = getUserIdOrThrow();
-
-    const CLEAR_CHAT_FOR_ME_SQL = """
-    INSERT INTO deleted_messages (message_id, user_id)
-    SELECT id, ? FROM messages WHERE chat_id = ?
-    WHERE NOT EXISTS (SELECT 1 FROM deleted_messages WHERE message_id = id AND user_id = ?);
-""";
-
-    const CLEAR_CHAT_FOR_EVERYONE_SQL = """
-    DELETE FROM messages WHERE chat_id = ?;
-  """;
-
-    return forEveryone
-        ? PowerSync.db.execute(CLEAR_CHAT_FOR_EVERYONE_SQL, [chatId])
-        : PowerSync.db.execute(
-            CLEAR_CHAT_FOR_ME_SQL,
-            [userId, chatId, userId],
-          );
   }
 
   @override

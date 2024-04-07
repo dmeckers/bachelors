@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/data/data.dart';
 import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/routing/routing.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
-import 'package:jam_utils/jam_utils.dart';
 
 final _refreshKey = UniqueKey();
 final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
@@ -23,19 +23,19 @@ class JamApp extends StatelessWidget with ProfileRepositoryProviders {
         builder: (context, ref, child) {
           final router = ref.watch(routerProvider);
 
-          ref.listen(
-            connectivityStatusProvider,
-            (_, connection) {
-              ref.invalidate(currentUserProfileProvider);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: connection == ConnectionStatus.isConnected
-                      ? const Text('Connected to internet')
-                      : const Text('No internet connection'),
-                ),
-              );
-            },
-          );
+          // ref.listen(
+          //   connectivityStatusProvider,
+          //   (_, connection) {
+          //     ref.invalidate(currentUserProfileProvider);
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       SnackBar(
+          //         content: connection == ConnectionStatus.isConnected
+          //             ? const Text('Connected to internet')
+          //             : const Text('No internet connection'),
+          //       ),
+          //     );
+          //   },
+          // );
 
           return MaterialApp.router(
             title: 'Jam',

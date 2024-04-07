@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jam/presentation/presentation.dart';
 import 'dart:async';
+
+import 'package:jam/presentation/presentation.dart';
 
 class PickImageBottomSheet extends StatelessWidget {
   const PickImageBottomSheet({super.key, required this.onImagePicked});

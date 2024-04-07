@@ -2,13 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jam/application/application.dart';
-import 'package:jam/data/attachments/local_attachments_service.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
-
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
   const ChatPopupMenu({super.key, required this.chat});
@@ -97,11 +96,11 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
   }
 
   void _handleMuteChat(BuildContext context, WidgetRef ref) {
-    //TODO implement
+    showUnimplementedSnackbar(context);
   }
 
   void _handleSearch(BuildContext context, WidgetRef ref) {
-    //TODO implement
+    showUnimplementedSnackbar(context);
   }
 
   _openClearHistoryDialog(BuildContext context, WidgetRef ref) async {
@@ -133,6 +132,7 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
         confirmMessage: 'Delete',
         //todo rework this
         onConfirm: (forBoth) {
+          showUnimplementedSnackbar(context);
           // ref
           //     .read(messagesControllerProvider)
           //     .deleteChat(chatId: int.tryParse(chatId ?? '1') ?? 1, forBoth: forBoth ?? false);
