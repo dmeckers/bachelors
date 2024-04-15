@@ -55,7 +55,7 @@ class ChatsPage extends HookConsumerWidget
         data: (chats) {
           if (chats.isEmpty) {
             return const Center(
-              child: NotFoundPlaceholder(message: 'No chats found'),
+              child: NotFoundPlaceholder(message: 'No chats found!'),
             );
           }
 
