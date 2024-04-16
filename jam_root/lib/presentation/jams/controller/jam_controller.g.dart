@@ -186,7 +186,7 @@ final getParticipatingJamsProvider = AutoDisposeFutureProvider<Jams>.internal(
 );
 
 typedef GetParticipatingJamsRef = AutoDisposeFutureProviderRef<Jams>;
-String _$updateJamHash() => r'b8eab8894219cd9e472442d79bd3f3078c86c45f';
+String _$updateJamHash() => r'd1fd9f4bbdc7d2e98f9e8d478413bb95f49279fb';
 
 /// See also [updateJam].
 @ProviderFor(updateJam)
@@ -440,7 +440,7 @@ class _CreateJamProviderElement
   JamModel get jam => (origin as CreateJamProvider).jam;
 }
 
-String _$deleteJamHash() => r'ccbfc2f32b2623e987c80d5b259e7b4f78b46035';
+String _$deleteJamHash() => r'2af393dfe817bd23e918a82a64d7292eca132216';
 
 /// See also [deleteJam].
 @ProviderFor(deleteJam)

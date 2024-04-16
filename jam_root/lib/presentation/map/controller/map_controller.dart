@@ -1,3 +1,4 @@
+import 'package:jam/application/application.dart';
 import 'package:location/location.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,13 +13,13 @@ final currentLocationStreamProvider = StreamProvider(
 );
 
 @riverpod
-Future<bool> checkUserHasFriendInvite(
-  CheckUserHasFriendInviteRef ref, {
+Future<UserWithRelationshipStatus> checkRelationShipStatus(
+  CheckRelationShipStatusRef ref, {
   required String userId,
 }) async =>
     await ref
         .read(socialRepositoryProvider)
-        .getAnotherUserForInvite(userId: userId);
+        .getRelationshipStatus(userId: userId);
 
 @riverpod
 Future<bool> sendFriendInvite(

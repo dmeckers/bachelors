@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/application/application.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:rxdart/subjects.dart';
 
 import 'package:jam/config/config.dart';
 
@@ -27,23 +25,25 @@ class ChatsState extends WidgetsBindingObserver with Storer {
       },
     );
 
-    yield* _state.stream.doOnData((chats) {
-      final mapped = chats
-          .map(
-            (e) => e.copyWith(
-              chatEventType: ChatEventType.stopTyping,
-              relatedContact: e.relatedContact.copyWith(
-                isOnline: false,
+    yield* _state.stream.doOnData(
+      (chats) {
+        final mapped = chats
+            .map(
+              (e) => e.copyWith(
+                chatEventType: ChatEventType.stopTyping,
+                relatedContact: e.relatedContact.copyWith(
+                  isOnline: false,
+                ),
               ),
-            ),
-          )
-          .toList();
+            )
+            .toList();
 
-      localDatabase.put(
-        HiveConstants.LOCAL_DB_CHAT_KEY,
-        mapped,
-      );
-    });
+        localDatabase.put(
+          HiveConstants.LOCAL_DB_CHAT_KEY,
+          mapped,
+        );
+      },
+    );
   }
 
   unpinChats({required Chats selectedChats}) {

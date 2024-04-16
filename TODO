@@ -1,11 +1,11 @@
 HIGH PRIORITY
-1.switch on offline works poorly
 2. fix not showing chat in chat page after accept invite and sending message from friends list
 3. clear chat from chats page doesnt work
-4. after accept friends still shows 'send friend invite' in map page
+5.switch on offline works poorly
 
 MID PRIORITY
 1.delete chat
+2.remove description column fetching as it has been deleted
 2.restore account (email link)
 4.finish invnites?
 
@@ -17,6 +17,7 @@ LOW PRIORITY
 1.update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
 
 DONE
+4. after accept friends still shows 'send friend invite' in map page DONE
 4.show jam icon legend DONE
 3.custom controls on map DONE
 2.insert/remove users from map in realtime DONE

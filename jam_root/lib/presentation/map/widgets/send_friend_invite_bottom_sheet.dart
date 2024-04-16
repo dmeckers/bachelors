@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/application/application.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
@@ -24,10 +25,9 @@ class SendFriendInviteDialog extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userInfo = ref.watch(getUserInfoProvider(userId));
     final userProfile = ref.watch(currentUserProfileProvider);
-    final userIsIvnited = ref.watch(
-      checkUserHasFriendInviteProvider(userId: userId),
+    final otherUserData = ref.watch(
+      checkRelationShipStatusProvider(userId: userId),
     );
 
     final sendingIvnite = useState(false);
@@ -37,36 +37,33 @@ class SendFriendInviteDialog extends HookConsumerWidget
       size: BottomSheetSize.medium,
       children: [
         const SizedBox(height: 10),
-        [userInfo, userProfile, userIsIvnited].when(
+        [userProfile, otherUserData].when(
           data: (data) {
             final dataList = data.toList();
-            final userInfoData = dataList[0] as UserProfileModel;
-            final currentUserProfileData = dataList[1] as UserProfileModel;
-            final userIsIvnitedData = dataList[2] as bool;
+            final currentUserProfileData = dataList.first as UserProfileModel;
+            final otherUser = dataList.last as UserWithRelationshipStatus;
 
             return Column(
               children: [
                 CircleAvatar(
                   radius: 27,
                   backgroundImage: CachedNetworkImageProvider(
-                    userInfoData.avatar ??
+                    otherUser.user.avatar ??
                         ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
                   ),
                 ),
                 Text(
-                  userInfoData.username ?? 'User',
+                  otherUser.user.username ?? 'User',
                   style: context.jText.headlineMedium,
                 ),
                 Text(
-                  userInfoData.profileStatus ?? '',
+                  otherUser.user.profileStatus ?? '',
                   style: context.jText.headlineSmall,
                 ),
                 _buildBody(
-                  userProfile,
                   currentUserProfileData,
-                  userInfoData,
+                  otherUser,
                   context,
-                  userIsIvnitedData,
                   ref,
                   sendingIvnite,
                 ),
@@ -84,43 +81,37 @@ class SendFriendInviteDialog extends HookConsumerWidget
   }
 
   Widget _buildBody(
-      AsyncValue<UserProfileModel> userProfile,
       UserProfileModel currentUserProfileData,
-      UserProfileModel userInfoData,
+      UserWithRelationshipStatus otherUser,
       BuildContext context,
-      bool userIsIvnitedData,
       WidgetRef ref,
       ValueNotifier<bool> sendingIvnite) {
-    return userProfile.when(
-      data: (profileData) => Column(
-        children: [
-          !profileData.friends.any((e) => e.id == userId)
-              ? SizedBox(
-                  height: 100,
-                  child: Text(
-                    'Vibes in common: ${currentUserProfileData.vibes.intersection(userInfoData.vibes).map((e) => e.name).join(', ')}',
-                    style: context.jText.bodySmall,
-                  ),
-                )
-              : const SizedBox(),
-          _buildButton(
-            profileData,
-            context,
-            userIsIvnitedData,
-            ref,
-            sendingIvnite,
-          )
-        ],
-      ),
-      error: (_, __) => const SizedBox(height: 100),
-      loading: () => const SizedBox(height: 100),
+    return Column(
+      children: [
+        otherUser.status == RelationshipStatus.notFriends
+            ? SizedBox(
+                height: 100,
+                child: Text(
+                  'Vibes in common: ${currentUserProfileData.vibes.intersection(otherUser.user.vibes).map((e) => e.name).join(', ')}',
+                  style: context.jText.bodySmall,
+                ),
+              )
+            : const SizedBox(),
+        _buildButton(
+          currentUserProfileData,
+          otherUser,
+          context,
+          ref,
+          sendingIvnite,
+        )
+      ],
     );
   }
 
   ButtonWithLoader _buildButton(
     UserProfileModel profileData,
+    UserWithRelationshipStatus otherUser,
     BuildContext context,
-    bool userIsIvnitedData,
     WidgetRef ref,
     ValueNotifier<bool> sendingIvnite,
   ) {
@@ -129,15 +120,17 @@ class SendFriendInviteDialog extends HookConsumerWidget
         context,
         ref,
         profileData,
-        userIsIvnitedData,
+        otherUser,
         sendingIvnite,
       ),
-      text: profileData.friends.where((e) => e.id == userId).firstOrNull != null
-          ? 'Message'
-          : userIsIvnitedData
-              ? 'Invite sent'
-              : 'Send friend invite',
-      color: userIsIvnitedData ? Colors.grey : context.jColor.onPrimary,
+      text: switch (otherUser.status) {
+        RelationshipStatus.notFriends => 'Senf friend invite',
+        RelationshipStatus.friends => 'Message',
+        RelationshipStatus.friendRequestSent => 'Invite sent',
+      },
+      color: otherUser.status == RelationshipStatus.friendRequestSent
+          ? Colors.grey
+          : context.jColor.onPrimary,
       textStyle: context.jText.bodySmall,
       size: const Size(200, 50),
     );
@@ -147,22 +140,20 @@ class SendFriendInviteDialog extends HookConsumerWidget
     BuildContext context,
     WidgetRef ref,
     UserProfileModel profileData,
-    bool userIsIvnitedData,
+    UserWithRelationshipStatus otherUser,
     ValueNotifier<bool> sendingIvnite,
   ) {
-    final friend = profileData.friends.where((e) => e.id == userId).firstOrNull;
-    final isFriend = friend != null;
-    if (isFriend) {
+    if (otherUser.status == RelationshipStatus.friendRequestSent) return;
+
+    if (otherUser.status == RelationshipStatus.friends) {
       return context.pushNamed(
         ChatRoutes.chat.name,
         pathParameters: {
-          'chatId': friend.rootChatId.toString(),
+          'chatId': otherUser.user.rootChatId.toString(),
         },
-        extra: friend,
+        extra: otherUser.user,
       );
     }
-
-    if (userIsIvnitedData) return null;
 
     final future = ref.read(
       sendFriendInviteProvider(userId: userId).future,

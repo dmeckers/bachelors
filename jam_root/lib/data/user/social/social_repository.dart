@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/application/application.dart';
@@ -51,19 +52,28 @@ final class SocialRepository
   }
 
   @override
-  Future<bool> getAnotherUserForInvite({required String userId}) async {
-    if (!(await isOnline(_ref))) {
-      return await _ref
-          .read(powerSyncSocialServiceProvider)
-          .checkInviteSent(userId: userId);
-    }
+  Future<UserWithRelationshipStatus> getRelationshipStatus({
+    required String userId,
+  }) async {
+    // if (!(await isOnline(_ref))) {
+    //   return await _ref
+    //       .read(powerSyncSocialServiceProvider)
+    //       .checkInviteSent(userId: userId);
+    // }
 
     final response = await supabase.rpc(CHECK_USER_HAS_INVITE_RPC, params: {
-      'userid': userId,
-      'currentuserid': getUserIdOrThrow(),
+      'user_id': userId,
+      'current_user_id': getUserIdOrThrow(),
     }) as Dynamics;
 
-    return (response.first as Json)['has_invite'];
+    debugPrint(response.toString());
+
+    return (
+      status: RelationshipStatus.fromString(
+        response.first['relationship_status'],
+      ),
+      user: UserProfileModel.fromJson(response.first['profile'])
+    );
   }
 
   @override

@@ -6,8 +6,8 @@ part of 'map_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$checkUserHasFriendInviteHash() =>
-    r'2fe947fb20c245dadb431959a6ff4359a10a7709';
+String _$checkRelationShipStatusHash() =>
+    r'adde4a24911c70df419c5524e297ac262ad467de';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,27 +30,28 @@ class _SystemHash {
   }
 }
 
-/// See also [checkUserHasFriendInvite].
-@ProviderFor(checkUserHasFriendInvite)
-const checkUserHasFriendInviteProvider = CheckUserHasFriendInviteFamily();
+/// See also [checkRelationShipStatus].
+@ProviderFor(checkRelationShipStatus)
+const checkRelationShipStatusProvider = CheckRelationShipStatusFamily();
 
-/// See also [checkUserHasFriendInvite].
-class CheckUserHasFriendInviteFamily extends Family<AsyncValue<bool>> {
-  /// See also [checkUserHasFriendInvite].
-  const CheckUserHasFriendInviteFamily();
+/// See also [checkRelationShipStatus].
+class CheckRelationShipStatusFamily
+    extends Family<AsyncValue<UserWithRelationshipStatus>> {
+  /// See also [checkRelationShipStatus].
+  const CheckRelationShipStatusFamily();
 
-  /// See also [checkUserHasFriendInvite].
-  CheckUserHasFriendInviteProvider call({
+  /// See also [checkRelationShipStatus].
+  CheckRelationShipStatusProvider call({
     required String userId,
   }) {
-    return CheckUserHasFriendInviteProvider(
+    return CheckRelationShipStatusProvider(
       userId: userId,
     );
   }
 
   @override
-  CheckUserHasFriendInviteProvider getProviderOverride(
-    covariant CheckUserHasFriendInviteProvider provider,
+  CheckRelationShipStatusProvider getProviderOverride(
+    covariant CheckRelationShipStatusProvider provider,
   ) {
     return call(
       userId: provider.userId,
@@ -69,32 +70,33 @@ class CheckUserHasFriendInviteFamily extends Family<AsyncValue<bool>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'checkUserHasFriendInviteProvider';
+  String? get name => r'checkRelationShipStatusProvider';
 }
 
-/// See also [checkUserHasFriendInvite].
-class CheckUserHasFriendInviteProvider extends AutoDisposeFutureProvider<bool> {
-  /// See also [checkUserHasFriendInvite].
-  CheckUserHasFriendInviteProvider({
+/// See also [checkRelationShipStatus].
+class CheckRelationShipStatusProvider
+    extends AutoDisposeFutureProvider<UserWithRelationshipStatus> {
+  /// See also [checkRelationShipStatus].
+  CheckRelationShipStatusProvider({
     required String userId,
   }) : this._internal(
-          (ref) => checkUserHasFriendInvite(
-            ref as CheckUserHasFriendInviteRef,
+          (ref) => checkRelationShipStatus(
+            ref as CheckRelationShipStatusRef,
             userId: userId,
           ),
-          from: checkUserHasFriendInviteProvider,
-          name: r'checkUserHasFriendInviteProvider',
+          from: checkRelationShipStatusProvider,
+          name: r'checkRelationShipStatusProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$checkUserHasFriendInviteHash,
-          dependencies: CheckUserHasFriendInviteFamily._dependencies,
+                  : _$checkRelationShipStatusHash,
+          dependencies: CheckRelationShipStatusFamily._dependencies,
           allTransitiveDependencies:
-              CheckUserHasFriendInviteFamily._allTransitiveDependencies,
+              CheckRelationShipStatusFamily._allTransitiveDependencies,
           userId: userId,
         );
 
-  CheckUserHasFriendInviteProvider._internal(
+  CheckRelationShipStatusProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -108,12 +110,14 @@ class CheckUserHasFriendInviteProvider extends AutoDisposeFutureProvider<bool> {
 
   @override
   Override overrideWith(
-    FutureOr<bool> Function(CheckUserHasFriendInviteRef provider) create,
+    FutureOr<UserWithRelationshipStatus> Function(
+            CheckRelationShipStatusRef provider)
+        create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: CheckUserHasFriendInviteProvider._internal(
-        (ref) => create(ref as CheckUserHasFriendInviteRef),
+      override: CheckRelationShipStatusProvider._internal(
+        (ref) => create(ref as CheckRelationShipStatusRef),
         from: from,
         name: null,
         dependencies: null,
@@ -125,13 +129,13 @@ class CheckUserHasFriendInviteProvider extends AutoDisposeFutureProvider<bool> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<bool> createElement() {
-    return _CheckUserHasFriendInviteProviderElement(this);
+  AutoDisposeFutureProviderElement<UserWithRelationshipStatus> createElement() {
+    return _CheckRelationShipStatusProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CheckUserHasFriendInviteProvider && other.userId == userId;
+    return other is CheckRelationShipStatusProvider && other.userId == userId;
   }
 
   @override
@@ -143,18 +147,19 @@ class CheckUserHasFriendInviteProvider extends AutoDisposeFutureProvider<bool> {
   }
 }
 
-mixin CheckUserHasFriendInviteRef on AutoDisposeFutureProviderRef<bool> {
+mixin CheckRelationShipStatusRef
+    on AutoDisposeFutureProviderRef<UserWithRelationshipStatus> {
   /// The parameter `userId` of this provider.
   String get userId;
 }
 
-class _CheckUserHasFriendInviteProviderElement
-    extends AutoDisposeFutureProviderElement<bool>
-    with CheckUserHasFriendInviteRef {
-  _CheckUserHasFriendInviteProviderElement(super.provider);
+class _CheckRelationShipStatusProviderElement
+    extends AutoDisposeFutureProviderElement<UserWithRelationshipStatus>
+    with CheckRelationShipStatusRef {
+  _CheckRelationShipStatusProviderElement(super.provider);
 
   @override
-  String get userId => (origin as CheckUserHasFriendInviteProvider).userId;
+  String get userId => (origin as CheckRelationShipStatusProvider).userId;
 }
 
 String _$sendFriendInviteHash() => r'59a6a36ad5ed6b061e901d0877b7d7ba37b89019';

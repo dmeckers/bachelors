@@ -31,11 +31,6 @@ class ChatRealtimeService
   Stream<Chats> get$() async* {
     final cahced = localDatabase.get('chats') as List<dynamic>?;
 
-    // chatControllers.forEach((key, value) {
-    //     value.drain()
-
-    // })
-
     yield cahced?.cast<ChatModel>() ?? [];
 
     final data = await repository.getChats();
