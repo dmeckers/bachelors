@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:jam/application/application.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
-class UserState extends WidgetsBindingObserver with Storer {
+class UserState with Storer {
   final _state = BehaviorSubject<UserProfileModel>();
 
   UserState({required this.userRepo, required this.vibesRepo});
@@ -17,24 +16,31 @@ class UserState extends WidgetsBindingObserver with Storer {
   final VibesRepositoryInterface vibesRepo;
 
   Stream<UserProfileModel> user$() async* {
+    final cached = get<UserProfileModel>();
+    if (cached != null) {
+      _state.value = cached;
+      yield cached;
+    }
+
     final profile = await userRepo.getCurrentUserProfile();
-    refresh<UserProfileModel>(profile);
+
     _state.value = profile;
-    yield* _state.stream.asBroadcastStream();
+
+    yield* _state.stream
+        .doOnData((event) => refresh<UserProfileModel>(profile))
+        .asBroadcastStream();
   }
 
   void updateUserName({required String username}) {
     final profile = _state.value.copyWith(username: username);
     _state.value = profile;
     userRepo.updateUserName(username: username);
-    refresh<UserProfileModel>(profile);
   }
 
   void updateProfileStatus({required String status}) {
     final profile = _state.value.copyWith(profileStatus: status);
     _state.value = profile;
     userRepo.updateProfileStatus(status: status);
-    refresh<UserProfileModel>(profile);
   }
 
   Future<void> addProfilePhoto({required File image}) async {
@@ -46,14 +52,12 @@ class UserState extends WidgetsBindingObserver with Storer {
     );
 
     _state.value = profile;
-    refresh<UserProfileModel>(profile);
   }
 
   void updateVibes({required List<VibeModel> vibes}) {
     final profile = _state.value.copyWith(vibes: vibes);
     _state.value = profile;
     vibesRepo.updateVibes(vibes: vibes);
-    refresh<UserProfileModel>(profile);
   }
 
   void deleteProfilePhoto({required String photoId}) {
@@ -69,7 +73,6 @@ class UserState extends WidgetsBindingObserver with Storer {
     );
 
     _state.value = profile;
-    refresh<UserProfileModel>(profile);
 
     userRepo.images.deleteProfilePhoto(photoId: photoId);
   }
@@ -77,16 +80,7 @@ class UserState extends WidgetsBindingObserver with Storer {
   void setMainAvatar(String? fileName) {
     final profile = _state.value.copyWith(avatar: fileName);
     _state.value = profile;
-    refresh<UserProfileModel>(profile);
     userRepo.images.setMainAvatar(fileName);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.hidden ||
-        state == AppLifecycleState.detached) {
-      store<UserProfileModel>(_state.value);
-    }
   }
 }
 
@@ -103,11 +97,5 @@ final userStateProvider = Provider<UserState>(
 );
 
 final user$ = StreamProvider.autoDispose(
-  (ref) {
-    final userState = ref.read(userStateProvider);
-
-    WidgetsBinding.instance.addObserver(userState);
-
-    return userState.user$();
-  },
+  (ref) => ref.read(userStateProvider).user$(),
 );

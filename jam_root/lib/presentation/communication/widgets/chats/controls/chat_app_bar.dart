@@ -32,7 +32,7 @@ class ChatAppBar extends ConsumerWidget
     return ref.watch(chatStream).maybeWhen(
           data: (chats) => _buildBar(
             context,
-            chats.firstWhere((c) => c.id == chat.id),
+            chats.where((c) => c.id == chat.id).firstOrNull ?? chat,
             ref,
           ),
           orElse: () => _buildBar(context, chat, ref),

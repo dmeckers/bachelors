@@ -7,3 +7,6 @@ abstract class ChatRealtimeInterface {
 
   Stream<List<ChatModel>> get$();
 }
+
+abstract class SingleChatEventServiceInterface
+    implements NoParameterEventServiceInterface<ChatEventType, ChatEvent> {}

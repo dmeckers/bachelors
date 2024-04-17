@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -48,7 +49,14 @@ class SupabaseServices {
                 .read(profileRepositoryProvidersProvider)
                 .userProfileRepository;
 
-            ref.read(userRepo).getCurrentUserProfile();
+            ref.read(userRepo).getCurrentUserProfile().then(
+              (user) {
+                localDatabase.put(
+                  HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
+                  user,
+                );
+              },
+            );
 
             await initNotifications();
             ref.dispose();

@@ -32,34 +32,7 @@ final class UserProfileRepository
 
   @override
   Future<UserProfileModel> getCurrentUserProfile() async {
-    final cache = localDatabase.get(HiveConstants.LOCAL_DB_USER_PROFILE_KEY);
-    if (cache != null) return cache;
-
-    final userId = getUserIdOrThrow();
-    UserProfileModel? profile;
-
-    if (!(await utils.isOnline(_ref))) {
-      profile = await _ref
-          .read(powersyncUserProfileServiceProvider)
-          .getUserProfileById(userId: userId);
-    } else {
-      final response = await supabase.rpc(
-        GET_USER_FULL_RPC,
-        params: {'user_id': userId},
-      ) as Dynamics;
-
-      final rawData = response.first['data'] as Json;
-      final data = (rawData['user_info'] as Json)
-        ..flatten()
-        ..['vibes'] = rawData['vibes']
-        ..['friends'] = rawData['friends'];
-
-      profile = UserProfileModel.fromJson(data);
-    }
-
-    return profile.copyWith(
-      photoUrls: await images.getUserAvatars(),
-    );
+    return getUserProfileById(userId: getUserIdOrThrow());
   }
 
   @override

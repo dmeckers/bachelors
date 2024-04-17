@@ -21,8 +21,9 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
           children: [
             ConstrainedBox(
               constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.8),
-              child: ref.watch(chatStream).maybeWhen(
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+              ),
+              child: ref.watch(getFriendsProvider).maybeWhen(
                     data: (data) => data.isEmpty
                         ? const NotFoundPlaceholder(message: 'No friends found')
                         : ListView.separated(
@@ -48,43 +49,41 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
 
   ShakesOnNoLongPress _buildFriendTile(
     BuildContext context,
-    ChatModel chat,
+    UserProfileModel user,
   ) {
-    final user = chat.relatedContact;
     return ShakesOnNoLongPress(
       child: ListTile(
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        onTap: () => _navigateToChat(context, chat),
+        onTap: () => context.pushNamed(
+          ChatRoutes.chat.name,
+          pathParameters: {
+            ChatRoutes.chat.pathParameter!: user.rootChatId!.toString()
+          },
+          extra: ChatModel(id: user.rootChatId!, relatedContact: user),
+        ),
         tileColor: context.jColor.secondaryContainer,
-        title: _buildTitle(user, context),
-        subtitle: _buildSubtitle(user, context),
-        leading: _buildTileLeading(user),
+        title: Text(
+          user.username ?? 'User',
+          style: context.jText.bodyMedium?.copyWith(
+            color: ColorHelper.colorContrast(context.jColor.secondaryContainer),
+          ),
+        ),
+        subtitle: user.profileStatus != null
+            ? Text(
+                user.profileStatus ?? '',
+                style: context.jText.headlineSmall,
+              )
+            : null,
+        leading: HeroAvatar(
+          isPersonal: false,
+          profile: user,
+          radius: 23,
+        ),
         trailing: _buildTileTrailing(user, context),
       ),
     );
   }
-
-  Text _buildTitle(UserProfileModel user, BuildContext context) => Text(
-        user.username ?? 'User',
-        style: context.jText.bodyMedium?.copyWith(
-          color: ColorHelper.colorContrast(context.jColor.secondaryContainer),
-        ),
-      );
-
-  Text? _buildSubtitle(UserProfileModel user, BuildContext context) =>
-      user.profileStatus != null
-          ? Text(
-              user.profileStatus ?? '',
-              style: context.jText.headlineSmall,
-            )
-          : null;
-
-  HeroAvatar _buildTileLeading(UserProfileModel user) => HeroAvatar(
-        isPersonal: false,
-        profile: user,
-        radius: 23,
-      );
 
   SizedBox _buildTileTrailing(UserProfileModel user, BuildContext context) =>
       SizedBox(
@@ -103,11 +102,5 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
             ),
           ),
         ),
-      );
-
-  _navigateToChat(BuildContext context, ChatModel chat) => context.pushNamed(
-        ChatRoutes.chat.name,
-        pathParameters: {ChatRoutes.chat.pathParameter!: chat.id.toString()},
-        extra: chat,
       );
 }

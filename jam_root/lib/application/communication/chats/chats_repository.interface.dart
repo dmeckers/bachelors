@@ -6,6 +6,7 @@ abstract class ChatRepositoryInterface {
   Future<void> unarchiveChats({required List<ChatModel> selectedChats});
   Future<void> pinChats({required List<ChatModel> selectedChats});
   Future<List<ChatModel>> getChats();
+  Future<ChatModel> getChatById({required int chatId});
   Future<void> unpinChats({required List<ChatModel> selectedChats});
   // abstract final ChatRealtimeInterface realtime;
   // Future<void> muteChats({required List<ChatModel> selectedChats});

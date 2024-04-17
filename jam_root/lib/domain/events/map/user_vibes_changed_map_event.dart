@@ -23,7 +23,7 @@ class UserVibesChangedMapEvent implements MapEvent {
   final List<VibeModel> vibes;
 
   @override
-  String get eventName => RealTime.USER_UPDATED_VIBES_MAP_EVENT;
+  String get eventName => MapRealTime.USER_UPDATED_VIBES_MAP_EVENT;
 
   @override
   Map<String, dynamic>? get payload => {

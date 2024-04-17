@@ -109,6 +109,9 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
           _ProfileJsonTransformer.readChatId(json, 'root_chat_id') as int?,
       publicKey: json['public_key'] as String?,
       lastActiveAt: DateTime.parse(json['last_active_at'] as String),
+      isChatHidden:
+          _ProfileJsonTransformer.readIsChatHidden(json, 'is_chat_hidden')
+              as bool?,
     );
 
 Map<String, dynamic> _$$UserProfileModelImplToJson(

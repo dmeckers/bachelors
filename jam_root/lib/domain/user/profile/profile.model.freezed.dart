@@ -110,6 +110,17 @@ mixin _$UserProfileModel {
   @HiveField(14)
   DateTime get lastActiveAt => throw _privateConstructorUsedError;
 
+  ///
+  /// Utility field for events
+  /// @see jam_root/lib/data/realtime/communication/chats_realtime_service.dart
+  /// @see jam_root/lib/presentation/communication/widgets/chats/input_bar/send_button/controller.dart
+  ///
+  @JsonKey(
+      readValue: _ProfileJsonTransformer.readIsChatHidden,
+      includeIfNull: false,
+      includeToJson: false)
+  bool? get isChatHidden => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserProfileModelCopyWith<UserProfileModel> get copyWith =>
@@ -154,7 +165,12 @@ abstract class $UserProfileModelCopyWith<$Res> {
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       int? rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) String? publicKey,
-      @HiveField(14) DateTime lastActiveAt});
+      @HiveField(14) DateTime lastActiveAt,
+      @JsonKey(
+          readValue: _ProfileJsonTransformer.readIsChatHidden,
+          includeIfNull: false,
+          includeToJson: false)
+      bool? isChatHidden});
 }
 
 /// @nodoc
@@ -186,6 +202,7 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
     Object? rootChatId = freezed,
     Object? publicKey = freezed,
     Object? lastActiveAt = null,
+    Object? isChatHidden = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -252,6 +269,10 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.lastActiveAt
           : lastActiveAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      isChatHidden: freezed == isChatHidden
+          ? _value.isChatHidden
+          : isChatHidden // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -296,7 +317,12 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       int? rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) String? publicKey,
-      @HiveField(14) DateTime lastActiveAt});
+      @HiveField(14) DateTime lastActiveAt,
+      @JsonKey(
+          readValue: _ProfileJsonTransformer.readIsChatHidden,
+          includeIfNull: false,
+          includeToJson: false)
+      bool? isChatHidden});
 }
 
 /// @nodoc
@@ -326,6 +352,7 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
     Object? rootChatId = freezed,
     Object? publicKey = freezed,
     Object? lastActiveAt = null,
+    Object? isChatHidden = freezed,
   }) {
     return _then(_$UserProfileModelImpl(
       id: null == id
@@ -392,6 +419,10 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.lastActiveAt
           : lastActiveAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      isChatHidden: freezed == isChatHidden
+          ? _value.isChatHidden
+          : isChatHidden // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -435,7 +466,12 @@ class _$UserProfileModelImpl extends _UserProfileModel {
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       this.rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) this.publicKey,
-      @HiveField(14) required this.lastActiveAt})
+      @HiveField(14) required this.lastActiveAt,
+      @JsonKey(
+          readValue: _ProfileJsonTransformer.readIsChatHidden,
+          includeIfNull: false,
+          includeToJson: false)
+      this.isChatHidden})
       : _photoUrls = photoUrls,
         _friends = friends,
         _jams = jams,
@@ -605,9 +641,21 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   @HiveField(14)
   final DateTime lastActiveAt;
 
+  ///
+  /// Utility field for events
+  /// @see jam_root/lib/data/realtime/communication/chats_realtime_service.dart
+  /// @see jam_root/lib/presentation/communication/widgets/chats/input_bar/send_button/controller.dart
+  ///
+  @override
+  @JsonKey(
+      readValue: _ProfileJsonTransformer.readIsChatHidden,
+      includeIfNull: false,
+      includeToJson: false)
+  final bool? isChatHidden;
+
   @override
   String toString() {
-    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt)';
+    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt, isChatHidden: $isChatHidden)';
   }
 
   @override
@@ -639,7 +687,9 @@ class _$UserProfileModelImpl extends _UserProfileModel {
             (identical(other.publicKey, publicKey) ||
                 other.publicKey == publicKey) &&
             (identical(other.lastActiveAt, lastActiveAt) ||
-                other.lastActiveAt == lastActiveAt));
+                other.lastActiveAt == lastActiveAt) &&
+            (identical(other.isChatHidden, isChatHidden) ||
+                other.isChatHidden == isChatHidden));
   }
 
   @JsonKey(ignore: true)
@@ -661,7 +711,8 @@ class _$UserProfileModelImpl extends _UserProfileModel {
       lastSignInAt,
       rootChatId,
       publicKey,
-      lastActiveAt);
+      lastActiveAt,
+      isChatHidden);
 
   @JsonKey(ignore: true)
   @override
@@ -713,8 +764,12 @@ abstract class _UserProfileModel extends UserProfileModel {
           includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
       final int? rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) final String? publicKey,
-      @HiveField(14)
-      required final DateTime lastActiveAt}) = _$UserProfileModelImpl;
+      @HiveField(14) required final DateTime lastActiveAt,
+      @JsonKey(
+          readValue: _ProfileJsonTransformer.readIsChatHidden,
+          includeIfNull: false,
+          includeToJson: false)
+      final bool? isChatHidden}) = _$UserProfileModelImpl;
   const _UserProfileModel._() : super._();
 
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) =
@@ -824,6 +879,18 @@ abstract class _UserProfileModel extends UserProfileModel {
   ///
   @HiveField(14)
   DateTime get lastActiveAt;
+  @override
+
+  ///
+  /// Utility field for events
+  /// @see jam_root/lib/data/realtime/communication/chats_realtime_service.dart
+  /// @see jam_root/lib/presentation/communication/widgets/chats/input_bar/send_button/controller.dart
+  ///
+  @JsonKey(
+      readValue: _ProfileJsonTransformer.readIsChatHidden,
+      includeIfNull: false,
+      includeToJson: false)
+  bool? get isChatHidden;
   @override
   @JsonKey(ignore: true)
   _$$UserProfileModelImplCopyWith<_$UserProfileModelImpl> get copyWith =>

@@ -6,12 +6,12 @@ part of 'communication_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getFriendInvitesHash() => r'0fa6ba59c25323f1fc268f2dd745f62f0775deaa';
+String _$getFriendInvitesHash() => r'b2762c5176ffedb02aba941da6a6d8bbbbb4d886';
 
 /// See also [getFriendInvites].
 @ProviderFor(getFriendInvites)
 final getFriendInvitesProvider =
-    AutoDisposeFutureProvider<List<FriendInviteModel>>.internal(
+    AutoDisposeFutureProvider<FriendInvites>.internal(
   getFriendInvites,
   name: r'getFriendInvitesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,8 +21,7 @@ final getFriendInvitesProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GetFriendInvitesRef
-    = AutoDisposeFutureProviderRef<List<FriendInviteModel>>;
+typedef GetFriendInvitesRef = AutoDisposeFutureProviderRef<FriendInvites>;
 String _$acceptFriendInviteHash() =>
     r'ee04cc1fce7244f38393a86b6a8e09e3a9ed7f70';
 
@@ -306,12 +305,12 @@ class _RejectFriendInviteProviderElement
       (origin as RejectFriendInviteProvider).friendInviteId;
 }
 
-String _$getFriendsHash() => r'7d36193e55eb3dd1475e496f8543f581d86f8d08';
+String _$getFriendsHash() => r'3eeee433cf4fdbb618a14b698d78c785537c0a0f';
 
 /// See also [getFriends].
 @ProviderFor(getFriends)
 final getFriendsProvider =
-    AutoDisposeFutureProvider<List<UserProfileModel>>.internal(
+    AutoDisposeStreamProvider<List<UserProfileModel>>.internal(
   getFriends,
   name: r'getFriendsProvider',
   debugGetCreateSourceHash:
@@ -320,6 +319,6 @@ final getFriendsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GetFriendsRef = AutoDisposeFutureProviderRef<List<UserProfileModel>>;
+typedef GetFriendsRef = AutoDisposeStreamProviderRef<List<UserProfileModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -53,7 +53,7 @@ class MapRealtime
         /// JAM MAP EVENTS
         ///
         .onBroadcast(
-          event: RealTime.JAM_CREATED_MAP_EVENT,
+          event: MapRealTime.JAM_CREATED_MAP_EVENT,
           callback: (data) {
             final newJam = JamLocation.fromJson(data);
             final userVibes = get<UserProfileModel>()!.vibes;
@@ -74,7 +74,7 @@ class MapRealtime
           },
         )
         .onBroadcast(
-          event: RealTime.JAM_DELETED_MAP_EVENT,
+          event: MapRealTime.JAM_DELETED_MAP_EVENT,
           callback: (data) {
             if (!_contoller.value.jams.any((j) => j.id == data['jam_id'])) {
               return;
@@ -87,7 +87,7 @@ class MapRealtime
           },
         )
         .onBroadcast(
-          event: RealTime.JAM_UPDATED_MAP_EVENT,
+          event: MapRealTime.JAM_UPDATED_MAP_EVENT,
           callback: (data) {
             if (!_contoller.value.jams.any((j) => j.id == data['jam_id'])) {
               return;
@@ -187,7 +187,7 @@ class MapRealtime
         //   },
         // )
         .onBroadcast(
-          event: RealTime.USER_UPDATED_VIBES_MAP_EVENT,
+          event: MapRealTime.USER_UPDATED_VIBES_MAP_EVENT,
           callback: (data) {
             final userLocation = UserLocation.fromJson(data);
 

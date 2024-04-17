@@ -17,6 +17,9 @@ final class ChatRepository
     this.cache,
   );
 
+  static const GET_CHATS_RPC = 'get_root_personal_chats_with_meta';
+  static const GET_CHAT_RPC = 'get_one_root_chat';
+
   final ProviderRef _ref;
 
   @override
@@ -115,13 +118,21 @@ final class ChatRepository
   @override
   Future<Chats> getChats() async {
     final data = await supabase.rpc(
-      'get_root_personal_chats_with_meta',
-      params: {
-        'user_id': getUserIdOrThrow(),
-      },
+      GET_CHATS_RPC,
+      params: {'user_id': getUserIdOrThrow()},
     ) as Dynamics;
 
     return data.map((e) => ChatModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<ChatModel> getChatById({required int chatId}) async {
+    final response = await supabase.rpc(GET_CHAT_RPC, params: {
+      'user_id': getUserIdOrThrow(),
+      'chat_id': chatId,
+    }) as Dynamics;
+
+    return ChatModel.fromJson(response.first);
   }
 }
 

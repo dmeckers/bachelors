@@ -34,7 +34,7 @@ class UserChangedMapVisibilityMapEvent implements MapEvent {
   final List<VibeModel> vibes;
 
   @override
-  String get eventName => RealTime.USER_CHANGED_MAP_VISIBILITY_MAP_EVENT;
+  String get eventName => MapRealTime.USER_CHANGED_MAP_VISIBILITY_MAP_EVENT;
 
   @override
   Map<String, dynamic>? get payload => {

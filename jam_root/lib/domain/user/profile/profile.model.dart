@@ -104,6 +104,18 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
     /// Last active at
     ///
     @HiveField(14) required DateTime lastActiveAt,
+
+    ///
+    /// Utility field for events
+    /// @see jam_root/lib/data/realtime/communication/chats_realtime_service.dart
+    /// @see jam_root/lib/presentation/communication/widgets/chats/input_bar/send_button/controller.dart
+    ///
+    @JsonKey(
+      readValue: _ProfileJsonTransformer.readIsChatHidden,
+      includeIfNull: false,
+      includeToJson: false,
+    )
+    bool? isChatHidden,
   }) = _UserProfileModel;
 
   const UserProfileModel._();
@@ -122,4 +134,5 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
 
 class _ProfileJsonTransformer {
   static Object? readChatId(json, value) => json['chat_id'];
+  static Object? readIsChatHidden(json, value) => json['to_hide'];
 }

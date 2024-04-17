@@ -21,7 +21,7 @@ class NewJamCreatedEvent implements MapEvent {
   final String? jamName;
 
   @override
-  String get eventName => RealTime.JAM_CREATED_MAP_EVENT;
+  String get eventName => MapRealTime.JAM_CREATED_MAP_EVENT;
 
   @override
   Map<String, dynamic>? get payload => {

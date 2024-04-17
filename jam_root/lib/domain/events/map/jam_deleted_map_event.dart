@@ -1,6 +1,5 @@
 import 'package:jam/config/constants/supabase/supabase.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam_utils/jam_utils.dart';
 
 class JamDeletedMapEvent implements MapEvent {
   const JamDeletedMapEvent({
@@ -23,7 +22,7 @@ class JamDeletedMapEvent implements MapEvent {
   final double longitude;
 
   @override
-  String get eventName => RealTime.JAM_DELETED_MAP_EVENT;
+  String get eventName => MapRealTime.JAM_DELETED_MAP_EVENT;
 
   @override
   Map<String, dynamic>? get payload => {

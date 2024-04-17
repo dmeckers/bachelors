@@ -118,7 +118,6 @@ final class PowerSyncJamQueries {
       SELECT
         vibes.id,
         vibes.name,
-        vibes.description
       FROM jams_vibes
       LEFT JOIN vibes ON jams_vibes.vibe_id = vibes.id
       WHERE jams_vibes.jam_id = ?;

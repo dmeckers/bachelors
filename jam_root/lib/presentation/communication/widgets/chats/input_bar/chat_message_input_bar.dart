@@ -8,6 +8,7 @@ import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
+//TODO reduce logic
 class MessageInputBar extends HookConsumerWidget
     with ChattingProviders, ProfileRepositoryProviders, SupabaseUserGetter {
   const MessageInputBar({
@@ -103,7 +104,7 @@ class MessageInputBar extends HookConsumerWidget
 
     // fire typing event
     if (!isTyping.value) {
-      ref.read(chatsEventsProvider).fireEvent(
+      ref.read(chatsEventsProvider(chatId)).fireEvent(
             UserTypingInChatEvent(
               chatId,
               getUserIdOrThrow(),
@@ -117,7 +118,7 @@ class MessageInputBar extends HookConsumerWidget
     debouncer(
       () {
         isTyping.value = false;
-        ref.read(chatsEventsProvider).fireEvent(
+        ref.read(chatsEventsProvider(chatId)).fireEvent(
               UserStopsTypingInChatEvent(
                 chatId,
                 getUserIdOrThrow(),

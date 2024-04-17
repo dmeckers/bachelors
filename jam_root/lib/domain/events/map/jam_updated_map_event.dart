@@ -21,7 +21,7 @@ class JamUpdatedEvent implements MapEvent {
   final String? jamName;
 
   @override
-  String get eventName => RealTime.JAM_UPDATED_MAP_EVENT;
+  String get eventName => MapRealTime.JAM_UPDATED_MAP_EVENT;
 
   @override
   Map<String, dynamic>? get payload => {

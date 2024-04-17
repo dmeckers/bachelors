@@ -9,7 +9,7 @@ class UserTypingInChatEvent implements ChatEvent {
   final String userId;
 
   @override
-  final String eventName = RealTime.USER_TYPING_EVENT;
+  final String eventName = ChatRealTime.USER_TYPING_EVENT;
 
   @override
   Map<String, dynamic> get payload => {

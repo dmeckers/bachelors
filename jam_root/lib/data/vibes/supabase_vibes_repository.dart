@@ -42,7 +42,7 @@ final class SupabaseVibesRepository extends VibesRepositoryInterface
   Future<Vibes> getVibesByUserId({required String userId}) async {
     final result = await supabase
         .from('users_vibes')
-        .select("id ,vibes( id, name, description, icon_url)")
+        .select("id ,vibes( id, name, icon_url)")
         .eq('user_id', userId);
 
     final vibes = result.map((e) => e['vibes']).toList();
