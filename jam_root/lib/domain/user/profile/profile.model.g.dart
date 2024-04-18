@@ -105,8 +105,7 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
       lastSignInAt: json['last_sign_in_at'] == null
           ? null
           : DateTime.parse(json['last_sign_in_at'] as String),
-      rootChatId:
-          _ProfileJsonTransformer.readChatId(json, 'root_chat_id') as int?,
+      rootChatId: json['root_chat_id'] as int?,
       publicKey: json['public_key'] as String?,
       lastActiveAt: DateTime.parse(json['last_active_at'] as String),
       isChatHidden:

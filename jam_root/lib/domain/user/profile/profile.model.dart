@@ -91,7 +91,7 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
     @HiveField(12)
     @JsonKey(
       includeToJson: false,
-      readValue: _ProfileJsonTransformer.readChatId,
+      // readValue: _ProfileJsonTransformer.readChatId,
     )
     int? rootChatId,
 
@@ -133,6 +133,6 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
 }
 
 class _ProfileJsonTransformer {
-  static Object? readChatId(json, value) => json['chat_id'];
+  // static Object? readChatId(json, value) => json['root_chat_id'];
   static Object? readIsChatHidden(json, value) => json['to_hide'];
 }

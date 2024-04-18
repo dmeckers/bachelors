@@ -13,7 +13,7 @@ final Map<int, RealtimeChannel> sockets = {};
 
 class ChatRealtimeService
     with SupabaseUserGetter
-    implements ChatRealtimeInterface, FiresEvents<ChatEvent> {
+    implements ChatRealtimeInterface {
   const ChatRealtimeService({required this.repository});
 
   @override
@@ -37,8 +37,10 @@ class ChatRealtimeService
 
     yield* CombineLatestStream.list(chatControllers.values.map((e) => e.stream))
         .map(
-          (chats) =>
-              chats.where((chat) => chat != null).toList().cast<ChatModel>(),
+          (chats) => chats
+              .where((chat) => chat != null && chat.toHide == false)
+              .toList()
+              .cast<ChatModel>(),
         )
         .cast<Chats>()
         .asBroadcastStream();
@@ -55,15 +57,7 @@ class ChatRealtimeService
           callback: (payload) async {
             final chatId = payload['chat_id'];
             if (chatControllers[chatId] != null) return;
-
-            /// fetch chat /w messages
-            final chat = await repository.getChatById(chatId: chatId);
-
-            /// add to the list
-            chatControllers[chatId] = BehaviorSubject<ChatModel>.seeded(chat);
-
-            /// save socket connection
-            _subscribeChatAndStoreSocket(chatId, chat.relatedContact.id);
+            pushChatAndSubscribe(chatId);
           },
         )
         .onBroadcast(
@@ -71,10 +65,6 @@ class ChatRealtimeService
           callback: (payload) {
             final chatId = payload['chat_id'];
             if (chatControllers[chatId] == null) return;
-
-            chatControllers[chatId]!.value = null;
-            chatControllers[chatId]!.close();
-            sockets[chatId]!.unsubscribe();
           },
         )
         .subscribe();
@@ -84,7 +74,7 @@ class ChatRealtimeService
   /// Subscription to chat events
   ///
   _subscribeChatAndStoreSocket(int chatId, String userId) {
-    supabase
+    sockets[chatId] = supabase
         .channel('chat-$chatId')
 
         ///
@@ -233,6 +223,39 @@ class ChatRealtimeService
       event: event.eventName,
       payload: event.payload,
     );
+  }
+
+  @override
+  Future<void> pushChatAndSubscribe(int chatId) async {
+    /// fetch chat /w messages
+    final chat = await repository.getChatById(chatId: chatId);
+
+    /// add to the list
+    chatControllers[chatId] = BehaviorSubject<ChatModel>.seeded(chat);
+
+    /// save socket connection
+    _subscribeChatAndStoreSocket(chatId, chat.relatedContact.id);
+  }
+
+  @override
+  void removeChatAndUnsubscribe(int chatId) {
+    ///
+    /// First pass to stream null to all
+    /// listeners to remove the chat from lists
+    ///
+    chatControllers[chatId]!.value = null;
+
+    ///
+    /// Unsub and close to avoid memory leaks
+    ///
+    sockets[chatId]!.unsubscribe();
+    chatControllers[chatId]!.close();
+
+    ///
+    /// Clear map key to be sure
+    /// nothing is left
+    ///
+    chatControllers.remove(chatId);
   }
 }
 

@@ -29,10 +29,10 @@ class ChatAppBar extends ConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(chatStream).maybeWhen(
-          data: (chats) => _buildBar(
+    return ref.watch(chatEvents$(chat.id)).maybeWhen(
+          data: (event) => _buildBar(
             context,
-            chats.where((c) => c.id == chat.id).firstOrNull ?? chat,
+            chat.copyWith(chatEventType: event),
             ref,
           ),
           orElse: () => _buildBar(context, chat, ref),

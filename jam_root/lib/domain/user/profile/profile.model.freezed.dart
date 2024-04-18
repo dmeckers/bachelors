@@ -94,7 +94,7 @@ mixin _$UserProfileModel {
   /// chat id linked to interlocutor
   ///
   @HiveField(12)
-  @JsonKey(includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
+  @JsonKey(includeToJson: false)
   int? get rootChatId => throw _privateConstructorUsedError;
 
   ///
@@ -160,10 +160,7 @@ abstract class $UserProfileModelCopyWith<$Res> {
       @HiveField(9) @JsonKey(includeToJson: false) List<VibeModel> vibes,
       @HiveField(10) String? avatar,
       @HiveField(11) @JsonKey(includeToJson: false) DateTime? lastSignInAt,
-      @HiveField(12)
-      @JsonKey(
-          includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
-      int? rootChatId,
+      @HiveField(12) @JsonKey(includeToJson: false) int? rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) String? publicKey,
       @HiveField(14) DateTime lastActiveAt,
       @JsonKey(
@@ -312,10 +309,7 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
       @HiveField(9) @JsonKey(includeToJson: false) List<VibeModel> vibes,
       @HiveField(10) String? avatar,
       @HiveField(11) @JsonKey(includeToJson: false) DateTime? lastSignInAt,
-      @HiveField(12)
-      @JsonKey(
-          includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
-      int? rootChatId,
+      @HiveField(12) @JsonKey(includeToJson: false) int? rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) String? publicKey,
       @HiveField(14) DateTime lastActiveAt,
       @JsonKey(
@@ -461,10 +455,7 @@ class _$UserProfileModelImpl extends _UserProfileModel {
       final List<VibeModel> vibes = const [],
       @HiveField(10) this.avatar,
       @HiveField(11) @JsonKey(includeToJson: false) this.lastSignInAt,
-      @HiveField(12)
-      @JsonKey(
-          includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
-      this.rootChatId,
+      @HiveField(12) @JsonKey(includeToJson: false) this.rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) this.publicKey,
       @HiveField(14) required this.lastActiveAt,
       @JsonKey(
@@ -623,7 +614,7 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   ///
   @override
   @HiveField(12)
-  @JsonKey(includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
+  @JsonKey(includeToJson: false)
   final int? rootChatId;
 
   ///
@@ -759,10 +750,7 @@ abstract class _UserProfileModel extends UserProfileModel {
       @HiveField(11)
       @JsonKey(includeToJson: false)
       final DateTime? lastSignInAt,
-      @HiveField(12)
-      @JsonKey(
-          includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
-      final int? rootChatId,
+      @HiveField(12) @JsonKey(includeToJson: false) final int? rootChatId,
       @HiveField(13) @JsonKey(includeToJson: false) final String? publicKey,
       @HiveField(14) required final DateTime lastActiveAt,
       @JsonKey(
@@ -862,7 +850,7 @@ abstract class _UserProfileModel extends UserProfileModel {
   /// chat id linked to interlocutor
   ///
   @HiveField(12)
-  @JsonKey(includeToJson: false, readValue: _ProfileJsonTransformer.readChatId)
+  @JsonKey(includeToJson: false)
   int? get rootChatId;
   @override
 

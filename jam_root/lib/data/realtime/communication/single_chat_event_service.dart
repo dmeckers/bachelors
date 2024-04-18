@@ -8,6 +8,12 @@ import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
+RealtimeChannel? _singleChatSocket;
+
+///
+/// Responsible for showing the chat events
+/// e.g. typing, stop typing , sending audio, files, choosing emoji etc
+///
 class SingleChatEventService
     with SupabaseUserGetter
     implements SingleChatEventServiceInterface {
@@ -28,30 +34,31 @@ class SingleChatEventService
 
   @override
   Future<void> fireEvent(ChatEvent event) async {
-    await _socket?.sendBroadcastMessage(
+    await _singleChatSocket?.sendBroadcastMessage(
       event: event.eventName,
       payload: event.payload,
     );
 
-    _pushAndDie = supabase.channel('chat-$chatId').subscribe(
-      (e, _) async {
-        if (e == RealtimeSubscribeStatus.subscribed) {
-          await _pushAndDie!.sendBroadcastMessage(
-            event: event.eventName,
-            payload: event.payload,
-          );
-
-          await _pushAndDie!.unsubscribe();
-        }
-      },
+    await sockets[chatId]!.sendBroadcastMessage(
+      event: event.eventName,
+      payload: event.payload,
     );
+
+    // _pushAndDie = supabase.channel('chat-$chatId').subscribe(
+    //   (e, _) async {
+    //     if (e == RealtimeSubscribeStatus.subscribed) {
+
+    //       await _pushAndDie!.unsubscribe();
+    //     }
+    //   },
+    // );
   }
 
   @override
   Stream<ChatEventType> getEvents$({
     String? channelIdentifier,
   }) async* {
-    _socket = supabase
+    _singleChatSocket = supabase
         .channel('chat-events-$channelIdentifier')
         .onBroadcast(
           event: ChatRealTime.USER_STOP_TYPING_EVENT,
@@ -78,4 +85,11 @@ class SingleChatEventService
 final chatsEventsProvider =
     Provider.family.autoDispose<SingleChatEventServiceInterface, int>(
   (ref, chatId) => SingleChatEventService(chatId: chatId),
+);
+
+final chatEvents$ = StreamProvider.family<ChatEventType, int>(
+  (ref, chatId) {
+    final service = ref.read(chatsEventsProvider(chatId));
+    return service.getEvents$(channelIdentifier: chatId.toString());
+  },
 );
