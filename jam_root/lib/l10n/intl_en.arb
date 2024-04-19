@@ -4,5 +4,6 @@
   "createAccount": "Create account",
   "dontHaveAccount": "Dont have account?",
   "login": "Login",
-  "enterYourEmailAddressAndWeWillSendYouA": "Enter your email address and we will send you a link to reset your password."
+  "enterYourEmailAddressAndWeWillSendYouA": "Enter your email address and we will send you a link to reset your password.",
+  "lastSeenLasttimeseen": "Last seen {last_time_seen}"
 }

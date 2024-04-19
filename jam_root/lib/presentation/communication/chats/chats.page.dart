@@ -24,7 +24,9 @@ class ChatsPage extends HookConsumerWidget
     useEffect(() {
       final chatsListener = ref.listenManual(chatsState$, (previous, next) {});
 
-      return () => chatsListener.close();
+      return () {
+        chatsListener.close();
+      };
     }, []);
 
     _initOnlineStatusObserver(ref);

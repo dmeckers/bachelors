@@ -8,16 +8,21 @@ import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
-final Map<int, BehaviorSubject<ChatModel?>> chatControllers = {};
+final Map<int, BehaviorSubject<ChatModel>> chatControllers = {};
 final Map<int, RealtimeChannel> sockets = {};
 
 class ChatRealtimeService
     with SupabaseUserGetter
     implements ChatRealtimeInterface {
-  const ChatRealtimeService({required this.repository});
+  ChatRealtimeService({required this.repository});
 
   @override
   final ChatRepositoryInterface repository;
+
+  // final _chats = BehaviorSubject<Chats>.seeded([]);
+
+  final _chatStreams = BehaviorSubject<List<Stream<ChatModel>>>.seeded([]);
+  RealtimeChannel? pushAndDie;
 
   @override
   Stream<Chats> get$() async* {
@@ -25,9 +30,9 @@ class ChatRealtimeService
 
     yield cahced?.cast<ChatModel>() ?? [];
 
-    _openRealtimeChatQueue();
-
     final data = await repository.getChats();
+
+    _openRealtimeChatQueue();
 
     for (var element in data) {
       chatControllers[element.id] = BehaviorSubject<ChatModel>.seeded(element);
@@ -35,14 +40,17 @@ class ChatRealtimeService
       _subscribeChatAndStoreSocket(element.id, element.relatedContact.id);
     }
 
-    yield* CombineLatestStream.list(chatControllers.values.map((e) => e.stream))
-        .map(
-          (chats) => chats
-              .where((chat) => chat != null && chat.toHide == false)
-              .toList()
-              .cast<ChatModel>(),
+    _chatStreams.value = chatControllers.values.map((e) => e.stream).toList();
+
+    yield* _chatStreams.stream
+        .scan(
+          (accumulated, value, index) => [...accumulated, ...value],
+          List<Stream<ChatModel>>.empty(growable: true),
         )
-        .cast<Chats>()
+        .switchMap((streams) => CombineLatestStream.list(streams))
+        .map(
+          (chats) => chats.where((chat) => chat.toHide == false).toList(),
+        )
         .asBroadcastStream();
   }
 
@@ -51,7 +59,7 @@ class ChatRealtimeService
   ///
   _openRealtimeChatQueue() {
     sockets[0] = supabase
-        .channel('chats-queue-${getUserIdOrThrow()}')
+        .channel('chats-gates-${getUserIdOrThrow()}')
         .onBroadcast(
           event: ChatRealTime.TRACK_CHAT_EVENT,
           callback: (payload) async {
@@ -101,7 +109,7 @@ class ChatRealtimeService
               return;
             }
             chatControllers[chatId]?.add(
-              chatControllers[chatId]!.value?.copyWith(
+              chatControllers[chatId]!.value.copyWith(
                     relatedContact:
                         UserProfileModel.fromJson(callback.newRecord),
                   ),
@@ -148,7 +156,7 @@ class ChatRealtimeService
           event: ChatRealTime.USER_STOP_TYPING_EVENT,
           callback: (payload) {
             chatControllers[chatId]?.value =
-                chatControllers[chatId]!.value?.copyWith(
+                chatControllers[chatId]!.value.copyWith(
                       chatEventType: ChatEventType.stopTyping,
                     );
           },
@@ -157,7 +165,7 @@ class ChatRealtimeService
           event: ChatRealTime.USER_TYPING_EVENT,
           callback: (payload) {
             chatControllers[chatId]?.value =
-                chatControllers[chatId]!.value?.copyWith(
+                chatControllers[chatId]!.value.copyWith(
                       chatEventType: ChatEventType.typing,
                     );
           },
@@ -170,7 +178,7 @@ class ChatRealtimeService
           event: ChatRealTime.CLEAR_CHAT_HISTORY_EVENT,
           callback: (payload) {
             chatControllers[chatId]?.value =
-                chatControllers[chatId]!.value?.copyWith(
+                chatControllers[chatId]!.value.copyWith(
                       lastMessage: null,
                     );
           },
@@ -189,7 +197,7 @@ class ChatRealtimeService
     }
 
     chatControllers[data['chat_id']]?.value =
-        chatControllers[data['chat_id']]!.value?.copyWith(
+        chatControllers[data['chat_id']]!.value.copyWith(
               lastMessage: LastMessageModel.fromJson(
                 data
                   ..putIfAbsent('message_status', () => 'unread')
@@ -204,7 +212,7 @@ class ChatRealtimeService
   void _handleChatUpdate(PostgresChangePayload payload) {
     final data = payload.newRecord;
 
-    if (data['chat_id'] == null) {
+    if (data['chat_id'] == null || data['user_id'] != getUserIdOrThrow()) {
       return;
     }
 
@@ -219,10 +227,26 @@ class ChatRealtimeService
 
   @override
   Future<void> fireEvent(ChatEvent event) async {
-    await sockets[event.chatId]?.sendBroadcastMessage(
-      event: event.eventName,
-      payload: event.payload,
-    );
+    if (event is TrackChatEvent) {
+      pushAndDie = supabase.channel('chats-gates-${event.userId}').subscribe(
+        (e, _) async {
+          if (e == RealtimeSubscribeStatus.subscribed) {
+            await pushAndDie!.sendBroadcastMessage(
+              event: event.eventName,
+              payload: event.payload,
+            );
+
+            pushAndDie!.unsubscribe();
+          }
+        },
+        const Duration(seconds: 5),
+      );
+    } else {
+      await sockets[event.chatId]?.sendBroadcastMessage(
+        event: event.eventName,
+        payload: event.payload,
+      );
+    }
   }
 
   @override
@@ -232,6 +256,9 @@ class ChatRealtimeService
 
     /// add to the list
     chatControllers[chatId] = BehaviorSubject<ChatModel>.seeded(chat);
+
+    /// update _chatStreams
+    _chatStreams.value = chatControllers.values.map((e) => e.stream).toList();
 
     /// save socket connection
     _subscribeChatAndStoreSocket(chatId, chat.relatedContact.id);
@@ -243,7 +270,7 @@ class ChatRealtimeService
     /// First pass to stream null to all
     /// listeners to remove the chat from lists
     ///
-    chatControllers[chatId]!.value = null;
+    // chatControllers[chatId]!.value = null;
 
     ///
     /// Unsub and close to avoid memory leaks

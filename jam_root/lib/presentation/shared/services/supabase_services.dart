@@ -85,5 +85,6 @@ class SupabaseServices {
   static _logoutHook() async {
     await localDatabase.clear();
     chatControllers.clear();
+    sockets.clear();
   }
 }

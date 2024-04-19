@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
 
 import 'package:jam/config/constants/constants.dart';
+import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -29,15 +31,16 @@ class FriendInvitesPage extends HookConsumerWidget {
               )
             : ListView.separated(
                 separatorBuilder: (ctx, i) => JamDivider(
-                      color: context.jColor.onSecondaryContainer,
-                    ),
+                  color: context.jColor.onSecondaryContainer,
+                ),
                 itemBuilder: (ctx, i) => _buildInviteTile(
-                      context,
-                      invitesList,
-                      ref,
-                      i,
-                    ),
-                itemCount: invitesList.value.length),
+                  context,
+                  invitesList,
+                  ref,
+                  i,
+                ),
+                itemCount: invitesList.value.length,
+              ),
       ),
     );
   }
@@ -112,19 +115,32 @@ class FriendInvitesPage extends HookConsumerWidget {
     ValueNotifier<List<FriendInviteModel>> invites,
     int index,
   ) {
+    final invite = invites.value[index];
+
     final future = ref.read(
       acceptFriendInviteProvider(
-        friendInviteId: invites.value[index].id.toString(),
+        friendInviteId: invite.id.toString(),
       ).future,
     );
 
     future.then(
       (value) {
-        JSnackBar.show(
-          context,
-          description: '${invites.value[index].username} is now your friend',
-          type: SnackbarInfoType.success,
-        );
+        supabase.rpc('get_chat_with_user', params: {
+          'user_id': invite.userId,
+          'current_user_id': supaAuth.currentUser!.id,
+        }).then((chatId) {
+          final chatRealtime = ref.read(chatRealtimeServiceProvider);
+
+          chatRealtime.pushChatAndSubscribe(chatId).then((value) {
+            chatRealtime.fireEvent(TrackChatEvent(chatId, invite.userId));
+          });
+
+          JSnackBar.show(
+            context,
+            description: '${invite.username} is now your friend',
+            type: SnackbarInfoType.success,
+          );
+        });
 
         _removeInvitesFromListAndInvalidateState(invites, index, ref);
       },
@@ -132,9 +148,10 @@ class FriendInvitesPage extends HookConsumerWidget {
   }
 
   _removeInvitesFromListAndInvalidateState(
-      ValueNotifier<List<FriendInviteModel>> invites,
-      int index,
-      WidgetRef ref) {
+    ValueNotifier<List<FriendInviteModel>> invites,
+    int index,
+    WidgetRef ref,
+  ) {
     invites.value = invites.value
         .where((element) => element.id != invites.value[index].id)
         .toList();

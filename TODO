@@ -1,7 +1,8 @@
 HIGH PRIORITY
-2. fix not showing chat in chat page after accept invite and sending message from friends list
-3. clear chat from chats page doesnt work
-5.switch on offline works poorly
+1.fix push notifications
+2.friend invites realtime or smth similar
+
+5. switch on offline works poorly // fuck it
 
 MID PRIORITY
 1.delete chat
@@ -17,9 +18,11 @@ LOW PRIORITY
 1.update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
 
 DONE
+3. clear chat from chats page doesnt work DONE
 4. after accept friends still shows 'send friend invite' in map page DONE
 4.show jam icon legend DONE
 3.custom controls on map DONE
+2. fix not showing chat in chat page after accept invite and sending message from friends list DONE
 2.insert/remove users from map in realtime DONE
 in vibe edit page change route push on pop DONE
 push new jams in realtime (with all conditions) DONE

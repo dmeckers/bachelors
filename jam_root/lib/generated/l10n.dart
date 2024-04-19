@@ -109,6 +109,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Last seen {last_time_seen}`
+  String lastSeenLasttimeseen(Object last_time_seen) {
+    return Intl.message(
+      'Last seen $last_time_seen',
+      name: 'lastSeenLasttimeseen',
+      desc: '',
+      args: [last_time_seen],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

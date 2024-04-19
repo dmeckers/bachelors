@@ -17,6 +17,12 @@ extension IdentifiableListExtension<T extends Identifiable> on List<T> {
     ).toList();
   }
 
+  List<T> excludeById(List<T> other) {
+    return where(
+      (element) => other.any((otherElement) => otherElement.id != element.id),
+    ).toList();
+  }
+
   List<T> replaceIntersected({
     required List<T> toReplaceWith,
     T Function(T el)? tap,

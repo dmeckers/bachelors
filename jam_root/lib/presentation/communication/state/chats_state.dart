@@ -90,6 +90,15 @@ class ChatsState extends WidgetsBindingObserver with Storer {
         .read(chatRepositoryProvider)
         .unarchiveChats(selectedChats: selectedChats);
   }
+
+  deleteChats({required Chats selectedChats, bool forBoth = false}) {
+    _state.value = _state.value.excludeById(selectedChats);
+
+    _ref.read(chatRepositoryProvider).deleteChats(
+          selectedChats: selectedChats,
+          forBoth: forBoth,
+        );
+  }
 }
 
 final chatsStateProvider = Provider<ChatsState>(
