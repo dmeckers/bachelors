@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -41,9 +42,9 @@ class OtherUserProfilePage extends HookConsumerWidget
                     ShakesOnNoLongPress(
                       child: ListTile(
                         leading: const Icon(Icons.person),
-                        title: Text(data.fullName ?? 'No Name'),
+                        title: Text(data.fullName ?? S.of(context).noName),
                         subtitle: Text(
-                          'Name',
+                          S.of(context).name,
                           style: context.jText.headlineSmall,
                         ),
                       ),
@@ -51,9 +52,9 @@ class OtherUserProfilePage extends HookConsumerWidget
                     ShakesOnNoLongPress(
                       child: ListTile(
                         leading: const FaIcon(FontAwesomeIcons.commentDots),
-                        title: Text(data.profileStatus ?? 'No Status'),
+                        title: Text(data.profileStatus ?? S.of(context).noStatus),
                         subtitle: Text(
-                          'Status',
+                          S.of(context).status,
                           style: context.jText.headlineSmall,
                         ),
                       ),
@@ -65,7 +66,7 @@ class OtherUserProfilePage extends HookConsumerWidget
                           data.vibes.map((e) => e.name).join(', '),
                         ),
                         subtitle: Text(
-                          'Vibes',
+                          S.of(context).vibes,
                           style: context.jText.headlineSmall,
                         ),
                       ),

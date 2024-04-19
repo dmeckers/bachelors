@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -27,7 +28,7 @@ class JamLocationPicker extends ConsumerWidget {
         tileColor: context.jTheme.cardColor,
         title: Text(
             coords.isNull
-                ? 'Select location here'
+                ? S.of(context).selectLocationHere
                 : 'Lat: ${coords!.lat}\nLng: ${coords.lon}',
             style: context.jText.bodySmall),
         leading: const Icon(Icons.location_on),

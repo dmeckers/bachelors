@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -69,7 +70,7 @@ class JamPage extends HookConsumerWidget {
                     FontAwesomeIcons.paperPlane,
                     size: 15,
                   ),
-                  child: const Text('Jam invites'),
+                  child: Text(S.of(context).jamInvites),
                 ),
               ),
               Padding(
@@ -80,7 +81,7 @@ class JamPage extends HookConsumerWidget {
                     Icons.add,
                     size: 15,
                   ),
-                  child: const Text('Create jam'),
+                  child: Text(S.of(context).createJam),
                 ),
               )
             ],
@@ -99,9 +100,9 @@ class JamPage extends HookConsumerWidget {
       ],
       bottom: TabBar(
         tabs: [
-          _buildTab(context, 'My jams'),
-          _buildTab(context, 'Upcoming jams'),
-          _buildTab(context, 'Old jams'),
+          _buildTab(context, S.of(context).myJams),
+          _buildTab(context, S.of(context).upcomingJams),
+          _buildTab(context, S.of(context).oldJams),
         ],
       ),
     );

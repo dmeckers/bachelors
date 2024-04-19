@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:jam/config/config.dart';
@@ -36,7 +37,7 @@ class PinnedMessagesTopBar extends HookConsumerWidget with ChattingProviders {
     final pinnedMessageContent =
         pinnedMessages[pinnedMessageIndexNumber].messageType == MessageType.text
             ? pinnedMessages[pinnedMessageIndexNumber].messageText?.crop(50)
-            : 'Media';
+            : S.of(context).media;
 
     return Container(
       height: 65,

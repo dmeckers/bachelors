@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -38,8 +39,8 @@ class JamImagePicker extends ConsumerWidget {
             : null,
         title: Text(
           isImageSelected || (hasBackgrounUrl && !dropBackground)
-              ? 'Changed your mind?'
-              : 'Because you can',
+              ? S.of(context).changedYourMind
+              : S.of(context).becauseYouCan,
           style: context.jText.bodySmall,
         ),
         leading: const Icon(Icons.image),

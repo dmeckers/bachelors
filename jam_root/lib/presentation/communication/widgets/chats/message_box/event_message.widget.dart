@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -24,7 +25,7 @@ class EventMessageBox extends ConsumerWidget with ChattingProviders {
           alignment: Alignment.center,
           color: Colors.black,
           child: Text(
-            message.messageText ?? 'Event',
+            message.messageText ?? S.of(context).event,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 12, color: Colors.white),
           ),

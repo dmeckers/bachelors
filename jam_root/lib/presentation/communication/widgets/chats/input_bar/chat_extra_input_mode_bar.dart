@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -42,14 +43,14 @@ class ChatExtraInputModeBar extends HookConsumerWidget with ChattingProviders {
                 Text(
                   state.inputMode == ChatInputMode.reply
                       ? "Reply to ${state.model?.senderName}"
-                      : 'Editing',
+                      : S.of(context).editing,
                   style: context.jText.headlineSmall,
                 ),
                 const SizedBox(height: 3),
                 Text(
                   state.model?.isTextMessage ?? false
                       ? (state.model?.messageText as String).crop(50)
-                      : 'Media',
+                      : S.of(context).media,
                   style: context.jText.bodySmall?.copyWith(fontSize: 10),
                 )
               ],

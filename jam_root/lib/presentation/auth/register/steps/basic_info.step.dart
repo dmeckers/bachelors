@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/generated/l10n.dart';
 
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -31,7 +32,7 @@ class BasicInfoStep extends HookConsumerWidget {
                 registerModel.confirmPasswordModel.controller!.text ==
                         registerModel.passwordModel.controller!.text
                     ? null
-                    : 'Passwords do not match',
+                    : S.of(context).passwordsDoNotMatch,
           ),
           const SizedBox(height: 20),
         ],

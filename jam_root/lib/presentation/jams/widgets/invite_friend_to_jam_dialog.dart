@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -46,10 +47,10 @@ class InviteFriendToJamDialog extends ConsumerWidget {
                     : _buildNoFriendsPlaceholder(context);
               },
               loading: () => _buildLoader(),
-              error: (error, _) => const Center(
+              error: (error, _) => Center(
                 child: JamErrorBox(
                   errorMessage:
-                      'Whoops! Something went wrong while loading friends',
+                      S.of(context).whoopsWrongWhileLoadingFriends,
                 ),
               ),
             ),
@@ -108,7 +109,7 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
           children: [
             const SizedBox(height: 20),
             Text(
-              'Who to invite to the jam?',
+              S.of(context).whoToInviteToTheJam,
               style: context.jText.bodyMedium?.copyWith(color: fontColor),
             ),
             const SizedBox(height: 20),

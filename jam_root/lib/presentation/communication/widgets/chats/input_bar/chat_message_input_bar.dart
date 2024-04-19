@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -48,7 +49,7 @@ class MessageInputBar extends HookConsumerWidget
     return ChatMesssageInputBarWrapper(
       children: [
         IconButton(
-          onPressed: () => debugPrint('Display stickers'),
+          onPressed: () => debugPrint(S.of(context).displayStickers),
           icon: const Icon(Icons.tag_faces_sharp),
         ),
         _buildBar(stopTypingDebouncer, isTyping, debounced),

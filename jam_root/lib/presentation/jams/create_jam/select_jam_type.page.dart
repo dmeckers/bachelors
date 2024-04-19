@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -17,7 +18,7 @@ class JamTypeSelectPage extends ConsumerWidget {
       child: Column(
         children: [
           Text(
-            'JAM TYPE',
+            S.of(context).jamType,
             textAlign: TextAlign.right,
             style:
                 context.jText.displayMedium?.copyWith(fontFamily: rubickFamily),
@@ -43,16 +44,16 @@ class JamTypeSelectPage extends ConsumerWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text('Instant jam'),
+                        child: Text(S.of(context).instantJam),
                       ),
                       Text(
-                        'Start jamming right now (at least 2 people)',
+                        S.of(context).startJammingNow2People,
                         style: context.jText.headlineMedium,
                       ),
                       Text(
-                        '(Unavailable in this version)',
+                        S.of(context).unavailableInThisVersion,
                         style: context.jText.headlineSmall,
                       ),
                     ],
@@ -82,16 +83,16 @@ class JamTypeSelectPage extends ConsumerWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text('Callout for jam'),
+                        child: Text(S.of(context).calloutForJam),
                       ),
                       Text(
-                        'Let people know you are looking for a jam',
+                        S.of(context).letPeopleKnowYouAreLookingForJam,
                         style: context.jText.headlineMedium,
                       ),
                       Text(
-                        '(Unavailable in this version)',
+                        S.of(context).unavailableInThisVersion,
                         style: context.jText.headlineSmall,
                       ),
                     ],
@@ -130,12 +131,12 @@ class JamTypeSelectPage extends ConsumerWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text('Plan a jam'),
+                        child: Text(S.of(context).planAJam),
                       ),
                       Text(
-                        'Schedule a jam for a future date and time',
+                        S.of(context).scheduleJamForFutureDateTime,
                         style: context.jText.headlineMedium,
                       ),
                     ],

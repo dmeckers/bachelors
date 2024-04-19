@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
@@ -18,7 +19,7 @@ class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
         borderRadius: BorderRadius.zero,
       ),
       title: selectedChats.length == 1
-          ? const Text('Delete chat', style: TextStyle(fontSize: 18))
+          ? Text(S.of(context).deleteChat, style: TextStyle(fontSize: 18))
           : Text('Delete ${selectedChats.length} chats',
               style: const TextStyle(fontSize: 18)),
       content: _buildModalContent(context, selectedChats.length, deleteForBoth),

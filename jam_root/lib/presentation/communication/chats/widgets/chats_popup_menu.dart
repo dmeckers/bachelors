@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 
 enum ChatsPopupMenuActions { friendInvites }
@@ -20,11 +21,11 @@ class ChatsPopupMenu extends HookConsumerWidget with ChattingProviders {
         itemBuilder: (context) => [
               PopupMenuItem(
                 onTap: () => _navigateToFriendListPage(context),
-                child: const Row(
+                child: Row(
                   children: [
                     FaIcon(FontAwesomeIcons.addressBook),
                     SizedBox(width: 10),
-                    Text('Friends'),
+                    Text(S.of(context).friends),
                   ],
                 ),
               ),

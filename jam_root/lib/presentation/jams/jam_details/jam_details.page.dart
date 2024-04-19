@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -49,7 +50,7 @@ class JamDetailsPage extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 100.0),
                 child: Text(
-                  data.name?.jamPostfix() ?? 'Anonymous',
+                  data.name?.jamPostfix() ?? S.of(context).anonymous,
                   textAlign: TextAlign.right,
                   style: context.jText.displayMedium
                       ?.copyWith(fontFamily: rubickFamily),
@@ -60,12 +61,12 @@ class JamDetailsPage extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Driven by: ',
+                    S.of(context).drivenBy,
                     style: context.jText.headlineSmall,
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    data.creator?.fullName ?? 'Anonymous',
+                    data.creator?.fullName ?? S.of(context).anonymous,
                     style: context.jText.headlineSmall,
                   ),
                   const SizedBox(width: 10),
@@ -136,14 +137,14 @@ class JamDetailsPage extends HookConsumerWidget {
         ),
         onPressed: () => context.pushNamed(
           JamRoutes.edit.name,
-          pathParameters: {'jamId': data.id.toString()},
+          pathParameters: {S.of(context).jamid: data.id.toString()},
           extra: data,
         ),
-        child: const Row(
+        child: Row(
           children: [
             Icon(Icons.edit),
             SizedBox(width: 30),
-            Text('Edit Jam'),
+            Text(S.of(context).editJam),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -14,7 +15,7 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Friend list'),
+      appBar: SimpleAppBar(title: S.of(context).friendList),
       backgroundColor: context.jColor.primary,
       body: Center(
         child: Column(
@@ -25,7 +26,7 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
               ),
               child: ref.watch(getFriendsProvider).maybeWhen(
                     data: (data) => data.isEmpty
-                        ? const NotFoundPlaceholder(message: 'No friends found')
+                        ? NotFoundPlaceholder(message: S.of(context).noFriendsFound)
                         : ListView.separated(
                             separatorBuilder: (ctx, i) => JamDivider(
                               color: context.jColor.onSecondaryContainer,

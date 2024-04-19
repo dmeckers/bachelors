@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
 
@@ -22,7 +23,7 @@ class EditJamDetailsPage extends ConsumerWidget {
     final showBackgroundImage = vm.image?.existsSync() ?? false;
 
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Jam details'),
+      appBar: SimpleAppBar(title: S.of(context).jamDetails),
       body: Stack(
         children: [
           AnimatedOpacity(

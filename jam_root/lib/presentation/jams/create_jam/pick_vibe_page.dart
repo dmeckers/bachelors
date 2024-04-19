@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/vibes/powersync_vibes_service.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -18,12 +19,12 @@ class PickVibePage extends HookConsumerWidget {
     return Column(
       children: [
         Text(
-          'DA VIBEZ',
+          S.of(context).daVibez,
           textAlign: TextAlign.right,
           style:
               context.jText.displayMedium?.copyWith(fontFamily: rubickFamily),
         ),
-        const Text('Pick at least one'),
+        Text(S.of(context).pickAtLeastOne),
         const SizedBox(height: 20),
         Center(
           child: vibes.maybeWhen(
@@ -73,7 +74,7 @@ class PickVibePage extends HookConsumerWidget {
                 ],
               ),
             ),
-            orElse: () => const Text('loading'),
+            orElse: () => Text(S.of(context).loading),
           ),
         ),
       ],

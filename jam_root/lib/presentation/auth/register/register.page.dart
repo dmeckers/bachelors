@@ -1,6 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:jam/generated/l10n.dart';
 
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -33,7 +34,7 @@ class RegisterPage extends HookConsumerWidget {
     final isValid = registerModel.validate();
 
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Registration'),
+      appBar: SimpleAppBar(title: S.of(context).registration),
       body: Layout(
         child: Stack(
           children: [
@@ -55,7 +56,7 @@ class RegisterPage extends HookConsumerWidget {
                                 context.jColor.inversePrimary,
                               ),
                             ),
-                            child: const Text('Back'),
+                            child: Text(S.of(context).back),
                           ),
                         ),
                       if (stepperCurrentStepState.value != 2)
@@ -68,7 +69,7 @@ class RegisterPage extends HookConsumerWidget {
                               ),
                             ),
                             onPressed: details.onStepContinue,
-                            child: const Text('Next'),
+                            child: Text(S.of(context).next),
                           ),
                         ),
                       if (stepperCurrentStepState.value == 2)
@@ -83,7 +84,7 @@ class RegisterPage extends HookConsumerWidget {
                                   : const MaterialStatePropertyAll(Colors.grey),
                             ),
                             onPressed: () => handleRegister(ref, registerModel),
-                            child: const Text('Register'),
+                            child: Text(S.of(context).register),
                           ),
                         ),
                     ],
@@ -106,20 +107,20 @@ class RegisterPage extends HookConsumerWidget {
                 steps: [
                   Step(
                     title: Text(
-                        stepperCurrentStepState.value == 0 ? 'Basic info' : '',
+                        stepperCurrentStepState.value == 0 ? S.of(context).basicInfo : '',
                         style: context.jText.bodySmall),
                     content: const BasicInfoStep(),
                   ),
                   Step(
                     title: Text(
-                        stepperCurrentStepState.value == 1 ? 'Vibes info' : '',
+                        stepperCurrentStepState.value == 1 ? S.of(context).vibesInfo : '',
                         style: context.jText.bodySmall),
                     content: const SelectVibe(),
                   ),
                   Step(
                     title: Text(
                       stepperCurrentStepState.value == 2
-                          ? 'License agreements'
+                          ? S.of(context).licenseAgreements
                           : '',
                       style: context.jText.bodySmall,
                     ),

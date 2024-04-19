@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/constants/constants.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -21,11 +22,11 @@ class FriendInvitesPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.jColor.primary,
-      appBar: const SimpleAppBar(title: 'Friend Invites'),
+      appBar: SimpleAppBar(title: S.of(context).friendInvites),
       body: Center(
         child: invitesList.value.isEmpty
-            ? const NotFoundPlaceholder(
-                message: 'No friend invites',
+            ? NotFoundPlaceholder(
+                message: S.of(context).noFriendInvites,
               )
             : ListView.separated(
                 separatorBuilder: (ctx, i) => JamDivider(

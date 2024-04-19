@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class JamInvitesPage extends HookConsumerWidget {
@@ -18,7 +19,7 @@ class JamInvitesPage extends HookConsumerWidget {
     final trash = useState([]);
 
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Jam Invites'),
+      appBar: SimpleAppBar(title: S.of(context).jamInvites),
       body: Center(
         child: FutureBuilder(
           future: ref.read(
@@ -64,7 +65,7 @@ class JamInvitesPage extends HookConsumerWidget {
                                 icon: const Icon(Icons.remove_red_eye_outlined),
                                 onPressed: () => context.pushNamed(
                                   JamRoutes.details.name,
-                                  pathParameters: {'jamId': jam.$1.toString()},
+                                  pathParameters: {S.of(context).jamid: jam.$1.toString()},
                                 ),
                               ),
                               IconButton(
@@ -77,7 +78,7 @@ class JamInvitesPage extends HookConsumerWidget {
 
                                   JSnackBar.show(
                                     context,
-                                    description: 'Jam invite accepted',
+                                    description: S.of(context).jamInviteAccepted,
                                     type: SnackbarInfoType.success,
                                   );
 
@@ -95,7 +96,7 @@ class JamInvitesPage extends HookConsumerWidget {
 
                                   JSnackBar.show(
                                     context,
-                                    description: 'Invite declined',
+                                    description: S.of(context).inviteDeclined,
                                     type: SnackbarInfoType.info,
                                   );
 
@@ -109,7 +110,7 @@ class JamInvitesPage extends HookConsumerWidget {
                       );
                     },
                   )
-                : const NotFoundPlaceholder(message: 'No invites found');
+                : NotFoundPlaceholder(message: S.of(context).noInvitesFound);
           },
         ),
       ),

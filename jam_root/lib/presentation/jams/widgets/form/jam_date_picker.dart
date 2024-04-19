@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import 'package:jam/domain/domain.dart';
@@ -22,8 +23,8 @@ class JamDatePicker extends ConsumerWidget {
         tileColor: context.jTheme.cardColor,
         title: Text(
           viewModel.date == null
-              ? 'Select date here'
-              : viewModel.date!.format('dd.MM.yyyy   HH:MM'),
+              ? S.of(context).selectDateHere
+              : viewModel.date!.format(S.of(context).ddmmyyyyHhmm),
           style: context.jText.bodySmall,
         ),
         leading: const Icon(Icons.calendar_today),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -21,7 +22,7 @@ class BigJamCard extends ConsumerWidget {
         onTap: () => context.goNamed(
               JamRoutes.details.name,
               pathParameters: {
-                'jamId': jam.id.toString(),
+                S.of(context).jamid: jam.id.toString(),
               },
             ),
         onLongPress: () {
@@ -56,7 +57,7 @@ class BigJamCard extends ConsumerWidget {
                       Row(
                         children: [
                           Text(
-                            jam.name?.crop(13) ?? 'Anonymous',
+                            jam.name?.crop(13) ?? S.of(context).anonymous,
                             maxLines: 2,
                             style: context.jText.displaySmall?.copyWith(
                               color: Colors.white,

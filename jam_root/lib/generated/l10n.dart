@@ -109,6 +109,926 @@ class S {
       args: [],
     );
   }
+
+  /// `Password Recovery`
+  String get passwordRecovery {
+    return Intl.message(
+      'Password Recovery',
+      name: 'passwordRecovery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send email`
+  String get sendEmail {
+    return Intl.message(
+      'Send email',
+      name: 'sendEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link for password reset sent to your email`
+  String get LinkPassResetSentYourEmail {
+    return Intl.message(
+      'Link for password reset sent to your email',
+      name: 'LinkPassResetSentYourEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords do not match`
+  String get passwordsDoNotMatch {
+    return Intl.message(
+      'Passwords do not match',
+      name: 'passwordsDoNotMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `License`
+  String get license {
+    return Intl.message(
+      'License',
+      name: 'license',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read and Agreeeee with all the licenses!`
+  String get readAndAgreWithAllLicenses {
+    return Intl.message(
+      'Read and Agreeeee with all the licenses!',
+      name: 'readAndAgreWithAllLicenses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select at least one thing you like`
+  String get selectAtLeastOneThingYouLike {
+    return Intl.message(
+      'Select at least one thing you like',
+      name: 'selectAtLeastOneThingYouLike',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registration`
+  String get registration {
+    return Intl.message(
+      'Registration',
+      name: 'registration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back`
+  String get back {
+    return Intl.message(
+      'Back',
+      name: 'back',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register`
+  String get register {
+    return Intl.message(
+      'Register',
+      name: 'register',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Basic info`
+  String get basicInfo {
+    return Intl.message(
+      'Basic info',
+      name: 'basicInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vibes info`
+  String get vibesInfo {
+    return Intl.message(
+      'Vibes info',
+      name: 'vibesInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `License agreements`
+  String get licenseAgreements {
+    return Intl.message(
+      'License agreements',
+      name: 'licenseAgreements',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next`
+  String get next {
+    return Intl.message(
+      'Next',
+      name: 'next',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friends`
+  String get friends {
+    return Intl.message(
+      'Friends',
+      name: 'friends',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No chats found!`
+  String get noChatsFound {
+    return Intl.message(
+      'No chats found!',
+      name: 'noChatsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friend Invites`
+  String get friendInvites {
+    return Intl.message(
+      'Friend Invites',
+      name: 'friendInvites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No friend invites`
+  String get noFriendInvites {
+    return Intl.message(
+      'No friend invites',
+      name: 'noFriendInvites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friend list`
+  String get friendList {
+    return Intl.message(
+      'Friend list',
+      name: 'friendList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No friends found`
+  String get noFriendsFound {
+    return Intl.message(
+      'No friends found',
+      name: 'noFriendsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Name`
+  String get noName {
+    return Intl.message(
+      'No Name',
+      name: 'noName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name {
+    return Intl.message(
+      'Name',
+      name: 'name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Status`
+  String get noStatus {
+    return Intl.message(
+      'No Status',
+      name: 'noStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status`
+  String get status {
+    return Intl.message(
+      'Status',
+      name: 'status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vibes`
+  String get vibes {
+    return Intl.message(
+      'Vibes',
+      name: 'vibes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Archived Chats`
+  String get archivedChats {
+    return Intl.message(
+      'Archived Chats',
+      name: 'archivedChats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unarchive`
+  String get unarchive {
+    return Intl.message(
+      'Unarchive',
+      name: 'unarchive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Archive`
+  String get archive {
+    return Intl.message(
+      'Archive',
+      name: 'archive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear chat`
+  String get clearChat {
+    return Intl.message(
+      'Clear chat',
+      name: 'clearChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete chat`
+  String get deleteChat {
+    return Intl.message(
+      'Delete chat',
+      name: 'deleteChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete message`
+  String get deleteMessage {
+    return Intl.message(
+      'Delete message',
+      name: 'deleteMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attach file`
+  String get attachFile {
+    return Intl.message(
+      'Attach file',
+      name: 'attachFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Record video`
+  String get recordVideo {
+    return Intl.message(
+      'Record video',
+      name: 'recordVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Editing`
+  String get editing {
+    return Intl.message(
+      'Editing',
+      name: 'editing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Media`
+  String get media {
+    return Intl.message(
+      'Media',
+      name: 'media',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display stickers`
+  String get displayStickers {
+    return Intl.message(
+      'Display stickers',
+      name: 'displayStickers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Event`
+  String get event {
+    return Intl.message(
+      'Event',
+      name: 'event',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pinned Messages`
+  String get pinnedMessages {
+    return Intl.message(
+      'Pinned Messages',
+      name: 'pinnedMessages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whoops! Could not load pinned messages. Please try again.`
+  String get CouldntLoadMessagesTryAgain {
+    return Intl.message(
+      'Whoops! Could not load pinned messages. Please try again.',
+      name: 'CouldntLoadMessagesTryAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unpin all messages`
+  String get unpinAllMessages {
+    return Intl.message(
+      'Unpin all messages',
+      name: 'unpinAllMessages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DA VIBEZ`
+  String get daVibez {
+    return Intl.message(
+      'DA VIBEZ',
+      name: 'daVibez',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick at least one`
+  String get pickAtLeastOne {
+    return Intl.message(
+      'Pick at least one',
+      name: 'pickAtLeastOne',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `loading`
+  String get loading {
+    return Intl.message(
+      'loading',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WHATS DA PLAN`
+  String get whatsDaPlan {
+    return Intl.message(
+      'WHATS DA PLAN',
+      name: 'whatsDaPlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When?`
+  String get when {
+    return Intl.message(
+      'When?',
+      name: 'when',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Where?`
+  String get where {
+    return Intl.message(
+      'Where?',
+      name: 'where',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Right were I am`
+  String get rightWereIAm {
+    return Intl.message(
+      'Right were I am',
+      name: 'rightWereIAm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add some extra info?`
+  String get addSomeExtraInfo {
+    return Intl.message(
+      'Add some extra info?',
+      name: 'addSomeExtraInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nah`
+  String get nah {
+    return Intl.message(
+      'Nah',
+      name: 'nah',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes please!`
+  String get yesPlease {
+    return Intl.message(
+      'Yes please!',
+      name: 'yesPlease',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can give it a name`
+  String get youCanGiveItAName {
+    return Intl.message(
+      'You can give it a name',
+      name: 'youCanGiveItAName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Or name the the spot`
+  String get orNameTheTheSpot {
+    return Intl.message(
+      'Or name the the spot',
+      name: 'orNameTheTheSpot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Perhaps some comments?`
+  String get perhapsSomeComments {
+    return Intl.message(
+      'Perhaps some comments?',
+      name: 'perhapsSomeComments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Background image`
+  String get backgroundImage {
+    return Intl.message(
+      'Background image',
+      name: 'backgroundImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `JAM TYPE`
+  String get jamType {
+    return Intl.message(
+      'JAM TYPE',
+      name: 'jamType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Instant jam`
+  String get instantJam {
+    return Intl.message(
+      'Instant jam',
+      name: 'instantJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start jamming right now (at least 2 people)`
+  String get startJammingNow2People {
+    return Intl.message(
+      'Start jamming right now (at least 2 people)',
+      name: 'startJammingNow2People',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `(Unavailable in this version)`
+  String get unavailableInThisVersion {
+    return Intl.message(
+      '(Unavailable in this version)',
+      name: 'unavailableInThisVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Callout for jam`
+  String get calloutForJam {
+    return Intl.message(
+      'Callout for jam',
+      name: 'calloutForJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let people know you are looking for a jam`
+  String get letPeopleKnowYouAreLookingForJam {
+    return Intl.message(
+      'Let people know you are looking for a jam',
+      name: 'letPeopleKnowYouAreLookingForJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Plan a jam`
+  String get planAJam {
+    return Intl.message(
+      'Plan a jam',
+      name: 'planAJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Schedule a jam for a future date and time`
+  String get scheduleJamForFutureDateTime {
+    return Intl.message(
+      'Schedule a jam for a future date and time',
+      name: 'scheduleJamForFutureDateTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jam details`
+  String get jamDetails {
+    return Intl.message(
+      'Jam details',
+      name: 'jamDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New jam`
+  String get newJam {
+    return Intl.message(
+      'New jam',
+      name: 'newJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change vibes`
+  String get changeVibes {
+    return Intl.message(
+      'Change vibes',
+      name: 'changeVibes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Control participants`
+  String get controlParticipants {
+    return Intl.message(
+      'Control participants',
+      name: 'controlParticipants',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restrictions, poilicies and more`
+  String get restrictionsPoiliciesAndMore {
+    return Intl.message(
+      'Restrictions, poilicies and more',
+      name: 'restrictionsPoiliciesAndMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change some details`
+  String get changeSomeDetails {
+    return Intl.message(
+      'Change some details',
+      name: 'changeSomeDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change the name, date and more`
+  String get changeTheNameDateAndMore {
+    return Intl.message(
+      'Change the name, date and more',
+      name: 'changeTheNameDateAndMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `jamId`
+  String get jamid {
+    return Intl.message(
+      'jamId',
+      name: 'jamid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jam Invites`
+  String get jamInvites {
+    return Intl.message(
+      'Jam Invites',
+      name: 'jamInvites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Jam invite accepted`
+  String get jamInviteAccepted {
+    return Intl.message(
+      'Jam invite accepted',
+      name: 'jamInviteAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invite declined`
+  String get inviteDeclined {
+    return Intl.message(
+      'Invite declined',
+      name: 'inviteDeclined',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invites found`
+  String get noInvitesFound {
+    return Intl.message(
+      'No invites found',
+      name: 'noInvitesFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anonymous`
+  String get anonymous {
+    return Intl.message(
+      'Anonymous',
+      name: 'anonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Driven by: `
+  String get drivenBy {
+    return Intl.message(
+      'Driven by: ',
+      name: 'drivenBy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Jam`
+  String get editJam {
+    return Intl.message(
+      'Edit Jam',
+      name: 'editJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select date here`
+  String get selectDateHere {
+    return Intl.message(
+      'Select date here',
+      name: 'selectDateHere',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `dd.MM.yyyy   HH:MM`
+  String get ddmmyyyyHhmm {
+    return Intl.message(
+      'dd.MM.yyyy   HH:MM',
+      name: 'ddmmyyyyHhmm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Changed your mind?`
+  String get changedYourMind {
+    return Intl.message(
+      'Changed your mind?',
+      name: 'changedYourMind',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Because you can`
+  String get becauseYouCan {
+    return Intl.message(
+      'Because you can',
+      name: 'becauseYouCan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select location here`
+  String get selectLocationHere {
+    return Intl.message(
+      'Select location here',
+      name: 'selectLocationHere',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select jam vibes`
+  String get selectJamVibes {
+    return Intl.message(
+      'Select jam vibes',
+      name: 'selectJamVibes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whoops! Something went wrong while loading friends`
+  String get whoopsWrongWhileLoadingFriends {
+    return Intl.message(
+      'Whoops! Something went wrong while loading friends',
+      name: 'whoopsWrongWhileLoadingFriends',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Who to invite to the jam?`
+  String get whoToInviteToTheJam {
+    return Intl.message(
+      'Who to invite to the jam?',
+      name: 'whoToInviteToTheJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create jam`
+  String get createJam {
+    return Intl.message(
+      'Create jam',
+      name: 'createJam',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My jams`
+  String get myJams {
+    return Intl.message(
+      'My jams',
+      name: 'myJams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming jams`
+  String get upcomingJams {
+    return Intl.message(
+      'Upcoming jams',
+      name: 'upcomingJams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Old jams`
+  String get oldJams {
+    return Intl.message(
+      'Old jams',
+      name: 'oldJams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Or sign in with`
+  String get orSignInWith {
+    return Intl.message(
+      'Or sign in with',
+      name: 'orSignInWith',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

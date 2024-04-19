@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -13,7 +14,7 @@ class ForgotPasswordPage extends HookWidget {
     final viewModel = useState(ForgotPasswordViewModel.generate());
 
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Password Recovery'),
+      appBar: SimpleAppBar(title: S.of(context).passwordRecovery),
       body: SingleChildScrollView(
         child: Layout(
           child: Center(
@@ -36,7 +37,7 @@ class ForgotPasswordPage extends HookWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    'Enter your email address and we will send you a link to reset your password.',
+                    S.of(context).enterYourEmailAddressAndWeWillSendYouA,
                     style: context.jText.bodyMedium,
                   ),
                 ),
@@ -55,7 +56,7 @@ class ForgotPasswordPage extends HookWidget {
                     context,
                     viewModel,
                   ),
-                  text: 'Send email',
+                  text: S.of(context).sendEmail,
                   withSuccessGradient: true,
                 ),
               ],
@@ -75,7 +76,7 @@ class ForgotPasswordPage extends HookWidget {
     }
     JSnackBar.show(
       context,
-      description: 'Link for password reset sent to your email',
+      description: S.of(context).LinkPassResetSentYourEmail,
       type: SnackbarInfoType.success,
     );
   }

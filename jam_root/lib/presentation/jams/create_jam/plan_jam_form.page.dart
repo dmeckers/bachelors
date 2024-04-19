@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -72,18 +73,18 @@ class PlanJamFormPage extends HookConsumerWidget {
           child: Column(
             children: [
               Text(
-                'WHATS DA PLAN',
+                S.of(context).whatsDaPlan,
                 textAlign: TextAlign.right,
                 style: context.jText.displayMedium
                     ?.copyWith(fontFamily: rubickFamily),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              _buildSectionTitle('When?'),
+              _buildSectionTitle(S.of(context).when),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
                 child: JamDatePicker(jamModel: jam),
               ),
-              _buildSectionTitle('Where?', bottomPadding: 20, topPadding: 20),
+              _buildSectionTitle(S.of(context).where, bottomPadding: 20, topPadding: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -92,7 +93,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                     child: Checkbox(value: false, onChanged: (value) {}),
                   ),
                   Text(
-                    'Right were I am',
+                    S.of(context).rightWereIAm,
                     style: context.jText.headlineMedium,
                   ),
                 ],
@@ -113,7 +114,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                     Row(
                       children: [
                         _buildSectionTitle(
-                          'Add some extra info?',
+                          S.of(context).addSomeExtraInfo,
                           rightPadding: 20,
                         ),
                         Align(
@@ -126,7 +127,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                               color: Colors.black,
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                showExtraInfo.value ? 'Nah' : 'Yes please!',
+                                showExtraInfo.value ? S.of(context).nah : S.of(context).yesPlease,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   color: Colors.white,
@@ -152,13 +153,13 @@ class PlanJamFormPage extends HookConsumerWidget {
                   ),
                   child: Column(
                     children: [
-                      _buildFormInputHeading(context, 'You can give it a name'),
+                      _buildFormInputHeading(context, S.of(context).youCanGiveItAName),
                       _buildFormInput(viewModel.nameFormModel),
-                      _buildFormInputHeading(context, 'Or name the the spot'),
+                      _buildFormInputHeading(context, S.of(context).orNameTheTheSpot),
                       _buildFormInput(viewModel.locationNameFormModel),
-                      _buildFormInputHeading(context, 'Perhaps some comments?'),
+                      _buildFormInputHeading(context, S.of(context).perhapsSomeComments),
                       _buildFormInput(viewModel.extraInformationFormModel),
-                      _buildFormInputHeading(context, 'Background image'),
+                      _buildFormInputHeading(context, S.of(context).backgroundImage),
                       JamImagePicker(jamModel: jam),
                       //TODO invites controls
                     ],

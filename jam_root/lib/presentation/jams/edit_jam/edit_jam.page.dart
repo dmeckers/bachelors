@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/jams/jam.model.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -15,7 +16,7 @@ final class EditJamPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'New jam'),
+      appBar: SimpleAppBar(title: S.of(context).newJam),
       backgroundColor: context.jColor.secondary,
       body: Column(
         children: [
@@ -23,7 +24,7 @@ final class EditJamPage extends HookConsumerWidget {
             context,
             Colors.amber,
             ImagePathConstants.JAM_CHOOSING_COSTUME_IMAGE_PATH,
-            'Change vibes',
+            S.of(context).changeVibes,
             '',
             MediaQuery.of(context).size.height * 0.29,
           ),
@@ -31,21 +32,21 @@ final class EditJamPage extends HookConsumerWidget {
             context,
             Colors.blue,
             ImagePathConstants.JAM_FACE_CONTROL_IMAGE_PATH,
-            'Control participants',
-            'Restrictions, poilicies and more',
+            S.of(context).controlParticipants,
+            S.of(context).restrictionsPoiliciesAndMore,
             MediaQuery.of(context).size.height * 0.29,
           ),
           _buildSection(
             context,
             Colors.green,
             ImagePathConstants.JAM_AT_TABLE_IMAGE_PATH,
-            'Change some details',
-            'Change the name, date and more',
+            S.of(context).changeSomeDetails,
+            S.of(context).changeTheNameDateAndMore,
             MediaQuery.of(context).size.height * 0.303,
             false,
             () => context.pushNamed(
               JamRoutes.jamEditDetails.name,
-              pathParameters: {'jamId': jam.id.toString()},
+              pathParameters: {S.of(context).jamid: jam.id.toString()},
               extra: jam,
             ),
           ),

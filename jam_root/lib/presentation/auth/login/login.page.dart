@@ -116,7 +116,7 @@ class LoginPage extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Or sign in with',
+                        S.of(context).orSignInWith,
                         style: context.jText.bodySmall,
                       ),
                       const SizedBox(height: 10),

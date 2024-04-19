@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:jam/config/config.dart';
@@ -78,7 +79,7 @@ class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
                 child: Text(
                   message.messageType == MessageType.text
                       ? repliedMessage.messageText!.crop(35)
-                      : 'Media',
+                      : S.of(context).media,
                   style: context.jText.bodySmall?.copyWith(fontSize: 12),
                 ),
               ),

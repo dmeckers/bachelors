@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -24,7 +25,7 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
           const EdgeInsets.only(left: 24, right: 24, bottom: 0, top: 16),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       title: selectedMessages.length < 2
-          ? const Text('Delete message', style: TextStyle(fontSize: 18))
+          ? Text(S.of(context).deleteMessage, style: TextStyle(fontSize: 18))
           : Text('Delete ${selectedMessages.length} messages',
               style: const TextStyle(fontSize: 18)),
       content:
@@ -32,7 +33,7 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
       actions: [
         TextButton(
           onPressed: () => context.pop(),
-          child: const Text('Cancel',
+          child: Text(S.of(context).cancel,
               style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         TextButton(
@@ -43,7 +44,7 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
               context.pop();
             },
             child: Text(
-              'Delete',
+              S.of(context).delete,
               style: context.jText.bodySmall?.copyWith(color: Colors.red),
             ))
       ],

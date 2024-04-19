@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/generated/l10n.dart';
 
 import 'package:jam/presentation/presentation.dart';
 
@@ -15,7 +16,7 @@ class ChatMessageInputBarAttachButton extends ConsumerWidget
     return Visibility(
         visible: messageTextFieldController.text.isEmpty,
         child: GestureDetector(
-            onTap: () => debugPrint('Attach file'),
+            onTap: () => debugPrint(S.of(context).attachFile),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
               child: Icon(Icons.attach_file),

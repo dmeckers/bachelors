@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -43,7 +44,7 @@ class ReadLicenseWidget extends HookConsumerWidget {
                 title: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    'License',
+                    S.of(context).license,
                     style: context.jText.headlineLarge,
                   ),
                 ),
@@ -75,7 +76,7 @@ class ReadLicenseWidget extends HookConsumerWidget {
               onChanged: toggleReadLicense,
             ),
             Text(
-              'Read and Agreeeee with all the licenses!',
+              S.of(context).readAndAgreWithAllLicenses,
               style: context.jText.bodySmall,
             )
           ],

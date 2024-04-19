@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -19,7 +20,7 @@ class ArchivedChatsPage extends HookConsumerWidget {
     );
 
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Archived Chats'),
+      appBar: SimpleAppBar(title: S.of(context).archivedChats),
       body: chats$.maybeWhen(
         data: (data) => data.isNotEmpty
             ? ListView.builder(

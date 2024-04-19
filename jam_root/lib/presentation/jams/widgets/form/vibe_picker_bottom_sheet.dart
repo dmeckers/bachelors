@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -33,7 +34,7 @@ class VibeSelectorBottomSheet extends ConsumerWidget {
         child: Column(
           children: [
             Text(
-              'Select jam vibes',
+              S.of(context).selectJamVibes,
               style:
                   context.jText.headlineMedium!.copyWith(color: Colors.black),
             ),

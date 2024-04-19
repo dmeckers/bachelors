@@ -7,6 +7,7 @@ import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/communication/chats/chat.model.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -54,8 +55,8 @@ class ChatsPage extends HookConsumerWidget
       body: c$.maybeWhen(
         data: (chats) {
           if (chats.isEmpty) {
-            return const Center(
-              child: NotFoundPlaceholder(message: 'No chats found!'),
+            return Center(
+              child: NotFoundPlaceholder(message: S.of(context).noChatsFound),
             );
           }
 

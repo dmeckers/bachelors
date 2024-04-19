@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -44,7 +45,7 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              chatModel.isArchived ? 'Unarchive' : 'Archive',
+              chatModel.isArchived ? S.of(context).unarchive : S.of(context).archive,
               style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(width: 16),

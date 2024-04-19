@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class PinnedMessagesPage extends ConsumerWidget with ChattingProviders {
@@ -15,7 +16,7 @@ class PinnedMessagesPage extends ConsumerWidget with ChattingProviders {
     final pinnedMessages$ = ref.watch(getPinnedMessagesProvider(chat: chat));
 
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Pinned Messages'),
+      appBar: SimpleAppBar(title: S.of(context).pinnedMessages),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -41,9 +42,9 @@ class PinnedMessagesPage extends ConsumerWidget with ChattingProviders {
                 );
               },
               loading: () => const CircularProgressIndicator(),
-              error: (error, stackTrace) => const JamErrorBox(
+              error: (error, stackTrace) => JamErrorBox(
                 errorMessage:
-                    'Whoops! Couldn\'t load pinned messages. Please try again.',
+                    S.of(context).CouldntLoadMessagesTryAgain,
               ),
             ),
           ),
@@ -56,8 +57,8 @@ class PinnedMessagesPage extends ConsumerWidget with ChattingProviders {
               Navigator.of(context).pop();
             },
             tileColor: Colors.black,
-            title: const Text(
-              'Unpin all messages',
+            title: Text(
+              S.of(context).unpinAllMessages,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class ChatList extends ConsumerWidget with ChattingProviders {
@@ -38,8 +39,8 @@ class ChatList extends ConsumerWidget with ChattingProviders {
               )
             : SizedBox(
                 height: MediaQuery.of(context).size.height,
-                child: const Center(
-                  child: Text('No chats found'),
+                child: Center(
+                  child: Text(S.of(context).noChatsFound),
                 ),
               );
       },
