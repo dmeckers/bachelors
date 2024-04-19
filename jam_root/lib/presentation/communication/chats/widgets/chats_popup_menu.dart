@@ -58,11 +58,11 @@ class ChatsPopupMenu extends HookConsumerWidget with ChattingProviders {
       padding: const EdgeInsets.only(left: 10),
       value: ChatsPopupMenuActions.friendInvites,
       onTap: () => _navigateToFriendRequest(context, invites),
-      child: const Row(
+      child: Row(
         children: [
-          FaIcon(FontAwesomeIcons.handshake),
-          SizedBox(width: 10),
-          Text('Friend requests'),
+          const FaIcon(FontAwesomeIcons.handshake),
+          const SizedBox(width: 10),
+          Text(S.of(context).friendRequests),
         ],
       ),
     );

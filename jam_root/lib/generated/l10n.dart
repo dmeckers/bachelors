@@ -1029,6 +1029,346 @@ class S {
       args: [],
     );
   }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid email`
+  String get invalidEmail {
+    return Intl.message(
+      'Invalid email',
+      name: 'invalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password cannot be empty`
+  String get passwordCannotBeEmpty {
+    return Intl.message(
+      'Password cannot be empty',
+      name: 'passwordCannotBeEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default search`
+  String get defaultSearch {
+    return Intl.message(
+      'Default search',
+      name: 'defaultSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search with AI prompt (experimental)`
+  String get searchWithAiPromptExperimental {
+    return Intl.message(
+      'Search with AI prompt (experimental)',
+      name: 'searchWithAiPromptExperimental',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can select up to {MAX_VIBES_AMOUNT} vibes`
+  String youCanSelectUpToNMaxVibes(Object MAX_VIBES_AMOUNT) {
+    return Intl.message(
+      'You can select up to $MAX_VIBES_AMOUNT vibes',
+      name: 'youCanSelectUpToNMaxVibes',
+      desc: '',
+      args: [MAX_VIBES_AMOUNT],
+    );
+  }
+
+  /// `Whoops! Failed to load vibes`
+  String get whoopsFailedToLoadVibes {
+    return Intl.message(
+      'Whoops! Failed to load vibes',
+      name: 'whoopsFailedToLoadVibes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Find your vibe`
+  String get findYourVibe {
+    return Intl.message(
+      'Find your vibe',
+      name: 'findYourVibe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friend requests`
+  String get friendRequests {
+    return Intl.message(
+      'Friend requests',
+      name: 'friendRequests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Friend invite rejected.`
+  String get friendInviteRejected {
+    return Intl.message(
+      'Friend invite rejected.',
+      name: 'friendInviteRejected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User`
+  String get user {
+    return Intl.message(
+      'User',
+      name: 'user',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online`
+  String get online {
+    return Intl.message(
+      'Online',
+      name: 'online',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last seen {last_acctive}`
+  String lastSeenActive(Object last_acctive) {
+    return Intl.message(
+      'Last seen $last_acctive',
+      name: 'lastSeenActive',
+      desc: '',
+      args: [last_acctive],
+    );
+  }
+
+  /// `{invites} is now your friend`
+  String invites(Object invites) {
+    return Intl.message(
+      '$invites is now your friend',
+      name: 'invites',
+      desc: '',
+      args: [invites],
+    );
+  }
+
+  /// `No Archived Chats`
+  String get noArchivedChats {
+    return Intl.message(
+      'No Archived Chats',
+      name: 'noArchivedChats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recently`
+  String get recently {
+    return Intl.message(
+      'Recently',
+      name: 'recently',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Typing...`
+  String get typing {
+    return Intl.message(
+      'Typing...',
+      name: 'typing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Draft: `
+  String get draft {
+    return Intl.message(
+      'Draft: ',
+      name: 'draft',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear history`
+  String get clearHistory {
+    return Intl.message(
+      'Clear history',
+      name: 'clearHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear`
+  String get clear {
+    return Intl.message(
+      'Clear',
+      name: 'clear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to clear history?`
+  String get youSureWantClearHistory {
+    return Intl.message(
+      'Are you sure you want to clear history?',
+      name: 'youSureWantClearHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Also clear for {chat_related_contact}`
+  String alsoClearFor(Object chat_related_contact) {
+    return Intl.message(
+      'Also clear for $chat_related_contact',
+      name: 'alsoClearFor',
+      desc: '',
+      args: [chat_related_contact],
+    );
+  }
+
+  /// `Are you sure you want to delete chat?`
+  String get youSureWantDeleteChat {
+    return Intl.message(
+      'Are you sure you want to delete chat?',
+      name: 'youSureWantDeleteChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Also delete for this user`
+  String get alsoDeleteForThisUser {
+    return Intl.message(
+      'Also delete for this user',
+      name: 'alsoDeleteForThisUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last seen {related_contact_last_active}`
+  String lastSeenChatContact(Object related_contact_last_active) {
+    return Intl.message(
+      'Last seen $related_contact_last_active',
+      name: 'lastSeenChatContact',
+      desc: '',
+      args: [related_contact_last_active],
+    );
+  }
+
+  /// `Clear {selected_chats} chats`
+  String clearSelectedChats(Object selected_chats) {
+    return Intl.message(
+      'Clear $selected_chats chats',
+      name: 'clearSelectedChats',
+      desc: '',
+      args: [selected_chats],
+    );
+  }
+
+  /// `Clear chat history for this user?`
+  String get clearChatHistoryThisUser {
+    return Intl.message(
+      'Clear chat history for this user?',
+      name: 'clearChatHistoryThisUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Also for this user`
+  String get alsoForThisUser {
+    return Intl.message(
+      'Also for this user',
+      name: 'alsoForThisUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to clear these chats?`
+  String get sureYouWantClearTheseChats {
+    return Intl.message(
+      'Are you sure you want to clear these chats?',
+      name: 'sureYouWantClearTheseChats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete {delete_chats} chats`
+  String deleteSelectedChats(Object delete_chats) {
+    return Intl.message(
+      'Delete $delete_chats chats',
+      name: 'deleteSelectedChats',
+      desc: '',
+      args: [delete_chats],
+    );
+  }
+
+  /// `Are you sure you want to delete this chat`
+  String get sureYouWantDeleteThisChat {
+    return Intl.message(
+      'Are you sure you want to delete this chat',
+      name: 'sureYouWantDeleteThisChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete selected chats`
+  String get youSureWantDeleteSelectedChats {
+    return Intl.message(
+      'Are you sure you want to delete selected chats',
+      name: 'youSureWantDeleteSelectedChats',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

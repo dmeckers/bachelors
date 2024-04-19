@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -80,7 +81,7 @@ class ChatAppBar extends ConsumerWidget
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    chat.relatedContact.username ?? 'User',
+                    chat.relatedContact.username ?? S.of(context).user,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -101,12 +102,12 @@ class ChatAppBar extends ConsumerWidget
   Widget _buildChatSubtitle(BuildContext context, ChatModel chat) {
     final isOnline = chat.relatedContact.isOnlineAndActive;
     final subtitleText = isOnline
-        ? 'Online'
-        : 'Last seen ${chat.relatedContact.lastActiveAt.toNTimeAgo()}';
+        ? S.of(context).online
+        : S.of(context).lastSeenChatContact(chat.relatedContact.lastActiveAt.toNTimeAgo());
     final isTyping = chat.chatEventType == ChatEventType.typing;
 
     return isTyping
-        ? Text('Typing...', style: context.jText.headlineSmall)
+        ? Text(S.of(context).typing, style: context.jText.headlineSmall)
         : Text(subtitleText, style: context.jText.headlineSmall);
   }
 

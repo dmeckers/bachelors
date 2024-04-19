@@ -20,8 +20,8 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
       ),
       title: selectedChats.length == 1
           ? Text(S.of(context).clearChat, style: TextStyle(fontSize: 18))
-          : Text('Clear ${selectedChats.length} chats',
-              style: const TextStyle(fontSize: 18)),
+          : Text(S.of(context).clearSelectedChats(selectedChats.length),
+              style: TextStyle(fontSize: 18)),
       content: _buildModalContent(context, selectedChats.length, clearForBoth),
       actions: [
         _buildCancelButton(context),
@@ -34,7 +34,7 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
           ValueNotifier<bool?> checkboxState) =>
       selectedChatsCount == 1
           ? Column(mainAxisSize: MainAxisSize.min, children: [
-              const Text('Clear chat history for this user?',
+              Text(S.of(context).clearChatHistoryThisUser,
                   style: TextStyle(fontSize: 14)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -43,12 +43,12 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
                       value: checkboxState.value ?? false,
                       onChanged: (value) =>
                           checkboxState.value = value as bool),
-                  const Text('Also for this user',
+                   Text(S.of(context).alsoForThisUser,
                       style: TextStyle(fontSize: 14))
                 ],
               ),
             ])
-          : const Text('Are you sure you want to clear these chats?',
+          : Text(S.of(context).sureYouWantClearTheseChats,
               style: TextStyle(fontSize: 14));
 
   TextButton _buildConfirmButton(BuildContext context, WidgetRef ref,
@@ -60,8 +60,8 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
         //     selectedChats: selectedChats, forBoth: clearForBoth.value ?? false);
         ref.read(selectedChatsProvider.notifier).state = [];
       },
-      child: const Text(
-        'Yes',
+      child: Text(
+        S.of(context).yes,
         style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
       ),
     );
@@ -69,8 +69,8 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
 
   TextButton _buildCancelButton(BuildContext context) => TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text(
-          'Cancel',
+        child: Text(
+          S.of(context).cancel,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
       );

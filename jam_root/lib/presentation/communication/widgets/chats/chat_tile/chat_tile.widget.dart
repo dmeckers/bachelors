@@ -111,7 +111,7 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
     // final chatState = chatModel.state;
     if (chatModel.chatEventType == ChatEventType.typing) {
       return Text(
-        'Typing...',
+        S.of(context).typing,
         style: context.jText.bodySmall?.copyWith(fontStyle: FontStyle.italic),
       );
     }
@@ -140,7 +140,7 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
       return RichText(
           text: TextSpan(children: [
         TextSpan(
-          text: 'Draft: ',
+          text: S.of(context).draft,
           style: context.jText.bodySmall
               ?.copyWith(fontStyle: FontStyle.italic, color: Colors.red[400]),
         ),

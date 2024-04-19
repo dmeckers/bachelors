@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -107,9 +108,9 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
     await showDialog(
       context: context,
       builder: (_) => DestructiveDialog(
-        title: 'Clear history',
-        subtitle: 'Are you sure you want to clear history?',
-        confirmMessage: 'Clear',
+        title: S.of(context).clearHistory,
+        subtitle: S.of(context).youSureWantClearHistory,
+        confirmMessage: S.of(context).clear,
         onConfirm: (forEveryone) {
           ref.read(
             clearChatMessagesProvider(
@@ -118,7 +119,7 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
             ),
           );
         },
-        extraConditionMessage: 'Also clear for ${chat.relatedContact.username}',
+        extraConditionMessage: S.of(context).alsoClearFor(chat.relatedContact.username?? ""),
       ),
     );
   }
@@ -127,9 +128,9 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
     await showDialog(
       context: context,
       builder: (_) => DestructiveDialog(
-        title: 'Delete chat',
-        subtitle: 'Are you sure you want to delete chat?',
-        confirmMessage: 'Delete',
+        title: S.of(context).deleteChat,
+        subtitle: S.of(context).youSureWantDeleteChat,
+        confirmMessage: S.of(context).delete,
         //todo rework this
         onConfirm: (forBoth) {
           showUnimplementedSnackbar(context);
@@ -137,7 +138,7 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
           //     .read(messagesControllerProvider)
           //     .deleteChat(chatId: int.tryParse(chatId ?? '1') ?? 1, forBoth: forBoth ?? false);
         },
-        extraConditionMessage: 'Also delete for this user',
+        extraConditionMessage: S.of(context).alsoDeleteForThisUser,
       ),
     );
   }

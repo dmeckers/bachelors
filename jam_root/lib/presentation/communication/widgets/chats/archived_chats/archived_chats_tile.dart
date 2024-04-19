@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -34,7 +35,7 @@ class ArchivedChatsTile extends StatelessWidget {
               .crop(70),
           style: context.jText.bodySmall,
         ),
-        title: Text('Archive', style: context.jText.headlineMedium),
+        title: Text(S.of(context).archive, style: context.jText.headlineMedium),
         trailing: CircleAvatar(
           backgroundColor: context.jTheme.disabledColor,
           minRadius: _UNREAD_MESSAGES_MAX_RADIUS,

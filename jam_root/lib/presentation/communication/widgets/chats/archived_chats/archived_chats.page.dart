@@ -54,7 +54,7 @@ class ArchivedChatsPage extends HookConsumerWidget {
             ),
             const SizedBox(height: 10.0),
             Text(
-              'No Archived Chats',
+              S.of(context).noArchivedChats,
               style: context.jText.headlineMedium?.copyWith(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,

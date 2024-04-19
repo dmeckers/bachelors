@@ -99,7 +99,7 @@ class FriendInvitesPage extends HookConsumerWidget {
     future.then((value) {
       JSnackBar.show(
         context,
-        description: 'Friend invite rejected.',
+        description: S.of(context).friendInviteRejected,
         type: SnackbarInfoType.info,
       );
 
@@ -123,7 +123,7 @@ class FriendInvitesPage extends HookConsumerWidget {
       (value) {
         JSnackBar.show(
           context,
-          description: '${invites.value[index].username} is now your friend',
+          description: S.of(context).invites(invites.value[index].username),
           type: SnackbarInfoType.success,
         );
 

@@ -83,7 +83,7 @@ class SelectVibe extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, top: 4.0),
                 child: Text(
-                  'You can select up to $MAX_VIBES_AMOUNT vibes',
+                  S.of(context).youCanSelectUpToNMaxVibes(MAX_VIBES_AMOUNT),
                   style:
                       context.jText.headlineSmall?.copyWith(color: Colors.red),
                 ),
@@ -130,8 +130,8 @@ class SelectVibe extends HookConsumerWidget {
         ),
         Text(
           searchWithAI.value
-              ? 'Default search'
-              : 'Search with AI prompt (experimental)',
+              ? S.of(context).defaultSearch
+              : S.of(context).searchWithAiPromptExperimental,
           style: context.jText.headlineSmall,
         ),
       ],
@@ -184,8 +184,8 @@ class SelectVibe extends HookConsumerWidget {
             ),
           );
         },
-        error: (e, s) => const JamErrorBox(
-          errorMessage: 'Whoops! Failed to load vibes',
+        error: (e, s) => JamErrorBox(
+          errorMessage: S.of(context).whoopsFailedToLoadVibes,
         ),
         loading: () => const Center(
           child: CircularProgressIndicator(),

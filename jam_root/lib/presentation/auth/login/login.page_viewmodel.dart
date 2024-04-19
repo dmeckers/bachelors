@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
@@ -52,13 +53,13 @@ class LoginPageModel {
   factory LoginPageModel.generate(BuildContext context) {
     return LoginPageModel(
       emailFormModel: JamBaseFormModel.generate(
-          labelText: 'Email',
+          labelText: S.of(context).email,
           validator: (value) =>
-              (value as String).isValidEmail() ? null : 'Invalid email'),
+              (value as String).isValidEmail() ? null : S.of(context).invalidEmail),
       passwordFormModel: JamBaseFormModel.generate(
-          labelText: 'Password',
+          labelText: S.of(context).password,
           validator: (value) =>
-              (value as String).isNotEmpty ? null : 'Password cannot be empty'),
+              (value as String).isNotEmpty ? null : S.of(context).passwordCannotBeEmpty),
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
 
@@ -32,7 +33,7 @@ class ChatTileTrailing extends StatelessWidget with ChattingProviders {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            chatModel.lastMessage?.sentAt.toNTimeAgo() ?? 'Recently',
+            chatModel.lastMessage?.sentAt.toNTimeAgo() ?? S.of(context).recently,
           ),
           const SizedBox(height: 2),
           if (chatModel.isPinned) _buildPinnedIcon(context)

@@ -20,7 +20,7 @@ class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
       ),
       title: selectedChats.length == 1
           ? Text(S.of(context).deleteChat, style: TextStyle(fontSize: 18))
-          : Text('Delete ${selectedChats.length} chats',
+          : Text(S.of(context).deleteSelectedChats(selectedChats.length),
               style: const TextStyle(fontSize: 18)),
       content: _buildModalContent(context, selectedChats.length, deleteForBoth),
       actions: [
@@ -35,7 +35,7 @@ class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
           ValueNotifier<bool?> checkboxState) =>
       selectedChatsCount == 1
           ? Column(mainAxisSize: MainAxisSize.min, children: [
-              const Text('Are you sure you want to delete this chat',
+              Text(S.of(context).sureYouWantDeleteThisChat,
                   style: TextStyle(fontSize: 14)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -44,18 +44,18 @@ class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
                       value: checkboxState.value ?? false,
                       onChanged: (value) =>
                           checkboxState.value = value as bool),
-                  const Text('Also delete for this user',
+                  Text(S.of(context).alsoDeleteForThisUser,
                       style: TextStyle(fontSize: 14))
                 ],
               ),
             ])
-          : const Text('Are you sure you want to delete selected chats',
+          : Text(S.of(context).youSureWantDeleteSelectedChats,
               style: TextStyle(fontSize: 14));
 
   TextButton _buildCancelDeleteChatButton(BuildContext context) => TextButton(
         onPressed: () => Navigator.pop(context),
         child:
-            const Text('Cancel', style: TextStyle(fontWeight: FontWeight.w600)),
+            Text(S.of(context).cancel, style: TextStyle(fontWeight: FontWeight.w600)),
       );
 
   TextButton _buildConfirmDeleteChatButton(BuildContext context, WidgetRef ref,
@@ -68,7 +68,7 @@ class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
           //     .deleteChats(selectedChats: selectedChats, deleteForBoth: checkboxState.value ?? false);
           ref.read(selectedChatsProvider.notifier).state = [];
         },
-        child: const Text('Yes',
+        child: Text(S.of(context).yes,
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600)),
       );
 }

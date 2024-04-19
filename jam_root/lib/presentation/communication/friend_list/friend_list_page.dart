@@ -65,7 +65,7 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
         ),
         tileColor: context.jColor.secondaryContainer,
         title: Text(
-          user.username ?? 'User',
+          user.username ?? S.of(context).user,
           style: context.jText.bodyMedium?.copyWith(
             color: ColorHelper.colorContrast(context.jColor.secondaryContainer),
           ),
@@ -93,8 +93,8 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
           alignment: Alignment.centerRight,
           child: Text(
             user.isOnlineAndActive
-                ? 'Online'
-                : 'Last seen ${user.lastActiveAt.toNTimeAgo()}',
+                ? S.of(context).online
+                : S.of(context).lastSeenActive(user.lastActiveAt.toNTimeAgo()),
             style: context.jText.bodySmall?.copyWith(
               fontSize: 11,
               color: ColorHelper.colorContrast(
