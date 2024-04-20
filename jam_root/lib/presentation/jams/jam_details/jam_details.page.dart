@@ -108,7 +108,7 @@ class JamDetailsPage extends HookConsumerWidget {
                       ShowJamOnMapButton(jam: data),
                       const SizedBox(height: 5),
                       if (DateTime.now().isBefore(data.date))
-                        _buildInviteFriendsButton(context, data.id!),
+                        _buildInviteFriendsButton(context, data),
                       const SizedBox(height: 5),
                       if (supabase.auth.currentUser!.id == data.creatorId &&
                           DateTime.now().isBefore(data.date))
@@ -150,7 +150,7 @@ class JamDetailsPage extends HookConsumerWidget {
     );
   }
 
-  SizedBox _buildInviteFriendsButton(BuildContext context, int jamId) {
+  SizedBox _buildInviteFriendsButton(BuildContext context, JamModel jam) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.6,
       child: ElevatedButton(
@@ -161,7 +161,7 @@ class JamDetailsPage extends HookConsumerWidget {
         onPressed: () => showDialog(
           context: context,
           builder: (ctx) => InviteFriendToJamDialog(
-            jamId: jamId,
+            jam: jam,
           ),
         ),
         child: const Row(

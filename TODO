@@ -1,43 +1,36 @@
-HIGH PRIORITY
-1.fix push notifications
-2.friend invites realtime or smth similar
-
-5. switch on offline works poorly // fuck it
-
 MID PRIORITY
-1.delete chat
-2.remove description column fetching as it has been deleted
-2.restore account (email link)
-4.finish invnites?
-
-LOW PRIORITY
-3.populate some vibes
+2.multiple chat pin/archive issue
 
 
-5.check typing/not typing events TO TEST
-1.update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
 
-DONE
-3. clear chat from chats page doesnt work DONE
-4. after accept friends still shows 'send friend invite' in map page DONE
-4.show jam icon legend DONE
-3.custom controls on map DONE
-2. fix not showing chat in chat page after accept invite and sending message from friends list DONE
-2.insert/remove users from map in realtime DONE
-in vibe edit page change route push on pop DONE
-push new jams in realtime (with all conditions) DONE
-7.extra map style(map style id) tip ok
-3. FUCKING DISPOSE STREAM FINAL Y FUYCKING FDONE
-6.pick location map marker DONE
-1. MAP BUG DONE
-map realtime dosnt work DONE (doesnt publish new without refresh)
-do something with drawer DONE
-1.cache profile for menubar + dispose stream as it fucking caches between logins DONE
-check on performance of chat keyboard go up and especially down DONE
-chat keyboard scroll tormozit (use slivers?) DONE
-return lazy load DONE
-online status (extra check on last activity + add triggers) DONE
-replace fancy text placeholders DONE
-add ref listeners that updates state on image upload (right now it loads only with invalidate) DONE
 
-PROFILE UPDATE SETTINGS BUG? MUST REPLICATE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+after papers ONLY
+0.update map stream if it was open by new vibe ids (refetch) when vibes changed
+1.invite through contacts
+2.open graph link
+3.jam invites filter from BE
+4.jam vibe change (probably this will affect also map stream)
+5.refactor jam invites page
+6.jam invite get data by 1 query (now is done by 2)
+7.fix dialogs
+8.fix in-chat clear chat history
+9.restore account (email link)
+10.online status
+
+999.populate some vibes

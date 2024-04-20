@@ -440,7 +440,7 @@ class _CreateJamProviderElement
   JamModel get jam => (origin as CreateJamProvider).jam;
 }
 
-String _$deleteJamHash() => r'2af393dfe817bd23e918a82a64d7292eca132216';
+String _$deleteJamHash() => r'7399659b10003ec4bad5ed1b1a249576d7f749c8';
 
 /// See also [deleteJam].
 @ProviderFor(deleteJam)
@@ -453,10 +453,10 @@ class DeleteJamFamily extends Family<AsyncValue<void>> {
 
   /// See also [deleteJam].
   DeleteJamProvider call({
-    required int jamId,
+    required JamModel jam,
   }) {
     return DeleteJamProvider(
-      jamId: jamId,
+      jam: jam,
     );
   }
 
@@ -465,7 +465,7 @@ class DeleteJamFamily extends Family<AsyncValue<void>> {
     covariant DeleteJamProvider provider,
   ) {
     return call(
-      jamId: provider.jamId,
+      jam: provider.jam,
     );
   }
 
@@ -488,11 +488,11 @@ class DeleteJamFamily extends Family<AsyncValue<void>> {
 class DeleteJamProvider extends AutoDisposeFutureProvider<void> {
   /// See also [deleteJam].
   DeleteJamProvider({
-    required int jamId,
+    required JamModel jam,
   }) : this._internal(
           (ref) => deleteJam(
             ref as DeleteJamRef,
-            jamId: jamId,
+            jam: jam,
           ),
           from: deleteJamProvider,
           name: r'deleteJamProvider',
@@ -502,7 +502,7 @@ class DeleteJamProvider extends AutoDisposeFutureProvider<void> {
                   : _$deleteJamHash,
           dependencies: DeleteJamFamily._dependencies,
           allTransitiveDependencies: DeleteJamFamily._allTransitiveDependencies,
-          jamId: jamId,
+          jam: jam,
         );
 
   DeleteJamProvider._internal(
@@ -512,10 +512,10 @@ class DeleteJamProvider extends AutoDisposeFutureProvider<void> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.jamId,
+    required this.jam,
   }) : super.internal();
 
-  final int jamId;
+  final JamModel jam;
 
   @override
   Override overrideWith(
@@ -530,7 +530,7 @@ class DeleteJamProvider extends AutoDisposeFutureProvider<void> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        jamId: jamId,
+        jam: jam,
       ),
     );
   }
@@ -542,21 +542,21 @@ class DeleteJamProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   bool operator ==(Object other) {
-    return other is DeleteJamProvider && other.jamId == jamId;
+    return other is DeleteJamProvider && other.jam == jam;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, jamId.hashCode);
+    hash = _SystemHash.combine(hash, jam.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin DeleteJamRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `jamId` of this provider.
-  int get jamId;
+  /// The parameter `jam` of this provider.
+  JamModel get jam;
 }
 
 class _DeleteJamProviderElement extends AutoDisposeFutureProviderElement<void>
@@ -564,7 +564,7 @@ class _DeleteJamProviderElement extends AutoDisposeFutureProviderElement<void>
   _DeleteJamProviderElement(super.provider);
 
   @override
-  int get jamId => (origin as DeleteJamProvider).jamId;
+  JamModel get jam => (origin as DeleteJamProvider).jam;
 }
 
 String _$getJamInvitesHash() => r'81e9b5b6737da240bfb36f379cc8d43d45b176f8';
@@ -582,7 +582,7 @@ final getJamInvitesProvider = AutoDisposeFutureProvider<JamInvites>.internal(
 );
 
 typedef GetJamInvitesRef = AutoDisposeFutureProviderRef<JamInvites>;
-String _$sendJamInvitesHash() => r'ab6227619850b14b62d0afdda70852f1e2c0ad1f';
+String _$sendJamInvitesHash() => r'7bee6b6bd27d0ba1b868bb2068f7bfaa9999697f';
 
 /// See also [sendJamInvites].
 @ProviderFor(sendJamInvites)
@@ -596,11 +596,11 @@ class SendJamInvitesFamily extends Family<AsyncValue<void>> {
   /// See also [sendJamInvites].
   SendJamInvitesProvider call({
     required int jamId,
-    required List<String> userIds,
+    required List<UserProfileModel> users,
   }) {
     return SendJamInvitesProvider(
       jamId: jamId,
-      userIds: userIds,
+      users: users,
     );
   }
 
@@ -610,7 +610,7 @@ class SendJamInvitesFamily extends Family<AsyncValue<void>> {
   ) {
     return call(
       jamId: provider.jamId,
-      userIds: provider.userIds,
+      users: provider.users,
     );
   }
 
@@ -634,12 +634,12 @@ class SendJamInvitesProvider extends AutoDisposeFutureProvider<void> {
   /// See also [sendJamInvites].
   SendJamInvitesProvider({
     required int jamId,
-    required List<String> userIds,
+    required List<UserProfileModel> users,
   }) : this._internal(
           (ref) => sendJamInvites(
             ref as SendJamInvitesRef,
             jamId: jamId,
-            userIds: userIds,
+            users: users,
           ),
           from: sendJamInvitesProvider,
           name: r'sendJamInvitesProvider',
@@ -651,7 +651,7 @@ class SendJamInvitesProvider extends AutoDisposeFutureProvider<void> {
           allTransitiveDependencies:
               SendJamInvitesFamily._allTransitiveDependencies,
           jamId: jamId,
-          userIds: userIds,
+          users: users,
         );
 
   SendJamInvitesProvider._internal(
@@ -662,11 +662,11 @@ class SendJamInvitesProvider extends AutoDisposeFutureProvider<void> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.jamId,
-    required this.userIds,
+    required this.users,
   }) : super.internal();
 
   final int jamId;
-  final List<String> userIds;
+  final List<UserProfileModel> users;
 
   @override
   Override overrideWith(
@@ -682,7 +682,7 @@ class SendJamInvitesProvider extends AutoDisposeFutureProvider<void> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         jamId: jamId,
-        userIds: userIds,
+        users: users,
       ),
     );
   }
@@ -696,14 +696,14 @@ class SendJamInvitesProvider extends AutoDisposeFutureProvider<void> {
   bool operator ==(Object other) {
     return other is SendJamInvitesProvider &&
         other.jamId == jamId &&
-        other.userIds == userIds;
+        other.users == users;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, jamId.hashCode);
-    hash = _SystemHash.combine(hash, userIds.hashCode);
+    hash = _SystemHash.combine(hash, users.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -713,8 +713,8 @@ mixin SendJamInvitesRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `jamId` of this provider.
   int get jamId;
 
-  /// The parameter `userIds` of this provider.
-  List<String> get userIds;
+  /// The parameter `users` of this provider.
+  List<UserProfileModel> get users;
 }
 
 class _SendJamInvitesProviderElement
@@ -724,7 +724,7 @@ class _SendJamInvitesProviderElement
   @override
   int get jamId => (origin as SendJamInvitesProvider).jamId;
   @override
-  List<String> get userIds => (origin as SendJamInvitesProvider).userIds;
+  List<UserProfileModel> get users => (origin as SendJamInvitesProvider).users;
 }
 
 String _$getSentJamInvitesHash() => r'71adc29c97fcc8000efe789483e4a217aeba9f74';

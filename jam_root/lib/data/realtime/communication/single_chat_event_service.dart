@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/globals.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -19,14 +20,6 @@ class SingleChatEventService
     implements SingleChatEventServiceInterface {
   SingleChatEventService({required this.chatId});
 
-  RealtimeChannel? _socket;
-
-  ///
-  /// TODO maybe is not necessary
-  /// TODO test with and without
-  ///
-  RealtimeChannel? _pushAndDie;
-
   final BehaviorSubject<ChatEventType> _controllers =
       BehaviorSubject<ChatEventType>();
 
@@ -39,19 +32,10 @@ class SingleChatEventService
       payload: event.payload,
     );
 
-    await sockets[chatId]!.sendBroadcastMessage(
+    await MAIN_CHATS_SOCKETS[chatId]?.sendBroadcastMessage(
       event: event.eventName,
       payload: event.payload,
     );
-
-    // _pushAndDie = supabase.channel('chat-$chatId').subscribe(
-    //   (e, _) async {
-    //     if (e == RealtimeSubscribeStatus.subscribed) {
-
-    //       await _pushAndDie!.unsubscribe();
-    //     }
-    //   },
-    // );
   }
 
   @override

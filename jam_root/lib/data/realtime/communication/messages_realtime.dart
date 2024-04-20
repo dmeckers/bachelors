@@ -96,7 +96,9 @@ class MessagesRealtimeService
         payload.newRecord['message_type'] != MessageType.event.name) {
       return;
     }
-    pushMessage(MessageModel.fromJson(payload.newRecord));
+    pushMessage(
+      MessageModel.fromJson(payload.newRecord..['from_me'] = false),
+    );
   }
 
   void _handleUpdateEvent(PostgresChangePayload payload) async {

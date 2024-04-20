@@ -209,29 +209,18 @@ class PlanJamFormPage extends HookConsumerWidget {
     JamViewModel viewModel,
     WidgetRef ref,
   ) async {
-    final future = ref.read(updateJamProvider(
-      jam: viewModel.castToModel(),
-    ).future);
+    await ref.read(updateJamProvider(jam: viewModel.castToModel()).future);
 
-    future.then((value) {
-      ref.invalidate(userJamControllerProvider);
-
-      showDialog(
-        context: context,
-        builder: (ctx) => OkPopup(
-          imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
-          title: 'Jam updated sucessfully',
-          onOkPressed: () => Navigator.of(context).pop(),
-        ),
-      );
-    }).onError((error, stackTrace) {
-      debugPrint(error.toString());
-      JSnackBar.show(
-        context,
-        description: 'Error updating Jam',
-        type: SnackbarInfoType.error,
-      );
-    });
+    ref.invalidate(userJamControllerProvider);
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (ctx) => OkPopup(
+        imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
+        title: 'Jam updated sucessfully',
+        onOkPressed: () => Navigator.of(context).pop(),
+      ),
+    );
   }
 
   Positioned _buildWatchingJamJar() {

@@ -33,9 +33,7 @@ class ChatMessagesList extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final currentUser = ref.watch(currentUserProfileProvider);
     final handler = getMessageObserverHandler(ref, messages, chat.id);
-    // messageObserverLazyLoad(ref, messages, chat);
 
     final controller = ref.watch(autoScrollCtrlProvider);
     final isLoading = useRef(false);
@@ -92,85 +90,3 @@ final autoScrollCtrlProvider = Provider.autoDispose<AutoScrollController>(
     axis: Axis.vertical,
   ),
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// GOVNO BLJAD EBANOE
-
-
-    // final p = ref.watch(chattingProvidersProvider);
-    // final itemPositionsListener = ref.watch(p.itemPositionsListenerProvider);
-
-    // final nothingToLoad = useRef(false);
-    // final offset = useRef(0);
-
-    // listener() {
-    //   if (nothingToLoad.value || messages.length < 50) return;
-
-    //   final messageOnScreenIndex =
-    //       itemPositionsListener.itemPositions.value.first.index;
-    //   final isThreshold = messageOnScreenIndex > messages.length - 15;
-
-    //   if (!isThreshold) return;
-
-    //   ref
-    //       .read(messagesRepositoryProvider)
-    //       .loadMoreMessages(
-    //         chatId: messages.first.chatId!,
-    //         offset: offset.value + 1,
-    //       )
-    //       .then(
-    //     (value) {
-    //       nothingToLoad.value = value.isEmpty;
-    //       offset.value = offset.value + 1;
-    //     },
-    //   );
-    // }
-
-    // useEffect(() {
-    //   // itemPositionsListener.itemPositions.removeListener(listener);
-    //   itemPositionsListener.itemPositions.addListener(listener);
-
-    //   return () {};
-    //   // return () => itemPositionsListener.itemPositions.removeListener(listener);
-    // }, []);

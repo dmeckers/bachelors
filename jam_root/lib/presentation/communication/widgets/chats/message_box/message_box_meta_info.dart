@@ -17,36 +17,38 @@ class MessageBoxMetaInfo extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(width: 6),
-        Visibility(
-          visible: message.isPinned,
-          child: Transform.rotate(
+
+        /// pinned part
+        if (message.isPinned)
+          Transform.rotate(
             angle: 0.8,
             child: const Icon(
               Icons.push_pin_outlined,
               size: 11,
             ),
           ),
-        ),
-        Visibility(
-          visible: message.isPinned,
-          child: const SizedBox(width: 6),
-        ),
-        Visibility(
-            visible: message.isEdited,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: Text(
-                'Edited',
-                style: context.jText.bodySmall?.copyWith(fontSize: 8),
-              ),
-            )),
-        Visibility(visible: message.isEdited, child: const SizedBox(width: 6)),
+        if (message.isPinned) const SizedBox(width: 6),
+
+        /// edited part
+        if (message.isEdited)
+          Padding(
+            padding: const EdgeInsets.only(right: 5),
+            child: Text(
+              'Edited',
+              style: context.jText.bodySmall?.copyWith(fontSize: 8),
+            ),
+          ),
+        if (message.isEdited) const SizedBox(width: 6),
+
+        /// time
         Text(
           message.sentAt.toTime(),
           style: context.jText.bodySmall?.copyWith(fontSize: 11),
         ),
         const SizedBox(width: 6),
-        Icon((message.messageStatus?.toIcon()), size: 11)
+
+        /// status part
+        if (message.fromMe) Icon((message.messageStatus?.toIcon()), size: 11)
       ],
     );
   }

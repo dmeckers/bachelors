@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -142,7 +143,7 @@ class SendFriendInviteDialog extends HookConsumerWidget
     UserProfileModel profileData,
     UserWithRelationshipStatus otherUser,
     ValueNotifier<bool> sendingIvnite,
-  ) {
+  ) async {
     if (otherUser.status == RelationshipStatus.friendRequestSent) return;
 
     if (otherUser.status == RelationshipStatus.friends) {
@@ -155,22 +156,33 @@ class SendFriendInviteDialog extends HookConsumerWidget
       );
     }
 
-    final future = ref.read(
+    final success = await ref.read(
       sendFriendInviteProvider(userId: userId).future,
     );
 
+    final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
+    sendingIvnite.value = false;
+
+    await supabase.functions.invoke('send_friend_invite_notifications',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $key'
+        },
+        body: {
+          'user_received': userId,
+          'user_fcm_token': otherUser.user.fcmToken
+        });
+
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => OkPopup(
+          title: success ? 'Invite sent' : 'Could not send invite',
+          onOkPressed: () => onInviteSent(),
+        ),
+      );
+    }
+
     sendingIvnite.value = true;
-    future.then(
-      (success) {
-        sendingIvnite.value = false;
-        showDialog(
-          context: context,
-          builder: (context) => OkPopup(
-            title: success ? 'Invite sent' : 'Could not send invite',
-            onOkPressed: () => onInviteSent(),
-          ),
-        );
-      },
-    );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:go_router/go_router.dart';
+import 'package:jam/globals.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 // ignore: depend_on_referenced_packages
@@ -16,11 +17,11 @@ class AndroidNotificator {
 
   static handleRedirect(NotificationResponse a) {
     final chatId = int.parse(a.payload!.split('=')[1]);
-    if (routerKey.currentContext == null) {
+    if (ROUTER_KEY.currentContext == null) {
       return (isFromChat: true, router: null);
     }
 
-    GoRouter.of(routerKey.currentContext!).pushNamed(
+    GoRouter.of(ROUTER_KEY.currentContext!).pushNamed(
       ChatRoutes.chat.name,
       pathParameters: {
         ChatRoutes.chat.pathParameter!: chatId.toString(),

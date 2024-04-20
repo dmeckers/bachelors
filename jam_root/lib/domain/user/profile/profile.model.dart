@@ -116,6 +116,15 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
       includeToJson: false,
     )
     bool? isChatHidden,
+
+    ///
+    /// Utility token for push notifications
+    ///
+    @JsonKey(
+      includeIfNull: false,
+      includeToJson: false,
+    )
+    String? fcmToken,
   }) = _UserProfileModel;
 
   const UserProfileModel._();

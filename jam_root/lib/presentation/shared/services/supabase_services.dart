@@ -1,8 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:jam/globals.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -84,7 +84,7 @@ class SupabaseServices {
 
   static _logoutHook() async {
     await localDatabase.clear();
-    chatControllers.clear();
-    sockets.clear();
+    MAIN_CHATS_STREAM.clear();
+    MAIN_CHATS_SOCKETS.clear();
   }
 }

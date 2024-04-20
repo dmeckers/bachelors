@@ -6,8 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
-part 'messages_state.g.dart';
-
 class MessagesState with ChattingProviders, Storer {
   MessagesState(this._ref);
 
@@ -28,23 +26,6 @@ class MessagesState with ChattingProviders, Storer {
     );
 
     yield* _messagesState.stream.asBroadcastStream();
-  }
-}
-
-@riverpod
-class MessagesStateNotifier extends _$MessagesStateNotifier {
-  @override
-  FutureOr<Messages> build({required ChatModel chat}) {
-    ref
-        .read(messagesRepositoryProvider)
-        .getMessages$(chat: chat)
-        .listen((event) {
-      state = AsyncData(event);
-
-      localDatabase.put('chat-messages-${chat.id}', event);
-    });
-
-    return [];
   }
 }
 

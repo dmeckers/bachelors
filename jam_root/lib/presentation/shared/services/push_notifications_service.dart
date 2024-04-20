@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jam/globals.dart';
+import 'package:jam/presentation/push_notifications/push_notification_type.enum.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:jam/config/config.dart';
@@ -78,71 +80,86 @@ class PushNotificationsService {
   static initFirebaseMessagingForegroundHandler() {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) async {
-        final userId = supabase.auth.currentUser?.id;
-
-        if (message.data.isEmpty || message.data['senderId'] == userId) {
+        if (message.data.isEmpty || message.data['notificationType'] == null) {
           return;
         }
 
-        final (isFromChat: fromChat, router: router) =
-            _isMessageFromChat(message);
+        final notificitationType =
+            PushNotificationType.parse(message.data['notificationType']);
 
-        if (fromChat) return;
-
-        final messageModel = MessageModel(
-          fromMe: false,
-          messageText: message.data['body'],
-          senderId: message.data['senderId'],
-          chatId: int.parse(message.data['chatId']),
-          sentAt: DateTime.now(),
-          messageType: MessageType.parse(message.data['messageType']),
-        );
-
-        JSnackBar.show(
-          testKey.currentContext!,
-          type: SnackbarInfoType.info,
-          description: messageModel.messageText!.crop(20),
-          title: message.data['title'] ?? "New Message",
-          avatarUrl: message.data['avatar'] ??
-              ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-          onTap: () => router!.pushNamed(
-            ChatRoutes.chat.name,
-            pathParameters: {
-              ChatRoutes.chat.pathParameter!: message.data['chatId']
-            },
-          ),
-        );
+        switch (notificitationType) {
+          case PushNotificationType.friendInvite:
+            _simplePushNotificationHandler(
+              message,
+              ChatRoutes.friendInvites.name,
+            );
+          case PushNotificationType.messageNotification:
+            _handleMessageNotification(message);
+          case PushNotificationType.jamInvite:
+            _simplePushNotificationHandler(message, JamRoutes.invites.name);
+            break;
+        }
       },
     );
   }
 
-  static ({bool isFromChat, GoRouter? router}) _isMessageFromChat(
-      RemoteMessage message) {
-    if (routerKey.currentContext == null) {
-      return (isFromChat: true, router: null);
-    }
+  static _simplePushNotificationHandler(
+    RemoteMessage message, [
+    String? routeName,
+  ]) {
+    final context = MAIN_PAGE_KEY.currentContext;
+    if (context == null) return;
 
-    final router = GoRouter.of(routerKey.currentContext!);
+    JSnackBar.show(
+      context,
+      type: SnackbarInfoType.info,
+      description: message.data['body'],
+      onTap: () =>
+          routeName != null ? GoRouter.of(context).pushNamed(routeName) : {},
+    );
+  }
 
+  static _handleMessageNotification(RemoteMessage message) {
+    final routerContext = ROUTER_KEY.currentContext;
+    // we need this context af
+    if (routerContext == null) return;
+
+    final router = GoRouter.of(routerContext);
     final lastMatch = router.routerDelegate.currentConfiguration.last;
     final matchList = lastMatch is ImperativeRouteMatch
         ? lastMatch.matches
         : router.routerDelegate.currentConfiguration;
 
     final route = matchList.uri.toString();
-
-    /// TODO resolve when to show notification
-    /// i will only check on chat because im fucking tired of this shit
-    /// if somebody wants he will do it
-    final isChatNotification = (message.data['title'] as String)
-        .toLowerCase()
-        .startsWith('new message');
     final isHomeRoute = route == '/home';
     final isChatRoute = RegExp(r'^/home/\d+$').hasMatch(route);
 
-    return (
-      isFromChat: (isHomeRoute || isChatRoute) && isChatNotification,
-      router: router
+    /// dont show notification if user is in chat or home
+    /// because he will see new message anyway
+    if (isHomeRoute || isChatRoute) return;
+
+    final messageModel = MessageModel(
+      fromMe: false,
+      messageText: message.data['body'],
+      senderId: message.data['senderId'],
+      chatId: int.parse(message.data['chatId']),
+      sentAt: DateTime.now(),
+      messageType: MessageType.parse(message.data['messageType']),
+    );
+
+    JSnackBar.show(
+      MAIN_PAGE_KEY.currentContext!,
+      type: SnackbarInfoType.info,
+      description: messageModel.messageText!.crop(20),
+      title: message.data['title'] ?? "New Message",
+      avatarUrl: message.data['avatar'] ??
+          ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
+      onTap: () => router.pushNamed(
+        ChatRoutes.chat.name,
+        pathParameters: {
+          ChatRoutes.chat.pathParameter!: message.data['chatId']
+        },
+      ),
     );
   }
 }

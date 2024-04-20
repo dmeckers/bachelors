@@ -3,12 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
+import 'package:jam/globals.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'router.g.dart';
-
-final routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 
 @riverpod
 GoRouter router(RouterRef ref) {
@@ -40,7 +39,7 @@ GoRouter router(RouterRef ref) {
     );
 
   final router = GoRouter(
-    navigatorKey: routerKey,
+    navigatorKey: ROUTER_KEY,
     refreshListenable: isAuth,
     debugLogDiagnostics: true,
     initialLocation: "/${GuestRoutes.splash.name}",

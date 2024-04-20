@@ -6,12 +6,12 @@ part of 'communication_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getFriendInvitesHash() => r'b2762c5176ffedb02aba941da6a6d8bbbbb4d886';
+String _$getFriendInvitesHash() => r'6858a523b7fd2022227c2d0b236148a1f2f63f4b';
 
 /// See also [getFriendInvites].
 @ProviderFor(getFriendInvites)
 final getFriendInvitesProvider =
-    AutoDisposeFutureProvider<FriendInvites>.internal(
+    AutoDisposeStreamProvider<FriendInvites>.internal(
   getFriendInvites,
   name: r'getFriendInvitesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,7 +21,7 @@ final getFriendInvitesProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GetFriendInvitesRef = AutoDisposeFutureProviderRef<FriendInvites>;
+typedef GetFriendInvitesRef = AutoDisposeStreamProviderRef<FriendInvites>;
 String _$acceptFriendInviteHash() =>
     r'ee04cc1fce7244f38393a86b6a8e09e3a9ed7f70';
 

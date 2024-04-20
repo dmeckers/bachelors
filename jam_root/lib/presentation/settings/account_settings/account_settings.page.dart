@@ -93,17 +93,18 @@ class AccountSettingsPage extends ConsumerWidget
                 context: context,
                 builder: (_) => FixedInputDialog(
                   rules: isStrongPassword,
-                  onConfirm: (value) {
-                    return ref
+                  onConfirm: (value) async {
+                    await ref
                         .read(authRepositoryProvider)
-                        .updateUserPassword(password: value)
-                        .then(
-                          (value) => JSnackBar.show(
-                            context,
-                            description: 'Password changed successfully',
-                            type: SnackbarInfoType.success,
-                          ),
-                        );
+                        .updateUserPassword(password: value);
+
+                    if (!context.mounted) return;
+
+                    JSnackBar.show(
+                      context,
+                      description: 'Password changed successfully',
+                      type: SnackbarInfoType.success,
+                    );
                   },
                   title: 'Change password',
                 ),

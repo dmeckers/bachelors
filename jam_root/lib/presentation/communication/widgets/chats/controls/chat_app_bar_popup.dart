@@ -106,19 +106,8 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
   _openClearHistoryDialog(BuildContext context, WidgetRef ref) async {
     await showDialog(
       context: context,
-      builder: (_) => DestructiveDialog(
-        title: 'Clear history',
-        subtitle: 'Are you sure you want to clear history?',
-        confirmMessage: 'Clear',
-        onConfirm: (forEveryone) {
-          ref.read(
-            clearChatMessagesProvider(
-              chatId: chat.id,
-              forEveryone: forEveryone ?? false,
-            ),
-          );
-        },
-        extraConditionMessage: 'Also clear for ${chat.relatedContact.username}',
+      builder: (_) => ClearChatsDialog(
+        chat: chat,
       ),
     );
   }
@@ -126,18 +115,9 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
   _openDeleteChatDialog(BuildContext context, WidgetRef ref) async {
     await showDialog(
       context: context,
-      builder: (_) => DestructiveDialog(
-        title: 'Delete chat',
-        subtitle: 'Are you sure you want to delete chat?',
-        confirmMessage: 'Delete',
-        //todo rework this
-        onConfirm: (forBoth) {
-          showUnimplementedSnackbar(context);
-          // ref
-          //     .read(messagesControllerProvider)
-          //     .deleteChat(chatId: int.tryParse(chatId ?? '1') ?? 1, forBoth: forBoth ?? false);
-        },
-        extraConditionMessage: 'Also delete for this user',
+      builder: (_) => DeleteChatsDialog(
+        chat: chat,
+        onClose: () => Navigator.of(context).pop(),
       ),
     );
   }

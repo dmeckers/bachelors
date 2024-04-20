@@ -23,9 +23,7 @@ final chatsRoutes = [
   GoRoute(
     path: ChatRoutes.friendInvites.name,
     name: ChatRoutes.friendInvites.name,
-    builder: (_, state) => FriendInvitesPage(
-      friendInvites: (state.extra as List<FriendInviteModel>),
-    ),
+    builder: (_, state) => const FriendInvitesPage(),
   ),
   GoRoute(
     path: VibeRoutes.editMyVibes.name,
