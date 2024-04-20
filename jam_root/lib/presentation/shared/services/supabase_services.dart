@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:jam/globals.dart';
@@ -84,6 +85,11 @@ class SupabaseServices {
 
   static _logoutHook() async {
     await localDatabase.clear();
+
+    MAIN_CHATS_STREAM.forEach((key, controller) {
+      controller.close();
+    });
+
     MAIN_CHATS_STREAM.clear();
     MAIN_CHATS_SOCKETS.clear();
   }

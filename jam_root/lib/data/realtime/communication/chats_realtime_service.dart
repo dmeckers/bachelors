@@ -17,7 +17,7 @@ class ChatRealtimeService
   @override
   final ChatRepositoryInterface repository;
 
-  final _chatStreams = BehaviorSubject<List<Stream<ChatModel>>>.seeded([]);
+  BehaviorSubject<List<Stream<ChatModel>>>? _chatStreams;
   RealtimeChannel? pushAndDie;
 
   @override
@@ -36,10 +36,12 @@ class ChatRealtimeService
 
       _subscribeChatAndStoreSocket(element.id, element.relatedContact.id);
     }
+    _chatStreams = BehaviorSubject<List<Stream<ChatModel>>>.seeded([]);
 
-    _chatStreams.value = MAIN_CHATS_STREAM.values.map((e) => e.stream).toList();
+    _chatStreams!.value =
+        MAIN_CHATS_STREAM.values.map((e) => e.stream).toList();
 
-    yield* _chatStreams.stream
+    yield* _chatStreams!.stream
         .scan(
           (accumulated, value, index) => [...accumulated, ...value],
           List<Stream<ChatModel>>.empty(growable: true),
@@ -256,7 +258,8 @@ class ChatRealtimeService
     MAIN_CHATS_STREAM[chatId] = BehaviorSubject<ChatModel>.seeded(chat);
 
     /// update _chatStreams
-    _chatStreams.value = MAIN_CHATS_STREAM.values.map((e) => e.stream).toList();
+    _chatStreams?.value =
+        MAIN_CHATS_STREAM.values.map((e) => e.stream).toList();
 
     /// save socket connection
     _subscribeChatAndStoreSocket(chatId, chat.relatedContact.id);

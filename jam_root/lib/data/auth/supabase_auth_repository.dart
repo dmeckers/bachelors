@@ -55,6 +55,7 @@ class SupabaseAuthRepository
     required String password,
   }) async {
     try {
+      await localDatabase.clear();
       final authResponse =
           await Supabase.instance.client.auth.signInWithPassword(
         password: password,
@@ -174,6 +175,8 @@ class SupabaseAuthRepository
 
   @override
   Future thirdPartyLogin({required ThirdPartyProviders provider}) async {
+    await localDatabase.clear();
+
     switch (provider) {
       case ThirdPartyProviders.google:
         loginWithGoogle();

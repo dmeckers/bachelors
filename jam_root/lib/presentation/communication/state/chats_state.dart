@@ -41,7 +41,15 @@ class ChatsState extends WidgetsBindingObserver with Storer {
           mapped,
         );
       },
-    );
+    ).map((chats) => chats..sort(compareChats));
+  }
+
+  int compareChats(ChatModel a, ChatModel b) {
+    if (a.isPinned != b.isPinned) {
+      return a.isPinned ? -1 : 1;
+    }
+    return (b.lastMessage?.sentAt ?? DateTime(0))
+        .compareTo(a.lastMessage?.sentAt ?? DateTime(0));
   }
 
   unpinChats({required Chats selectedChats}) {

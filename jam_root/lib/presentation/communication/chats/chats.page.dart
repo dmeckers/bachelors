@@ -19,13 +19,14 @@ class ChatsPage extends HookConsumerWidget
     final selectedChats = ref.watch(selectedChatsProvider);
     final c$ = ref.watch(chatsState$);
 
-    useEffect(() {
-      final chatsListener = ref.listenManual(chatsState$, (previous, next) {});
+    // useEffect(() {
+    //   final chatsListener = ref.listenManual(chatsState$, (previous, next) {});
 
-      return () {
-        chatsListener.close();
-      };
-    }, []);
+    //   return () {
+    //     debugPrint('statement');
+    //     chatsListener.close();
+    //   };
+    // }, []);
 
     _initOnlineStatusObserver(ref);
 
