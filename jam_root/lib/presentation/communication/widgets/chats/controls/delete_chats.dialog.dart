@@ -35,18 +35,16 @@ class DeleteChatsDialog extends HookConsumerWidget with ChattingProviders {
       ),
       title: Text(titleText, style: const TextStyle(fontSize: 18)),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(contentText, style: const TextStyle(fontSize: 14)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Checkbox(
-                value: deleteForBoth.value ?? false,
-                onChanged: (v) => deleteForBoth.value = v,
-              ),
-              Text(checkboxText, style: const TextStyle(fontSize: 14)),
-            ],
-          )
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            value: deleteForBoth.value ?? false,
+            onChanged: (v) => deleteForBoth.value = v,
+            title: Text(checkboxText, style: const TextStyle(fontSize: 14)),
+          ),
         ],
       ),
       actions: [

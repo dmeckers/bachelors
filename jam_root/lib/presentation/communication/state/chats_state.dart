@@ -107,6 +107,12 @@ class ChatsState extends WidgetsBindingObserver with Storer {
           forBoth: forBoth,
         );
   }
+
+  clearChatMessages({required int chatId}) {
+    _state.value = _state.value
+        .map((e) => e.id == chatId ? e.copyWith(lastMessage: null) : e)
+        .toList();
+  }
 }
 
 final chatsStateProvider = Provider<ChatsState>(

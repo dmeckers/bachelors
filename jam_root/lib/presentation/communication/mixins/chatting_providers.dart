@@ -92,8 +92,11 @@ Stream<List<MessageModel>> _getChatMessages(
     ref.read(messagesRepositoryProvider).getMessages$(chat: chat);
 
 @riverpod
-Future<void> _clearChatMessages(_ClearChatMessagesRef ref,
-    {required int chatId, required bool forEveryone}) {
+Future<void> _clearChatMessages(
+  _ClearChatMessagesRef ref, {
+  required int chatId,
+  required bool forEveryone,
+}) {
   return ref
       .read(messagesRepositoryProvider)
       .clearChatMessages(chatId: chatId, forEveryone: forEveryone);

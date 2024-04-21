@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
+import 'package:jam/domain/domain.dart';
 import 'package:jam/globals.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,14 +12,15 @@ part 'router.g.dart';
 
 @riverpod
 GoRouter router(RouterRef ref) {
-  final isAuth = ValueNotifier<AsyncValue<bool>>(const AsyncLoading());
+  final authState =
+      ValueNotifier<AsyncValue<JUserAuthState>>(const AsyncLoading());
   var hasVibes = true;
 
   ref
-    ..onDispose(isAuth.dispose)
+    ..onDispose(authState.dispose)
     ..listen(
       authStatChangesProvider.select(
-        (value) => value.whenData((value) => value.isAuthenticated),
+        (value) => value.whenData((value) => value.authState),
       ),
       (_, next) async {
         final iss = supaAuth.currentUser?.userMetadata?['iss'] as String?;
@@ -34,42 +36,52 @@ GoRouter router(RouterRef ref) {
           }
         }
 
-        isAuth.value = next;
+        authState.value = next;
       },
     );
 
   final router = GoRouter(
     navigatorKey: ROUTER_KEY,
-    refreshListenable: isAuth,
+    refreshListenable: authState,
     debugLogDiagnostics: true,
     initialLocation: "/${GuestRoutes.splash.name}",
     //homeRoute is actual chat route with sub chat routes
     routes: [homeRoute, ...guestRoutes, ...utilityRoutes],
     errorBuilder: (_, state) => NotFoundPage(state: state),
     redirect: (context, state) async {
-      if (isAuth.value.unwrapPrevious().hasError) {
+      final isLoading = authState.value.isLoading;
+      final hasValue = authState.value.hasValue;
+      final hasError = authState.value.hasError;
+
+      if (hasError) {
         return "/${GuestRoutes.login.name}";
       }
 
-      if (isAuth.value.isLoading ||
-          (!isAuth.value.hasValue && !isAuth.value.hasError)) {
+      if (isLoading || (!hasValue && !hasError)) {
         return "/${GuestRoutes.splash.name}";
       }
 
+      final authStateValue = authState.value.requireValue;
+
       final isGuestRoute = GuestRoutes.values
           .any((element) => element.name == state.uri.path.substring(1));
-      final isAuthenticated = isAuth.value.requireValue;
+
       final isSplash = state.uri.path == "/${GuestRoutes.splash.name}";
 
-      if (isAuthenticated && !hasVibes) {
+      if (authStateValue == JUserAuthState.authenticated && !hasVibes) {
         return "/${HomeRoutes.home.name}/${VibeRoutes.editMyVibes.name}";
       }
 
-      return switch ((isGuestRoute, isAuthenticated, isSplash)) {
-        (true, true, false) => "/${HomeRoutes.home.name}",
-        (true, true, true) => "/${HomeRoutes.home.name}",
-        (false, false, false) => "/${GuestRoutes.login.name}",
-        (true, false, true) => "/${GuestRoutes.login.name}",
+      return switch ((isGuestRoute, authStateValue, isSplash)) {
+        (true, JUserAuthState.authenticated, false) =>
+          "/${HomeRoutes.home.name}",
+        (true, JUserAuthState.authenticated, true) =>
+          "/${HomeRoutes.home.name}",
+        (false, JUserAuthState.signedOut, false) =>
+          "/${GuestRoutes.login.name}",
+        (true, JUserAuthState.signedOut, true) => "/${GuestRoutes.login.name}",
+        (true, JUserAuthState.passwordRecovery, false) =>
+          "/${GuestRoutes.resetPassword.name}",
         _ => null,
       };
     },

@@ -16,6 +16,10 @@ class SupabaseAuthRepository
   @override
   Stream<AppUser> authStateChanges$() {
     return Supabase.instance.client.auth.onAuthStateChange.map((e) {
+      if (e.event == AuthChangeEvent.passwordRecovery) {
+        return const AppUser.passwordRecovery();
+      }
+
       final isInitializingSession =
           e.event == AuthChangeEvent.initialSession && e.session != null;
 

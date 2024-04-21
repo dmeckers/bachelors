@@ -16,7 +16,6 @@ abstract class JamRepositoryInterface {
   });
   Future<bool> joinJam({required int jamId});
   Future<List<UserProfileModel>> getJamParticipants({required int jamId});
-  Future<List<(int, String)>> getJamNamesByIds({required List<int> jamIds});
 
   abstract final JamQueueInterface queue;
   abstract final AttachmentServiceInterface attachmentService;

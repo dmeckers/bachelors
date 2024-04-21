@@ -35,18 +35,16 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
       ),
       title: Text(titleText, style: const TextStyle(fontSize: 18)),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(contentText, style: const TextStyle(fontSize: 14)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Checkbox(
-                value: clearForBoth.value ?? false,
-                onChanged: (v) => clearForBoth.value = v,
-              ),
-              Text(checkboxText, style: const TextStyle(fontSize: 14)),
-            ],
-          )
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            value: clearForBoth.value ?? false,
+            onChanged: (v) => clearForBoth.value = v,
+            title: Text(checkboxText, style: const TextStyle(fontSize: 14)),
+          ),
         ],
       ),
       actions: [
@@ -80,10 +78,11 @@ class ClearChatsDialog extends HookConsumerWidget with ChattingProviders {
     Navigator.of(context).pop();
     // since i have removed clear chat from main page it is only possible to clear one chat at a time
     // but i will keep the multiple chat clear for future use
-    if (chat != null) return;
+    if (chat == null) return;
     await ref
         .read(messagesRepositoryProvider)
         .clearChatMessages(chatId: chat!.id, forEveryone: forEveryone);
+
     ref.read(selectedChatsProvider.notifier).state = [];
 
     onClose?.call();

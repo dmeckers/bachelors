@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/globals.dart';
@@ -29,10 +28,6 @@ class ChatsPage extends HookConsumerWidget
     // }, []);
 
     _initOnlineStatusObserver(ref);
-
-    final usermeta = supaAuth.currentUser!.userMetadata;
-
-    debugPrint(usermeta.toString());
 
     return Scaffold(
       backgroundColor: context.jTheme.primaryColor,

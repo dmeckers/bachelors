@@ -276,8 +276,8 @@ class ChatRealtimeService
     ///
     /// Unsub and close to avoid memory leaks
     ///
-    MAIN_CHATS_SOCKETS[chatId]!.unsubscribe();
-    MAIN_CHATS_STREAM[chatId]!.close();
+    MAIN_CHATS_SOCKETS[chatId]?.unsubscribe();
+    MAIN_CHATS_STREAM[chatId]?.close();
 
     ///
     /// Clear map key to be sure

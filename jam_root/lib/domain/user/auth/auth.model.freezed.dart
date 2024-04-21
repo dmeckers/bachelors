@@ -20,6 +20,8 @@ AppUser _$AppUserFromJson(Map<String, dynamic> json) {
       return JUser.fromJson(json);
     case 'signedOut':
       return SignedOut.fromJson(json);
+    case 'passwordRecovery':
+      return PasswordRecovery.fromJson(json);
 
     default:
       throw CheckedFromJsonException(json, 'runtimeType', 'AppUser',
@@ -41,6 +43,7 @@ mixin _$AppUser {
             UserProfileModel? userProfile)
         signedIn,
     required TResult Function() signedOut,
+    required TResult Function() passwordRecovery,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -55,6 +58,7 @@ mixin _$AppUser {
             UserProfileModel? userProfile)?
         signedIn,
     TResult? Function()? signedOut,
+    TResult? Function()? passwordRecovery,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -63,6 +67,7 @@ mixin _$AppUser {
             String token, DateTime? lastSignIn, UserProfileModel? userProfile)?
         signedIn,
     TResult Function()? signedOut,
+    TResult Function()? passwordRecovery,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -70,18 +75,21 @@ mixin _$AppUser {
   TResult map<TResult extends Object?>({
     required TResult Function(JUser value) signedIn,
     required TResult Function(SignedOut value) signedOut,
+    required TResult Function(PasswordRecovery value) passwordRecovery,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(JUser value)? signedIn,
     TResult? Function(SignedOut value)? signedOut,
+    TResult? Function(PasswordRecovery value)? passwordRecovery,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(JUser value)? signedIn,
     TResult Function(SignedOut value)? signedOut,
+    TResult Function(PasswordRecovery value)? passwordRecovery,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -272,6 +280,7 @@ class _$JUserImpl extends JUser {
             UserProfileModel? userProfile)
         signedIn,
     required TResult Function() signedOut,
+    required TResult Function() passwordRecovery,
   }) {
     return signedIn(
         uid, displayName, email, phone, token, lastSignIn, userProfile);
@@ -290,6 +299,7 @@ class _$JUserImpl extends JUser {
             UserProfileModel? userProfile)?
         signedIn,
     TResult? Function()? signedOut,
+    TResult? Function()? passwordRecovery,
   }) {
     return signedIn?.call(
         uid, displayName, email, phone, token, lastSignIn, userProfile);
@@ -302,6 +312,7 @@ class _$JUserImpl extends JUser {
             String token, DateTime? lastSignIn, UserProfileModel? userProfile)?
         signedIn,
     TResult Function()? signedOut,
+    TResult Function()? passwordRecovery,
     required TResult orElse(),
   }) {
     if (signedIn != null) {
@@ -316,6 +327,7 @@ class _$JUserImpl extends JUser {
   TResult map<TResult extends Object?>({
     required TResult Function(JUser value) signedIn,
     required TResult Function(SignedOut value) signedOut,
+    required TResult Function(PasswordRecovery value) passwordRecovery,
   }) {
     return signedIn(this);
   }
@@ -325,6 +337,7 @@ class _$JUserImpl extends JUser {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(JUser value)? signedIn,
     TResult? Function(SignedOut value)? signedOut,
+    TResult? Function(PasswordRecovery value)? passwordRecovery,
   }) {
     return signedIn?.call(this);
   }
@@ -334,6 +347,7 @@ class _$JUserImpl extends JUser {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(JUser value)? signedIn,
     TResult Function(SignedOut value)? signedOut,
+    TResult Function(PasswordRecovery value)? passwordRecovery,
     required TResult orElse(),
   }) {
     if (signedIn != null) {
@@ -432,6 +446,7 @@ class _$SignedOutImpl extends SignedOut {
             UserProfileModel? userProfile)
         signedIn,
     required TResult Function() signedOut,
+    required TResult Function() passwordRecovery,
   }) {
     return signedOut();
   }
@@ -449,6 +464,7 @@ class _$SignedOutImpl extends SignedOut {
             UserProfileModel? userProfile)?
         signedIn,
     TResult? Function()? signedOut,
+    TResult? Function()? passwordRecovery,
   }) {
     return signedOut?.call();
   }
@@ -460,6 +476,7 @@ class _$SignedOutImpl extends SignedOut {
             String token, DateTime? lastSignIn, UserProfileModel? userProfile)?
         signedIn,
     TResult Function()? signedOut,
+    TResult Function()? passwordRecovery,
     required TResult orElse(),
   }) {
     if (signedOut != null) {
@@ -473,6 +490,7 @@ class _$SignedOutImpl extends SignedOut {
   TResult map<TResult extends Object?>({
     required TResult Function(JUser value) signedIn,
     required TResult Function(SignedOut value) signedOut,
+    required TResult Function(PasswordRecovery value) passwordRecovery,
   }) {
     return signedOut(this);
   }
@@ -482,6 +500,7 @@ class _$SignedOutImpl extends SignedOut {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(JUser value)? signedIn,
     TResult? Function(SignedOut value)? signedOut,
+    TResult? Function(PasswordRecovery value)? passwordRecovery,
   }) {
     return signedOut?.call(this);
   }
@@ -491,6 +510,7 @@ class _$SignedOutImpl extends SignedOut {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(JUser value)? signedIn,
     TResult Function(SignedOut value)? signedOut,
+    TResult Function(PasswordRecovery value)? passwordRecovery,
     required TResult orElse(),
   }) {
     if (signedOut != null) {
@@ -513,4 +533,150 @@ abstract class SignedOut extends AppUser {
 
   factory SignedOut.fromJson(Map<String, dynamic> json) =
       _$SignedOutImpl.fromJson;
+}
+
+/// @nodoc
+abstract class _$$PasswordRecoveryImplCopyWith<$Res> {
+  factory _$$PasswordRecoveryImplCopyWith(_$PasswordRecoveryImpl value,
+          $Res Function(_$PasswordRecoveryImpl) then) =
+      __$$PasswordRecoveryImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PasswordRecoveryImplCopyWithImpl<$Res>
+    extends _$AppUserCopyWithImpl<$Res, _$PasswordRecoveryImpl>
+    implements _$$PasswordRecoveryImplCopyWith<$Res> {
+  __$$PasswordRecoveryImplCopyWithImpl(_$PasswordRecoveryImpl _value,
+      $Res Function(_$PasswordRecoveryImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PasswordRecoveryImpl extends PasswordRecovery {
+  const _$PasswordRecoveryImpl({final String? $type})
+      : $type = $type ?? 'passwordRecovery',
+        super._();
+
+  factory _$PasswordRecoveryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PasswordRecoveryImplFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'AppUser.passwordRecovery()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PasswordRecoveryImpl);
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String uid,
+            String displayName,
+            String email,
+            String phone,
+            String token,
+            DateTime? lastSignIn,
+            UserProfileModel? userProfile)
+        signedIn,
+    required TResult Function() signedOut,
+    required TResult Function() passwordRecovery,
+  }) {
+    return passwordRecovery();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String uid,
+            String displayName,
+            String email,
+            String phone,
+            String token,
+            DateTime? lastSignIn,
+            UserProfileModel? userProfile)?
+        signedIn,
+    TResult? Function()? signedOut,
+    TResult? Function()? passwordRecovery,
+  }) {
+    return passwordRecovery?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String uid, String displayName, String email, String phone,
+            String token, DateTime? lastSignIn, UserProfileModel? userProfile)?
+        signedIn,
+    TResult Function()? signedOut,
+    TResult Function()? passwordRecovery,
+    required TResult orElse(),
+  }) {
+    if (passwordRecovery != null) {
+      return passwordRecovery();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(JUser value) signedIn,
+    required TResult Function(SignedOut value) signedOut,
+    required TResult Function(PasswordRecovery value) passwordRecovery,
+  }) {
+    return passwordRecovery(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(JUser value)? signedIn,
+    TResult? Function(SignedOut value)? signedOut,
+    TResult? Function(PasswordRecovery value)? passwordRecovery,
+  }) {
+    return passwordRecovery?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(JUser value)? signedIn,
+    TResult Function(SignedOut value)? signedOut,
+    TResult Function(PasswordRecovery value)? passwordRecovery,
+    required TResult orElse(),
+  }) {
+    if (passwordRecovery != null) {
+      return passwordRecovery(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PasswordRecoveryImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class PasswordRecovery extends AppUser {
+  const factory PasswordRecovery() = _$PasswordRecoveryImpl;
+  const PasswordRecovery._() : super._();
+
+  factory PasswordRecovery.fromJson(Map<String, dynamic> json) =
+      _$PasswordRecoveryImpl.fromJson;
 }

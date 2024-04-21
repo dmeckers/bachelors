@@ -162,14 +162,6 @@ Future<(JamInvites, Users)> getJamInvitesAndParticipants(
 }
 
 @riverpod
-Future<List<(int, String)>> getJamNamesByIds(
-  GetJamNamesByIdsRef ref, {
-  required Integers jamIds,
-}) async {
-  return await ref.read(jamRepositoryProvider).getJamNamesByIds(jamIds: jamIds);
-}
-
-@riverpod
 Future<void> acceptJamInvite(
   AcceptJamInviteRef ref, {
   required int inviteId,

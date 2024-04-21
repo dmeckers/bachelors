@@ -69,10 +69,22 @@ class ForgotPasswordPage extends HookWidget {
   _handleSendResetPasswordLink(
     BuildContext context,
     ValueNotifier<ForgotPasswordViewModel> viewModel,
-  ) {
-    if (!viewModel.value.emailFormModel.isValid) {
+  ) async {
+    final vm = viewModel.value.emailFormModel;
+    if (!vm.isValid) {
       return;
     }
+    try {
+      await supabase.auth.resetPasswordForEmail(
+        vm.controller!.text,
+        redirectTo: EnvironmentConstants.PASSWORD_RESET_MAGIC_LINK,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    if (!context.mounted) return;
+
     JSnackBar.show(
       context,
       description: 'Link for password reset sent to your email',

@@ -5,7 +5,7 @@ import 'package:jam/domain/user/profile/profile.model.dart';
 part 'auth.model.freezed.dart';
 part 'auth.model.g.dart';
 
-enum Gender { male, female, croissant }
+enum JUserAuthState { authenticated, signedOut, passwordRecovery }
 
 @freezed
 abstract class AppUser with _$AppUser {
@@ -23,8 +23,16 @@ abstract class AppUser with _$AppUser {
 
   const factory AppUser.signedOut() = SignedOut;
 
-  bool get isAuthenticated =>
-      switch (this) { JUser() => true, SignedOut() => false, _ => false };
+  const factory AppUser.passwordRecovery() = PasswordRecovery;
+
+  JUserAuthState get authState => switch (this) {
+        JUser() => JUserAuthState.authenticated,
+        SignedOut() => JUserAuthState.signedOut,
+        PasswordRecovery() => JUserAuthState.passwordRecovery,
+        _ => throw UnimplementedError(),
+      };
+
+  bool get isPsswordRecovery => this is PasswordRecovery;
 
   factory AppUser.fromJson(Map<String, dynamic> json) =>
       _$AppUserFromJson(json);

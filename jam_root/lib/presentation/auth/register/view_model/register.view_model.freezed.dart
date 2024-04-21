@@ -22,7 +22,6 @@ mixin _$RegisterModel {
   JamBaseFormModel get confirmPasswordModel =>
       throw _privateConstructorUsedError;
   bool get agreeWithTerms => throw _privateConstructorUsedError;
-  Gender get gender => throw _privateConstructorUsedError;
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -42,7 +41,6 @@ abstract class $RegisterModelCopyWith<$Res> {
       JamBaseFormModel passwordModel,
       JamBaseFormModel confirmPasswordModel,
       bool agreeWithTerms,
-      Gender gender,
       List<VibeModel> vibes});
 }
 
@@ -64,7 +62,6 @@ class _$RegisterModelCopyWithImpl<$Res, $Val extends RegisterModel>
     Object? passwordModel = null,
     Object? confirmPasswordModel = null,
     Object? agreeWithTerms = null,
-    Object? gender = null,
     Object? vibes = null,
   }) {
     return _then(_value.copyWith(
@@ -88,10 +85,6 @@ class _$RegisterModelCopyWithImpl<$Res, $Val extends RegisterModel>
           ? _value.agreeWithTerms
           : agreeWithTerms // ignore: cast_nullable_to_non_nullable
               as bool,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
-              as Gender,
       vibes: null == vibes
           ? _value.vibes
           : vibes // ignore: cast_nullable_to_non_nullable
@@ -114,7 +107,6 @@ abstract class _$$RegisterModelImplCopyWith<$Res>
       JamBaseFormModel passwordModel,
       JamBaseFormModel confirmPasswordModel,
       bool agreeWithTerms,
-      Gender gender,
       List<VibeModel> vibes});
 }
 
@@ -134,7 +126,6 @@ class __$$RegisterModelImplCopyWithImpl<$Res>
     Object? passwordModel = null,
     Object? confirmPasswordModel = null,
     Object? agreeWithTerms = null,
-    Object? gender = null,
     Object? vibes = null,
   }) {
     return _then(_$RegisterModelImpl(
@@ -158,10 +149,6 @@ class __$$RegisterModelImplCopyWithImpl<$Res>
           ? _value.agreeWithTerms
           : agreeWithTerms // ignore: cast_nullable_to_non_nullable
               as bool,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
-              as Gender,
       vibes: null == vibes
           ? _value._vibes
           : vibes // ignore: cast_nullable_to_non_nullable
@@ -179,7 +166,6 @@ class _$RegisterModelImpl extends _RegisterModel {
       required this.passwordModel,
       required this.confirmPasswordModel,
       this.agreeWithTerms = false,
-      this.gender = Gender.male,
       required final List<VibeModel> vibes})
       : _vibes = vibes,
         super._();
@@ -195,9 +181,6 @@ class _$RegisterModelImpl extends _RegisterModel {
   @override
   @JsonKey()
   final bool agreeWithTerms;
-  @override
-  @JsonKey()
-  final Gender gender;
   final List<VibeModel> _vibes;
   @override
   List<VibeModel> get vibes {
@@ -208,7 +191,7 @@ class _$RegisterModelImpl extends _RegisterModel {
 
   @override
   String toString() {
-    return 'RegisterModel(emailModel: $emailModel, fullNameModel: $fullNameModel, passwordModel: $passwordModel, confirmPasswordModel: $confirmPasswordModel, agreeWithTerms: $agreeWithTerms, gender: $gender, vibes: $vibes)';
+    return 'RegisterModel(emailModel: $emailModel, fullNameModel: $fullNameModel, passwordModel: $passwordModel, confirmPasswordModel: $confirmPasswordModel, agreeWithTerms: $agreeWithTerms, vibes: $vibes)';
   }
 
   @override
@@ -226,7 +209,6 @@ class _$RegisterModelImpl extends _RegisterModel {
                 other.confirmPasswordModel == confirmPasswordModel) &&
             (identical(other.agreeWithTerms, agreeWithTerms) ||
                 other.agreeWithTerms == agreeWithTerms) &&
-            (identical(other.gender, gender) || other.gender == gender) &&
             const DeepCollectionEquality().equals(other._vibes, _vibes));
   }
 
@@ -238,7 +220,6 @@ class _$RegisterModelImpl extends _RegisterModel {
       passwordModel,
       confirmPasswordModel,
       agreeWithTerms,
-      gender,
       const DeepCollectionEquality().hash(_vibes));
 
   @JsonKey(ignore: true)
@@ -255,7 +236,6 @@ abstract class _RegisterModel extends RegisterModel {
       required final JamBaseFormModel passwordModel,
       required final JamBaseFormModel confirmPasswordModel,
       final bool agreeWithTerms,
-      final Gender gender,
       required final List<VibeModel> vibes}) = _$RegisterModelImpl;
   const _RegisterModel._() : super._();
 
@@ -269,8 +249,6 @@ abstract class _RegisterModel extends RegisterModel {
   JamBaseFormModel get confirmPasswordModel;
   @override
   bool get agreeWithTerms;
-  @override
-  Gender get gender;
   @override
   List<VibeModel> get vibes;
   @override

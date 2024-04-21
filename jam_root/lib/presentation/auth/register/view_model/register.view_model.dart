@@ -15,7 +15,6 @@ class RegisterModel with _$RegisterModel {
     required JamBaseFormModel passwordModel,
     required JamBaseFormModel confirmPasswordModel,
     @Default(false) bool agreeWithTerms,
-    @Default(Gender.male) Gender gender,
     required List<VibeModel> vibes,
   }) = _RegisterModel;
 
@@ -61,10 +60,6 @@ class RegisterModelStateNotifier extends StateNotifier<RegisterModel> {
   void removeVibe(VibeModel vibe) {
     state = state.copyWith(
         vibes: state.vibes.where((element) => element != vibe).toList());
-  }
-
-  void updateGender(Gender gender) {
-    state = state.copyWith(gender: gender);
   }
 
   void updateAgreeWithTerms(bool value) {

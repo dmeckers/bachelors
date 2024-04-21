@@ -118,14 +118,7 @@ final class JamsRepository extends JamRepositoryInterface
         : await supabase.rpc(
             GET_OWNER_JAMS_RPC,
             params: {'user_id': userId},
-          ).withConverter(
-            (data) => data
-                .map(
-                  (e) => JamModel.fromJson(e),
-                )
-                .toList()
-                .cast<JamModel>(),
-          );
+          ).withConverter(_jamConverter);
   }
 
   @override
@@ -139,14 +132,7 @@ final class JamsRepository extends JamRepositoryInterface
         : await supabase.rpc(
             GET_PARTICIPATED_JAMS_OUTDATED,
             params: {'user_id': userId},
-          ).withConverter(
-            (data) => data
-                .map(
-                  (e) => JamModel.fromJson(e),
-                )
-                .toList()
-                .cast<JamModel>(),
-          );
+          ).withConverter(_jamConverter);
   }
 
   @override
@@ -160,26 +146,17 @@ final class JamsRepository extends JamRepositoryInterface
         : await supabase.rpc(
             GET_PARTICIPATED_JAMS,
             params: {'user_id': userId},
-          ).withConverter(
-            (data) => data
-                .map(
-                  (e) => JamModel.fromJson(e),
-                )
-                .toList()
-                .cast<JamModel>(),
-          );
+          ).withConverter(_jamConverter);
   }
 
   @override
   Future<bool> joinJam({required int jamId}) async {
     if (await isOnline(_ref)) return queue.queueJoin(jamId: jamId);
 
-    await supabase.from('jams_users').insert(
-      {
-        'user_id': supabase.auth.currentUser!.id,
-        'jam_id': jamId,
-      },
-    );
+    await supabase.from('jams_users').insert({
+      'user_id': getUserIdOrThrow(),
+      'jam_id': jamId,
+    });
     return true;
   }
 
@@ -194,26 +171,7 @@ final class JamsRepository extends JamRepositoryInterface
             .select('profiles(*)')
             .eq('jam_id', jamId)
             .withConverter<Users>(
-              (data) => data.map((e) => UserProfileModel.fromJson(e)).toList(),
-            );
-  }
-
-  @override
-  Future<IdsWithNames> getJamNamesByIds({
-    required Integers jamIds,
-  }) async {
-    return !(await isOnline(_ref))
-        ? await _ref
-            .read(powersyncJamServiceProvider)
-            .getJamNamesByIds(jamIds: jamIds)
-        : await supabase
-            .from('jams')
-            .select('id , name')
-            .inFilter('id', jamIds)
-            .withConverter<IdsWithNames>(
-              (data) => data
-                  .map((e) => (e['id'] as int, e['name'] as String))
-                  .toList(),
+              (data) => data.map(UserProfileModel.fromJson).toList(),
             );
   }
 
@@ -222,6 +180,9 @@ final class JamsRepository extends JamRepositoryInterface
     // TODO: implement updateJamVibes
     throw UnimplementedError();
   }
+
+  Jams _jamConverter(dynamic data) =>
+      (data as Dynamics).cast<Json>().map(JamModel.fromJson).toList();
 }
 
 final jamRepositoryProvider = Provider<JamRepositoryInterface>(

@@ -27,6 +27,9 @@ mixin _$JamInviteModel {
   @JsonKey(includeIfNull: false)
   String get status => throw _privateConstructorUsedError;
   DateTime get insertedAt => throw _privateConstructorUsedError;
+  UserProfileModel get sender => throw _privateConstructorUsedError;
+  @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+  String get jamName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +49,12 @@ abstract class $JamInviteModelCopyWith<$Res> {
       String invitedUserId,
       String sendedFromUserId,
       @JsonKey(includeIfNull: false) String status,
-      DateTime insertedAt});
+      DateTime insertedAt,
+      UserProfileModel sender,
+      @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+      String jamName});
+
+  $UserProfileModelCopyWith<$Res> get sender;
 }
 
 /// @nodoc
@@ -68,6 +76,8 @@ class _$JamInviteModelCopyWithImpl<$Res, $Val extends JamInviteModel>
     Object? sendedFromUserId = null,
     Object? status = null,
     Object? insertedAt = null,
+    Object? sender = null,
+    Object? jamName = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -94,7 +104,23 @@ class _$JamInviteModelCopyWithImpl<$Res, $Val extends JamInviteModel>
           ? _value.insertedAt
           : insertedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      sender: null == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as UserProfileModel,
+      jamName: null == jamName
+          ? _value.jamName
+          : jamName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserProfileModelCopyWith<$Res> get sender {
+    return $UserProfileModelCopyWith<$Res>(_value.sender, (value) {
+      return _then(_value.copyWith(sender: value) as $Val);
+    });
   }
 }
 
@@ -112,7 +138,13 @@ abstract class _$$JamInviteModelImplCopyWith<$Res>
       String invitedUserId,
       String sendedFromUserId,
       @JsonKey(includeIfNull: false) String status,
-      DateTime insertedAt});
+      DateTime insertedAt,
+      UserProfileModel sender,
+      @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+      String jamName});
+
+  @override
+  $UserProfileModelCopyWith<$Res> get sender;
 }
 
 /// @nodoc
@@ -132,6 +164,8 @@ class __$$JamInviteModelImplCopyWithImpl<$Res>
     Object? sendedFromUserId = null,
     Object? status = null,
     Object? insertedAt = null,
+    Object? sender = null,
+    Object? jamName = null,
   }) {
     return _then(_$JamInviteModelImpl(
       id: null == id
@@ -158,6 +192,14 @@ class __$$JamInviteModelImplCopyWithImpl<$Res>
           ? _value.insertedAt
           : insertedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      sender: null == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as UserProfileModel,
+      jamName: null == jamName
+          ? _value.jamName
+          : jamName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -172,7 +214,10 @@ class _$JamInviteModelImpl extends _JamInviteModel {
       required this.invitedUserId,
       required this.sendedFromUserId,
       @JsonKey(includeIfNull: false) required this.status,
-      required this.insertedAt})
+      required this.insertedAt,
+      required this.sender,
+      @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+      required this.jamName})
       : super._();
 
   factory _$JamInviteModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -191,10 +236,15 @@ class _$JamInviteModelImpl extends _JamInviteModel {
   final String status;
   @override
   final DateTime insertedAt;
+  @override
+  final UserProfileModel sender;
+  @override
+  @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+  final String jamName;
 
   @override
   String toString() {
-    return 'JamInviteModel(id: $id, jamId: $jamId, invitedUserId: $invitedUserId, sendedFromUserId: $sendedFromUserId, status: $status, insertedAt: $insertedAt)';
+    return 'JamInviteModel(id: $id, jamId: $jamId, invitedUserId: $invitedUserId, sendedFromUserId: $sendedFromUserId, status: $status, insertedAt: $insertedAt, sender: $sender, jamName: $jamName)';
   }
 
   @override
@@ -210,13 +260,15 @@ class _$JamInviteModelImpl extends _JamInviteModel {
                 other.sendedFromUserId == sendedFromUserId) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.insertedAt, insertedAt) ||
-                other.insertedAt == insertedAt));
+                other.insertedAt == insertedAt) &&
+            (identical(other.sender, sender) || other.sender == sender) &&
+            (identical(other.jamName, jamName) || other.jamName == jamName));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, jamId, invitedUserId,
-      sendedFromUserId, status, insertedAt);
+      sendedFromUserId, status, insertedAt, sender, jamName);
 
   @JsonKey(ignore: true)
   @override
@@ -240,7 +292,10 @@ abstract class _JamInviteModel extends JamInviteModel {
       required final String invitedUserId,
       required final String sendedFromUserId,
       @JsonKey(includeIfNull: false) required final String status,
-      required final DateTime insertedAt}) = _$JamInviteModelImpl;
+      required final DateTime insertedAt,
+      required final UserProfileModel sender,
+      @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+      required final String jamName}) = _$JamInviteModelImpl;
   const _JamInviteModel._() : super._();
 
   factory _JamInviteModel.fromJson(Map<String, dynamic> json) =
@@ -259,6 +314,11 @@ abstract class _JamInviteModel extends JamInviteModel {
   String get status;
   @override
   DateTime get insertedAt;
+  @override
+  UserProfileModel get sender;
+  @override
+  @JsonKey(readValue: _JamInviteJsonTransformer.readJamName)
+  String get jamName;
   @override
   @JsonKey(ignore: true)
   _$$JamInviteModelImplCopyWith<_$JamInviteModelImpl> get copyWith =>

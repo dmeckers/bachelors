@@ -8,6 +8,7 @@ import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 final class MessagesRepository
@@ -322,11 +323,21 @@ final class MessagesRepository
             chatId: chatId,
             forEveryone: forEveryone,
           )
-        : await supabase.rpc(CLEAR_MESSAGES_RPC, params: {
-            'chat_id': chatId,
-            'for_everyone': forEveryone,
-            'user_id': getUserIdOrThrow()
-          });
+        : await supabase.rpc(
+            CLEAR_MESSAGES_RPC,
+            params: {
+              'chat_id': chatId,
+              'for_everyone': forEveryone,
+              'user_id': getUserIdOrThrow()
+            },
+          );
+
+    _ref.read(chatsStateProvider).clearChatMessages(chatId: chatId);
+    if (!forEveryone) return;
+
+    await _ref
+        .read(chatRealtimeServiceProvider)
+        .fireEvent(ClearChatHistoryEvent(chatId));
   }
 }
 

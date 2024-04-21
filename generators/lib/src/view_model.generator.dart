@@ -134,7 +134,7 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
 
     if (visitor.forTextFields.keys
         .any((element) => element.toLowerCase().contains('password'))) {
-      buffer.writeln('bool? passwordVisibility;');
+      buffer.writeln('final bool passwordVisibility;');
     }
   }
 
@@ -161,6 +161,9 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
   }
 
   void _generateContructor(ModelVisitor visitor, StringBuffer buffer) {
+    final hasPasswordField = visitor.forTextFields.keys
+        .any((element) => element.toLowerCase().contains('password'));
+
     final references =
         visitor.references.entries.map((e) => 'this.${e.key}').join(',\n');
     final textFields = visitor.forTextFields.entries
@@ -182,6 +185,7 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
 
     buffer.writeln("""
       const $className({
+        ${hasPasswordField ? 'this.passwordVisibility = false,' : ''}
         ${references.isNotEmpty ? '$references,' : ''}
         ${textFields.isNotEmpty ? '$textFields,' : ''}
         ${booleans.isNotEmpty ? '$booleans,' : ''}

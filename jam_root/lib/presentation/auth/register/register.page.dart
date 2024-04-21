@@ -33,11 +33,12 @@ class RegisterPage extends HookConsumerWidget {
     final isValid = registerModel.validate();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const SimpleAppBar(title: 'Registration'),
       body: Layout(
         child: Stack(
           children: [
-            _buildFancyCircles(context),
+            const FancyCircles(),
             Form(
               key: ref.watch(registerFormKeyProvider),
               child: Stepper(
@@ -126,45 +127,6 @@ class RegisterPage extends HookConsumerWidget {
                     content: const ReadLicenseWidget(),
                   ),
                 ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Positioned _buildFancyCircles(BuildContext context) {
-    return Positioned(
-      right: 0,
-      bottom: 0,
-      child: SizedBox(
-        width: 200,
-        height: 200,
-        child: Stack(
-          children: [
-            Positioned(
-              right: 0,
-              bottom: -100,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: context.jTheme.primaryColorDark.withOpacity(0.5),
-                ),
-              ),
-            ),
-            Positioned(
-              right: -80,
-              bottom: -20,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: context.jTheme.primaryColorLight.withOpacity(0.5),
-                ),
               ),
             ),
           ],

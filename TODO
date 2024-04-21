@@ -1,17 +1,13 @@
 after papers ONLY
-0.update map stream if it was open by new vibe ids (refetch) when vibes changed
+
+0.update map stream if it was open by new vibe ids (refetch) when vibes changed to test
 1.invite through contacts
 2.open graph link
 3.jam invites filter from BE
 4.jam vibe change (probably this will affect also map stream)
-5.refactor jam invites page
-6.jam invite get data by 1 query (now is done by 2)
-7.fix dialogs
-8.fix in-chat clear chat history
-9.restore account (email link)
 10.online status
-11.disable circle items at bottom right corner shrink in register on keyboard popup
 12.chat separator issue
 13.theme
+
 
 999.populate some vibes
