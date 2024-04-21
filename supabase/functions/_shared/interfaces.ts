@@ -1,4 +1,4 @@
-export interface WebhookPaylod<T> {
+export interface WebhookPayload<T> {
   type: "INSERT" | "UPDATE" | "DELETE";
   table: string;
   record: T;

@@ -18,6 +18,11 @@ class JamInviteModel with _$JamInviteModel implements Jsonable<JamInviteModel> {
     )
     required String status,
     required DateTime insertedAt,
+    required UserProfileModel sender,
+    @JsonKey(
+      readValue: _JamInviteJsonTransformer.readJamName,
+    )
+    required String jamName,
   }) = _JamInviteModel;
 
   const JamInviteModel._();
@@ -35,4 +40,8 @@ class JamInviteModel with _$JamInviteModel implements Jsonable<JamInviteModel> {
   String getJsonClassId() {
     return jsonClassId;
   }
+}
+
+class _JamInviteJsonTransformer {
+  static Object? readJamName(json, value) => json['jam']['name'];
 }

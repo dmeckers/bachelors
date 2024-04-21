@@ -80,41 +80,6 @@ final class ChatRepository
             .eq('user_id', getUserIdOrThrow());
   }
 
-  // @override
-  // Stream<Chats> getChats$() async* {
-  //   final cahced = localDatabase.get('chats') as List<dynamic>?;
-
-  //   yield cahced?.cast<ChatModel>() ?? [];
-
-  //   final chats$ = !(await isOnline(_ref))
-  //       ? _ref.read(powersyncChatsService).chats$().asBroadcastStream()
-  //       : realtime.get$(data: await _fetchChats());
-
-  //   final eventsSubject = BehaviorSubject<List<ChatEvent>>.seeded([]);
-
-  //   chats$.take(1).listen(
-  //     (chats) {
-  //       eventsSubject
-  //           .addStream(_ref.read(chatsEventsProvider).getEvents$(data: chats));
-  //     },
-  //   );
-
-  //   yield* Rx.combineLatest2<List<ChatModel>, List<ChatEvent>, Chats>(
-  //     chats$,
-  //     eventsSubject.stream,
-  //     (chats, events) => chats
-  //         .map(
-  //           (e) => e.copyWith(
-  //             chatEventType: events
-  //                 .where((element) => element.chatId == e.id)
-  //                 .firstOrNull
-  //                 ?.toChatEventType(),
-  //           ),
-  //         )
-  //         .toList(),
-  //   ).startWith([]).asBroadcastStream();
-  // }
-
   @override
   Future<Chats> getChats() async {
     final data = await supabase.rpc(
@@ -134,6 +99,18 @@ final class ChatRepository
 
     return ChatModel.fromJson(response.first);
   }
+
+  @override
+  Future<void> deleteChats({
+    required Chats selectedChats,
+    bool forBoth = false,
+  }) async {
+    await supabase.rpc('delete_chats', params: {
+      'user_id': getUserIdOrThrow(),
+      'chat_ids': selectedChats.map((e) => e.id).toList(),
+      'for_everyone': forBoth,
+    });
+  }
 }
 
 final chatRepositoryProvider = Provider<ChatRepositoryInterface>(
@@ -143,7 +120,3 @@ final chatRepositoryProvider = Provider<ChatRepositoryInterface>(
     ref.read(chatCacheProvider),
   ),
 );
-
-// final chatStream = StreamProvider(
-//   (ref) => ref.read(chatRepositoryProvider).getChats$(),
-// );

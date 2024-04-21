@@ -16,6 +16,10 @@ class SupabaseAuthRepository
   @override
   Stream<AppUser> authStateChanges$() {
     return Supabase.instance.client.auth.onAuthStateChange.map((e) {
+      if (e.event == AuthChangeEvent.passwordRecovery) {
+        return const AppUser.passwordRecovery();
+      }
+
       final isInitializingSession =
           e.event == AuthChangeEvent.initialSession && e.session != null;
 
@@ -55,6 +59,7 @@ class SupabaseAuthRepository
     required String password,
   }) async {
     try {
+      await localDatabase.clear();
       final authResponse =
           await Supabase.instance.client.auth.signInWithPassword(
         password: password,
@@ -174,6 +179,8 @@ class SupabaseAuthRepository
 
   @override
   Future thirdPartyLogin({required ThirdPartyProviders provider}) async {
+    await localDatabase.clear();
+
     switch (provider) {
       case ThirdPartyProviders.google:
         loginWithGoogle();

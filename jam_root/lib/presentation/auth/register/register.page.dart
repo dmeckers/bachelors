@@ -34,11 +34,12 @@ class RegisterPage extends HookConsumerWidget {
     final isValid = registerModel.validate();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: SimpleAppBar(title: S.of(context).registration),
       body: Layout(
         child: Stack(
           children: [
-            _buildFancyCircles(context),
+            const FancyCircles(),
             Form(
               key: ref.watch(registerFormKeyProvider),
               child: Stepper(
@@ -107,13 +108,17 @@ class RegisterPage extends HookConsumerWidget {
                 steps: [
                   Step(
                     title: Text(
-                        stepperCurrentStepState.value == 0 ? S.of(context).basicInfo : '',
+                        stepperCurrentStepState.value == 0
+                            ? S.of(context).basicInfo
+                            : '',
                         style: context.jText.bodySmall),
                     content: const BasicInfoStep(),
                   ),
                   Step(
                     title: Text(
-                        stepperCurrentStepState.value == 1 ? S.of(context).vibesInfo : '',
+                        stepperCurrentStepState.value == 1
+                            ? S.of(context).vibesInfo
+                            : '',
                         style: context.jText.bodySmall),
                     content: const SelectVibe(),
                   ),
@@ -127,45 +132,6 @@ class RegisterPage extends HookConsumerWidget {
                     content: const ReadLicenseWidget(),
                   ),
                 ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Positioned _buildFancyCircles(BuildContext context) {
-    return Positioned(
-      right: 0,
-      bottom: 0,
-      child: SizedBox(
-        width: 200,
-        height: 200,
-        child: Stack(
-          children: [
-            Positioned(
-              right: 0,
-              bottom: -100,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: context.jTheme.primaryColorDark.withOpacity(0.5),
-                ),
-              ),
-            ),
-            Positioned(
-              right: -80,
-              bottom: -20,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: context.jTheme.primaryColorLight.withOpacity(0.5),
-                ),
               ),
             ),
           ],

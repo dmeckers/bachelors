@@ -55,20 +55,9 @@ mixin ChatBuilderHelper {
           },
           icon: const Icon(Icons.volume_up)),
       IconButton(
-        onPressed: () => _clearChatsHistoryBuilder(context),
-        icon: const Icon(Icons.clear_all),
-      ),
-      IconButton(
           onPressed: () => _deleteChatsDialogBuilder(context),
           icon: const Icon(Icons.delete)),
     ];
-  }
-
-  Future<void> _clearChatsHistoryBuilder(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (context) => const ClearChatsDialog(),
-    );
   }
 
   Future<void> _deleteChatsDialogBuilder(BuildContext context) async {

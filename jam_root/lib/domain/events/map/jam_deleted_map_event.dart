@@ -1,5 +1,6 @@
 import 'package:jam/config/constants/supabase/supabase.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class JamDeletedMapEvent implements MapEvent {
   const JamDeletedMapEvent({
@@ -37,14 +38,18 @@ class JamDeletedMapEvent implements MapEvent {
   @override
   final List<VibeModel> vibes;
 
-  factory JamDeletedMapEvent.fromModel(int jamId) {
+  factory JamDeletedMapEvent.fromModel(JamModel jam) {
+    final coords = jam.lat == -1
+        ? jam.location.extractCords()
+        : (lat: jam.lat, lon: jam.lon);
+
     return JamDeletedMapEvent(
-      jamId: jamId,
-      creatorId: '',
-      latitude: -1,
-      longitude: -1,
-      vibes: [],
-      name: '',
+      jamId: jam.id!,
+      creatorId: jam.creatorId ?? '',
+      latitude: coords.lat!,
+      longitude: coords.lon!,
+      vibes: jam.relatedVibes,
+      name: jam.backfilled.name!,
     );
   }
 }

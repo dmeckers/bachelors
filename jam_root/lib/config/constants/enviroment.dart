@@ -8,4 +8,6 @@ final class EnvironmentConstants {
   static const BUGSNAG_API_KEY = 'BUGSNAG_API_KEY';
   static const POWERSYNC_INSTANCE_URL = 'POWERSYNC_INSTANCE_URL';
   static const MAP_STYLE_PATH = 'assets/data/map_style.json';
+
+  static const PASSWORD_RESET_MAGIC_LINK = 'PASSWORD_RESET_MAGIC_LINK';
 }

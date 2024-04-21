@@ -121,6 +121,12 @@ mixin _$UserProfileModel {
       includeToJson: false)
   bool? get isChatHidden => throw _privateConstructorUsedError;
 
+  ///
+  /// Utility token for push notifications
+  ///
+  @JsonKey(includeIfNull: false, includeToJson: false)
+  String? get fcmToken => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserProfileModelCopyWith<UserProfileModel> get copyWith =>
@@ -167,7 +173,8 @@ abstract class $UserProfileModelCopyWith<$Res> {
           readValue: _ProfileJsonTransformer.readIsChatHidden,
           includeIfNull: false,
           includeToJson: false)
-      bool? isChatHidden});
+      bool? isChatHidden,
+      @JsonKey(includeIfNull: false, includeToJson: false) String? fcmToken});
 }
 
 /// @nodoc
@@ -200,6 +207,7 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
     Object? publicKey = freezed,
     Object? lastActiveAt = null,
     Object? isChatHidden = freezed,
+    Object? fcmToken = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -270,6 +278,10 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.isChatHidden
           : isChatHidden // ignore: cast_nullable_to_non_nullable
               as bool?,
+      fcmToken: freezed == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -316,7 +328,8 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
           readValue: _ProfileJsonTransformer.readIsChatHidden,
           includeIfNull: false,
           includeToJson: false)
-      bool? isChatHidden});
+      bool? isChatHidden,
+      @JsonKey(includeIfNull: false, includeToJson: false) String? fcmToken});
 }
 
 /// @nodoc
@@ -347,6 +360,7 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
     Object? publicKey = freezed,
     Object? lastActiveAt = null,
     Object? isChatHidden = freezed,
+    Object? fcmToken = freezed,
   }) {
     return _then(_$UserProfileModelImpl(
       id: null == id
@@ -417,6 +431,10 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.isChatHidden
           : isChatHidden // ignore: cast_nullable_to_non_nullable
               as bool?,
+      fcmToken: freezed == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -462,7 +480,8 @@ class _$UserProfileModelImpl extends _UserProfileModel {
           readValue: _ProfileJsonTransformer.readIsChatHidden,
           includeIfNull: false,
           includeToJson: false)
-      this.isChatHidden})
+      this.isChatHidden,
+      @JsonKey(includeIfNull: false, includeToJson: false) this.fcmToken})
       : _photoUrls = photoUrls,
         _friends = friends,
         _jams = jams,
@@ -644,9 +663,16 @@ class _$UserProfileModelImpl extends _UserProfileModel {
       includeToJson: false)
   final bool? isChatHidden;
 
+  ///
+  /// Utility token for push notifications
+  ///
+  @override
+  @JsonKey(includeIfNull: false, includeToJson: false)
+  final String? fcmToken;
+
   @override
   String toString() {
-    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt, isChatHidden: $isChatHidden)';
+    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt, isChatHidden: $isChatHidden, fcmToken: $fcmToken)';
   }
 
   @override
@@ -680,7 +706,9 @@ class _$UserProfileModelImpl extends _UserProfileModel {
             (identical(other.lastActiveAt, lastActiveAt) ||
                 other.lastActiveAt == lastActiveAt) &&
             (identical(other.isChatHidden, isChatHidden) ||
-                other.isChatHidden == isChatHidden));
+                other.isChatHidden == isChatHidden) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken));
   }
 
   @JsonKey(ignore: true)
@@ -703,7 +731,8 @@ class _$UserProfileModelImpl extends _UserProfileModel {
       rootChatId,
       publicKey,
       lastActiveAt,
-      isChatHidden);
+      isChatHidden,
+      fcmToken);
 
   @JsonKey(ignore: true)
   @override
@@ -757,7 +786,9 @@ abstract class _UserProfileModel extends UserProfileModel {
           readValue: _ProfileJsonTransformer.readIsChatHidden,
           includeIfNull: false,
           includeToJson: false)
-      final bool? isChatHidden}) = _$UserProfileModelImpl;
+      final bool? isChatHidden,
+      @JsonKey(includeIfNull: false, includeToJson: false)
+      final String? fcmToken}) = _$UserProfileModelImpl;
   const _UserProfileModel._() : super._();
 
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) =
@@ -879,6 +910,13 @@ abstract class _UserProfileModel extends UserProfileModel {
       includeIfNull: false,
       includeToJson: false)
   bool? get isChatHidden;
+  @override
+
+  ///
+  /// Utility token for push notifications
+  ///
+  @JsonKey(includeIfNull: false, includeToJson: false)
+  String? get fcmToken;
   @override
   @JsonKey(ignore: true)
   _$$UserProfileModelImplCopyWith<_$UserProfileModelImpl> get copyWith =>

@@ -1,4 +1,34 @@
 import { create } from "https://deno.land/x/djwt@v3.0.1/mod.ts";
+import { NotificationType } from "./notification_type.ts";
+
+export async function sendNotificationWithData<T>(
+  accessToken: string,
+  fcmToken: string,
+  data: T,
+) {
+  const response = await fetch(
+    "https://fcm.googleapis.com/v1/projects/jamm-10753/messages:send",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        message: {
+          token: fcmToken,
+          data: data,
+        },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const data = await response.json();
+    console.error("Failed to send notification:", data);
+    throw new Error("Failed to send notification");
+  }
+}
 
 export async function sendNotification(
   accessToken: string,
@@ -9,6 +39,7 @@ export async function sendNotification(
   messageType: string,
   chatId: string,
   avatar: string,
+  notificationType: NotificationType,
 ) {
   const response = await fetch(
     "https://fcm.googleapis.com/v1/projects/jamm-10753/messages:send",
@@ -28,6 +59,7 @@ export async function sendNotification(
             messageType,
             chatId,
             avatar,
+            notificationType,
           },
         },
       }),

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 final class MessagesRepository
@@ -42,6 +44,7 @@ final class MessagesRepository
     required UserProfileModel receiver,
     required int chatId,
   }) async {
+    final userId = getUserIdOrThrow();
     if (!(await _isOnline())) {
       final messageModel = await chatQueue.queueSendText(
         chatId: chatId,
@@ -51,7 +54,7 @@ final class MessagesRepository
 
       messagesRealtime.pushMessage(
         messageModel.copyWith(
-          senderId: getUserIdOrThrow(),
+          senderId: userId,
           chatId: chatId,
           messageStatus: MessageDeliveryStatus.unread,
         ),
@@ -69,11 +72,26 @@ final class MessagesRepository
     messagesRealtime.pushMessage(
       message.copyWith(
         id: id,
-        senderId: getUserIdOrThrow(),
+        senderId: userId,
         chatId: chatId,
         messageStatus: MessageDeliveryStatus.unread,
       ),
     );
+
+    final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
+    final user = get<UserProfileModel>();
+    await supabase.functions.invoke('send_message_notification', headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $key'
+    }, body: {
+      'fcm_token': receiver.fcmToken,
+      'message': message.messageText!,
+      'chat_id': chatId,
+      'sender_id': userId,
+      'avatar': user?.avatar,
+      'message_type': 'text',
+      'sender_name': user?.username,
+    });
 
     return message;
   }
@@ -305,11 +323,21 @@ final class MessagesRepository
             chatId: chatId,
             forEveryone: forEveryone,
           )
-        : await supabase.rpc(CLEAR_MESSAGES_RPC, params: {
-            'chat_id': chatId,
-            'for_everyone': forEveryone,
-            'user_id': getUserIdOrThrow()
-          });
+        : await supabase.rpc(
+            CLEAR_MESSAGES_RPC,
+            params: {
+              'chat_id': chatId,
+              'for_everyone': forEveryone,
+              'user_id': getUserIdOrThrow()
+            },
+          );
+
+    _ref.read(chatsStateProvider).clearChatMessages(chatId: chatId);
+    if (!forEveryone) return;
+
+    await _ref
+        .read(chatRealtimeServiceProvider)
+        .fireEvent(ClearChatHistoryEvent(chatId));
   }
 }
 

@@ -1,6 +1,7 @@
 export 'bottom_sheet_layout.dart';
 export 'box.layout.dart';
 export 'divider.widget.dart';
+export 'fancy_circles.dart';
 export 'hero_avatar.dart';
 export 'layout_widget.dart';
 export 'menu_drawer.dart';

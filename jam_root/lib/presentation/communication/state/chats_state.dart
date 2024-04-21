@@ -41,7 +41,15 @@ class ChatsState extends WidgetsBindingObserver with Storer {
           mapped,
         );
       },
-    );
+    ).map((chats) => chats..sort(compareChats));
+  }
+
+  int compareChats(ChatModel a, ChatModel b) {
+    if (a.isPinned != b.isPinned) {
+      return a.isPinned ? -1 : 1;
+    }
+    return (b.lastMessage?.sentAt ?? DateTime(0))
+        .compareTo(a.lastMessage?.sentAt ?? DateTime(0));
   }
 
   unpinChats({required Chats selectedChats}) {
@@ -89,6 +97,21 @@ class ChatsState extends WidgetsBindingObserver with Storer {
     _ref
         .read(chatRepositoryProvider)
         .unarchiveChats(selectedChats: selectedChats);
+  }
+
+  deleteChats({required Chats selectedChats, bool forBoth = false}) {
+    _state.value = _state.value.excludeById(selectedChats);
+
+    _ref.read(chatRepositoryProvider).deleteChats(
+          selectedChats: selectedChats,
+          forBoth: forBoth,
+        );
+  }
+
+  clearChatMessages({required int chatId}) {
+    _state.value = _state.value
+        .map((e) => e.id == chatId ? e.copyWith(lastMessage: null) : e)
+        .toList();
   }
 }
 

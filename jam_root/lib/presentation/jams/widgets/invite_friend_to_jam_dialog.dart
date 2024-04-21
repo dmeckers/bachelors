@@ -11,15 +11,15 @@ import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class InviteFriendToJamDialog extends ConsumerWidget {
-  const InviteFriendToJamDialog({super.key, required this.jamId});
+  const InviteFriendToJamDialog({super.key, required this.jam});
 
-  final int jamId;
+  final JamModel jam;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final friends = ref.watch(getFriendsProvider);
     final invitesAndParticipants = ref.watch(
-      getJamInvitesAndParticipantsProvider(jamId: jamId),
+      getJamInvitesAndParticipantsProvider(jamId: jam.id!),
     );
 
     return Stack(
@@ -42,15 +42,16 @@ class InviteFriendToJamDialog extends ConsumerWidget {
                         friendList: friendList,
                         invites: invites,
                         participants: participants,
-                        jamId: jamId,
+                        jam: jam,
                       )
-                    : _buildNoFriendsPlaceholder(context);
+                    : const NotFoundPlaceholder(
+                        message: 'No one to invite to found',
+                      );
               },
               loading: () => _buildLoader(),
               error: (error, _) => Center(
                 child: JamErrorBox(
-                  errorMessage:
-                      S.of(context).whoopsWrongWhileLoadingFriends,
+                  errorMessage: S.of(context).whoopsWrongWhileLoadingFriends,
                 ),
               ),
             ),
@@ -71,28 +72,17 @@ class InviteFriendToJamDialog extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _buildNoFriendsPlaceholder(BuildContext context) {
-    final fontColor = ColorHelper.colorContrast(context.jColor.primary);
-
-    return Center(
-      child: Text(
-        'No friends found',
-        style: context.jText.bodyLarge?.copyWith(color: fontColor),
-      ),
-    );
-  }
 }
 
 class _SendInviteFriendListPicker extends HookConsumerWidget {
   const _SendInviteFriendListPicker({
     required this.friendList,
-    required this.jamId,
+    required this.jam,
     required this.invites,
     required this.participants,
   });
 
-  final int jamId;
+  final JamModel jam;
   final Users friendList;
   final JamInvites invites;
   final Users participants;
@@ -115,20 +105,21 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
             const SizedBox(height: 20),
             ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.65,
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
               ),
               child: ListView.separated(
-                  separatorBuilder: (ctx, i) => const JamDivider(
-                        color: Colors.white60,
-                      ),
-                  itemBuilder: (ctx, i) => _buildListItem(
-                        selectedFriends,
-                        friendList[i],
-                        invites,
-                        participants,
-                        context,
-                      ),
-                  itemCount: friendList.length),
+                separatorBuilder: (ctx, i) => const JamDivider(
+                  color: Colors.white60,
+                ),
+                itemBuilder: (ctx, i) => _buildListItem(
+                  selectedFriends,
+                  friendList[i],
+                  invites,
+                  participants,
+                  context,
+                ),
+                itemCount: friendList.length,
+              ),
             ),
             _buildModalButtons(context, selectedFriends, ref)
           ],
@@ -145,7 +136,10 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
     BuildContext context,
   ) {
     final fontColor = ColorHelper.colorContrast(context.jColor.primary);
-    final isParticipating = participants.any((e) => e.id == friend.id);
+    final isParticipating = [
+      ...participants,
+      UserProfileModel(id: jam.creatorId!, lastActiveAt: DateTime.now())
+    ].any((e) => e.id == friend.id);
     final isInvited = invites.any((e) => e.invitedUserId == friend.id);
 
     return Material(
@@ -222,8 +216,8 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
               onPressed: () {
                 ref.read(
                   sendJamInvitesProvider(
-                    jamId: jamId,
-                    userIds: selectedFriends.value.map((e) => e.id).toList(),
+                    jamId: jam.id!,
+                    users: selectedFriends.value,
                   ),
                 );
 

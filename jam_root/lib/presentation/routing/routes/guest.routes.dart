@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jam/presentation/auth/auth.dart';
 import 'package:jam/presentation/shared/shared.dart';
 
-enum GuestRoutes { register, login, splash, forgotPassword }
+enum GuestRoutes { register, login, splash, forgotPassword, resetPassword }
 
 final guestRoutes = [
   GoRoute(
@@ -25,5 +25,10 @@ final guestRoutes = [
     path: "/${GuestRoutes.forgotPassword.name}",
     name: GuestRoutes.forgotPassword.name,
     builder: (_, state) => const ForgotPasswordPage(),
+  ),
+  GoRoute(
+    path: "/${GuestRoutes.resetPassword.name}",
+    name: GuestRoutes.resetPassword.name,
+    builder: (_, state) => const ResetPasswordPage(),
   ),
 ];

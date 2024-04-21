@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
 
 import 'package:jam/domain/domain.dart';
 import 'package:jam/generated/l10n.dart';
@@ -17,72 +18,71 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedMessages = ref.watch(selectedMessagesProvider);
     final deleteForBoth = useState<bool>(false);
+    final toDeleteMultiple = selectedMessages.length > 1;
+
+    final titleText = toDeleteMultiple
+        ? 'Delete ${selectedMessages.length} messages'
+        : S.of(context).deleteMessage;
+
+    final contentText = toDeleteMultiple
+        ? 'Are you sure you want to delete these messages?'
+        : 'Are you sure you want to delete this message?';
 
     return AlertDialog(
-      actionsPadding: const EdgeInsets.only(top: 0, bottom: 16, right: 8),
-      insetPadding: EdgeInsets.zero,
-      contentPadding:
-          const EdgeInsets.only(left: 24, right: 24, bottom: 0, top: 16),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-      title: selectedMessages.length < 2
-          ? Text(S.of(context).deleteMessage, style: TextStyle(fontSize: 18))
-          : Text('Delete ${selectedMessages.length} messages',
-              style: const TextStyle(fontSize: 18)),
-      content:
-          _buildModalContent(context, selectedMessages.length, deleteForBoth),
+      title: Text(titleText, style: const TextStyle(fontSize: 18)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(contentText, style: const TextStyle(fontSize: 14)),
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            value: deleteForBoth.value,
+            onChanged: (v) => deleteForBoth.value = v ?? false,
+            title: const Text(
+              'Delete for everyone',
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+        ],
+      ),
       actions: [
         TextButton(
           onPressed: () => context.pop(),
-          child: Text(S.of(context).cancel,
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
         TextButton(
-            onPressed: () {
-              selectedMessages.isEmpty
-                  ? _deleteMessage(ref, deleteForBoth.value)
-                  : _deleteMessages(ref, selectedMessages, deleteForBoth.value);
-              context.pop();
-            },
-            child: Text(
-              S.of(context).delete,
-              style: context.jText.bodySmall?.copyWith(color: Colors.red),
-            ))
+          onPressed: () async => await _deleteMessages(
+            context,
+            ref,
+            selectedMessages,
+            deleteForBoth.value,
+          ),
+          child: Text(
+            'Delete',
+            style: context.jText.bodySmall?.copyWith(color: Colors.red),
+          ),
+        )
       ],
     );
   }
 
-  _deleteMessage(WidgetRef ref, bool forBoth) {
+  _deleteMessages(
+    BuildContext context,
+    WidgetRef ref,
+    Messages messages,
+    bool forBoth,
+  ) {
+    // TODO when messages can be multiply selected handle delete list of messages
     ref.read(
-        deleteChatMessageProvider(message: message!, forEveryone: forBoth));
-    // ref.read(messagesControllerProvider).deleteMessages(messages: messages, forBoth: forBoth);
-    ref.read(selectedMessagesProvider.notifier).state = [];
-  }
+      deleteChatMessageProvider(message: message!, forEveryone: forBoth),
+    );
 
-  _deleteMessages(WidgetRef ref, List<MessageModel> messages, bool forBoth) {
-    // ref.read(messagesControllerProvider).deleteMessages(messages: messages, forBoth: forBoth);
     ref.read(selectedMessagesProvider.notifier).state = [];
+    context.pop();
   }
-
-  Widget _buildModalContent(BuildContext context, int selectedMessageCount,
-          ValueNotifier<bool?> checkboxState) =>
-      ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 100),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          selectedMessageCount == 1
-              ? const Text('Are you sure you want to delete this message?',
-                  style: TextStyle(fontSize: 14))
-              : const Text('Are you sure you want to delete theese messages?',
-                  style: TextStyle(fontSize: 14)),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Checkbox(
-                  value: checkboxState.value,
-                  onChanged: (value) => checkboxState.value = value as bool),
-              const Text('Delete for everyone', style: TextStyle(fontSize: 14))
-            ],
-          ),
-        ]),
-      );
 }

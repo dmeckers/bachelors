@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jam/domain/events/map/jam_deleted_map_event.dart';
 import 'package:jam/domain/events/map/jam_updated_map_event.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -83,10 +84,10 @@ Future<JamModel> createJam(CreateJamRef ref, {required JamModel jam}) async {
 }
 
 @riverpod
-Future<void> deleteJam(DeleteJamRef ref, {required int jamId}) async {
-  await ref.read(jamRepositoryProvider).deleteJam(jamId: jamId);
+Future<void> deleteJam(DeleteJamRef ref, {required JamModel jam}) async {
+  await ref.read(jamRepositoryProvider).deleteJam(jamId: jam.id!);
   await ref.read(mapRealtimeProvider).fireEvent(
-        JamDeletedMapEvent.fromModel(jamId),
+        JamDeletedMapEvent.fromModel(jam),
       );
   ref.invalidate(userJamControllerProvider);
 }
@@ -120,11 +121,20 @@ Future<JamInvites> getJamInvites(GetJamInvitesRef ref) async {
 Future<void> sendJamInvites(
   SendJamInvitesRef ref, {
   required int jamId,
-  required Strings userIds,
+  required Users users,
 }) async {
-  return ref
+  await ref
       .read(socialRepositoryProvider)
-      .sendJamInvite(jamId: jamId, userIds: userIds);
+      .sendJamInvite(jamId: jamId, userIds: users.map((e) => e.id).toList());
+
+  final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
+
+  await supabase.functions.invoke('send_invite_jam_notification', headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $key'
+  }, body: {
+    'users_fcm_token': users.map((e) => e.fcmToken).toList(),
+  });
 }
 
 @riverpod
@@ -149,14 +159,6 @@ Future<(JamInvites, Users)> getJamInvitesAndParticipants(
     await ref.read(socialRepositoryProvider).getSentJamInvites(),
     await ref.read(jamRepositoryProvider).getJamParticipants(jamId: jamId),
   );
-}
-
-@riverpod
-Future<List<(int, String)>> getJamNamesByIds(
-  GetJamNamesByIdsRef ref, {
-  required Integers jamIds,
-}) async {
-  return await ref.read(jamRepositoryProvider).getJamNamesByIds(jamIds: jamIds);
 }
 
 @riverpod

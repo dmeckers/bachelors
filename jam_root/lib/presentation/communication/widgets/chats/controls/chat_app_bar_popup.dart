@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
-import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -107,19 +106,8 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
   _openClearHistoryDialog(BuildContext context, WidgetRef ref) async {
     await showDialog(
       context: context,
-      builder: (_) => DestructiveDialog(
-        title: S.of(context).clearHistory,
-        subtitle: S.of(context).youSureWantClearHistory,
-        confirmMessage: S.of(context).clear,
-        onConfirm: (forEveryone) {
-          ref.read(
-            clearChatMessagesProvider(
-              chatId: chat.id,
-              forEveryone: forEveryone ?? false,
-            ),
-          );
-        },
-        extraConditionMessage: S.of(context).alsoClearFor(chat.relatedContact.username?? ""),
+      builder: (_) => ClearChatsDialog(
+        chat: chat,
       ),
     );
   }
@@ -127,18 +115,9 @@ class ChatPopupMenu extends ConsumerWidget with ChattingProviders {
   _openDeleteChatDialog(BuildContext context, WidgetRef ref) async {
     await showDialog(
       context: context,
-      builder: (_) => DestructiveDialog(
-        title: S.of(context).deleteChat,
-        subtitle: S.of(context).youSureWantDeleteChat,
-        confirmMessage: S.of(context).delete,
-        //todo rework this
-        onConfirm: (forBoth) {
-          showUnimplementedSnackbar(context);
-          // ref
-          //     .read(messagesControllerProvider)
-          //     .deleteChat(chatId: int.tryParse(chatId ?? '1') ?? 1, forBoth: forBoth ?? false);
-        },
-        extraConditionMessage: S.of(context).alsoDeleteForThisUser,
+      builder: (_) => DeleteChatsDialog(
+        chat: chat,
+        onClose: () => Navigator.of(context).pop(),
       ),
     );
   }

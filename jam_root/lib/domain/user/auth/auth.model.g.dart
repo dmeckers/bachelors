@@ -43,3 +43,15 @@ Map<String, dynamic> _$$SignedOutImplToJson(_$SignedOutImpl instance) =>
     <String, dynamic>{
       'runtimeType': instance.$type,
     };
+
+_$PasswordRecoveryImpl _$$PasswordRecoveryImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PasswordRecoveryImpl(
+      $type: json['runtimeType'] as String?,
+    );
+
+Map<String, dynamic> _$$PasswordRecoveryImplToJson(
+        _$PasswordRecoveryImpl instance) =>
+    <String, dynamic>{
+      'runtimeType': instance.$type,
+    };

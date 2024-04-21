@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/application/application.dart';
@@ -66,8 +65,6 @@ final class SocialRepository
       'current_user_id': getUserIdOrThrow(),
     }) as Dynamics;
 
-    debugPrint(response.toString());
-
     return (
       status: RelationshipStatus.fromString(
         response.first['relationship_status'],
@@ -82,8 +79,16 @@ final class SocialRepository
         ? await _ref.read(powerSyncSocialServiceProvider).getFriendInvites()
         : await supabase
             .from('friend_invites')
-            .select(
-                'id , sent_at:inserted_at , status , user_id:user_sent , profiles!friend_invites_user_sent_fkey(username,avatar) ')
+            .select("""
+                  id ,
+                  sent_at:inserted_at ,
+                  status ,
+                  user_id:user_sent ,
+                  profiles!friend_invites_user_sent_fkey(
+                    username,
+                    avatar
+                  )
+                """)
             .eq('user_received', supabase.auth.currentUser!.id)
             .withConverter<FriendInvites>(
               (data) => data
@@ -102,11 +107,7 @@ final class SocialRepository
             GET_USER_FRIENDS,
             params: {'user_id': getUserIdOrThrow()},
           ).withConverter<Users>(
-            (data) => (data as List)
-                .map(
-                  (profileMap) => UserProfileModel.fromJson(profileMap),
-                )
-                .toList(),
+            (data) => (data as Jsons).map(UserProfileModel.fromJson).toList(),
           );
   }
 
@@ -116,15 +117,22 @@ final class SocialRepository
         ? await _ref.read(powerSyncSocialServiceProvider).getJamInvites()
         : await supabase
             .from('jam_invites')
-            .select()
+            .select("""
+                  * ,
+                  jam:jams!jam_invites_jam_id_fkey(
+                    name
+                  ),
+                  sender:profiles!jam_invites_sended_from_user_id_fkey(
+                      id,username,
+                      full_name,
+                      avatar,
+                      last_active_at
+                  )
+                """)
             .eq('status', 'pending')
             .eq('invited_user_id', getUserIdOrThrow())
             .withConverter<JamInvites>(
-              (data) => data
-                  .map(
-                    (e) => JamInviteModel.fromJson(e),
-                  )
-                  .toList(),
+              (data) => data.map(JamInviteModel.fromJson).toList(),
             );
   }
 
@@ -137,7 +145,7 @@ final class SocialRepository
             .select()
             .eq('sended_from_user_id', supabase.auth.currentUser!.id)
             .withConverter<JamInvites>(
-              (data) => data.map((e) => JamInviteModel.fromJson(e)).toList(),
+              (data) => data.map(JamInviteModel.fromJson).toList(),
             );
   }
 

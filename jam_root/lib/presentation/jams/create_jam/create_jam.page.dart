@@ -133,19 +133,20 @@ final class CreateJamPage extends ConsumerWidget {
     bool canSubmit,
   ) async {
     if (!canSubmit) return;
-    ref
-        .read(createJamProvider(jam: viewModel.castToModel().backfilled).future)
-        .then(
-      (value) {
-        showDialog(
-          context: context,
-          builder: (ctx) => OkPopup(
-            imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
-            title: 'Jam created',
-            onOkPressed: () => Navigator.of(context).pop(),
-          ),
-        );
-      },
+
+    await ref.read(
+      createJamProvider(jam: viewModel.castToModel().backfilled).future,
+    );
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => OkPopup(
+        imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
+        title: 'Jam created',
+        onOkPressed: () => Navigator.of(context).pop(),
+      ),
     );
   }
 }

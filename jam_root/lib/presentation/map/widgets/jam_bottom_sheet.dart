@@ -95,7 +95,7 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
       text: isUserAlreadyParticipates || (userId == jamLocation.creatorId)
           ? 'Details'
           : 'Join',
-      onPressed: () {
+      onPressed: () async {
         if (isUserAlreadyParticipates || (userId == jamLocation.creatorId)) {
           onActionPressed();
           context.pushNamed(
@@ -105,30 +105,29 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
           return;
         }
 
-        final future =
-            ref.read(joinJamFromMapProvider(jamId: jamLocation.id).future);
-        future.then(
-          (success) => _buildOkPopup(context, success),
+        final success = await ref
+            .read(joinJamFromMapProvider(jamId: jamLocation.id).future);
+
+        if (!context.mounted) return;
+
+        showDialog(
+          context: context,
+          builder: (ctx) => OkPopup(
+            title:
+                success ? 'You have joined the jam' : 'Failed to join the jam',
+            onOkPressed: () {
+              onActionPressed();
+              Navigator.of(context, rootNavigator: true).pop();
+              if (success) {
+                context.pushNamed(
+                  JamRoutes.details.name,
+                  pathParameters: {'jamId': jamLocation.id.toString()},
+                );
+              }
+            },
+          ),
         );
       },
     );
   }
-
-  Future<dynamic> _buildOkPopup(BuildContext context, bool success) =>
-      showDialog(
-        context: context,
-        builder: (ctx) => OkPopup(
-          title: success ? 'You have joined the jam' : 'Failed to join the jam',
-          onOkPressed: () {
-            onActionPressed();
-            Navigator.of(context, rootNavigator: true).pop();
-            if (success) {
-              context.pushNamed(
-                JamRoutes.details.name,
-                pathParameters: {'jamId': jamLocation.id.toString()},
-              );
-            }
-          },
-        ),
-      );
 }

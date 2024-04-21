@@ -111,6 +111,7 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
       isChatHidden:
           _ProfileJsonTransformer.readIsChatHidden(json, 'is_chat_hidden')
               as bool?,
+      fcmToken: json['fcm_token'] as String?,
     );
 
 Map<String, dynamic> _$$UserProfileModelImplToJson(

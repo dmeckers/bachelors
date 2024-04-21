@@ -15,7 +15,7 @@ class JamCardBottomSheetActions extends ConsumerWidget {
     return BottomSheetLayout(
       children: [
         _buildShowInMapTile(context),
-        if (!jam.isPast) _buildInviteFriendsTile(context, jam.id!),
+        if (!jam.isPast) _buildInviteFriendsTile(context, jam),
         if (jam.isOwner && !jam.isPast) _buildEditTile(context),
         if (jam.isOwner && !jam.isPast) _buildDeleteTile(context, ref),
       ],
@@ -29,11 +29,7 @@ class JamCardBottomSheetActions extends ConsumerWidget {
       onTap: () => showDialog(
         context: context,
         builder: (context) => DestructiveDialog(
-          onConfirm: (_) => _handleDeleteJam(
-            context,
-            ref,
-            jam.id!,
-          ),
+          onConfirm: (_) => _handleDeleteJam(context, ref, jam),
           title: 'Delete jam',
           subtitle: 'Are you sure you want to delete this jam?',
         ),
@@ -58,14 +54,14 @@ class JamCardBottomSheetActions extends ConsumerWidget {
     );
   }
 
-  ListTile _buildInviteFriendsTile(BuildContext context, int jamId) {
+  ListTile _buildInviteFriendsTile(BuildContext context, JamModel jam) {
     return ListTile(
       leading: const Icon(Icons.mail),
       title: const Text('Invite friends'),
       onTap: () => showDialog(
         context: context,
         builder: (ctx) => InviteFriendToJamDialog(
-          jamId: jamId,
+          jam: jam,
         ),
       ),
     );
@@ -85,9 +81,10 @@ class JamCardBottomSheetActions extends ConsumerWidget {
     );
   }
 
-  void _handleDeleteJam(BuildContext context, WidgetRef ref, int jamId) {
-    ref.read(deleteJamProvider(jamId: jamId).future).then(
+  void _handleDeleteJam(BuildContext context, WidgetRef ref, JamModel jam) {
+    ref.read(deleteJamProvider(jam: jam).future).then(
       (_) {
+        Navigator.of(context).pop();
         ref.invalidate(userJamControllerProvider);
       },
     );
