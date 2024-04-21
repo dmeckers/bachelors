@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -34,7 +35,7 @@ class MessageBoxMetaInfo extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 5),
             child: Text(
-              'Edited',
+              S.of(context).edited,
               style: context.jText.bodySmall?.copyWith(fontSize: 8),
             ),
           ),

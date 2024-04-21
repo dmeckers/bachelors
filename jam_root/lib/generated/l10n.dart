@@ -1369,6 +1369,146 @@ class S {
       args: [],
     );
   }
+
+  /// `Delete {selected_messages} messages`
+  String deleteSelectedMessages(Object selected_messages) {
+    return Intl.message(
+      'Delete $selected_messages messages',
+      name: 'deleteSelectedMessages',
+      desc: '',
+      args: [selected_messages],
+    );
+  }
+
+  /// `Are you sure you want to delete these messages?`
+  String get wantToDeleteTheseMessages {
+    return Intl.message(
+      'Are you sure you want to delete these messages?',
+      name: 'wantToDeleteTheseMessages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this message?`
+  String get wantToDeleteThisMessage {
+    return Intl.message(
+      'Are you sure you want to delete this message?',
+      name: 'wantToDeleteThisMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete for everyone`
+  String get deleteForEveryone {
+    return Intl.message(
+      'Delete for everyone',
+      name: 'deleteForEveryone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pin this message in chat?`
+  String get pinThisMessageInChat {
+    return Intl.message(
+      'Pin this message in chat?',
+      name: 'pinThisMessageInChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pin for everyone in chat`
+  String get pinForEveryoneInChat {
+    return Intl.message(
+      'Pin for everyone in chat',
+      name: 'pinForEveryoneInChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reply to {state_model_sender_name}`
+  String replyToStateModel(Object state_model_sender_name) {
+    return Intl.message(
+      'Reply to $state_model_sender_name',
+      name: 'replyToStateModel',
+      desc: '',
+      args: [state_model_sender_name],
+    );
+  }
+
+  /// `Reply`
+  String get reply {
+    return Intl.message(
+      'Reply',
+      name: 'reply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy`
+  String get copy {
+    return Intl.message(
+      'Copy',
+      name: 'copy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unpin`
+  String get unpin {
+    return Intl.message(
+      'Unpin',
+      name: 'unpin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pin`
+  String get pin {
+    return Intl.message(
+      'Pin',
+      name: 'pin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get edit {
+    return Intl.message(
+      'Edit',
+      name: 'edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edited`
+  String get edited {
+    return Intl.message(
+      'Edited',
+      name: 'edited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reply to: {repliedToName}`
+  String replyToRepliedtoname(Object repliedToName) {
+    return Intl.message(
+      'Reply to: $repliedToName',
+      name: 'replyToRepliedtoname',
+      desc: '',
+      args: [repliedToName],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

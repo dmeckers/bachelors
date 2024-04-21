@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -95,7 +96,7 @@ class MessageBoxActionButtonsWrapper extends HookConsumerWidget
     return [
       PopupMenuItem(
         value: ChatBoxPopupMenuActions.reply,
-        child: _buildPopupMenuItemContent(context, 'Reply', Icons.reply),
+        child: _buildPopupMenuItemContent(context, S.of(context).reply, Icons.reply),
         onTap: () {
           ref
               .read(currentChatStateProvider(message.chatId!).notifier)
@@ -105,14 +106,14 @@ class MessageBoxActionButtonsWrapper extends HookConsumerWidget
       if (message.messageType == MessageType.text)
         PopupMenuItem(
           value: ChatBoxPopupMenuActions.copy,
-          child: _buildPopupMenuItemContent(context, 'Copy', Icons.copy),
+          child: _buildPopupMenuItemContent(context, S.of(context).copy, Icons.copy),
           onTap: () async => await Clipboard.setData(
               ClipboardData(text: message.messageText!)),
         ),
       if (message.isPinned)
         PopupMenuItem(
           value: ChatBoxPopupMenuActions.unpin,
-          child: _buildPopupMenuItemContent(context, 'Unpin', Icons.push_pin),
+          child: _buildPopupMenuItemContent(context, S.of(context).unpin, Icons.push_pin),
           onTap: () async {
             return await ref
                 .read(messagesRepositoryProvider)
@@ -122,7 +123,7 @@ class MessageBoxActionButtonsWrapper extends HookConsumerWidget
       if (!message.isPinned)
         PopupMenuItem(
           value: ChatBoxPopupMenuActions.pin,
-          child: _buildPopupMenuItemContent(context, 'Pin', Icons.push_pin),
+          child: _buildPopupMenuItemContent(context, S.of(context).pin, Icons.push_pin),
           onTap: () async => await showDialog(
             context: context,
             builder: (context) => PinMessageDialog(
@@ -133,14 +134,14 @@ class MessageBoxActionButtonsWrapper extends HookConsumerWidget
       if (message.fromMe)
         PopupMenuItem(
           value: ChatBoxPopupMenuActions.edit,
-          child: _buildPopupMenuItemContent(context, 'Edit', Icons.edit),
+          child: _buildPopupMenuItemContent(context, S.of(context).edit, Icons.edit),
           onTap: () => ref
               .read(currentChatStateProvider(message.chatId!).notifier)
               .updateChatInputMode(ChatInputMode.edit, message),
         ),
       PopupMenuItem(
         value: ChatBoxPopupMenuActions.delete,
-        child: _buildPopupMenuItemContent(context, 'Delete', Icons.delete),
+        child: _buildPopupMenuItemContent(context, S.of(context).delete, Icons.delete),
         onTap: () async => await showDialog(
           context: context,
           builder: (context) => DeleteMessageDialog(

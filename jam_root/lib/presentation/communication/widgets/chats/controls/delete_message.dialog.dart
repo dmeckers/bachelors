@@ -21,12 +21,12 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
     final toDeleteMultiple = selectedMessages.length > 1;
 
     final titleText = toDeleteMultiple
-        ? 'Delete ${selectedMessages.length} messages'
+        ? S.of(context).deleteSelectedMessages(selectedMessages.length)
         : S.of(context).deleteMessage;
 
     final contentText = toDeleteMultiple
-        ? 'Are you sure you want to delete these messages?'
-        : 'Are you sure you want to delete this message?';
+        ? S.of(context).wantToDeleteTheseMessages
+        : S.of(context).wantToDeleteThisMessage;
 
     return AlertDialog(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -40,8 +40,8 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
             controlAffinity: ListTileControlAffinity.leading,
             value: deleteForBoth.value,
             onChanged: (v) => deleteForBoth.value = v ?? false,
-            title: const Text(
-              'Delete for everyone',
+            title: Text(
+              S.of(context).deleteForEveryone,
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -50,8 +50,8 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
       actions: [
         TextButton(
           onPressed: () => context.pop(),
-          child: const Text(
-            'Cancel',
+          child: Text(
+            S.of(context).cancel,
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
         ),
@@ -63,7 +63,7 @@ class DeleteMessageDialog extends HookConsumerWidget with ChattingProviders {
             deleteForBoth.value,
           ),
           child: Text(
-            'Delete',
+            S.of(context).delete,
             style: context.jText.bodySmall?.copyWith(color: Colors.red),
           ),
         )

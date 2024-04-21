@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -43,16 +44,16 @@ class PinMessageDialog extends HookConsumerWidget with ChattingProviders {
           pinForBoth.value,
         ),
         child: Text(
-          'Yes',
+          S.of(context).yes,
           style: context.jText.bodySmall,
         ),
       );
 
   TextButton _buildCancelActionButton(BuildContext context) => TextButton(
         onPressed: () => context.pop(),
-        child: const Text(
-          'Cancel',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        child: Text(
+          S.of(context).cancel,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
       );
 
@@ -75,7 +76,7 @@ class PinMessageDialog extends HookConsumerWidget with ChattingProviders {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pin this message in chat?',
+              S.of(context).pinThisMessageInChat,
               textAlign: TextAlign.left,
               style: context.jText.headlineMedium,
             ),
@@ -87,9 +88,9 @@ class PinMessageDialog extends HookConsumerWidget with ChattingProviders {
                   value: checkboxState.value,
                   onChanged: (value) => checkboxState.value = value as bool,
                 ),
-                const Text(
-                  'Pin for everyone in chat',
-                  style: TextStyle(fontSize: 14),
+                Text(
+                  S.of(context).pinForEveryoneInChat,
+                  style: const TextStyle(fontSize: 14),
                 )
               ],
             ),

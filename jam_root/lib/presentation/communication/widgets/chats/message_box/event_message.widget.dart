@@ -59,7 +59,7 @@ class EventMessageBox extends ConsumerWidget with ChattingProviders {
               ),
               const SizedBox(width: 5),
               Text(
-                'Delete',
+                S.of(context).delete,
                 style: context.jText.bodySmall,
               ),
             ],
@@ -72,9 +72,9 @@ class EventMessageBox extends ConsumerWidget with ChattingProviders {
                         message: message,
                         forEveryone: forEveryone ?? false,
                       ),
-              title: 'Delete message',
+              title: S.of(context).deleteMessage,
               subtitle: '',
-              extraConditionMessage: 'Delete for everyone',
+              extraConditionMessage: S.of(context).deleteForEveryone,
             ),
           ),
         )

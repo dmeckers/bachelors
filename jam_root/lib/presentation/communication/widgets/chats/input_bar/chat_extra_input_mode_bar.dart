@@ -42,7 +42,7 @@ class ChatExtraInputModeBar extends HookConsumerWidget with ChattingProviders {
               children: [
                 Text(
                   state.inputMode == ChatInputMode.reply
-                      ? "Reply to ${state.model?.senderName}"
+                      ? S.of(context).replyToStateModel(state.model?.senderName?? S.of(context).anonymous)
                       : S.of(context).editing,
                   style: context.jText.headlineSmall,
                 ),

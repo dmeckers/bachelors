@@ -27,14 +27,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(delete_chats) => "Delete ${delete_chats} chats";
 
-  static String m3(invites) => "${invites} is now your friend";
+  static String m3(selected_messages) => "Delete ${selected_messages} messages";
 
-  static String m4(last_acctive) => "Last seen ${last_acctive}";
+  static String m4(invites) => "${invites} is now your friend";
 
-  static String m5(related_contact_last_active) =>
+  static String m5(last_acctive) => "Last seen ${last_acctive}";
+
+  static String m6(related_contact_last_active) =>
       "Last seen ${related_contact_last_active}";
 
-  static String m6(MAX_VIBES_AMOUNT) =>
+  static String m7(repliedToName) => "Reply to: ${repliedToName}";
+
+  static String m8(state_model_sender_name) =>
+      "Reply to ${state_model_sender_name}";
+
+  static String m9(MAX_VIBES_AMOUNT) =>
       "You can select up to ${MAX_VIBES_AMOUNT} vibes";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -78,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearSelectedChats": m1,
         "controlParticipants":
             MessageLookupByLibrary.simpleMessage("Control participants"),
+        "copy": MessageLookupByLibrary.simpleMessage("Copy"),
         "createAccount": MessageLookupByLibrary.simpleMessage("Create account"),
         "createJam": MessageLookupByLibrary.simpleMessage("Create jam"),
         "daVibez": MessageLookupByLibrary.simpleMessage("DA VIBEZ"),
@@ -86,15 +94,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "defaultSearch": MessageLookupByLibrary.simpleMessage("Default search"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteChat": MessageLookupByLibrary.simpleMessage("Delete chat"),
+        "deleteForEveryone":
+            MessageLookupByLibrary.simpleMessage("Delete for everyone"),
         "deleteMessage": MessageLookupByLibrary.simpleMessage("Delete message"),
         "deleteSelectedChats": m2,
+        "deleteSelectedMessages": m3,
         "displayStickers":
             MessageLookupByLibrary.simpleMessage("Display stickers"),
         "dontHaveAccount":
             MessageLookupByLibrary.simpleMessage("Dont have account?"),
         "draft": MessageLookupByLibrary.simpleMessage("Draft: "),
         "drivenBy": MessageLookupByLibrary.simpleMessage("Driven by: "),
+        "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editJam": MessageLookupByLibrary.simpleMessage("Edit Jam"),
+        "edited": MessageLookupByLibrary.simpleMessage("Edited"),
         "editing": MessageLookupByLibrary.simpleMessage("Editing"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "enterYourEmailAddressAndWeWillSendYouA":
@@ -115,15 +128,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "invalidEmail": MessageLookupByLibrary.simpleMessage("Invalid email"),
         "inviteDeclined":
             MessageLookupByLibrary.simpleMessage("Invite declined"),
-        "invites": m3,
+        "invites": m4,
         "jamDetails": MessageLookupByLibrary.simpleMessage("Jam details"),
         "jamInviteAccepted":
             MessageLookupByLibrary.simpleMessage("Jam invite accepted"),
         "jamInvites": MessageLookupByLibrary.simpleMessage("Jam Invites"),
         "jamType": MessageLookupByLibrary.simpleMessage("JAM TYPE"),
         "jamid": MessageLookupByLibrary.simpleMessage("jamId"),
-        "lastSeenActive": m4,
-        "lastSeenChatContact": m5,
+        "lastSeenActive": m5,
+        "lastSeenChatContact": m6,
         "letPeopleKnowYouAreLookingForJam":
             MessageLookupByLibrary.simpleMessage(
                 "Let people know you are looking for a jam"),
@@ -165,6 +178,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Perhaps some comments?"),
         "pickAtLeastOne":
             MessageLookupByLibrary.simpleMessage("Pick at least one"),
+        "pin": MessageLookupByLibrary.simpleMessage("Pin"),
+        "pinForEveryoneInChat":
+            MessageLookupByLibrary.simpleMessage("Pin for everyone in chat"),
+        "pinThisMessageInChat":
+            MessageLookupByLibrary.simpleMessage("Pin this message in chat?"),
         "pinnedMessages":
             MessageLookupByLibrary.simpleMessage("Pinned Messages"),
         "planAJam": MessageLookupByLibrary.simpleMessage("Plan a jam"),
@@ -174,6 +192,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "recordVideo": MessageLookupByLibrary.simpleMessage("Record video"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "registration": MessageLookupByLibrary.simpleMessage("Registration"),
+        "reply": MessageLookupByLibrary.simpleMessage("Reply"),
+        "replyToRepliedtoname": m7,
+        "replyToStateModel": m8,
         "restrictionsPoiliciesAndMore": MessageLookupByLibrary.simpleMessage(
             "Restrictions, poilicies and more"),
         "rightWereIAm": MessageLookupByLibrary.simpleMessage("Right were I am"),
@@ -202,12 +223,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "unarchive": MessageLookupByLibrary.simpleMessage("Unarchive"),
         "unavailableInThisVersion": MessageLookupByLibrary.simpleMessage(
             "(Unavailable in this version)"),
+        "unpin": MessageLookupByLibrary.simpleMessage("Unpin"),
         "unpinAllMessages":
             MessageLookupByLibrary.simpleMessage("Unpin all messages"),
         "upcomingJams": MessageLookupByLibrary.simpleMessage("Upcoming jams"),
         "user": MessageLookupByLibrary.simpleMessage("User"),
         "vibes": MessageLookupByLibrary.simpleMessage("Vibes"),
         "vibesInfo": MessageLookupByLibrary.simpleMessage("Vibes info"),
+        "wantToDeleteTheseMessages": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete these messages?"),
+        "wantToDeleteThisMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete this message?"),
         "whatsDaPlan": MessageLookupByLibrary.simpleMessage("WHATS DA PLAN"),
         "when": MessageLookupByLibrary.simpleMessage("When?"),
         "where": MessageLookupByLibrary.simpleMessage("Where?"),
@@ -221,7 +247,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "yesPlease": MessageLookupByLibrary.simpleMessage("Yes please!"),
         "youCanGiveItAName":
             MessageLookupByLibrary.simpleMessage("You can give it a name"),
-        "youCanSelectUpToNMaxVibes": m6,
+        "youCanSelectUpToNMaxVibes": m9,
         "youSureWantClearHistory": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to clear history?"),
         "youSureWantDeleteChat": MessageLookupByLibrary.simpleMessage(

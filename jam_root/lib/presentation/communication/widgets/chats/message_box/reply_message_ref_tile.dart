@@ -68,7 +68,7 @@ class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
-                    "Reply to: $repliedToName",
+                    S.of(context).replyToRepliedtoname(repliedToName),
                     style: context.jText.bodySmall?.copyWith(fontSize: 12),
                   ),
                 ),
