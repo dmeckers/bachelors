@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -39,9 +41,12 @@ class InputDialog extends HookWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            JInputSimple(
-              controller: inputController,
-              initialValue: initialValue,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: JInputSimple(
+                controller: inputController,
+                initialValue: initialValue,
+              ),
             ),
             if (validationMessages.value != null)
               Container(

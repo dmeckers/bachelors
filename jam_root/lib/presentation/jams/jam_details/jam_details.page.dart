@@ -85,6 +85,7 @@ class JamDetailsPage extends HookConsumerWidget {
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.65,
                   child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Wrap(
                         children: [
@@ -104,16 +105,18 @@ class JamDetailsPage extends HookConsumerWidget {
                       JamParticipantsTile(jam: data),
                       JamDivider(color: context.jColor.primary),
                       JamExtraInformationTile(jam: data),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0, left: 10),
+                        child: Column(
+                          children: [
+                            _buildShowOnMapButton(context, data),
+                            _buildInviteFriendsButton(context, data),
+                            _buildEditJamButton(context, data),
+                            _buildEditJamFormButton(context, data),
+                          ],
+                        ),
+                      ),
                       const Spacer(),
-                      ShowJamOnMapButton(jam: data),
-                      const SizedBox(height: 5),
-                      if (DateTime.now().isBefore(data.date))
-                        _buildInviteFriendsButton(context, data),
-                      const SizedBox(height: 5),
-                      if (supabase.auth.currentUser!.id == data.creatorId &&
-                          DateTime.now().isBefore(data.date))
-                        _buildEditJamButton(context, data),
-                      const SizedBox(height: 15),
                     ],
                   ),
                 ),
@@ -126,83 +129,80 @@ class JamDetailsPage extends HookConsumerWidget {
     );
   }
 
-  SizedBox _buildEditJamButton(BuildContext context, JamModel data) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.6,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.black,
-        ),
+  Widget _buildEditJamFormButton(BuildContext context, JamModel jam) {
+    final isOwner = supabase.auth.currentUser!.id == jam.creatorId;
+    final formExists = jam.formModel != null;
+
+    if (!(isOwner && formExists && DateTime.now().isBefore(jam.date))) {
+      return const SizedBox();
+    }
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: TextButton.icon(
         onPressed: () => context.pushNamed(
-          JamRoutes.edit.name,
-          pathParameters: {'jamId': data.id.toString()},
-          extra: data,
+          JamRoutes.editJamForm.name,
+          pathParameters: {'jamId': jam.id.toString()},
+          extra: jam,
         ),
-        child: const Row(
-          children: [
-            Icon(Icons.edit),
-            SizedBox(width: 30),
-            Text('Edit Jam'),
-          ],
-        ),
+        icon: const Icon(Icons.quiz_outlined),
+        label: const Text('Edit jam form'),
       ),
     );
   }
 
-  SizedBox _buildInviteFriendsButton(BuildContext context, JamModel jam) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.6,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.black,
-        ),
-        onPressed: () => showDialog(
-          context: context,
-          builder: (ctx) => InviteFriendToJamDialog(
-            jam: jam,
+  Widget _buildEditJamButton(BuildContext context, JamModel jam) {
+    final isOwner = supabase.auth.currentUser!.id == jam.creatorId;
+
+    if (isOwner && DateTime.now().isBefore(jam.date)) {
+      return Align(
+        alignment: Alignment.topLeft,
+        child: TextButton.icon(
+          onPressed: () => context.pushNamed(
+            JamRoutes.edit.name,
+            pathParameters: {'jamId': jam.id.toString()},
+            extra: jam,
           ),
+          icon: const Icon(Icons.edit),
+          label: const Text('Edit jam'),
         ),
-        child: const Row(
-          children: [
-            Icon(Icons.mail),
-            SizedBox(width: 30),
-            Text('Invite friends')
-          ],
+      );
+    }
+
+    return const SizedBox();
+  }
+
+  Widget _buildInviteFriendsButton(BuildContext context, JamModel jam) {
+    if (DateTime.now().isBefore(jam.date)) {
+      return Align(
+        alignment: Alignment.topLeft,
+        child: TextButton.icon(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (ctx) => InviteFriendToJamDialog(
+              jam: jam,
+            ),
+          ),
+          icon: const Icon(Icons.mail),
+          label: const Text('Invite friends'),
         ),
+      );
+    }
+
+    return const SizedBox();
+  }
+
+  Widget _buildShowOnMapButton(BuildContext context, JamModel jam) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: TextButton.icon(
+        onPressed: () => context.pushNamed(
+          MapRoutes.map.name,
+          queryParameters: {MapRoutes.map.pathParameter!: jam.location},
+        ),
+        icon: const Icon(Icons.map),
+        label: const Text('Open in Maps'),
       ),
     );
   }
-
-  // void _handleDeleteJam(BuildContext context, WidgetRef ref, int jamId) {
-  //   ref.read(deleteJamProvider(jamId: jamId).future).then((_) {
-  //     ref.invalidate(userJamControllerProvider);
-  //     context.canPop() ? context.pop() : context.goNamed(JamRoutes.jams.name);
-  //   });
-  // }
 }
-
-
- //                         child: IconButton(
-  //                           icon: const Icon(
-  //                             Icons.delete,
-  //                             color: Colors.red,
-  //                           ),
-  //                           onPressed: () => showDialog(
-  //                             context: context,
-  //                             builder: (context) => DestructiveDialog(
-  //                               onConfirm: (_) => _handleDeleteJam(
-  //                                 context,
-  //                                 ref,
-  //                                 data.id!,
-  //                               ),
-  //                               title: 'Delete jam',
-  //                               subtitle:
-  //                                   'Are you sure you want to delete this jam?',
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     )
-  //                   : const SizedBox();

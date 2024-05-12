@@ -25,11 +25,9 @@ final class SupabaseUserProfileImagesRepositoryInterface
   @override
   Future<String> addProfilePhoto({required File image}) async {
     final fileName = await attachmentService.upload(file: image);
-    final userId = getUserIdOrThrow();
-    final currentAvatar =
-        await supabase.from('profiles').select('avatar').eq('id', userId);
+    final currentAvatar = await _getCurrentAvatar();
 
-    if (currentAvatar.first['avatar'] == null) {
+    if (currentAvatar == null) {
       await setMainAvatar(attachmentService.getLink(filename: fileName));
     }
 
@@ -37,17 +35,21 @@ final class SupabaseUserProfileImagesRepositoryInterface
   }
 
   @override
-  Future<void> deleteProfilePhoto({required String photoId}) async {
+  Future<String?> deleteProfilePhoto({required String photoId}) async {
     await attachmentService.delete(photoId);
+    final currentAvatar = await _getCurrentAvatar();
+    if (!(currentAvatar == photoId)) return currentAvatar;
+
     final otherImages = (await attachmentService.list()) as List<FileObject>;
     //supabase returns `.empty` file when no images are in folder NICE
-    final filtered = otherImages.where(
-      (element) => !element.name.startsWith('.'),
-    );
+    final newAvatar =
+        otherImages.where((element) => !element.name.startsWith('.')).isEmpty
+            ? null
+            : attachmentService.getLink(filename: otherImages.first.name);
 
-    return filtered.isEmpty
-        ? await setMainAvatar(null)
-        : await setMainAvatar(otherImages.first.name);
+    await setMainAvatar(newAvatar);
+
+    return newAvatar;
   }
 
   @override
@@ -79,5 +81,13 @@ final class SupabaseUserProfileImagesRepositoryInterface
         : await supabase
             .from('profiles')
             .update({'avatar': url}).eq('id', userId);
+  }
+
+  Future<String?> _getCurrentAvatar() async {
+    return (await supabase
+            .from('profiles')
+            .select('avatar')
+            .eq('id', getUserIdOrThrow()))
+        .first['avatar'] as String?;
   }
 }

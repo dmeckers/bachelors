@@ -66,7 +66,7 @@ class BigJamCard extends ConsumerWidget {
                         ],
                       ),
                       Text(
-                        jam.date.nameWithoutYear(),
+                        jam.date.nameWithoutYear,
                         style: context.jText.bodyMedium?.copyWith(
                           color: Colors.white,
                         ),

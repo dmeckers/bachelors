@@ -17,11 +17,11 @@ final class JamViewModel {
   final JamBaseFormModel locationNameFormModel;
   final JamBaseFormModel extraInformationFormModel;
 
-  final bool invitesOnly;
   final bool dropBackground;
   final int? id;
   final UserProfileModel? creator;
   final CommunityModel? relatedCommunity;
+  final JamFormModel? formModel;
   final List<UserProfileModel> admins;
   final List<UserProfileModel> participants;
   final List<VibeModel> relatedVibes;
@@ -34,18 +34,19 @@ final class JamViewModel {
   final String iconUrl;
   final String? backgroundUrl;
   final DateTime? date;
+  final JamJoinTypeEnum joinType;
   final File? image;
 
   const JamViewModel({
     this.id,
     this.creator,
     this.relatedCommunity,
+    this.formModel,
     required this.creatorIdFormModel,
     required this.nameFormModel,
     required this.descriptionFormModel,
     required this.locationNameFormModel,
     required this.extraInformationFormModel,
-    this.invitesOnly = false,
     this.dropBackground = false,
     this.lat = -1,
     this.lon = -1,
@@ -59,6 +60,7 @@ final class JamViewModel {
     this.iconUrl = '',
     this.backgroundUrl = '',
     this.date,
+    this.joinType = JamJoinTypeEnum.freeToJoin,
     this.image,
   });
 
@@ -72,6 +74,10 @@ final class JamViewModel {
         nameFormModel: JamBaseFormModel.generate(
             labelText: 'Name',
             validator: (value) {
+              if ((value as String).isEmpty) {
+                return 'Name cannot be empty';
+              }
+
               return null;
             }),
         descriptionFormModel: JamBaseFormModel.generate(
@@ -103,6 +109,10 @@ final class JamViewModel {
           labelText: 'Name',
           initValue: model.name,
           validator: (value) {
+            if ((value as String).isEmpty) {
+              return 'Name cannot be empty';
+            }
+
             return null;
           }),
       descriptionFormModel: JamBaseFormModel.generate(
@@ -123,11 +133,11 @@ final class JamViewModel {
           validator: (value) {
             return null;
           }),
-      invitesOnly: model.invitesOnly,
       dropBackground: model.dropBackground,
       id: model.id,
       creator: model.creator,
       relatedCommunity: model.relatedCommunity,
+      formModel: model.formModel,
       admins: model.admins,
       participants: model.participants,
       relatedVibes: model.relatedVibes,
@@ -141,6 +151,7 @@ final class JamViewModel {
       backgroundUrl: model.backgroundUrl,
       date: model.date,
       image: model.image,
+      joinType: model.joinType,
     );
   }
 
@@ -150,11 +161,11 @@ final class JamViewModel {
     JamBaseFormModel? descriptionFormModel,
     JamBaseFormModel? locationNameFormModel,
     JamBaseFormModel? extraInformationFormModel,
-    bool? invitesOnly,
     bool? dropBackground,
     int? id,
     UserProfileModel? creator,
     CommunityModel? relatedCommunity,
+    JamFormModel? formModel,
     List<UserProfileModel>? admins,
     List<UserProfileModel>? participants,
     List<VibeModel>? relatedVibes,
@@ -168,6 +179,7 @@ final class JamViewModel {
     String? backgroundUrl,
     DateTime? date,
     File? image,
+    JamJoinTypeEnum? joinType,
   }) {
     return JamViewModel(
       creatorIdFormModel: creatorIdFormModel ?? this.creatorIdFormModel,
@@ -177,11 +189,11 @@ final class JamViewModel {
           locationNameFormModel ?? this.locationNameFormModel,
       extraInformationFormModel:
           extraInformationFormModel ?? this.extraInformationFormModel,
-      invitesOnly: invitesOnly ?? this.invitesOnly,
       dropBackground: dropBackground ?? this.dropBackground,
       id: id ?? this.id,
       creator: creator ?? this.creator,
       relatedCommunity: relatedCommunity ?? this.relatedCommunity,
+      formModel: formModel ?? this.formModel,
       admins: admins ?? this.admins,
       participants: participants ?? this.participants,
       relatedVibes: relatedVibes ?? this.relatedVibes,
@@ -194,6 +206,7 @@ final class JamViewModel {
       iconUrl: iconUrl ?? this.iconUrl,
       backgroundUrl: backgroundUrl ?? this.backgroundUrl,
       date: date ?? this.date,
+      joinType: joinType ?? this.joinType,
       image: image ?? this.image,
     );
   }
@@ -211,7 +224,7 @@ final class JamViewModel {
       id: id,
       creator: creator,
       relatedCommunity: relatedCommunity,
-      invitesOnly: invitesOnly,
+      formModel: formModel,
       dropBackground: dropBackground,
       admins: admins,
       participants: participants,
@@ -224,6 +237,7 @@ final class JamViewModel {
       location: location,
       iconUrl: iconUrl,
       backgroundUrl: backgroundUrl,
+      joinType: joinType,
       date: date ?? DateTime.now(),
       image: image,
       creatorId: creatorIdFormModel.controller!.text,
@@ -268,10 +282,6 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
             .toList());
   }
 
-  void updateInvitesOnly(bool value) {
-    state = state.copyWith(invitesOnly: value);
-  }
-
   void updateDropBackground(bool value) {
     state = state.copyWith(dropBackground: value);
   }
@@ -286,6 +296,10 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
 
   void updateRelatedCommunity(CommunityModel? value) {
     state = state.copyWith(relatedCommunity: value);
+  }
+
+  void updateFormModel(JamFormModel? value) {
+    state = state.copyWith(formModel: value);
   }
 
   void updateLat(double? value) {
@@ -322,6 +336,10 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
 
   void updateDate(DateTime value) {
     state = state.copyWith(date: value);
+  }
+
+  void updateJoinType(JamJoinTypeEnum value) {
+    state = state.copyWith(joinType: value);
   }
 
   void updateImage(File? value) {
@@ -368,10 +386,6 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
             .toList());
   }
 
-  void updateInvitesOnly(bool value) {
-    state = state.copyWith(invitesOnly: value);
-  }
-
   void updateDropBackground(bool value) {
     state = state.copyWith(dropBackground: value);
   }
@@ -386,6 +400,10 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
 
   void updateRelatedCommunity(CommunityModel? value) {
     state = state.copyWith(relatedCommunity: value);
+  }
+
+  void updateFormModel(JamFormModel? value) {
+    state = state.copyWith(formModel: value);
   }
 
   void updateLat(double? value) {
@@ -406,6 +424,10 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
 
   void updateInvitesPerMember(int value) {
     state = state.copyWith(invitesPerMember: value);
+  }
+
+  void updateJoinType(JamJoinTypeEnum value) {
+    state = state.copyWith(joinType: value);
   }
 
   void updateLocation(String value) {

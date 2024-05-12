@@ -42,7 +42,7 @@ class MessageBoxMetaInfo extends StatelessWidget {
 
         /// time
         Text(
-          message.sentAt.toTime(),
+          message.sentAt.atTime,
           style: context.jText.bodySmall?.copyWith(fontSize: 11),
         ),
         const SizedBox(width: 6),

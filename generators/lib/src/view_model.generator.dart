@@ -6,6 +6,16 @@ import 'package:build/src/builder/build_step.dart';
 import 'package:generators/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
+// class JDefault {
+//   final Object? defaultValue;
+
+//   const JDefault({
+//     this.defaultValue,
+//   });
+// }
+
+// final _coreChecker = const TypeChecker.fromRuntime(JDefault);
+
 class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
   String className = "";
   final fields = {};
@@ -87,6 +97,9 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
     for (var element in visitor.locations.entries) {
       buffer.writeln('${element.key}: ${element.key},');
     }
+    for (var element in visitor.enums.entries) {
+      buffer.writeln('${element.key}: ${element.key},');
+    }
 
     for (var element in visitor.dates.entries) {
       buffer.writeln('${element.key}: ${element.key} ?? DateTime.now(),');
@@ -157,6 +170,10 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
     visitor.dates.forEach((key, value) =>
         buffer.writeln('final ${value.split('?').first}? $key;'));
 
+    visitor.enums.forEach((key, value) {
+      buffer.writeln('final $value $key;');
+    });
+
     visitor.files.forEach((key, value) => buffer.writeln('final $value $key;'));
   }
 
@@ -182,6 +199,12 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
         .join(',\n');
     final dates = visitor.dates.entries.map((e) => 'this.${e.key}').join(',\n');
     final files = visitor.files.entries.map((e) => 'this.${e.key}').join(',\n');
+    final enums = visitor.enums.entries
+        .map(
+          (e) =>
+              'this.${e.key}${visitor.meta['${e.key}_default'] != null ? '=${visitor.meta['${e.key}_default']}' : ''}',
+        )
+        .join(',\n');
 
     buffer.writeln("""
       const $className({
@@ -193,6 +216,7 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
         ${lists.isNotEmpty ? '$lists,' : ''}
         ${locations.isNotEmpty ? '$locations,' : ''}
         ${dates.isNotEmpty ? '$dates,' : ''}
+        ${enums.isNotEmpty ? '$enums,' : ''}
         ${files.isNotEmpty ? '$files,' : ''}
         });
       """);
@@ -236,6 +260,10 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
     });
 
     visitor.files.forEach((key, value) {
+      buffer.writeln("$key: model.$key,");
+    });
+
+    visitor.enums.forEach((key, value) {
       buffer.writeln("$key: model.$key,");
     });
 
@@ -433,6 +461,14 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
       buffer.writeln('\n');
     }
 
+    for (var element in visitor.enums.entries) {
+      buffer.writeln(
+          'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
+      buffer.writeln('state = state.copyWith(${element.key}: value);');
+      buffer.writeln('}');
+      buffer.writeln('\n');
+    }
+
     for (var element in visitor.files.entries) {
       buffer.writeln(
           'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
@@ -498,6 +534,14 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
       buffer.writeln('\n');
     }
 
+    for (var element in visitor.enums.entries) {
+      buffer.writeln(
+          'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
+      buffer.writeln('state = state.copyWith(${element.key}: value);');
+      buffer.writeln('}');
+      buffer.writeln('\n');
+    }
+
     for (var element in visitor.locations.entries) {
       buffer.writeln(
           'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
@@ -548,7 +592,8 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
       visitor.numbers,
       visitor.locations,
       visitor.dates,
-      visitor.files
+      visitor.files,
+      visitor.enums
     ]) {
       map.forEach((key, value) {
         buffer.writeln('${(value).split('?').first}? $key,');
@@ -568,6 +613,7 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
       visitor.numbers,
       visitor.locations,
       visitor.dates,
+      visitor.enums,
       visitor.files
     ]) {
       map.forEach((key, value) {

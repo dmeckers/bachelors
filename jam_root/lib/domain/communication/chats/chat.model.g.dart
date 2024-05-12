@@ -27,13 +27,14 @@ class ChatModelAdapter extends TypeAdapter<_$ChatModelImpl> {
       settings: fields[5] as PersonalChatSettingsModel?,
       isPinned: fields[12] as bool,
       isArchived: fields[13] as bool,
+      createdAt: fields[14] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$ChatModelImpl obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(2)
@@ -52,6 +53,8 @@ class ChatModelAdapter extends TypeAdapter<_$ChatModelImpl> {
       ..write(obj.isPinned)
       ..writeByte(13)
       ..write(obj.isArchived)
+      ..writeByte(14)
+      ..write(obj.createdAt)
       ..writeByte(3)
       ..write(obj.messages);
   }
@@ -91,6 +94,9 @@ _$ChatModelImpl _$$ChatModelImplFromJson(Map<String, dynamic> json) =>
       isPinned: json['is_pinned'] as bool? ?? false,
       isArchived: json['is_archived'] as bool? ?? false,
       toHide: json['to_hide'] as bool? ?? false,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
@@ -101,4 +107,5 @@ Map<String, dynamic> _$$ChatModelImplToJson(_$ChatModelImpl instance) =>
       'is_pinned': instance.isPinned,
       'is_archived': instance.isArchived,
       'to_hide': instance.toHide,
+      'created_at': instance.createdAt?.toIso8601String(),
     };

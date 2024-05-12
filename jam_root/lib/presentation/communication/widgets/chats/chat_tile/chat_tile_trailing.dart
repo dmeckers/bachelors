@@ -13,30 +13,38 @@ class ChatTileTrailing extends StatelessWidget with ChattingProviders {
   @override
   Widget build(BuildContext context) {
     final lastMessage = chatModel.lastMessage;
-    if (lastMessage == null) {
-      return const SizedBox(
-        width: 0,
-        height: 0,
-      );
-    }
-
-    if (lastMessage.fromMe) {
-      return _buildMessageFromMe(context, lastMessage);
-    }
 
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.2,
-      height: 50,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            chatModel.lastMessage?.sentAt.toNTimeAgo() ?? 'Recently',
-          ),
-          const SizedBox(height: 2),
-          if (chatModel.isPinned) _buildPinnedIcon(context)
-        ],
+      width: 120,
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (lastMessage != null)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    lastMessage.messageStatus?.toIcon(),
+                    size: 15,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(lastMessage.sentAt.toNTimeAgo),
+                ],
+              ),
+            if (lastMessage == null && chatModel.clearedAt != null)
+              Text(chatModel.clearedAt!.toNTimeAgo),
+            if (chatModel.isPinned)
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: _buildPinnedIcon(context),
+              )
+          ],
+        ),
       ),
     );
   }
@@ -56,40 +64,4 @@ class ChatTileTrailing extends StatelessWidget with ChattingProviders {
           ),
         ),
       );
-
-  SizedBox _buildMessageFromMe(
-    BuildContext context,
-    LastMessageModel lastMessage,
-  ) {
-    return SizedBox(
-      width: 120,
-      height: 80,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(
-                  lastMessage.messageStatus?.toIcon(),
-                  size: 15,
-                ),
-                const SizedBox(width: 4),
-                Text(lastMessage.sentAt.toNTimeAgo()),
-              ],
-            ),
-            if (chatModel.isPinned)
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: _buildPinnedIcon(context),
-              )
-          ],
-        ),
-      ),
-    );
-  }
 }

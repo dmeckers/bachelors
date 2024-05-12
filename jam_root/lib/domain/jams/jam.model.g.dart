@@ -13,7 +13,7 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
           ? null
           : UserProfileModel.fromJson(json['creator'] as Map<String, dynamic>),
       creatorId: json['creator_id'] as String?,
-      name: json['name'] as String? ?? 'Anonymous Jam',
+      name: json['name'] as String,
       description: json['description'] as String? ?? 'No description this time',
       locationName: json['location_name'] as String? ?? 'Check map',
       location: JsonJamTransformer.locationFromJson(
@@ -24,7 +24,6 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
       maxParticipants: json['max_participants'] as int,
       invitesPerMember: json['invites_per_member'] as int,
       extraInformation: json['extra_information'] as String? ?? '',
-      invitesOnly: json['invites_only'] as bool? ?? false,
       iconUrl: json['icon_url'] as String? ?? '',
       participants: (json['participants'] as List<dynamic>?)
               ?.map((e) => UserProfileModel.fromJson(e as Map<String, dynamic>))
@@ -34,6 +33,12 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
       relatedVibes: (json['related_vibes'] as List<dynamic>)
           .map((e) => VibeModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      joinType:
+          $enumDecodeNullable(_$JamJoinTypeEnumEnumMap, json['join_type']) ??
+              JamJoinTypeEnum.freeToJoin,
+      formModel: json['form_model'] == null
+          ? null
+          : JamFormModel.fromJson(json['form_model'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$JamModelImplToJson(_$JamModelImpl instance) {
@@ -54,9 +59,19 @@ Map<String, dynamic> _$$JamModelImplToJson(_$JamModelImpl instance) {
   val['max_participants'] = instance.maxParticipants;
   val['invites_per_member'] = instance.invitesPerMember;
   val['extra_information'] = instance.extraInformation;
-  val['invites_only'] = instance.invitesOnly;
   val['icon_url'] = instance.iconUrl;
   writeNotNull('background_url', instance.backgroundUrl);
   val['related_vibes'] = JsonVibeTransformer.vibesToIds(instance.relatedVibes);
+  val['join_type'] = _$JamJoinTypeEnumEnumMap[instance.joinType]!;
+  val['form_model'] = instance.formModel;
   return val;
 }
+
+const _$JamJoinTypeEnumEnumMap = {
+  JamJoinTypeEnum.freeToJoin: 'freeToJoin',
+  JamJoinTypeEnum.invitesOnly: 'invitesOnly',
+  JamJoinTypeEnum.freeToJoinAfterForm: 'freeToJoinAfterForm',
+  JamJoinTypeEnum.freetoJoinAfterFormAndApprove:
+      'freetoJoinAfterFormAndApprove',
+  JamJoinTypeEnum.requestToJoin: 'requestToJoin',
+};

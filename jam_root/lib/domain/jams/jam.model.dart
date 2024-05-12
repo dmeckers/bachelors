@@ -28,12 +28,9 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
     @JsonKey(includeToJson: false, includeIfNull: false)
     UserProfileModel? creator,
     @JsonKey(includeToJson: false) String? creatorId,
-    @Default('Anonymous Jam') String? name,
+    required String name,
     @Default('No description this time') String? description,
     @Default('Check map') String? locationName,
-
-    ///
-    /// this is fucked up
     @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
       fromJson: JsonJamTransformer.locationFromJson,
@@ -53,7 +50,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default(null)
     CommunityModel? relatedCommunity,
-    @Default(false) bool invitesOnly,
+    // @Default(false) bool invitesOnly,
     @JsonKey(includeIfNull: false) @Default('') String iconUrl,
     @JsonKey(
       includeToJson: false,
@@ -78,6 +75,10 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
     )
     @Default(false)
     bool dropBackground,
+    @JsonKey(includeIfNull: false)
+    @Default(JamJoinTypeEnum.freeToJoin)
+    JamJoinTypeEnum joinType,
+    JamFormModel? formModel,
   }) = _JamModel;
 
   const JamModel._();

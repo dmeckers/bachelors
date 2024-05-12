@@ -36,6 +36,7 @@ class ChatModel
     @HiveField(12) @Default(false) bool isPinned,
     @HiveField(13) @Default(false) bool isArchived,
     @Default(false) bool toHide,
+    @HiveField(14) DateTime? createdAt,
   }) = _ChatModel;
 
   const ChatModel._();

@@ -16,48 +16,6 @@ class PlanJamFormPage extends HookConsumerWidget {
   static const OPACITY_VISIBLE = 1.0;
   static const OPACITY_INVISIBLE = 0.0;
 
-  Widget _buildSectionTitle(
-    String title, {
-    double leftPadding = 38.0,
-    double topPadding = 0,
-    double bottomPadding = 0,
-    double rightPadding = 0,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: leftPadding,
-        top: topPadding,
-        bottom: bottomPadding,
-        right: rightPadding,
-      ),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(title),
-      ),
-    );
-  }
-
-  Widget _buildFormInputHeading(BuildContext context, String title) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        title,
-        style: context.jText.headlineMedium,
-      ),
-    );
-  }
-
-  Widget _buildFormInput(
-    JamBaseFormModel model, {
-    double topPadding = 15.0,
-    double bottomPadding = 25.0,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-      child: JTextFormInput(viewModel: model),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showExtraInfo = useState(false);
@@ -72,30 +30,29 @@ class PlanJamFormPage extends HookConsumerWidget {
           child: Column(
             children: [
               Text(
-                'WHATS DA PLAN',
+                'JAM PLANNING',
                 textAlign: TextAlign.right,
                 style: context.jText.displayMedium
                     ?.copyWith(fontFamily: rubickFamily),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              _buildSectionTitle('When?'),
+              _buildSectionTitle('When will it happen?'),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
                 child: JamDatePicker(jamModel: jam),
               ),
-              _buildSectionTitle('Where?', bottomPadding: 20, topPadding: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0),
-                    child: Checkbox(value: false, onChanged: (value) {}),
-                  ),
-                  Text(
-                    'Right were I am',
-                    style: context.jText.headlineMedium,
-                  ),
-                ],
+              _buildSectionTitle(
+                'Where can i find this?',
+                topPadding: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
+                child: JamLocationPicker(jamModel: jam),
+              ),
+              _buildSectionTitle(
+                'How can i join?',
+                bottomPadding: 20,
+                topPadding: 20,
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -103,8 +60,33 @@ class PlanJamFormPage extends HookConsumerWidget {
                   bottom: 20,
                   right: 20,
                 ),
-                child: JamLocationPicker(jamModel: jam),
+                child: ShakesOnNoLongPress(
+                  child: ListTile(
+                    tileColor: context.jTheme.cardColor,
+                    title: Text(
+                      viewModel.joinType.title,
+                      style: context.jText.bodySmall,
+                    ),
+                    leading: const Icon(Icons.link),
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (ctx) => const JamJoinTypePickerDialog()),
+                  ),
+                ),
               ),
+              if (viewModel.joinType ==
+                      JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
+                  viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)
+                _buildSectionTitle(
+                  'What will be form for registration?',
+                  bottomPadding: 20,
+                ),
+              if (viewModel.joinType ==
+                      JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
+                  viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)
+                JamFormBuilderTile(
+                  jam: jam,
+                ),
               SizedBox(
                 height: 130,
                 child: Stack(
@@ -160,7 +142,6 @@ class PlanJamFormPage extends HookConsumerWidget {
                       _buildFormInput(viewModel.extraInformationFormModel),
                       _buildFormInputHeading(context, 'Background image'),
                       JamImagePicker(jamModel: jam),
-                      //TODO invites controls
                     ],
                   ),
                 ),
@@ -174,6 +155,48 @@ class PlanJamFormPage extends HookConsumerWidget {
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildSectionTitle(
+    String title, {
+    double leftPadding = 38.0,
+    double topPadding = 0,
+    double bottomPadding = 0,
+    double rightPadding = 0,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: leftPadding,
+        top: topPadding,
+        bottom: bottomPadding,
+        right: rightPadding,
+      ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(title),
+      ),
+    );
+  }
+
+  Widget _buildFormInputHeading(BuildContext context, String title) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: context.jText.headlineMedium,
+      ),
+    );
+  }
+
+  Widget _buildFormInput(
+    JamBaseFormModel model, {
+    double topPadding = 15.0,
+    double bottomPadding = 25.0,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+      child: JTextFormInput(viewModel: model),
     );
   }
 
@@ -244,10 +267,15 @@ class PlanJamFormPage extends HookConsumerWidget {
 }
 
 bool _canSubmit(JamViewModel viewModel) {
-  return viewModel.nameFormModel.isValid &&
+  final condition = viewModel.nameFormModel.isValid &&
       viewModel.descriptionFormModel.isValid &&
       viewModel.locationNameFormModel.isValid &&
       viewModel.location.isNotEmpty &&
       viewModel.date != null &&
       viewModel.relatedVibes.isNotEmpty;
+
+  return viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm ||
+          viewModel.joinType == JamJoinTypeEnum.freetoJoinAfterFormAndApprove
+      ? condition && viewModel.formModel != null
+      : condition;
 }

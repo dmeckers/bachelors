@@ -22,8 +22,7 @@ class SupabaseAttachmentService
   @override
   Future<void> delete(String filename, [Identifiable? model]) async {
     final directory = bucket.getFullPath(getUserIdOrThrow(), model);
-    final fullPath =
-        "$directory${filename.startsWith('/') ? filename.substring(1) : filename}";
+    final fullPath = "$directory${filename.split(directory).last}";
     await supaBucket.remove([fullPath]);
   }
 
@@ -58,7 +57,7 @@ class SupabaseAttachmentService
     int? height,
   }) {
     return supaBucket.getPublicUrl(
-      '${bucket.getFullPath(userId ?? getUserIdOrThrow(), model)}/$filename',
+      '${bucket.getFullPath(userId ?? getUserIdOrThrow(), model)}$filename',
       // gotta pay money for this
       // transform: TransformOptions(
       //   resize: ResizeMode.cover,

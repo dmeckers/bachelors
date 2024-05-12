@@ -58,7 +58,7 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "${jamData.date.nameWithoutYear()} at ${jamData.date.toTime()}",
+                  "${jamData.date.nameWithoutYear} at ${jamData.date.atTime}",
                   style: context.jText.headlineSmall,
                 ),
                 const SizedBox(height: 8),

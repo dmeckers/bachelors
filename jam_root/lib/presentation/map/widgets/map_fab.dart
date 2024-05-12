@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+final expandibleFabKey = GlobalKey<_ExpandableFabState>();
+
 @immutable
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
@@ -9,11 +11,13 @@ class ExpandableFab extends StatefulWidget {
     this.initialOpen,
     required this.distance,
     required this.children,
+    this.buttonIcon,
   });
 
   final bool? initialOpen;
   final double distance;
   final List<Widget> children;
+  final IconData? buttonIcon;
 
   @override
   State<ExpandableFab> createState() => _ExpandableFabState();
@@ -23,14 +27,14 @@ class _ExpandableFabState extends State<ExpandableFab>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _expandAnimation;
-  bool _open = false;
+  bool open = false;
 
   @override
   void initState() {
     super.initState();
-    _open = widget.initialOpen ?? false;
+    open = widget.initialOpen ?? false;
     _controller = AnimationController(
-      value: _open ? 1.0 : 0.0,
+      value: open ? 1.0 : 0.0,
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
@@ -41,6 +45,13 @@ class _ExpandableFabState extends State<ExpandableFab>
     );
   }
 
+  close() {
+    setState(() {
+      open = false;
+      _controller.reverse();
+    });
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -49,8 +60,8 @@ class _ExpandableFabState extends State<ExpandableFab>
 
   void _toggle() {
     setState(() {
-      _open = !_open;
-      if (_open) {
+      open = !open;
+      if (open) {
         _controller.forward();
       } else {
         _controller.reverse();
@@ -115,24 +126,24 @@ class _ExpandableFabState extends State<ExpandableFab>
 
   Widget _buildTapToOpenFab() {
     return IgnorePointer(
-      ignoring: _open,
+      ignoring: open,
       child: AnimatedContainer(
         transformAlignment: Alignment.center,
         transform: Matrix4.diagonal3Values(
-          _open ? 0.7 : 1.0,
-          _open ? 0.7 : 1.0,
+          open ? 0.7 : 1.0,
+          open ? 0.7 : 1.0,
           1.0,
         ),
         duration: const Duration(milliseconds: 250),
         curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
         child: AnimatedOpacity(
-          opacity: _open ? 0.0 : 1.0,
+          opacity: open ? 0.0 : 1.0,
           curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
             shape: const CircleBorder(),
             onPressed: _toggle,
-            child: const Icon(Icons.map_outlined),
+            child: Icon(widget.buttonIcon ?? Icons.map_outlined),
           ),
         ),
       ),

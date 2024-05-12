@@ -19,8 +19,8 @@ class JamDateTimeTile extends StatelessWidget {
       leading: const Icon(Icons.date_range_outlined),
       title: Text(
         DateTime.now().isAfter(jam.date)
-            ? "${jam.date.nameWithoutYear()} ${jam.date.year}"
-            : "${jam.date.nameWithoutYear()} at ${jam.date.toTime()}",
+            ? "${jam.date.nameWithoutYear} ${jam.date.year}"
+            : "${jam.date.nameWithoutYear} at ${jam.date.atTime}",
         style: context.jText.bodySmall,
       ),
     );

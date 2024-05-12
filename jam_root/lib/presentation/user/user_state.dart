@@ -60,21 +60,21 @@ class UserState with Storer {
     vibesRepo.updateVibes(vibes: vibes);
   }
 
-  void deleteProfilePhoto({required String photoId}) {
+  Future<void> deleteProfilePhoto({required String photoId}) async {
+    final newAvatar =
+        await userRepo.images.deleteProfilePhoto(photoId: photoId);
+
     final filtered = _state.value.photoUrls
-            ?.where((url) => url.split('/').last != photoId)
+            ?.where((url) => !url.contains(photoId))
             .toList() ??
         [];
 
-    final newAvatar = filtered.isEmpty ? null : filtered.first;
     final profile = _state.value.copyWith(
       photoUrls: filtered,
       avatar: newAvatar,
     );
 
     _state.value = profile;
-
-    userRepo.images.deleteProfilePhoto(photoId: photoId);
   }
 
   void setMainAvatar(String? fileName) {

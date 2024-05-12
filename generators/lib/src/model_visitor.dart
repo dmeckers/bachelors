@@ -13,6 +13,8 @@ class ModelVisitor extends SimpleElementVisitor<void> {
   Map<String, String> locations = {};
   Map<String, String> dates = {};
   Map<String, String> files = {};
+  Map<String, String> enums = {};
+  Map<String, String> meta = {};
 
   void clear() {
     className = '';
@@ -70,6 +72,22 @@ class ModelVisitor extends SimpleElementVisitor<void> {
               parameterName.contains('id')) &&
           !parameterType.contains('List')) {
         references[parameterName] = parameterType;
+      }
+
+      if (parameterType.contains('Enum')) {
+        enums[parameterName] = parameterType;
+        for (var metadata in parameter.metadata) {
+          if (metadata.element?.enclosingElement?.name == 'Default') {
+            var value =
+                metadata.computeConstantValue()?.getField('defaultValue');
+
+            if (value == null || value.variable == null) continue;
+
+            final enumValue = value.variable!.name;
+            final enumType = value.variable!.type.toString();
+            meta['${parameterName}_default'] = "$enumType.$enumValue";
+          }
+        }
       }
 
       if ((parameterType.contains('int') || parameterType.contains('double')) &&

@@ -14,6 +14,7 @@ enum JamRoutes {
   jamControlParticipants(),
   jamEditVibes(),
   jamEditDetails(),
+  editJamForm(),
   createNew();
 }
 
@@ -53,6 +54,13 @@ final jamRoutes = GoRoute(
               name: JamRoutes.jamEditDetails.name,
               builder: (_, state) =>
                   EditJamDetailsPage(jam: state.extra as JamModel),
+            ),
+            GoRoute(
+              path: JamRoutes.editJamForm.name,
+              name: JamRoutes.editJamForm.name,
+              builder: (_, state) => JamFormBuilderPage(
+                jamModel: state.extra as JamModel,
+              ),
             ),
           ],
         ),

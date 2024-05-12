@@ -10,6 +10,7 @@ class BottomSheetLayout extends StatelessWidget {
     this.child,
     this.children,
     this.paddingTop,
+    this.decoration,
     this.size = BottomSheetSize.medium,
   }) : assert(child != null || children != null,
             'You must provide a child or children');
@@ -18,6 +19,7 @@ class BottomSheetLayout extends StatelessWidget {
   final List<Widget>? children;
   final double? paddingTop;
   final BottomSheetSize size;
+  final BoxDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +30,12 @@ class BottomSheetLayout extends StatelessWidget {
         BottomSheetSize.large => 350,
       },
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: context.jColor.background,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-      ),
+      decoration: decoration ??
+          BoxDecoration(
+            color: context.jColor.background,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          ),
       child: Column(
         children: [
           const SizedBox(height: 10),

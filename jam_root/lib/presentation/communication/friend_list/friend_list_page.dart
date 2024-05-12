@@ -92,7 +92,7 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
           child: Text(
             user.isOnlineAndActive
                 ? 'Online'
-                : 'Last seen ${user.lastActiveAt.toNTimeAgo()}',
+                : 'Last seen ${user.lastActiveAt.toNTimeAgo}',
             style: context.jText.bodySmall?.copyWith(
               fontSize: 11,
               color: ColorHelper.colorContrast(

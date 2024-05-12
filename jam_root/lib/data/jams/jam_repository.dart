@@ -39,6 +39,7 @@ final class JamsRepository extends JamRepositoryInterface
     final jamWithoutImage = jam.copyWith(image: null);
 
     final json = jamWithoutImage.backfilled.toJson();
+
     final jamId = await supabase.rpc(POST_RPC, params: json);
     final userId = getUserIdOrThrow();
 
@@ -177,7 +178,6 @@ final class JamsRepository extends JamRepositoryInterface
 
   @override
   Future<JamModel> updateJamVibes(JamModel jam) {
-    // TODO: implement updateJamVibes
     throw UnimplementedError();
   }
 

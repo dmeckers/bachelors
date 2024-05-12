@@ -102,7 +102,7 @@ class ChatAppBar extends ConsumerWidget
     final isOnline = chat.relatedContact.isOnlineAndActive;
     final subtitleText = isOnline
         ? 'Online'
-        : 'Last seen ${chat.relatedContact.lastActiveAt.toNTimeAgo()}';
+        : 'Last seen ${chat.relatedContact.lastActiveAt.toNTimeAgo}';
     final isTyping = chat.chatEventType == ChatEventType.typing;
 
     return isTyping

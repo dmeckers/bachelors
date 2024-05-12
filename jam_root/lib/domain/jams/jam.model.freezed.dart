@@ -26,12 +26,9 @@ mixin _$JamModel {
   UserProfileModel? get creator => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false)
   String? get creatorId => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   String? get locationName => throw _privateConstructorUsedError;
-
-  ///
-  /// this is fucked up
   @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
       fromJson: JsonJamTransformer.locationFromJson,
@@ -54,8 +51,8 @@ mixin _$JamModel {
   int get invitesPerMember => throw _privateConstructorUsedError;
   String? get extraInformation => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: false, includeToJson: false)
-  CommunityModel? get relatedCommunity => throw _privateConstructorUsedError;
-  bool get invitesOnly => throw _privateConstructorUsedError;
+  CommunityModel? get relatedCommunity =>
+      throw _privateConstructorUsedError; // @Default(false) bool invitesOnly,
   @JsonKey(includeIfNull: false)
   String get iconUrl => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false, includeIfNull: false, includeFromJson: false)
@@ -69,6 +66,9 @@ mixin _$JamModel {
   List<VibeModel> get relatedVibes => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false, includeFromJson: false)
   bool get dropBackground => throw _privateConstructorUsedError;
+  @JsonKey(includeIfNull: false)
+  JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
+  JamFormModel? get formModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -86,7 +86,7 @@ abstract class $JamModelCopyWith<$Res> {
       @JsonKey(includeToJson: false, includeIfNull: false)
       UserProfileModel? creator,
       @JsonKey(includeToJson: false) String? creatorId,
-      String? name,
+      String name,
       String? description,
       String? locationName,
       @JsonKey(
@@ -105,7 +105,6 @@ abstract class $JamModelCopyWith<$Res> {
       String? extraInformation,
       @JsonKey(includeFromJson: false, includeToJson: false)
       CommunityModel? relatedCommunity,
-      bool invitesOnly,
       @JsonKey(includeIfNull: false) String iconUrl,
       @JsonKey(
           includeToJson: false, includeIfNull: false, includeFromJson: false)
@@ -117,10 +116,13 @@ abstract class $JamModelCopyWith<$Res> {
       @Assert('relatedVibes.length > 0')
       List<VibeModel> relatedVibes,
       @JsonKey(includeToJson: false, includeFromJson: false)
-      bool dropBackground});
+      bool dropBackground,
+      @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
+      JamFormModel? formModel});
 
   $UserProfileModelCopyWith<$Res>? get creator;
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
+  $JamFormModelCopyWith<$Res>? get formModel;
 }
 
 /// @nodoc
@@ -139,7 +141,7 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
     Object? id = freezed,
     Object? creator = freezed,
     Object? creatorId = freezed,
-    Object? name = freezed,
+    Object? name = null,
     Object? description = freezed,
     Object? locationName = freezed,
     Object? location = null,
@@ -152,13 +154,14 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
     Object? invitesPerMember = null,
     Object? extraInformation = freezed,
     Object? relatedCommunity = freezed,
-    Object? invitesOnly = null,
     Object? iconUrl = null,
     Object? admins = null,
     Object? participants = null,
     Object? backgroundUrl = freezed,
     Object? relatedVibes = null,
     Object? dropBackground = null,
+    Object? joinType = null,
+    Object? formModel = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -173,10 +176,10 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -225,10 +228,6 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.relatedCommunity
           : relatedCommunity // ignore: cast_nullable_to_non_nullable
               as CommunityModel?,
-      invitesOnly: null == invitesOnly
-          ? _value.invitesOnly
-          : invitesOnly // ignore: cast_nullable_to_non_nullable
-              as bool,
       iconUrl: null == iconUrl
           ? _value.iconUrl
           : iconUrl // ignore: cast_nullable_to_non_nullable
@@ -253,6 +252,14 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.dropBackground
           : dropBackground // ignore: cast_nullable_to_non_nullable
               as bool,
+      joinType: null == joinType
+          ? _value.joinType
+          : joinType // ignore: cast_nullable_to_non_nullable
+              as JamJoinTypeEnum,
+      formModel: freezed == formModel
+          ? _value.formModel
+          : formModel // ignore: cast_nullable_to_non_nullable
+              as JamFormModel?,
     ) as $Val);
   }
 
@@ -279,6 +286,18 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
       return _then(_value.copyWith(relatedCommunity: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $JamFormModelCopyWith<$Res>? get formModel {
+    if (_value.formModel == null) {
+      return null;
+    }
+
+    return $JamFormModelCopyWith<$Res>(_value.formModel!, (value) {
+      return _then(_value.copyWith(formModel: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -294,7 +313,7 @@ abstract class _$$JamModelImplCopyWith<$Res>
       @JsonKey(includeToJson: false, includeIfNull: false)
       UserProfileModel? creator,
       @JsonKey(includeToJson: false) String? creatorId,
-      String? name,
+      String name,
       String? description,
       String? locationName,
       @JsonKey(
@@ -313,7 +332,6 @@ abstract class _$$JamModelImplCopyWith<$Res>
       String? extraInformation,
       @JsonKey(includeFromJson: false, includeToJson: false)
       CommunityModel? relatedCommunity,
-      bool invitesOnly,
       @JsonKey(includeIfNull: false) String iconUrl,
       @JsonKey(
           includeToJson: false, includeIfNull: false, includeFromJson: false)
@@ -325,12 +343,16 @@ abstract class _$$JamModelImplCopyWith<$Res>
       @Assert('relatedVibes.length > 0')
       List<VibeModel> relatedVibes,
       @JsonKey(includeToJson: false, includeFromJson: false)
-      bool dropBackground});
+      bool dropBackground,
+      @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
+      JamFormModel? formModel});
 
   @override
   $UserProfileModelCopyWith<$Res>? get creator;
   @override
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
+  @override
+  $JamFormModelCopyWith<$Res>? get formModel;
 }
 
 /// @nodoc
@@ -347,7 +369,7 @@ class __$$JamModelImplCopyWithImpl<$Res>
     Object? id = freezed,
     Object? creator = freezed,
     Object? creatorId = freezed,
-    Object? name = freezed,
+    Object? name = null,
     Object? description = freezed,
     Object? locationName = freezed,
     Object? location = null,
@@ -360,13 +382,14 @@ class __$$JamModelImplCopyWithImpl<$Res>
     Object? invitesPerMember = null,
     Object? extraInformation = freezed,
     Object? relatedCommunity = freezed,
-    Object? invitesOnly = null,
     Object? iconUrl = null,
     Object? admins = null,
     Object? participants = null,
     Object? backgroundUrl = freezed,
     Object? relatedVibes = null,
     Object? dropBackground = null,
+    Object? joinType = null,
+    Object? formModel = freezed,
   }) {
     return _then(_$JamModelImpl(
       id: freezed == id
@@ -381,10 +404,10 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -433,10 +456,6 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.relatedCommunity
           : relatedCommunity // ignore: cast_nullable_to_non_nullable
               as CommunityModel?,
-      invitesOnly: null == invitesOnly
-          ? _value.invitesOnly
-          : invitesOnly // ignore: cast_nullable_to_non_nullable
-              as bool,
       iconUrl: null == iconUrl
           ? _value.iconUrl
           : iconUrl // ignore: cast_nullable_to_non_nullable
@@ -461,6 +480,14 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.dropBackground
           : dropBackground // ignore: cast_nullable_to_non_nullable
               as bool,
+      joinType: null == joinType
+          ? _value.joinType
+          : joinType // ignore: cast_nullable_to_non_nullable
+              as JamJoinTypeEnum,
+      formModel: freezed == formModel
+          ? _value.formModel
+          : formModel // ignore: cast_nullable_to_non_nullable
+              as JamFormModel?,
     ));
   }
 }
@@ -473,7 +500,7 @@ class _$JamModelImpl extends _JamModel {
       {@JsonKey(includeIfNull: false) this.id,
       @JsonKey(includeToJson: false, includeIfNull: false) this.creator,
       @JsonKey(includeToJson: false) this.creatorId,
-      this.name = 'Anonymous Jam',
+      required this.name,
       this.description = 'No description this time',
       this.locationName = 'Check map',
       @JsonKey(
@@ -492,7 +519,6 @@ class _$JamModelImpl extends _JamModel {
       this.extraInformation = '',
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.relatedCommunity = null,
-      this.invitesOnly = false,
       @JsonKey(includeIfNull: false) this.iconUrl = '',
       @JsonKey(
           includeToJson: false, includeIfNull: false, includeFromJson: false)
@@ -504,7 +530,9 @@ class _$JamModelImpl extends _JamModel {
       @Assert('relatedVibes.length > 0')
       required final List<VibeModel> relatedVibes,
       @JsonKey(includeToJson: false, includeFromJson: false)
-      this.dropBackground = false})
+      this.dropBackground = false,
+      @JsonKey(includeIfNull: false) this.joinType = JamJoinTypeEnum.freeToJoin,
+      this.formModel})
       : _admins = admins,
         _participants = participants,
         _relatedVibes = relatedVibes,
@@ -523,17 +551,13 @@ class _$JamModelImpl extends _JamModel {
   @JsonKey(includeToJson: false)
   final String? creatorId;
   @override
-  @JsonKey()
-  final String? name;
+  final String name;
   @override
   @JsonKey()
   final String? description;
   @override
   @JsonKey()
   final String? locationName;
-
-  ///
-  /// this is fucked up
   @override
   @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
@@ -568,9 +592,7 @@ class _$JamModelImpl extends _JamModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   final CommunityModel? relatedCommunity;
-  @override
-  @JsonKey()
-  final bool invitesOnly;
+// @Default(false) bool invitesOnly,
   @override
   @JsonKey(includeIfNull: false)
   final String iconUrl;
@@ -608,10 +630,15 @@ class _$JamModelImpl extends _JamModel {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
   final bool dropBackground;
+  @override
+  @JsonKey(includeIfNull: false)
+  final JamJoinTypeEnum joinType;
+  @override
+  final JamFormModel? formModel;
 
   @override
   String toString() {
-    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, name: $name, description: $description, locationName: $locationName, location: $location, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, invitesOnly: $invitesOnly, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground)';
+    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, name: $name, description: $description, locationName: $locationName, location: $location, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel)';
   }
 
   @override
@@ -643,8 +670,6 @@ class _$JamModelImpl extends _JamModel {
                 other.extraInformation == extraInformation) &&
             (identical(other.relatedCommunity, relatedCommunity) ||
                 other.relatedCommunity == relatedCommunity) &&
-            (identical(other.invitesOnly, invitesOnly) ||
-                other.invitesOnly == invitesOnly) &&
             (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl) &&
             const DeepCollectionEquality().equals(other._admins, _admins) &&
             const DeepCollectionEquality()
@@ -654,7 +679,11 @@ class _$JamModelImpl extends _JamModel {
             const DeepCollectionEquality()
                 .equals(other._relatedVibes, _relatedVibes) &&
             (identical(other.dropBackground, dropBackground) ||
-                other.dropBackground == dropBackground));
+                other.dropBackground == dropBackground) &&
+            (identical(other.joinType, joinType) ||
+                other.joinType == joinType) &&
+            (identical(other.formModel, formModel) ||
+                other.formModel == formModel));
   }
 
   @JsonKey(ignore: true)
@@ -677,13 +706,14 @@ class _$JamModelImpl extends _JamModel {
         invitesPerMember,
         extraInformation,
         relatedCommunity,
-        invitesOnly,
         iconUrl,
         const DeepCollectionEquality().hash(_admins),
         const DeepCollectionEquality().hash(_participants),
         backgroundUrl,
         const DeepCollectionEquality().hash(_relatedVibes),
-        dropBackground
+        dropBackground,
+        joinType,
+        formModel
       ]);
 
   @JsonKey(ignore: true)
@@ -706,7 +736,7 @@ abstract class _JamModel extends JamModel {
       @JsonKey(includeToJson: false, includeIfNull: false)
       final UserProfileModel? creator,
       @JsonKey(includeToJson: false) final String? creatorId,
-      final String? name,
+      required final String name,
       final String? description,
       final String? locationName,
       @JsonKey(
@@ -725,7 +755,6 @@ abstract class _JamModel extends JamModel {
       final String? extraInformation,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final CommunityModel? relatedCommunity,
-      final bool invitesOnly,
       @JsonKey(includeIfNull: false) final String iconUrl,
       @JsonKey(
           includeToJson: false, includeIfNull: false, includeFromJson: false)
@@ -737,7 +766,9 @@ abstract class _JamModel extends JamModel {
       @Assert('relatedVibes.length > 0')
       required final List<VibeModel> relatedVibes,
       @JsonKey(includeToJson: false, includeFromJson: false)
-      final bool dropBackground}) = _$JamModelImpl;
+      final bool dropBackground,
+      @JsonKey(includeIfNull: false) final JamJoinTypeEnum joinType,
+      final JamFormModel? formModel}) = _$JamModelImpl;
   const _JamModel._() : super._();
 
   factory _JamModel.fromJson(Map<String, dynamic> json) =
@@ -753,15 +784,12 @@ abstract class _JamModel extends JamModel {
   @JsonKey(includeToJson: false)
   String? get creatorId;
   @override
-  String? get name;
+  String get name;
   @override
   String? get description;
   @override
   String? get locationName;
   @override
-
-  ///
-  /// this is fucked up
   @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
       fromJson: JsonJamTransformer.locationFromJson,
@@ -793,9 +821,7 @@ abstract class _JamModel extends JamModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   CommunityModel? get relatedCommunity;
-  @override
-  bool get invitesOnly;
-  @override
+  @override // @Default(false) bool invitesOnly,
   @JsonKey(includeIfNull: false)
   String get iconUrl;
   @override
@@ -814,6 +840,11 @@ abstract class _JamModel extends JamModel {
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
   bool get dropBackground;
+  @override
+  @JsonKey(includeIfNull: false)
+  JamJoinTypeEnum get joinType;
+  @override
+  JamFormModel? get formModel;
   @override
   @JsonKey(ignore: true)
   _$$JamModelImplCopyWith<_$JamModelImpl> get copyWith =>

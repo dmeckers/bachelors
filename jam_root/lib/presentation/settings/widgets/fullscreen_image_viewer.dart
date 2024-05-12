@@ -13,7 +13,8 @@ import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class FullScreenImageViewer extends HookWidget with ProfileRepositoryProviders {
+class FullScreenImageViewer extends HookConsumerWidget
+    with ProfileRepositoryProviders {
   const FullScreenImageViewer({
     super.key,
     required this.images,
@@ -27,7 +28,7 @@ class FullScreenImageViewer extends HookWidget with ProfileRepositoryProviders {
   final String mainAvatar;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mainImageIndexState = useState(mainImageIndex);
     final pageController = usePageController();
     final imagesState = useState(
@@ -38,133 +39,119 @@ class FullScreenImageViewer extends HookWidget with ProfileRepositoryProviders {
 
     return PageView.builder(
       controller: pageController,
+      itemCount: imagesState.value.length,
       itemBuilder: ((context, index) {
+        final imageUrl = imagesState.value[index];
+
         return GestureDetector(
           onTap: () => context.pop(),
           child: Stack(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  color: context.jColor.background,
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      imagesState.value[index],
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                      child: CachedNetworkImage(
-                        imageUrl: imagesState.value[index],
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              _buildImageContainer(context, imageUrl),
               if (isPersonal ?? true)
-                _buildGalleryActionButtons(
-                  mainImageIndexState,
-                  index,
-                  context,
-                  pageController,
-                  imagesState,
+                Positioned(
+                  top: 40,
+                  right: 20,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => _handleSetMainAvatar(
+                          index,
+                          mainImageIndexState,
+                          imagesState,
+                          ref,
+                        ),
+                        icon: Icon(
+                          mainImageIndexState.value == index
+                              ? Icons.star
+                              : Icons.star_outline,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                        color: Colors.transparent,
+                      ),
+                      IconButton(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (_) => DestructiveDialog(
+                            onConfirm: (_) => _handleDeleteAvatar(
+                              context,
+                              index,
+                              imagesState,
+                              mainImageIndexState,
+                              ref,
+                              pageController,
+                            ),
+                            title: 'Delete image',
+                            subtitle: 'You sure you want to delete this image?',
+                          ),
+                        ),
+                        icon: const Icon(Icons.delete,
+                            size: 30, color: Colors.red),
+                        color: Colors.transparent,
+                      )
+                    ],
+                  ),
                 ),
             ],
           ),
         );
       }),
-      itemCount: imagesState.value.length,
     );
   }
 
-  Consumer _buildGalleryActionButtons(
-    ValueNotifier<int> mainImageIndexState,
-    int index,
-    BuildContext context,
-    PageController controller,
-    ValueNotifier<Strings> imagesState,
-  ) =>
-      Consumer(
-        builder: (context, ref, child) {
-          return Positioned(
-            top: 40,
-            right: 20,
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => _handleSetMainAvatar(
-                    index,
-                    mainImageIndexState,
-                    imagesState,
-                    ref,
-                  ),
-                  icon: Icon(
-                    mainImageIndexState.value == index
-                        ? Icons.star
-                        : Icons.star_outline,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  color: Colors.transparent,
-                ),
-                IconButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (_) => DestructiveDialog(
-                      onConfirm: (_) => _handleDeleteAvatar(
-                        context,
-                        index,
-                        controller,
-                        imagesState,
-                        ref,
-                      ),
-                      title: 'Delete image',
-                      subtitle: 'You sure you want to delete this image?',
-                    ),
-                  ),
-                  icon: const Icon(Icons.delete, size: 30, color: Colors.red),
-                  color: Colors.transparent,
-                )
-              ],
+  Container _buildImageContainer(BuildContext context, String imageUrl) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: context.jColor.background,
+        image: DecorationImage(
+          image: CachedNetworkImageProvider(
+            imageUrl,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.contain,
             ),
-          );
-        },
-      );
+          ),
+        ),
+      ),
+    );
+  }
 
   void _handleDeleteAvatar(
     BuildContext context,
     int index,
-    PageController controller,
     ValueNotifier<Strings> imagesState,
+    ValueNotifier<int> mainImageIndexState,
     WidgetRef ref,
-  ) {
-    ref
-        .read(userProfileRepository)
-        .images
-        .deleteProfilePhoto(photoId: imagesState.value[index])
-        .then(
-      (value) {
-        // ref.invalidate(currentUserProfileProvider);
-        if (imagesState.value.length == 1) {
-          context.pop();
-        }
+    PageController pageController,
+  ) async {
+    await ref
+        .read(userStateProvider)
+        .deleteProfilePhoto(photoId: imagesState.value[index]);
 
-        controller.jumpTo(
-          imagesState.value.length - 1 == index ? index - 1 : index + 1,
-        );
+    if (imagesState.value.length == 1 && context.mounted) {
+      context.pop();
+      return;
+    }
 
-        imagesState.value = imagesState.value
-            .where((element) => element != imagesState.value[index])
-            .toList();
-      },
+    final currentPageIndex = pageController.page!.round();
+    final imageToRemove = imagesState.value[currentPageIndex];
+    pageController.jumpToPage(
+      currentPageIndex == 0 ? currentPageIndex + 1 : currentPageIndex - 1,
     );
+    imagesState.value =
+        imagesState.value.where((element) => element != imageToRemove).toList();
   }
 
   void _handleSetMainAvatar(
@@ -176,10 +163,5 @@ class FullScreenImageViewer extends HookWidget with ProfileRepositoryProviders {
     if (mainImageIndexState.value == index) return;
     mainImageIndexState.value = index;
     ref.read(userStateProvider).setMainAvatar(imagesState.value[index]);
-    // await ref
-    //     .read(userProfileRepository)
-    //     .images
-    //     .setMainAvatar(imagesState.value[index]);
-    // ref.invalidate(currentUserProfileProvider);
   }
 }

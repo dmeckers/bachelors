@@ -48,6 +48,8 @@ mixin _$ChatModel {
   @HiveField(13)
   bool get isArchived => throw _privateConstructorUsedError;
   bool get toHide => throw _privateConstructorUsedError;
+  @HiveField(14)
+  DateTime? get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -79,7 +81,8 @@ abstract class $ChatModelCopyWith<$Res> {
       ChatEventType? chatEventType,
       @HiveField(12) bool isPinned,
       @HiveField(13) bool isArchived,
-      bool toHide});
+      bool toHide,
+      @HiveField(14) DateTime? createdAt});
 
   $UserProfileModelCopyWith<$Res> get relatedContact;
   $LastMessageModelCopyWith<$Res>? get lastMessage;
@@ -110,6 +113,7 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
     Object? isPinned = null,
     Object? isArchived = null,
     Object? toHide = null,
+    Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -160,6 +164,10 @@ class _$ChatModelCopyWithImpl<$Res, $Val extends ChatModel>
           ? _value.toHide
           : toHide // ignore: cast_nullable_to_non_nullable
               as bool,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 
@@ -211,7 +219,8 @@ abstract class _$$ChatModelImplCopyWith<$Res>
       ChatEventType? chatEventType,
       @HiveField(12) bool isPinned,
       @HiveField(13) bool isArchived,
-      bool toHide});
+      bool toHide,
+      @HiveField(14) DateTime? createdAt});
 
   @override
   $UserProfileModelCopyWith<$Res> get relatedContact;
@@ -242,6 +251,7 @@ class __$$ChatModelImplCopyWithImpl<$Res>
     Object? isPinned = null,
     Object? isArchived = null,
     Object? toHide = null,
+    Object? createdAt = freezed,
   }) {
     return _then(_$ChatModelImpl(
       id: null == id
@@ -292,6 +302,10 @@ class __$$ChatModelImplCopyWithImpl<$Res>
           ? _value.toHide
           : toHide // ignore: cast_nullable_to_non_nullable
               as bool,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -317,7 +331,8 @@ class _$ChatModelImpl extends _ChatModel {
       @JsonKey(includeFromJson: false, includeToJson: false) this.chatEventType,
       @HiveField(12) this.isPinned = false,
       @HiveField(13) this.isArchived = false,
-      this.toHide = false})
+      this.toHide = false,
+      @HiveField(14) this.createdAt})
       : _messages = messages,
         super._();
 
@@ -374,10 +389,13 @@ class _$ChatModelImpl extends _ChatModel {
   @override
   @JsonKey()
   final bool toHide;
+  @override
+  @HiveField(14)
+  final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'ChatModel(id: $id, relatedContact: $relatedContact, messages: $messages, unreadMessagesCount: $unreadMessagesCount, clearedAt: $clearedAt, lastMessage: $lastMessage, iconUrl: $iconUrl, settings: $settings, chatEventType: $chatEventType, isPinned: $isPinned, isArchived: $isArchived, toHide: $toHide)';
+    return 'ChatModel(id: $id, relatedContact: $relatedContact, messages: $messages, unreadMessagesCount: $unreadMessagesCount, clearedAt: $clearedAt, lastMessage: $lastMessage, iconUrl: $iconUrl, settings: $settings, chatEventType: $chatEventType, isPinned: $isPinned, isArchived: $isArchived, toHide: $toHide, createdAt: $createdAt)';
   }
 
   @override
@@ -403,7 +421,9 @@ class _$ChatModelImpl extends _ChatModel {
                 other.isPinned == isPinned) &&
             (identical(other.isArchived, isArchived) ||
                 other.isArchived == isArchived) &&
-            (identical(other.toHide, toHide) || other.toHide == toHide));
+            (identical(other.toHide, toHide) || other.toHide == toHide) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
@@ -421,7 +441,8 @@ class _$ChatModelImpl extends _ChatModel {
       chatEventType,
       isPinned,
       isArchived,
-      toHide);
+      toHide,
+      createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -459,7 +480,8 @@ abstract class _ChatModel extends ChatModel {
       final ChatEventType? chatEventType,
       @HiveField(12) final bool isPinned,
       @HiveField(13) final bool isArchived,
-      final bool toHide}) = _$ChatModelImpl;
+      final bool toHide,
+      @HiveField(14) final DateTime? createdAt}) = _$ChatModelImpl;
   const _ChatModel._() : super._();
 
   factory _ChatModel.fromJson(Map<String, dynamic> json) =
@@ -505,6 +527,9 @@ abstract class _ChatModel extends ChatModel {
   bool get isArchived;
   @override
   bool get toHide;
+  @override
+  @HiveField(14)
+  DateTime? get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$ChatModelImplCopyWith<_$ChatModelImpl> get copyWith =>

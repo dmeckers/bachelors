@@ -11,13 +11,33 @@ final class CreateJamPage extends ConsumerWidget {
 
   final LatLng? position;
 
-  bool _canSubmit(JamViewModel viewModel) {
-    return viewModel.nameFormModel.isValid &&
+  String? _canSubmit(JamViewModel viewModel) {
+    // viewModel.nameFormModel.isValid &&
+
+    final isFilled = viewModel.nameFormModel.isValid &&
         viewModel.descriptionFormModel.isValid &&
         viewModel.locationNameFormModel.isValid &&
         viewModel.location.isNotEmpty &&
-        viewModel.date != null &&
-        viewModel.relatedVibes.isNotEmpty;
+        viewModel.date != null;
+
+    final formValidation = viewModel.joinType.isWithForm
+        ? viewModel.formModel != null &&
+            viewModel.formModel!.elements.isNotEmpty
+        : true;
+
+    if (!isFilled) {
+      return 'Mandatory fields are unfilled';
+    }
+
+    if (!formValidation) {
+      return 'No registration form created';
+    }
+
+    if (viewModel.relatedVibes.isEmpty) {
+      return 'No related vibes selected';
+    }
+
+    return null;
   }
 
   _setInitialPositionIfHasOne(WidgetRef ref, JamViewModel viewModel) {
@@ -42,48 +62,35 @@ final class CreateJamPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: const SimpleAppBar(title: ''),
-      body: CustomScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.9,
-              child: Stack(
-                children: [
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: viewModel.image?.existsSync() ?? false ? 1 : 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: viewModel.image?.existsSync() ?? false
-                            ? DecorationImage(
-                                opacity: 0.1,
-                                image: FileImage(viewModel.image!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Flexible(
-                        flex: 23,
-                        child: PageView(
-                          controller: pageController,
-                          children: pages,
-                        ),
-                      ),
-                      Flexible(
-                          flex: 2,
-                          child: _buildSubmitButton(viewModel, context, ref)),
-                      const SizedBox(height: 30),
-                    ],
-                  ),
-                ],
+      body: Stack(
+        children: [
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            opacity: viewModel.image?.existsSync() ?? false ? 1 : 0,
+            child: Container(
+              decoration: BoxDecoration(
+                image: viewModel.image?.existsSync() ?? false
+                    ? DecorationImage(
+                        opacity: 0.1,
+                        image: FileImage(viewModel.image!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
             ),
-          )
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: pageController,
+                  children: pages,
+                ),
+              ),
+              _buildSubmitButton(viewModel, context, ref),
+              const SizedBox(height: 30),
+            ],
+          ),
         ],
       ),
     );
@@ -94,7 +101,7 @@ final class CreateJamPage extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final canSubmit = _canSubmit(viewModel);
+    final validationErrors = _canSubmit(viewModel);
     final kamoji = badKamojis[viewModel.hashCode % badKamojis.length];
     return ElevatedButton(
       style: ButtonStyle(
@@ -102,17 +109,19 @@ final class CreateJamPage extends ConsumerWidget {
           const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         ),
         backgroundColor: MaterialStateProperty.all(
-          canSubmit ? Colors.black : Colors.grey,
+          validationErrors == null ? Colors.black : Colors.grey,
         ),
       ),
       onPressed: () => _handleSubmitJam(
         context,
         viewModel,
         ref,
-        canSubmit,
+        validationErrors == null,
       ),
       child: Text(
-        canSubmit ? 'Let\'s jam \u{1F525}' : '$kamoji smth is missing',
+        validationErrors == null
+            ? 'Let\'s jam \u{1F525}'
+            : '$kamoji $validationErrors',
         style: const TextStyle(color: Colors.white),
       ),
     );

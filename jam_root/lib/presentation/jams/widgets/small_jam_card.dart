@@ -101,7 +101,7 @@ class SmallJamCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8.0, top: 2.0),
               child: Text(
-                jam.date.nameWithoutYear(),
+                jam.date.nameWithoutYear,
                 style: context.jText.headlineSmall?.copyWith(
                   fontWeight: FontWeight.normal,
                   fontSize: 10,

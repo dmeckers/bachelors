@@ -62,7 +62,7 @@ class FriendInvitesPage extends HookConsumerWidget {
       ),
       title: Text(invite.username),
       subtitle:
-          Text(invite.sentAt.toNTimeAgo(), style: context.jText.headlineSmall),
+          Text(invite.sentAt.toNTimeAgo, style: context.jText.headlineSmall),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

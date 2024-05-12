@@ -107,7 +107,10 @@ final class SocialRepository
             GET_USER_FRIENDS,
             params: {'user_id': getUserIdOrThrow()},
           ).withConverter<Users>(
-            (data) => (data as Jsons).map(UserProfileModel.fromJson).toList(),
+            (data) => (data as Dynamics)
+                .cast<Json>()
+                .map(UserProfileModel.fromJson)
+                .toList(),
           );
   }
 
