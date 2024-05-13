@@ -43,7 +43,7 @@ class SmallJamCard extends StatelessWidget {
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
           leading: _buildLeading(),
-          title: Text(jam.name?.capitalize() ?? 'Anonymous',
+          title: Text(jam.name.capitalize(),
               style: context.jText.displaySmall?.copyWith(color: Colors.white)),
           tileColor: Colors.black,
           trailing: _buildTraling(context),

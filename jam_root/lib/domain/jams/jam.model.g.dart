@@ -38,7 +38,8 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
               JamJoinTypeEnum.freeToJoin,
       formModel: json['form_model'] == null
           ? null
-          : JamFormModel.fromJson(json['form_model'] as Map<String, dynamic>),
+          : JamJoinRequestModel.fromJson(
+              json['form_model'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$JamModelImplToJson(_$JamModelImpl instance) {

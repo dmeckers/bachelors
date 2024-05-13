@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 enum JamFormElementType {
   dateInput,
@@ -36,19 +38,15 @@ class JamFormBuilderPage extends HookConsumerWidget {
 
   final JamModel? jamModel;
 
-  // _getFormElementsProvider(WidgetRef ref) {
-  //   return jamModel == null
-  //       ? ref.watch(freshFormElementsProvider)
-  //       : ref.watch(formsElementsProvider(jamModel!.formModel?.elements));
-  // }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formElements = jamModel == null
+    final toCreate = jamModel.isNull;
+
+    final formElements = jamModel.isNull
         ? ref.watch(freshFormElementsProvider)
         : ref.watch(formsElementsProvider(jamModel!.formModel?.elements));
 
-    final formTitle = jamModel == null
+    final formTitle = jamModel.isNull
         ? ref.watch(formformTitle('Registration form'))
         : ref.watch(formformTitle(jamModel!.formModel!.title));
 
@@ -63,9 +61,9 @@ class JamFormBuilderPage extends HookConsumerWidget {
             child: TextInputWithCursor(
               initialValue: 'Registration form',
               onChanged: (v) => ref
-                  .read(formformTitle(jamModel != null
-                          ? jamModel!.formModel!.title
-                          : 'Registration form')
+                  .read(formformTitle(toCreate
+                          ? 'Registration form'
+                          : jamModel!.formModel!.title)
                       .notifier)
                   .state = v,
             ),
@@ -125,23 +123,33 @@ class JamFormBuilderPage extends HookConsumerWidget {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green),
                 ),
-                child: const Text(
-                  'Save form',
-                  style: TextStyle(color: Colors.black),
+                child: Text(
+                  toCreate ? 'Save form' : 'Update form',
+                  style: const TextStyle(color: Colors.black),
                 ),
                 onPressed: () {
-                  final formModel = JamFormModel(
+                  final formModel = JamJoinRequestModel(
                     elements: formElements,
                     title: formTitle,
                   );
-                  jamModel == null
-                      ? ref
-                          .read(freshJamViewModelStateProvider.notifier)
-                          .updateFormModel(formModel)
-                      : ref
-                          .read(jamViewModelStateProvider(jamModel!).notifier)
-                          .updateFormModel(formModel);
 
+                  if (toCreate) {
+                    ref
+                        .read(freshJamViewModelStateProvider.notifier)
+                        .updateFormModel(formModel);
+                  }
+
+                  if (!toCreate) {
+                    ref
+                        .read(jamViewModelStateProvider(jamModel!).notifier)
+                        .updateFormModel(formModel);
+
+                    ref.read(jamRepositoryProvider).updateJamForm(
+                          jamId: jamModel!.id!,
+                          form: formModel,
+                        );
+                  }
+                  JSnackBar.show(context, description: 'Form updated');
                   context.pop();
                 },
               ),

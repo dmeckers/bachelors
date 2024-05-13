@@ -35,9 +35,11 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
         data: (data) {
           final jamData = data.first as JamModel;
           final userJamsData = data.last as List<JamModel>;
+
           final isUserAlreadyParticipates = userJamsData.any(
-            (element) => element.id! == jamData.id!,
-          );
+                (element) => element.id! == jamData.id!,
+              ) ||
+              (getUserIdOrThrow() == jamLocation.creatorId);
 
           return SizedBox(
             height: 230,
@@ -53,7 +55,7 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  jamData.name ?? 'Anonymous',
+                  jamData.name,
                   style: context.jText.headlineMedium,
                 ),
                 const SizedBox(height: 8),
@@ -67,11 +69,9 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
                   style: context.jText.bodySmall,
                 ),
                 const Spacer(),
-                _buildJoinOrDetailsButton(
-                  isUserAlreadyParticipates,
-                  context,
-                  ref,
-                )
+                isUserAlreadyParticipates
+                    ? _buildButtonForParticipatingUser(context)
+                    : _buildButton(isUserAlreadyParticipates, context, ref),
               ],
             ),
           );
@@ -85,49 +85,69 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
     );
   }
 
-  ButtonWithLoader _buildJoinOrDetailsButton(
+  TextButton _buildButton(
     bool isUserAlreadyParticipates,
     BuildContext context,
     WidgetRef ref,
   ) {
-    final userId = getUserIdOrThrow();
-    return ButtonWithLoader(
-      text: isUserAlreadyParticipates || (userId == jamLocation.creatorId)
-          ? 'Details'
-          : 'Join',
-      onPressed: () async {
-        if (isUserAlreadyParticipates || (userId == jamLocation.creatorId)) {
+    return TextButton.icon(
+      onPressed: () {
+        final cb = switch (jamLocation.joinType) {
+          JamJoinTypeEnum.freeToJoin => _handleFreeToJoin,
+          JamJoinTypeEnum.freeToJoinAfterForm => () =>
+              _handleFreeToJoinWithForm,
+          JamJoinTypeEnum.freetoJoinAfterFormAndApprove => () =>
+              _handleJoinWithForm,
+          JamJoinTypeEnum.invitesOnly => _handleFreeToJoin,
+          JamJoinTypeEnum.requestToJoin => _handleRequestToJoin,
+        };
+
+        cb(context, ref);
+      },
+      icon: Icon(jamLocation.joinType.icon),
+      label: Text(jamLocation.joinType.title),
+    );
+  }
+
+  Future _handleRequestToJoin(BuildContext context, WidgetRef ref) async {}
+
+  Future _handleFreeToJoin(BuildContext context, WidgetRef ref) async {
+    final success =
+        await ref.read(joinJamFromMapProvider(jamId: jamLocation.id).future);
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => OkPopup(
+        title: success ? 'You have joined the jam' : 'Failed to join the jam',
+        onOkPressed: () {
           onActionPressed();
-          context.pushNamed(
-            JamRoutes.details.name,
-            pathParameters: {'jamId': jamLocation.id.toString()},
-          );
-          return;
-        }
+          Navigator.of(context, rootNavigator: true).pop();
+          if (success) {
+            context.pushNamed(
+              JamRoutes.details.name,
+              pathParameters: {'jamId': jamLocation.id.toString()},
+            );
+          }
+        },
+      ),
+    );
+  }
 
-        final success = await ref
-            .read(joinJamFromMapProvider(jamId: jamLocation.id).future);
+  Future _handleFreeToJoinWithForm(BuildContext context, WidgetRef ref) async {}
+  Future _handleJoinWithForm(BuildContext context, WidgetRef ref) async {}
 
-        if (!context.mounted) return;
-
-        showDialog(
-          context: context,
-          builder: (ctx) => OkPopup(
-            title:
-                success ? 'You have joined the jam' : 'Failed to join the jam',
-            onOkPressed: () {
-              onActionPressed();
-              Navigator.of(context, rootNavigator: true).pop();
-              if (success) {
-                context.pushNamed(
-                  JamRoutes.details.name,
-                  pathParameters: {'jamId': jamLocation.id.toString()},
-                );
-              }
-            },
-          ),
+  _buildButtonForParticipatingUser(BuildContext context) {
+    return TextButton.icon(
+      onPressed: () {
+        context.pushNamed(
+          JamRoutes.details.name,
+          pathParameters: {'jamId': jamLocation.id.toString()},
         );
       },
+      icon: const Icon(Icons.details),
+      label: const Text('Details'),
     );
   }
 }

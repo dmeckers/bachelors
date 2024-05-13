@@ -56,7 +56,7 @@ class BigJamCard extends ConsumerWidget {
                       Row(
                         children: [
                           Text(
-                            jam.name?.crop(13) ?? 'Anonymous',
+                            jam.name.crop(13),
                             maxLines: 2,
                             style: context.jText.displaySmall?.copyWith(
                               color: Colors.white,

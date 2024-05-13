@@ -68,7 +68,7 @@ mixin _$JamModel {
   bool get dropBackground => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
-  JamFormModel? get formModel => throw _privateConstructorUsedError;
+  JamJoinRequestModel? get formModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -118,11 +118,11 @@ abstract class $JamModelCopyWith<$Res> {
       @JsonKey(includeToJson: false, includeFromJson: false)
       bool dropBackground,
       @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
-      JamFormModel? formModel});
+      JamJoinRequestModel? formModel});
 
   $UserProfileModelCopyWith<$Res>? get creator;
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
-  $JamFormModelCopyWith<$Res>? get formModel;
+  $JamJoinRequestModelCopyWith<$Res>? get formModel;
 }
 
 /// @nodoc
@@ -259,7 +259,7 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
       formModel: freezed == formModel
           ? _value.formModel
           : formModel // ignore: cast_nullable_to_non_nullable
-              as JamFormModel?,
+              as JamJoinRequestModel?,
     ) as $Val);
   }
 
@@ -289,12 +289,12 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
 
   @override
   @pragma('vm:prefer-inline')
-  $JamFormModelCopyWith<$Res>? get formModel {
+  $JamJoinRequestModelCopyWith<$Res>? get formModel {
     if (_value.formModel == null) {
       return null;
     }
 
-    return $JamFormModelCopyWith<$Res>(_value.formModel!, (value) {
+    return $JamJoinRequestModelCopyWith<$Res>(_value.formModel!, (value) {
       return _then(_value.copyWith(formModel: value) as $Val);
     });
   }
@@ -345,14 +345,14 @@ abstract class _$$JamModelImplCopyWith<$Res>
       @JsonKey(includeToJson: false, includeFromJson: false)
       bool dropBackground,
       @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
-      JamFormModel? formModel});
+      JamJoinRequestModel? formModel});
 
   @override
   $UserProfileModelCopyWith<$Res>? get creator;
   @override
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
   @override
-  $JamFormModelCopyWith<$Res>? get formModel;
+  $JamJoinRequestModelCopyWith<$Res>? get formModel;
 }
 
 /// @nodoc
@@ -487,7 +487,7 @@ class __$$JamModelImplCopyWithImpl<$Res>
       formModel: freezed == formModel
           ? _value.formModel
           : formModel // ignore: cast_nullable_to_non_nullable
-              as JamFormModel?,
+              as JamJoinRequestModel?,
     ));
   }
 }
@@ -634,7 +634,7 @@ class _$JamModelImpl extends _JamModel {
   @JsonKey(includeIfNull: false)
   final JamJoinTypeEnum joinType;
   @override
-  final JamFormModel? formModel;
+  final JamJoinRequestModel? formModel;
 
   @override
   String toString() {
@@ -768,7 +768,7 @@ abstract class _JamModel extends JamModel {
       @JsonKey(includeToJson: false, includeFromJson: false)
       final bool dropBackground,
       @JsonKey(includeIfNull: false) final JamJoinTypeEnum joinType,
-      final JamFormModel? formModel}) = _$JamModelImpl;
+      final JamJoinRequestModel? formModel}) = _$JamModelImpl;
   const _JamModel._() : super._();
 
   factory _JamModel.fromJson(Map<String, dynamic> json) =
@@ -844,7 +844,7 @@ abstract class _JamModel extends JamModel {
   @JsonKey(includeIfNull: false)
   JamJoinTypeEnum get joinType;
   @override
-  JamFormModel? get formModel;
+  JamJoinRequestModel? get formModel;
   @override
   @JsonKey(ignore: true)
   _$$JamModelImplCopyWith<_$JamModelImpl> get copyWith =>

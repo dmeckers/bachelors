@@ -49,7 +49,7 @@ class JamDeletedMapEvent implements MapEvent {
       latitude: coords.lat!,
       longitude: coords.lon!,
       vibes: jam.relatedVibes,
-      name: jam.backfilled.name!,
+      name: jam.backfilled.name,
     );
   }
 }

@@ -19,6 +19,7 @@ _$JamLocationImpl _$$JamLocationImplFromJson(Map<String, dynamic> json) =>
           .map((e) => VibeModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       creatorId: json['creator_id'] as String,
+      joinType: $enumDecode(_$JamJoinTypeEnumEnumMap, json['join_type']),
       marker: json['marker'] == null
           ? null
           : BitmapDescriptor.fromJson(json['marker'] as Object),
@@ -35,6 +36,7 @@ Map<String, dynamic> _$$JamLocationImplToJson(_$JamLocationImpl instance) {
     'longitude': instance.longitude,
     'vibes': instance.vibes.map((e) => e.toJson()).toList(),
     'creator_id': instance.creatorId,
+    'join_type': _$JamJoinTypeEnumEnumMap[instance.joinType]!,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -46,3 +48,12 @@ Map<String, dynamic> _$$JamLocationImplToJson(_$JamLocationImpl instance) {
   writeNotNull('marker', instance.marker?.toJson());
   return val;
 }
+
+const _$JamJoinTypeEnumEnumMap = {
+  JamJoinTypeEnum.freeToJoin: 'freeToJoin',
+  JamJoinTypeEnum.invitesOnly: 'invitesOnly',
+  JamJoinTypeEnum.freeToJoinAfterForm: 'freeToJoinAfterForm',
+  JamJoinTypeEnum.freetoJoinAfterFormAndApprove:
+      'freetoJoinAfterFormAndApprove',
+  JamJoinTypeEnum.requestToJoin: 'requestToJoin',
+};

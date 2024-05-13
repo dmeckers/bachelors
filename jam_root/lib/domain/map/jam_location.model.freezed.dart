@@ -29,6 +29,7 @@ mixin _$JamLocation {
   double get longitude => throw _privateConstructorUsedError;
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
   String get creatorId => throw _privateConstructorUsedError;
+  JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker => throw _privateConstructorUsedError;
 
@@ -54,6 +55,7 @@ abstract class $JamLocationCopyWith<$Res> {
       double longitude,
       List<VibeModel> vibes,
       String creatorId,
+      JamJoinTypeEnum joinType,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker});
 }
 
@@ -79,6 +81,7 @@ class _$JamLocationCopyWithImpl<$Res, $Val extends JamLocation>
     Object? longitude = null,
     Object? vibes = null,
     Object? creatorId = null,
+    Object? joinType = null,
     Object? marker = freezed,
   }) {
     return _then(_value.copyWith(
@@ -118,6 +121,10 @@ class _$JamLocationCopyWithImpl<$Res, $Val extends JamLocation>
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String,
+      joinType: null == joinType
+          ? _value.joinType
+          : joinType // ignore: cast_nullable_to_non_nullable
+              as JamJoinTypeEnum,
       marker: freezed == marker
           ? _value.marker
           : marker // ignore: cast_nullable_to_non_nullable
@@ -144,6 +151,7 @@ abstract class _$$JamLocationImplCopyWith<$Res>
       double longitude,
       List<VibeModel> vibes,
       String creatorId,
+      JamJoinTypeEnum joinType,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker});
 }
 
@@ -167,6 +175,7 @@ class __$$JamLocationImplCopyWithImpl<$Res>
     Object? longitude = null,
     Object? vibes = null,
     Object? creatorId = null,
+    Object? joinType = null,
     Object? marker = freezed,
   }) {
     return _then(_$JamLocationImpl(
@@ -206,6 +215,10 @@ class __$$JamLocationImplCopyWithImpl<$Res>
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String,
+      joinType: null == joinType
+          ? _value.joinType
+          : joinType // ignore: cast_nullable_to_non_nullable
+              as JamJoinTypeEnum,
       marker: freezed == marker
           ? _value.marker
           : marker // ignore: cast_nullable_to_non_nullable
@@ -228,6 +241,7 @@ class _$JamLocationImpl extends _JamLocation {
       required this.longitude,
       required final List<VibeModel> vibes,
       required this.creatorId,
+      required this.joinType,
       @JsonKey(includeIfNull: false) this.marker})
       : _vibes = vibes,
         super._();
@@ -260,12 +274,14 @@ class _$JamLocationImpl extends _JamLocation {
   @override
   final String creatorId;
   @override
+  final JamJoinTypeEnum joinType;
+  @override
   @JsonKey(includeIfNull: false)
   final BitmapDescriptor? marker;
 
   @override
   String toString() {
-    return 'JamLocation(jamId: $jamId, name: $name, description: $description, locationName: $locationName, date: $date, latitude: $latitude, longitude: $longitude, vibes: $vibes, creatorId: $creatorId, marker: $marker)';
+    return 'JamLocation(jamId: $jamId, name: $name, description: $description, locationName: $locationName, date: $date, latitude: $latitude, longitude: $longitude, vibes: $vibes, creatorId: $creatorId, joinType: $joinType, marker: $marker)';
   }
 
   @override
@@ -287,6 +303,8 @@ class _$JamLocationImpl extends _JamLocation {
             const DeepCollectionEquality().equals(other._vibes, _vibes) &&
             (identical(other.creatorId, creatorId) ||
                 other.creatorId == creatorId) &&
+            (identical(other.joinType, joinType) ||
+                other.joinType == joinType) &&
             (identical(other.marker, marker) || other.marker == marker));
   }
 
@@ -303,6 +321,7 @@ class _$JamLocationImpl extends _JamLocation {
       longitude,
       const DeepCollectionEquality().hash(_vibes),
       creatorId,
+      joinType,
       marker);
 
   @JsonKey(ignore: true)
@@ -330,6 +349,7 @@ abstract class _JamLocation extends JamLocation {
           required final double longitude,
           required final List<VibeModel> vibes,
           required final String creatorId,
+          required final JamJoinTypeEnum joinType,
           @JsonKey(includeIfNull: false) final BitmapDescriptor? marker}) =
       _$JamLocationImpl;
   const _JamLocation._() : super._();
@@ -355,6 +375,8 @@ abstract class _JamLocation extends JamLocation {
   List<VibeModel> get vibes;
   @override
   String get creatorId;
+  @override
+  JamJoinTypeEnum get joinType;
   @override
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker;

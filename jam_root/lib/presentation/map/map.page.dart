@@ -9,9 +9,7 @@ import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/map/widgets/map_fab.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:location/location.dart';
 
 final showBottomSheetProvider = StateProvider<bool>((ref) => false);
 final showPutJamBottomSheetProvider = StateProvider<bool>((ref) => false);
@@ -141,9 +139,9 @@ class MapPage extends HookConsumerWidget {
     );
   }
 
-  Future<LocationData> _determinePosition() async {
-    return await Location.instance.getLocation();
-  }
+  // Future<LocationData> _determinePosition() async {
+  //   return await Location.instance.getLocation();
+  // }
 }
 
 class MapWidget extends HookConsumerWidget {

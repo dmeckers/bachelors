@@ -183,6 +183,29 @@ final class JamsRepository extends JamRepositoryInterface
 
   Jams _jamConverter(dynamic data) =>
       (data as Dynamics).cast<Json>().map(JamModel.fromJson).toList();
+
+  @override
+  Future<List<JamJoinRequestModel>> getJamJoinRequests({
+    required int jamId,
+  }) async {
+    final response = await supabase
+        .from('jam_join_requests')
+        .select()
+        .eq('jam_id', jamId)
+        .withConverter<List<JamJoinRequestModel>>(
+          (data) => data.map(JamJoinRequestModel.fromJson).toList(),
+        );
+
+    return response;
+  }
+
+  @override
+  Future updateJamForm({
+    required int jamId,
+    required JamJoinRequestModel form,
+  }) async {
+    await supabase.from('jams').update({'form': form.toJson()}).eq('id', jamId);
+  }
 }
 
 final jamRepositoryProvider = Provider<JamRepositoryInterface>(

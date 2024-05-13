@@ -49,7 +49,7 @@ class JamDetailsPage extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 100.0),
                 child: Text(
-                  data.name?.jamPostfix() ?? 'Anonymous',
+                  data.name.jamPostfix(),
                   textAlign: TextAlign.right,
                   style: context.jText.displayMedium
                       ?.copyWith(fontFamily: rubickFamily),

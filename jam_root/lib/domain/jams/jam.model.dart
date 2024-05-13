@@ -78,7 +78,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
     @JsonKey(includeIfNull: false)
     @Default(JamJoinTypeEnum.freeToJoin)
     JamJoinTypeEnum joinType,
-    JamFormModel? formModel,
+    JamJoinRequestModel? formModel,
   }) = _JamModel;
 
   const JamModel._();
@@ -100,7 +100,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
   JamLocation toLocationModel() {
     return JamLocation(
       jamId: id!,
-      name: name ?? 'Anonymous Jam',
+      name: name,
       description: description ?? 'No description this time',
       locationName: locationName ?? 'Unknown',
       date: date,
@@ -108,6 +108,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
       longitude: lon!,
       vibes: relatedVibes,
       creatorId: creatorId!,
+      joinType: joinType,
     );
   }
 }
@@ -116,7 +117,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
 extension JamModelExtension on JamModel {
   JamModel get backfilled {
     var jam = this;
-    if (name.isNull || (name?.isEmpty ?? true)) {
+    if (name.isNull || (name.isEmpty)) {
       jam = jam.copyWith(name: 'Anonymous Jam');
     }
     if (description.isNull || (description?.isEmpty ?? true)) {

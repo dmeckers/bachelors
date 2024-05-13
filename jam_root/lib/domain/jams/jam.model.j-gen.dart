@@ -21,7 +21,7 @@ final class JamViewModel {
   final int? id;
   final UserProfileModel? creator;
   final CommunityModel? relatedCommunity;
-  final JamFormModel? formModel;
+  final JamJoinRequestModel? formModel;
   final List<UserProfileModel> admins;
   final List<UserProfileModel> participants;
   final List<VibeModel> relatedVibes;
@@ -165,7 +165,7 @@ final class JamViewModel {
     int? id,
     UserProfileModel? creator,
     CommunityModel? relatedCommunity,
-    JamFormModel? formModel,
+    JamJoinRequestModel? formModel,
     List<UserProfileModel>? admins,
     List<UserProfileModel>? participants,
     List<VibeModel>? relatedVibes,
@@ -298,7 +298,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     state = state.copyWith(relatedCommunity: value);
   }
 
-  void updateFormModel(JamFormModel? value) {
+  void updateFormModel(JamJoinRequestModel? value) {
     state = state.copyWith(formModel: value);
   }
 
@@ -402,7 +402,7 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     state = state.copyWith(relatedCommunity: value);
   }
 
-  void updateFormModel(JamFormModel? value) {
+  void updateFormModel(JamJoinRequestModel? value) {
     state = state.copyWith(formModel: value);
   }
 

@@ -14,34 +14,39 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-JamFormModel _$JamFormModelFromJson(Map<String, dynamic> json) {
-  return _JamFormModel.fromJson(json);
+JamJoinRequestModel _$JamJoinRequestModelFromJson(Map<String, dynamic> json) {
+  return _JamJoinRequestModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$JamFormModel {
+mixin _$JamJoinRequestModel {
   List<JamFormElementData> get elements => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  @JsonKey(includeIfNull: false)
+  String? get filledByUserId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $JamFormModelCopyWith<JamFormModel> get copyWith =>
+  $JamJoinRequestModelCopyWith<JamJoinRequestModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $JamFormModelCopyWith<$Res> {
-  factory $JamFormModelCopyWith(
-          JamFormModel value, $Res Function(JamFormModel) then) =
-      _$JamFormModelCopyWithImpl<$Res, JamFormModel>;
+abstract class $JamJoinRequestModelCopyWith<$Res> {
+  factory $JamJoinRequestModelCopyWith(
+          JamJoinRequestModel value, $Res Function(JamJoinRequestModel) then) =
+      _$JamJoinRequestModelCopyWithImpl<$Res, JamJoinRequestModel>;
   @useResult
-  $Res call({List<JamFormElementData> elements, String title});
+  $Res call(
+      {List<JamFormElementData> elements,
+      String title,
+      @JsonKey(includeIfNull: false) String? filledByUserId});
 }
 
 /// @nodoc
-class _$JamFormModelCopyWithImpl<$Res, $Val extends JamFormModel>
-    implements $JamFormModelCopyWith<$Res> {
-  _$JamFormModelCopyWithImpl(this._value, this._then);
+class _$JamJoinRequestModelCopyWithImpl<$Res, $Val extends JamJoinRequestModel>
+    implements $JamJoinRequestModelCopyWith<$Res> {
+  _$JamJoinRequestModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -53,6 +58,7 @@ class _$JamFormModelCopyWithImpl<$Res, $Val extends JamFormModel>
   $Res call({
     Object? elements = null,
     Object? title = null,
+    Object? filledByUserId = freezed,
   }) {
     return _then(_value.copyWith(
       elements: null == elements
@@ -63,27 +69,34 @@ class _$JamFormModelCopyWithImpl<$Res, $Val extends JamFormModel>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      filledByUserId: freezed == filledByUserId
+          ? _value.filledByUserId
+          : filledByUserId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$JamFormModelImplCopyWith<$Res>
-    implements $JamFormModelCopyWith<$Res> {
-  factory _$$JamFormModelImplCopyWith(
-          _$JamFormModelImpl value, $Res Function(_$JamFormModelImpl) then) =
-      __$$JamFormModelImplCopyWithImpl<$Res>;
+abstract class _$$JamJoinRequestModelImplCopyWith<$Res>
+    implements $JamJoinRequestModelCopyWith<$Res> {
+  factory _$$JamJoinRequestModelImplCopyWith(_$JamJoinRequestModelImpl value,
+          $Res Function(_$JamJoinRequestModelImpl) then) =
+      __$$JamJoinRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<JamFormElementData> elements, String title});
+  $Res call(
+      {List<JamFormElementData> elements,
+      String title,
+      @JsonKey(includeIfNull: false) String? filledByUserId});
 }
 
 /// @nodoc
-class __$$JamFormModelImplCopyWithImpl<$Res>
-    extends _$JamFormModelCopyWithImpl<$Res, _$JamFormModelImpl>
-    implements _$$JamFormModelImplCopyWith<$Res> {
-  __$$JamFormModelImplCopyWithImpl(
-      _$JamFormModelImpl _value, $Res Function(_$JamFormModelImpl) _then)
+class __$$JamJoinRequestModelImplCopyWithImpl<$Res>
+    extends _$JamJoinRequestModelCopyWithImpl<$Res, _$JamJoinRequestModelImpl>
+    implements _$$JamJoinRequestModelImplCopyWith<$Res> {
+  __$$JamJoinRequestModelImplCopyWithImpl(_$JamJoinRequestModelImpl _value,
+      $Res Function(_$JamJoinRequestModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -91,8 +104,9 @@ class __$$JamFormModelImplCopyWithImpl<$Res>
   $Res call({
     Object? elements = null,
     Object? title = null,
+    Object? filledByUserId = freezed,
   }) {
-    return _then(_$JamFormModelImpl(
+    return _then(_$JamJoinRequestModelImpl(
       elements: null == elements
           ? _value._elements
           : elements // ignore: cast_nullable_to_non_nullable
@@ -101,6 +115,10 @@ class __$$JamFormModelImplCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      filledByUserId: freezed == filledByUserId
+          ? _value.filledByUserId
+          : filledByUserId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -108,13 +126,15 @@ class __$$JamFormModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$JamFormModelImpl implements _JamFormModel {
-  const _$JamFormModelImpl(
-      {required final List<JamFormElementData> elements, required this.title})
+class _$JamJoinRequestModelImpl implements _JamJoinRequestModel {
+  const _$JamJoinRequestModelImpl(
+      {required final List<JamFormElementData> elements,
+      required this.title,
+      @JsonKey(includeIfNull: false) this.filledByUserId})
       : _elements = elements;
 
-  factory _$JamFormModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$JamFormModelImplFromJson(json);
+  factory _$JamJoinRequestModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$JamJoinRequestModelImplFromJson(json);
 
   final List<JamFormElementData> _elements;
   @override
@@ -126,54 +146,65 @@ class _$JamFormModelImpl implements _JamFormModel {
 
   @override
   final String title;
+  @override
+  @JsonKey(includeIfNull: false)
+  final String? filledByUserId;
 
   @override
   String toString() {
-    return 'JamFormModel(elements: $elements, title: $title)';
+    return 'JamJoinRequestModel(elements: $elements, title: $title, filledByUserId: $filledByUserId)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$JamFormModelImpl &&
+            other is _$JamJoinRequestModelImpl &&
             const DeepCollectionEquality().equals(other._elements, _elements) &&
-            (identical(other.title, title) || other.title == title));
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.filledByUserId, filledByUserId) ||
+                other.filledByUserId == filledByUserId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_elements), title);
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_elements), title, filledByUserId);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$JamFormModelImplCopyWith<_$JamFormModelImpl> get copyWith =>
-      __$$JamFormModelImplCopyWithImpl<_$JamFormModelImpl>(this, _$identity);
+  _$$JamJoinRequestModelImplCopyWith<_$JamJoinRequestModelImpl> get copyWith =>
+      __$$JamJoinRequestModelImplCopyWithImpl<_$JamJoinRequestModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$JamFormModelImplToJson(
+    return _$$JamJoinRequestModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _JamFormModel implements JamFormModel {
-  const factory _JamFormModel(
-      {required final List<JamFormElementData> elements,
-      required final String title}) = _$JamFormModelImpl;
+abstract class _JamJoinRequestModel implements JamJoinRequestModel {
+  const factory _JamJoinRequestModel(
+          {required final List<JamFormElementData> elements,
+          required final String title,
+          @JsonKey(includeIfNull: false) final String? filledByUserId}) =
+      _$JamJoinRequestModelImpl;
 
-  factory _JamFormModel.fromJson(Map<String, dynamic> json) =
-      _$JamFormModelImpl.fromJson;
+  factory _JamJoinRequestModel.fromJson(Map<String, dynamic> json) =
+      _$JamJoinRequestModelImpl.fromJson;
 
   @override
   List<JamFormElementData> get elements;
   @override
   String get title;
   @override
+  @JsonKey(includeIfNull: false)
+  String? get filledByUserId;
+  @override
   @JsonKey(ignore: true)
-  _$$JamFormModelImplCopyWith<_$JamFormModelImpl> get copyWith =>
+  _$$JamJoinRequestModelImplCopyWith<_$JamJoinRequestModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
