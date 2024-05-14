@@ -1,35 +1,24 @@
+BUGS
+
+> > > old data when jam updated
+> > > CHECK ON MAP IF FORM FILLED/FREEZED/DECLINED BEFORE SHOW BUTTON WITH FORM
+> > > Participant list
+> > > Jam details -> invite friend -> error (json `sender` missing)
+> > > distance doesnt work
+> > > invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
+
+13.theme -> black by def
+
 papers
 PSA????
 konfiguracija
-testpiemeri (nah?)
 dokumentacija (lietotaju celvedis)
 
-vibe select like in debianart would be cool
-
-BUGS
-old data when jam updated
-distance doesnt work
-
-change jam marker click behaviour
-add jam request inbox with requests , registration forms requests
-
-> > > CHECK INBOX
-
-invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
-
-papers
-
-after papers ONLY
 0.update map stream if it was open by new vibe ids (refetch) when vibes changed to test
-1.invite through contacts
-2.open graph link
 3.jam invites filter from BE
 4.jam vibe change (probably this will affect also map stream)
-10.online status
-12.chat separator issue
-13.theme
 
 999.populate some vibes
 
 improve searching mechanism - how ? add music and feed?
-enrich vibe selection (devian art example)
+enrich vibe selection (devian art example) vibe select like in debianart would be cool

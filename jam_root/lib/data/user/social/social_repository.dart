@@ -145,9 +145,9 @@ final class SocialRepository
         ? await _ref.read(powerSyncSocialServiceProvider).getSentJamInvites()
         : await supabase
             .from('jam_invites')
-            .select()
+            .select('* , sender:sended_from_user_id_fkey!profiles(*)')
             .eq('sended_from_user_id', supabase.auth.currentUser!.id)
-            .withConverter<JamInvites>(
+            .withConverter<JamInvites>(ffff
               (data) => data.map(JamInviteModel.fromJson).toList(),
             );
   }

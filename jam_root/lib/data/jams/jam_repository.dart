@@ -205,7 +205,7 @@ final class JamsRepository extends JamRepositoryInterface
     required String userId,
   }) async {
     await supabase.from('jam_join_requests').update({
-      'status': ProcessStepTypeEnum.accepted,
+      'status': ProcessStepTypeEnum.accepted.name,
     }).eq('id', joinRequestId);
 
     await supabase.from('jams_users').insert({
@@ -216,7 +216,7 @@ final class JamsRepository extends JamRepositoryInterface
     final response = await supabase
         .from('profiles')
         .select('fcm_token')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .single();
 
     PushNotificationsService.sendNotification(
@@ -232,7 +232,7 @@ final class JamsRepository extends JamRepositoryInterface
     required String userId,
   }) async {
     await supabase.from('jam_join_requests').update({
-      'status': ProcessStepTypeEnum.freezed,
+      'status': ProcessStepTypeEnum.freezed.name,
     }).eq('id', joinRequestId);
   }
 
@@ -243,7 +243,7 @@ final class JamsRepository extends JamRepositoryInterface
     required String userId,
   }) async {
     await supabase.from('jam_join_requests').update({
-      'status': ProcessStepTypeEnum.declined,
+      'status': ProcessStepTypeEnum.declined.name,
     }).eq('id', joinRequestId);
   }
 
@@ -254,7 +254,7 @@ final class JamsRepository extends JamRepositoryInterface
     required String userId,
   }) async {
     await supabase.from('jam_join_requests').update({
-      'status': ProcessStepTypeEnum.pending,
+      'status': ProcessStepTypeEnum.pending.name,
     }).eq('id', joinRequestId);
   }
 }
