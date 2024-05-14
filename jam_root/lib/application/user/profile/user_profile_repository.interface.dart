@@ -11,4 +11,5 @@ abstract class UserProfileRepositoryInterface {
   Future<void> updateProfileStatus({required String status});
   Future<void> updateOnlineStatus({required bool onlineStatus});
   Future<UserProfileModel> getUserProfileById({required String userId});
+  Future<List<UserProfileModel>> getUsers({required List<String> userIds});
 }

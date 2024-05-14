@@ -18,6 +18,11 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
       locationName: json['location_name'] as String? ?? 'Check map',
       location: JsonJamTransformer.locationFromJson(
           JsonJamTransformer.readItself(json, 'location')),
+      joinRequests: (json['join_requests'] as List<dynamic>?)
+              ?.map((e) =>
+                  JamJoinRequestModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       lat: (json['lat'] as num?)?.toDouble(),
       lon: (json['lon'] as num?)?.toDouble(),
       date: DateTime.parse(json['date'] as String),
@@ -38,7 +43,7 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
               JamJoinTypeEnum.freeToJoin,
       formModel: json['form_model'] == null
           ? null
-          : JamJoinRequestModel.fromJson(
+          : BaseJamFormModel.fromJson(
               json['form_model'] as Map<String, dynamic>),
     );
 
@@ -56,6 +61,7 @@ Map<String, dynamic> _$$JamModelImplToJson(_$JamModelImpl instance) {
   val['description'] = instance.description;
   val['location_name'] = instance.locationName;
   val['location'] = JsonJamTransformer.locationToJson(instance.location);
+  val['join_requests'] = instance.joinRequests;
   val['date'] = instance.date.toIso8601String();
   val['max_participants'] = instance.maxParticipants;
   val['invites_per_member'] = instance.invitesPerMember;

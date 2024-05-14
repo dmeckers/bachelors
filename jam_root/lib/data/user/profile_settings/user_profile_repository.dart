@@ -100,4 +100,18 @@ final class UserProfileRepository
       photoUrls: await images.getUserAvatars(userId: userId),
     );
   }
+
+  @override
+  Future<List<UserProfileModel>> getUsers({
+    required List<String> userIds,
+  }) async {
+    final response =
+        await supabase.rpc('get_users', params: {'user_ids': userIds});
+
+    return (response as Dynamics)
+        .map((e) => e['data'] as Json)
+        // .cast<Json>()
+        .map<UserProfileModel>(UserProfileModel.fromJson)
+        .toList();
+  }
 }

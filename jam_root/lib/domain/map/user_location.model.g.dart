@@ -9,7 +9,7 @@ part of 'user_location.model.dart';
 _$UserLocationImpl _$$UserLocationImplFromJson(Map<String, dynamic> json) =>
     _$UserLocationImpl(
       userId: json['user_id'] as String,
-      name: json['name'] as String,
+      name: _UserLocationJson.readName(json, 'name') as String,
       vibes: (json['vibes'] as List<dynamic>)
           .map((e) => VibeModel.fromJson(e as Map<String, dynamic>))
           .toList(),

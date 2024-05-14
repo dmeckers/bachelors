@@ -1,4 +1,5 @@
 export 'communities/community.model.dart';
+export 'enums/enums.dart';
 export 'jams/jams.dart';
 export 'user/user.dart';
 export 'vibes/vibes.dart';

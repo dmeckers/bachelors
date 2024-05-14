@@ -128,7 +128,7 @@ class JamFormBuilderPage extends HookConsumerWidget {
                   style: const TextStyle(color: Colors.black),
                 ),
                 onPressed: () {
-                  final formModel = JamJoinRequestModel(
+                  final formModel = BaseJamFormModel(
                     elements: formElements,
                     title: formTitle,
                   );
@@ -144,12 +144,13 @@ class JamFormBuilderPage extends HookConsumerWidget {
                         .read(jamViewModelStateProvider(jamModel!).notifier)
                         .updateFormModel(formModel);
 
-                    ref.read(jamRepositoryProvider).updateJamForm(
+                    ref.read(jamFormsServiceProvider).updateJamForm(
                           jamId: jamModel!.id!,
                           form: formModel,
                         );
+                    JSnackBar.show(context, description: 'Form updated');
                   }
-                  JSnackBar.show(context, description: 'Form updated');
+
                   context.pop();
                 },
               ),

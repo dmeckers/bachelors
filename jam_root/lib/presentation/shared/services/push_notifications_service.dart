@@ -162,4 +162,17 @@ class PushNotificationsService {
       ),
     );
   }
+
+  static Future sendNotification(NotificationTypeEnum type, Json body) async {
+    final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
+
+    await supabase.functions.invoke(
+      type.value,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $key'
+      },
+      body: body,
+    );
+  }
 }

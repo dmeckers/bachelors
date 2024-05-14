@@ -35,6 +35,8 @@ mixin _$JamModel {
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   String get location => throw _privateConstructorUsedError;
+  List<JamJoinRequestModel> get joinRequests =>
+      throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false)
   double? get lat => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false)
@@ -68,7 +70,7 @@ mixin _$JamModel {
   bool get dropBackground => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
-  JamJoinRequestModel? get formModel => throw _privateConstructorUsedError;
+  BaseJamFormModel? get formModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -95,6 +97,7 @@ abstract class $JamModelCopyWith<$Res> {
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
       String location,
+      List<JamJoinRequestModel> joinRequests,
       @JsonKey(includeToJson: false) double? lat,
       @JsonKey(includeToJson: false) double? lon,
       DateTime date,
@@ -118,11 +121,11 @@ abstract class $JamModelCopyWith<$Res> {
       @JsonKey(includeToJson: false, includeFromJson: false)
       bool dropBackground,
       @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
-      JamJoinRequestModel? formModel});
+      BaseJamFormModel? formModel});
 
   $UserProfileModelCopyWith<$Res>? get creator;
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
-  $JamJoinRequestModelCopyWith<$Res>? get formModel;
+  $BaseJamFormModelCopyWith<$Res>? get formModel;
 }
 
 /// @nodoc
@@ -145,6 +148,7 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
     Object? description = freezed,
     Object? locationName = freezed,
     Object? location = null,
+    Object? joinRequests = null,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? date = null,
@@ -192,6 +196,10 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      joinRequests: null == joinRequests
+          ? _value.joinRequests
+          : joinRequests // ignore: cast_nullable_to_non_nullable
+              as List<JamJoinRequestModel>,
       lat: freezed == lat
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
@@ -259,7 +267,7 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
       formModel: freezed == formModel
           ? _value.formModel
           : formModel // ignore: cast_nullable_to_non_nullable
-              as JamJoinRequestModel?,
+              as BaseJamFormModel?,
     ) as $Val);
   }
 
@@ -289,12 +297,12 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
 
   @override
   @pragma('vm:prefer-inline')
-  $JamJoinRequestModelCopyWith<$Res>? get formModel {
+  $BaseJamFormModelCopyWith<$Res>? get formModel {
     if (_value.formModel == null) {
       return null;
     }
 
-    return $JamJoinRequestModelCopyWith<$Res>(_value.formModel!, (value) {
+    return $BaseJamFormModelCopyWith<$Res>(_value.formModel!, (value) {
       return _then(_value.copyWith(formModel: value) as $Val);
     });
   }
@@ -322,6 +330,7 @@ abstract class _$$JamModelImplCopyWith<$Res>
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
       String location,
+      List<JamJoinRequestModel> joinRequests,
       @JsonKey(includeToJson: false) double? lat,
       @JsonKey(includeToJson: false) double? lon,
       DateTime date,
@@ -345,14 +354,14 @@ abstract class _$$JamModelImplCopyWith<$Res>
       @JsonKey(includeToJson: false, includeFromJson: false)
       bool dropBackground,
       @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
-      JamJoinRequestModel? formModel});
+      BaseJamFormModel? formModel});
 
   @override
   $UserProfileModelCopyWith<$Res>? get creator;
   @override
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
   @override
-  $JamJoinRequestModelCopyWith<$Res>? get formModel;
+  $BaseJamFormModelCopyWith<$Res>? get formModel;
 }
 
 /// @nodoc
@@ -373,6 +382,7 @@ class __$$JamModelImplCopyWithImpl<$Res>
     Object? description = freezed,
     Object? locationName = freezed,
     Object? location = null,
+    Object? joinRequests = null,
     Object? lat = freezed,
     Object? lon = freezed,
     Object? date = null,
@@ -420,6 +430,10 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      joinRequests: null == joinRequests
+          ? _value._joinRequests
+          : joinRequests // ignore: cast_nullable_to_non_nullable
+              as List<JamJoinRequestModel>,
       lat: freezed == lat
           ? _value.lat
           : lat // ignore: cast_nullable_to_non_nullable
@@ -487,7 +501,7 @@ class __$$JamModelImplCopyWithImpl<$Res>
       formModel: freezed == formModel
           ? _value.formModel
           : formModel // ignore: cast_nullable_to_non_nullable
-              as JamJoinRequestModel?,
+              as BaseJamFormModel?,
     ));
   }
 }
@@ -509,6 +523,7 @@ class _$JamModelImpl extends _JamModel {
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
       required this.location,
+      final List<JamJoinRequestModel> joinRequests = const [],
       @JsonKey(includeToJson: false) this.lat,
       @JsonKey(includeToJson: false) this.lon,
       required this.date,
@@ -533,7 +548,8 @@ class _$JamModelImpl extends _JamModel {
       this.dropBackground = false,
       @JsonKey(includeIfNull: false) this.joinType = JamJoinTypeEnum.freeToJoin,
       this.formModel})
-      : _admins = admins,
+      : _joinRequests = joinRequests,
+        _admins = admins,
         _participants = participants,
         _relatedVibes = relatedVibes,
         super._();
@@ -565,6 +581,15 @@ class _$JamModelImpl extends _JamModel {
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   final String location;
+  final List<JamJoinRequestModel> _joinRequests;
+  @override
+  @JsonKey()
+  List<JamJoinRequestModel> get joinRequests {
+    if (_joinRequests is EqualUnmodifiableListView) return _joinRequests;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_joinRequests);
+  }
+
   @override
   @JsonKey(includeToJson: false)
   final double? lat;
@@ -634,11 +659,11 @@ class _$JamModelImpl extends _JamModel {
   @JsonKey(includeIfNull: false)
   final JamJoinTypeEnum joinType;
   @override
-  final JamJoinRequestModel? formModel;
+  final BaseJamFormModel? formModel;
 
   @override
   String toString() {
-    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, name: $name, description: $description, locationName: $locationName, location: $location, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel)';
+    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, name: $name, description: $description, locationName: $locationName, location: $location, joinRequests: $joinRequests, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel)';
   }
 
   @override
@@ -657,6 +682,8 @@ class _$JamModelImpl extends _JamModel {
                 other.locationName == locationName) &&
             (identical(other.location, location) ||
                 other.location == location) &&
+            const DeepCollectionEquality()
+                .equals(other._joinRequests, _joinRequests) &&
             (identical(other.lat, lat) || other.lat == lat) &&
             (identical(other.lon, lon) || other.lon == lon) &&
             (identical(other.date, date) || other.date == date) &&
@@ -697,6 +724,7 @@ class _$JamModelImpl extends _JamModel {
         description,
         locationName,
         location,
+        const DeepCollectionEquality().hash(_joinRequests),
         lat,
         lon,
         date,
@@ -745,6 +773,7 @@ abstract class _JamModel extends JamModel {
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
       required final String location,
+      final List<JamJoinRequestModel> joinRequests,
       @JsonKey(includeToJson: false) final double? lat,
       @JsonKey(includeToJson: false) final double? lon,
       required final DateTime date,
@@ -768,7 +797,7 @@ abstract class _JamModel extends JamModel {
       @JsonKey(includeToJson: false, includeFromJson: false)
       final bool dropBackground,
       @JsonKey(includeIfNull: false) final JamJoinTypeEnum joinType,
-      final JamJoinRequestModel? formModel}) = _$JamModelImpl;
+      final BaseJamFormModel? formModel}) = _$JamModelImpl;
   const _JamModel._() : super._();
 
   factory _JamModel.fromJson(Map<String, dynamic> json) =
@@ -796,6 +825,8 @@ abstract class _JamModel extends JamModel {
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   String get location;
+  @override
+  List<JamJoinRequestModel> get joinRequests;
   @override
   @JsonKey(includeToJson: false)
   double? get lat;
@@ -844,7 +875,7 @@ abstract class _JamModel extends JamModel {
   @JsonKey(includeIfNull: false)
   JamJoinTypeEnum get joinType;
   @override
-  JamJoinRequestModel? get formModel;
+  BaseJamFormModel? get formModel;
   @override
   @JsonKey(ignore: true)
   _$$JamModelImplCopyWith<_$JamModelImpl> get copyWith =>

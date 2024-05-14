@@ -11,7 +11,7 @@ class UserLocation with _$UserLocation implements LocationAbstactModel {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory UserLocation({
     required String userId,
-    required String name,
+    @JsonKey(readValue: _UserLocationJson.readName) required String name,
     required List<VibeModel> vibes,
     required double latitude,
     required double longitude,
@@ -31,4 +31,8 @@ class UserLocation with _$UserLocation implements LocationAbstactModel {
 
   @override
   LocationType get type => LocationType.user;
+}
+
+final class _UserLocationJson {
+  static Object? readName(json, key) => json['full_name'];
 }

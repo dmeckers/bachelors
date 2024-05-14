@@ -20,6 +20,7 @@ _$JamLocationImpl _$$JamLocationImplFromJson(Map<String, dynamic> json) =>
           .toList(),
       creatorId: json['creator_id'] as String,
       joinType: $enumDecode(_$JamJoinTypeEnumEnumMap, json['join_type']),
+      creatorFcmToken: json['creator_fcm_token'] as String?,
       marker: json['marker'] == null
           ? null
           : BitmapDescriptor.fromJson(json['marker'] as Object),
@@ -37,6 +38,7 @@ Map<String, dynamic> _$$JamLocationImplToJson(_$JamLocationImpl instance) {
     'vibes': instance.vibes.map((e) => e.toJson()).toList(),
     'creator_id': instance.creatorId,
     'join_type': _$JamJoinTypeEnumEnumMap[instance.joinType]!,
+    'creator_fcm_token': instance.creatorFcmToken,
   };
 
   void writeNotNull(String key, dynamic value) {

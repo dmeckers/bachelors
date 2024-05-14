@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/jams/form/jam_form.page.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -60,7 +61,7 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "${jamData.date.nameWithoutYear} at ${jamData.date.atTime}",
+                  "${jamData.date.nameWithoutYear}",
                   style: context.jText.headlineSmall,
                 ),
                 const SizedBox(height: 8),
@@ -94,10 +95,8 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
       onPressed: () {
         final cb = switch (jamLocation.joinType) {
           JamJoinTypeEnum.freeToJoin => _handleFreeToJoin,
-          JamJoinTypeEnum.freeToJoinAfterForm => () =>
-              _handleFreeToJoinWithForm,
-          JamJoinTypeEnum.freetoJoinAfterFormAndApprove => () =>
-              _handleJoinWithForm,
+          JamJoinTypeEnum.freeToJoinAfterForm => _handleFreeToJoinWithForm,
+          JamJoinTypeEnum.freetoJoinAfterFormAndApprove => _handleJoinWithForm,
           JamJoinTypeEnum.invitesOnly => _handleFreeToJoin,
           JamJoinTypeEnum.requestToJoin => _handleRequestToJoin,
         };
@@ -108,8 +107,6 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
       label: Text(jamLocation.joinType.title),
     );
   }
-
-  Future _handleRequestToJoin(BuildContext context, WidgetRef ref) async {}
 
   Future _handleFreeToJoin(BuildContext context, WidgetRef ref) async {
     final success =
@@ -135,8 +132,51 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
     );
   }
 
-  Future _handleFreeToJoinWithForm(BuildContext context, WidgetRef ref) async {}
-  Future _handleJoinWithForm(BuildContext context, WidgetRef ref) async {}
+  Future _handleRequestToJoin(BuildContext context, WidgetRef ref) async {
+    onActionPressed();
+    await ref.read(jamFormsServiceProvider).sendRequestForJoin(
+          jamId: jamLocation.id,
+        );
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => OkPopup(
+        title: 'Request to join sent',
+        onOkPressed: () {
+          Navigator.of(context, rootNavigator: true).pop();
+        },
+      ),
+    );
+  }
+
+  Future _handleFreeToJoinWithForm(BuildContext context, WidgetRef ref) async {
+    onActionPressed();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => JamFormPage(
+          jamId: jamLocation.id,
+          jamCreatorFcmToken: jamLocation.creatorFcmToken,
+          toJoin: true,
+        ),
+      ),
+    );
+  }
+
+  Future _handleJoinWithForm(BuildContext context, WidgetRef ref) async {
+    onActionPressed();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => JamFormPage(
+          jamId: jamLocation.id,
+          jamCreatorFcmToken: jamLocation.creatorFcmToken,
+        ),
+      ),
+    );
+  }
 
   _buildButtonForParticipatingUser(BuildContext context) {
     return TextButton.icon(

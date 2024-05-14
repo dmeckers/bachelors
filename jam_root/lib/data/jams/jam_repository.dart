@@ -4,6 +4,7 @@ import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 final class JamsRepository extends JamRepositoryInterface
@@ -185,26 +186,76 @@ final class JamsRepository extends JamRepositoryInterface
       (data as Dynamics).cast<Json>().map(JamModel.fromJson).toList();
 
   @override
-  Future<List<JamJoinRequestModel>> getJamJoinRequests({
+  Future<List<BaseJamFormModel>> getJamJoinRequests({
     required int jamId,
   }) async {
-    final response = await supabase
+    return await supabase
         .from('jam_join_requests')
         .select()
         .eq('jam_id', jamId)
-        .withConverter<List<JamJoinRequestModel>>(
-          (data) => data.map(JamJoinRequestModel.fromJson).toList(),
+        .withConverter<List<BaseJamFormModel>>(
+          (data) => data.map(BaseJamFormModel.fromJson).toList(),
         );
-
-    return response;
   }
 
   @override
-  Future updateJamForm({
+  Future<void> acceptJoinRequest({
     required int jamId,
-    required JamJoinRequestModel form,
+    required int joinRequestId,
+    required String userId,
   }) async {
-    await supabase.from('jams').update({'form': form.toJson()}).eq('id', jamId);
+    await supabase.from('jam_join_requests').update({
+      'status': ProcessStepTypeEnum.accepted,
+    }).eq('id', joinRequestId);
+
+    await supabase.from('jams_users').insert({
+      'user_id': userId,
+      'jam_id': jamId,
+    });
+
+    final response = await supabase
+        .from('profiles')
+        .select('fcm_token')
+        .eq('user_id', userId)
+        .single();
+
+    PushNotificationsService.sendNotification(
+        NotificationTypeEnum.sendJamRequestAcceptedNotification, {
+      'user_fcm_token': response['fcm_token'],
+    });
+  }
+
+  @override
+  Future<void> freezeRequest({
+    required int jamId,
+    required int joinRequestId,
+    required String userId,
+  }) async {
+    await supabase.from('jam_join_requests').update({
+      'status': ProcessStepTypeEnum.freezed,
+    }).eq('id', joinRequestId);
+  }
+
+  @override
+  Future<void> rejectJoinRequest({
+    required int jamId,
+    required int joinRequestId,
+    required String userId,
+  }) async {
+    await supabase.from('jam_join_requests').update({
+      'status': ProcessStepTypeEnum.declined,
+    }).eq('id', joinRequestId);
+  }
+
+  @override
+  Future<void> unfreezeRequest({
+    required int jamId,
+    required int joinRequestId,
+    required String userId,
+  }) async {
+    await supabase.from('jam_join_requests').update({
+      'status': ProcessStepTypeEnum.pending,
+    }).eq('id', joinRequestId);
   }
 }
 

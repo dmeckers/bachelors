@@ -60,6 +60,22 @@ Future<Jams> updateJam(
 }
 
 @riverpod
+Future<List<BaseJamFormModel>> getJamJoinRequests(
+  GetJamJoinRequestsRef ref, {
+  required int jamId,
+}) async {
+  return await ref.read(jamRepositoryProvider).getJamJoinRequests(jamId: jamId);
+}
+
+@riverpod
+Future<BaseJamFormModel> getJamForm(
+  GetJamFormRef ref, {
+  required int jamId,
+}) {
+  return ref.read(jamFormsServiceProvider).getJamForm(jamId: jamId);
+}
+
+@riverpod
 Future<JamModel> createJam(CreateJamRef ref, {required JamModel jam}) async {
   final jamModel = await ref.read(jamRepositoryProvider).createJam(jam);
 
@@ -175,4 +191,75 @@ Future<void> declineJamInvite(
   required int inviteId,
 }) async {
   return ref.read(socialRepositoryProvider).rejectJamInvite(inviteId: inviteId);
+}
+
+@riverpod
+final class JamDetailsState extends _$JamDetailsState {
+  @override
+  FutureOr<JamModel> build(int jamId) async {
+    final jam = await ref.read(jamRepositoryProvider).getJam(jamId: jamId);
+
+    return jam;
+  }
+
+  void declineJoinRequest(int requestId, String userId) async {
+    _updateStatus(requestId, ProcessStepTypeEnum.declined);
+    await ref.read(jamRepositoryProvider).rejectJoinRequest(
+          jamId: jamId,
+          joinRequestId: requestId,
+          userId: userId,
+        );
+  }
+
+  void acceptJoinRequest(int requestId, String userId) async {
+    _updateStatus(requestId, ProcessStepTypeEnum.accepted);
+    await ref.read(jamRepositoryProvider).acceptJoinRequest(
+          jamId: jamId,
+          joinRequestId: requestId,
+          userId: userId,
+        );
+  }
+
+  void _updateStatus(int requestId, ProcessStepTypeEnum status) {
+    state = state.when(
+      data: (data) => AsyncData(data.copyWith(
+        joinRequests: data.joinRequests
+            .map((e) => e.id == requestId ? e.copyWith(status: status) : e)
+            .toList(),
+      )),
+      error: (error, s) => AsyncError(error, s),
+      loading: () => const AsyncValue.loading(),
+    );
+  }
+
+  void updateSeenAt(int requestId) async {
+    await supabase
+        .from('jam_join_requests')
+        .update({'seen_at': "${DateTime.now()}"}).eq('id', requestId);
+
+    state = state.when(
+      data: (data) => AsyncData(data.copyWith(
+        joinRequests: data.joinRequests
+            .map((e) =>
+                e.id == requestId ? e.copyWith(seenAt: DateTime.now()) : e)
+            .toList(),
+      )),
+      error: (error, s) => AsyncError(error, s),
+      loading: () => const AsyncValue.loading(),
+    );
+  }
+}
+
+@riverpod
+Future<List<UserProfileModel>> getUsersByIds(
+  GetUsersByIdsRef ref, {
+  required List<String> userIds,
+}) async {
+  final providers = ref.read(profileRepositoryProvidersProvider);
+
+  final users = await ref
+      .read(providers.userProfileRepository)
+      .getUsers(userIds: userIds);
+
+  return users;
 }

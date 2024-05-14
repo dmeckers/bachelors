@@ -30,6 +30,7 @@ mixin _$JamLocation {
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
   String get creatorId => throw _privateConstructorUsedError;
   JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
+  String? get creatorFcmToken => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker => throw _privateConstructorUsedError;
 
@@ -56,6 +57,7 @@ abstract class $JamLocationCopyWith<$Res> {
       List<VibeModel> vibes,
       String creatorId,
       JamJoinTypeEnum joinType,
+      String? creatorFcmToken,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker});
 }
 
@@ -82,6 +84,7 @@ class _$JamLocationCopyWithImpl<$Res, $Val extends JamLocation>
     Object? vibes = null,
     Object? creatorId = null,
     Object? joinType = null,
+    Object? creatorFcmToken = freezed,
     Object? marker = freezed,
   }) {
     return _then(_value.copyWith(
@@ -125,6 +128,10 @@ class _$JamLocationCopyWithImpl<$Res, $Val extends JamLocation>
           ? _value.joinType
           : joinType // ignore: cast_nullable_to_non_nullable
               as JamJoinTypeEnum,
+      creatorFcmToken: freezed == creatorFcmToken
+          ? _value.creatorFcmToken
+          : creatorFcmToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       marker: freezed == marker
           ? _value.marker
           : marker // ignore: cast_nullable_to_non_nullable
@@ -152,6 +159,7 @@ abstract class _$$JamLocationImplCopyWith<$Res>
       List<VibeModel> vibes,
       String creatorId,
       JamJoinTypeEnum joinType,
+      String? creatorFcmToken,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker});
 }
 
@@ -176,6 +184,7 @@ class __$$JamLocationImplCopyWithImpl<$Res>
     Object? vibes = null,
     Object? creatorId = null,
     Object? joinType = null,
+    Object? creatorFcmToken = freezed,
     Object? marker = freezed,
   }) {
     return _then(_$JamLocationImpl(
@@ -219,6 +228,10 @@ class __$$JamLocationImplCopyWithImpl<$Res>
           ? _value.joinType
           : joinType // ignore: cast_nullable_to_non_nullable
               as JamJoinTypeEnum,
+      creatorFcmToken: freezed == creatorFcmToken
+          ? _value.creatorFcmToken
+          : creatorFcmToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       marker: freezed == marker
           ? _value.marker
           : marker // ignore: cast_nullable_to_non_nullable
@@ -242,6 +255,7 @@ class _$JamLocationImpl extends _JamLocation {
       required final List<VibeModel> vibes,
       required this.creatorId,
       required this.joinType,
+      this.creatorFcmToken,
       @JsonKey(includeIfNull: false) this.marker})
       : _vibes = vibes,
         super._();
@@ -276,12 +290,14 @@ class _$JamLocationImpl extends _JamLocation {
   @override
   final JamJoinTypeEnum joinType;
   @override
+  final String? creatorFcmToken;
+  @override
   @JsonKey(includeIfNull: false)
   final BitmapDescriptor? marker;
 
   @override
   String toString() {
-    return 'JamLocation(jamId: $jamId, name: $name, description: $description, locationName: $locationName, date: $date, latitude: $latitude, longitude: $longitude, vibes: $vibes, creatorId: $creatorId, joinType: $joinType, marker: $marker)';
+    return 'JamLocation(jamId: $jamId, name: $name, description: $description, locationName: $locationName, date: $date, latitude: $latitude, longitude: $longitude, vibes: $vibes, creatorId: $creatorId, joinType: $joinType, creatorFcmToken: $creatorFcmToken, marker: $marker)';
   }
 
   @override
@@ -305,6 +321,8 @@ class _$JamLocationImpl extends _JamLocation {
                 other.creatorId == creatorId) &&
             (identical(other.joinType, joinType) ||
                 other.joinType == joinType) &&
+            (identical(other.creatorFcmToken, creatorFcmToken) ||
+                other.creatorFcmToken == creatorFcmToken) &&
             (identical(other.marker, marker) || other.marker == marker));
   }
 
@@ -322,6 +340,7 @@ class _$JamLocationImpl extends _JamLocation {
       const DeepCollectionEquality().hash(_vibes),
       creatorId,
       joinType,
+      creatorFcmToken,
       marker);
 
   @JsonKey(ignore: true)
@@ -350,6 +369,7 @@ abstract class _JamLocation extends JamLocation {
           required final List<VibeModel> vibes,
           required final String creatorId,
           required final JamJoinTypeEnum joinType,
+          final String? creatorFcmToken,
           @JsonKey(includeIfNull: false) final BitmapDescriptor? marker}) =
       _$JamLocationImpl;
   const _JamLocation._() : super._();
@@ -377,6 +397,8 @@ abstract class _JamLocation extends JamLocation {
   String get creatorId;
   @override
   JamJoinTypeEnum get joinType;
+  @override
+  String? get creatorFcmToken;
   @override
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker;

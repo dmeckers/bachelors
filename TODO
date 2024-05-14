@@ -8,13 +8,14 @@ vibe select like in debianart would be cool
 
 BUGS
 old data when jam updated
+distance doesnt work
 
 change jam marker click behaviour
 add jam request inbox with requests , registration forms requests
 
+> > > CHECK INBOX
+
 invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
-
-
 
 papers
 
@@ -29,8 +30,6 @@ after papers ONLY
 13.theme
 
 999.populate some vibes
-
-
 
 improve searching mechanism - how ? add music and feed?
 enrich vibe selection (devian art example)

@@ -313,6 +313,269 @@ class _UpdateJamProviderElement extends AutoDisposeFutureProviderElement<Jams>
   JamModel get jam => (origin as UpdateJamProvider).jam;
 }
 
+String _$getJamJoinRequestsHash() =>
+    r'a5ca36e76bc8a5c747c8cd1a108753cd1ec9849f';
+
+/// See also [getJamJoinRequests].
+@ProviderFor(getJamJoinRequests)
+const getJamJoinRequestsProvider = GetJamJoinRequestsFamily();
+
+/// See also [getJamJoinRequests].
+class GetJamJoinRequestsFamily
+    extends Family<AsyncValue<List<BaseJamFormModel>>> {
+  /// See also [getJamJoinRequests].
+  const GetJamJoinRequestsFamily();
+
+  /// See also [getJamJoinRequests].
+  GetJamJoinRequestsProvider call({
+    required int jamId,
+  }) {
+    return GetJamJoinRequestsProvider(
+      jamId: jamId,
+    );
+  }
+
+  @override
+  GetJamJoinRequestsProvider getProviderOverride(
+    covariant GetJamJoinRequestsProvider provider,
+  ) {
+    return call(
+      jamId: provider.jamId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getJamJoinRequestsProvider';
+}
+
+/// See also [getJamJoinRequests].
+class GetJamJoinRequestsProvider
+    extends AutoDisposeFutureProvider<List<BaseJamFormModel>> {
+  /// See also [getJamJoinRequests].
+  GetJamJoinRequestsProvider({
+    required int jamId,
+  }) : this._internal(
+          (ref) => getJamJoinRequests(
+            ref as GetJamJoinRequestsRef,
+            jamId: jamId,
+          ),
+          from: getJamJoinRequestsProvider,
+          name: r'getJamJoinRequestsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getJamJoinRequestsHash,
+          dependencies: GetJamJoinRequestsFamily._dependencies,
+          allTransitiveDependencies:
+              GetJamJoinRequestsFamily._allTransitiveDependencies,
+          jamId: jamId,
+        );
+
+  GetJamJoinRequestsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.jamId,
+  }) : super.internal();
+
+  final int jamId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<BaseJamFormModel>> Function(GetJamJoinRequestsRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetJamJoinRequestsProvider._internal(
+        (ref) => create(ref as GetJamJoinRequestsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        jamId: jamId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<BaseJamFormModel>> createElement() {
+    return _GetJamJoinRequestsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetJamJoinRequestsProvider && other.jamId == jamId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, jamId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin GetJamJoinRequestsRef
+    on AutoDisposeFutureProviderRef<List<BaseJamFormModel>> {
+  /// The parameter `jamId` of this provider.
+  int get jamId;
+}
+
+class _GetJamJoinRequestsProviderElement
+    extends AutoDisposeFutureProviderElement<List<BaseJamFormModel>>
+    with GetJamJoinRequestsRef {
+  _GetJamJoinRequestsProviderElement(super.provider);
+
+  @override
+  int get jamId => (origin as GetJamJoinRequestsProvider).jamId;
+}
+
+String _$getJamFormHash() => r'717edcb9e8f545318e5ea0ded5e1190f95f5a0d0';
+
+/// See also [getJamForm].
+@ProviderFor(getJamForm)
+const getJamFormProvider = GetJamFormFamily();
+
+/// See also [getJamForm].
+class GetJamFormFamily extends Family<AsyncValue<BaseJamFormModel>> {
+  /// See also [getJamForm].
+  const GetJamFormFamily();
+
+  /// See also [getJamForm].
+  GetJamFormProvider call({
+    required int jamId,
+  }) {
+    return GetJamFormProvider(
+      jamId: jamId,
+    );
+  }
+
+  @override
+  GetJamFormProvider getProviderOverride(
+    covariant GetJamFormProvider provider,
+  ) {
+    return call(
+      jamId: provider.jamId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getJamFormProvider';
+}
+
+/// See also [getJamForm].
+class GetJamFormProvider extends AutoDisposeFutureProvider<BaseJamFormModel> {
+  /// See also [getJamForm].
+  GetJamFormProvider({
+    required int jamId,
+  }) : this._internal(
+          (ref) => getJamForm(
+            ref as GetJamFormRef,
+            jamId: jamId,
+          ),
+          from: getJamFormProvider,
+          name: r'getJamFormProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getJamFormHash,
+          dependencies: GetJamFormFamily._dependencies,
+          allTransitiveDependencies:
+              GetJamFormFamily._allTransitiveDependencies,
+          jamId: jamId,
+        );
+
+  GetJamFormProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.jamId,
+  }) : super.internal();
+
+  final int jamId;
+
+  @override
+  Override overrideWith(
+    FutureOr<BaseJamFormModel> Function(GetJamFormRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetJamFormProvider._internal(
+        (ref) => create(ref as GetJamFormRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        jamId: jamId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<BaseJamFormModel> createElement() {
+    return _GetJamFormProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetJamFormProvider && other.jamId == jamId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, jamId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin GetJamFormRef on AutoDisposeFutureProviderRef<BaseJamFormModel> {
+  /// The parameter `jamId` of this provider.
+  int get jamId;
+}
+
+class _GetJamFormProviderElement
+    extends AutoDisposeFutureProviderElement<BaseJamFormModel>
+    with GetJamFormRef {
+  _GetJamFormProviderElement(super.provider);
+
+  @override
+  int get jamId => (origin as GetJamFormProvider).jamId;
+}
+
 String _$createJamHash() => r'609b98394f5657a4e33a0e83c1ed06605bc49357';
 
 /// See also [createJam].
@@ -1265,6 +1528,136 @@ class _DeclineJamInviteProviderElement
   int get inviteId => (origin as DeclineJamInviteProvider).inviteId;
 }
 
+String _$getUsersByIdsHash() => r'4a2d926f29aa33a120aeb8012e2214ff0be1814e';
+
+/// See also [getUsersByIds].
+@ProviderFor(getUsersByIds)
+const getUsersByIdsProvider = GetUsersByIdsFamily();
+
+/// See also [getUsersByIds].
+class GetUsersByIdsFamily extends Family<AsyncValue<List<UserProfileModel>>> {
+  /// See also [getUsersByIds].
+  const GetUsersByIdsFamily();
+
+  /// See also [getUsersByIds].
+  GetUsersByIdsProvider call({
+    required List<String> userIds,
+  }) {
+    return GetUsersByIdsProvider(
+      userIds: userIds,
+    );
+  }
+
+  @override
+  GetUsersByIdsProvider getProviderOverride(
+    covariant GetUsersByIdsProvider provider,
+  ) {
+    return call(
+      userIds: provider.userIds,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getUsersByIdsProvider';
+}
+
+/// See also [getUsersByIds].
+class GetUsersByIdsProvider
+    extends AutoDisposeFutureProvider<List<UserProfileModel>> {
+  /// See also [getUsersByIds].
+  GetUsersByIdsProvider({
+    required List<String> userIds,
+  }) : this._internal(
+          (ref) => getUsersByIds(
+            ref as GetUsersByIdsRef,
+            userIds: userIds,
+          ),
+          from: getUsersByIdsProvider,
+          name: r'getUsersByIdsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getUsersByIdsHash,
+          dependencies: GetUsersByIdsFamily._dependencies,
+          allTransitiveDependencies:
+              GetUsersByIdsFamily._allTransitiveDependencies,
+          userIds: userIds,
+        );
+
+  GetUsersByIdsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.userIds,
+  }) : super.internal();
+
+  final List<String> userIds;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<UserProfileModel>> Function(GetUsersByIdsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetUsersByIdsProvider._internal(
+        (ref) => create(ref as GetUsersByIdsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        userIds: userIds,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<UserProfileModel>> createElement() {
+    return _GetUsersByIdsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetUsersByIdsProvider && other.userIds == userIds;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, userIds.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin GetUsersByIdsRef on AutoDisposeFutureProviderRef<List<UserProfileModel>> {
+  /// The parameter `userIds` of this provider.
+  List<String> get userIds;
+}
+
+class _GetUsersByIdsProviderElement
+    extends AutoDisposeFutureProviderElement<List<UserProfileModel>>
+    with GetUsersByIdsRef {
+  _GetUsersByIdsProviderElement(super.provider);
+
+  @override
+  List<String> get userIds => (origin as GetUsersByIdsProvider).userIds;
+}
+
 String _$userJamControllerHash() => r'7f363ce814238f8339ae430601c6459c8fe127ab';
 
 /// See also [UserJamController].
@@ -1297,5 +1690,148 @@ final jamCardViewStateProvider =
 );
 
 typedef _$JamCardViewState = AutoDisposeNotifier<JamCardView>;
+String _$jamDetailsStateHash() => r'7e35fbd06f189125d9bc225a9c558bea361b58a2';
+
+abstract class _$JamDetailsState
+    extends BuildlessAutoDisposeAsyncNotifier<JamModel> {
+  late final int jamId;
+
+  FutureOr<JamModel> build(
+    int jamId,
+  );
+}
+
+/// See also [JamDetailsState].
+@ProviderFor(JamDetailsState)
+const jamDetailsStateProvider = JamDetailsStateFamily();
+
+/// See also [JamDetailsState].
+class JamDetailsStateFamily extends Family<AsyncValue<JamModel>> {
+  /// See also [JamDetailsState].
+  const JamDetailsStateFamily();
+
+  /// See also [JamDetailsState].
+  JamDetailsStateProvider call(
+    int jamId,
+  ) {
+    return JamDetailsStateProvider(
+      jamId,
+    );
+  }
+
+  @override
+  JamDetailsStateProvider getProviderOverride(
+    covariant JamDetailsStateProvider provider,
+  ) {
+    return call(
+      provider.jamId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'jamDetailsStateProvider';
+}
+
+/// See also [JamDetailsState].
+class JamDetailsStateProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<JamDetailsState, JamModel> {
+  /// See also [JamDetailsState].
+  JamDetailsStateProvider(
+    int jamId,
+  ) : this._internal(
+          () => JamDetailsState()..jamId = jamId,
+          from: jamDetailsStateProvider,
+          name: r'jamDetailsStateProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$jamDetailsStateHash,
+          dependencies: JamDetailsStateFamily._dependencies,
+          allTransitiveDependencies:
+              JamDetailsStateFamily._allTransitiveDependencies,
+          jamId: jamId,
+        );
+
+  JamDetailsStateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.jamId,
+  }) : super.internal();
+
+  final int jamId;
+
+  @override
+  FutureOr<JamModel> runNotifierBuild(
+    covariant JamDetailsState notifier,
+  ) {
+    return notifier.build(
+      jamId,
+    );
+  }
+
+  @override
+  Override overrideWith(JamDetailsState Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: JamDetailsStateProvider._internal(
+        () => create()..jamId = jamId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        jamId: jamId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<JamDetailsState, JamModel>
+      createElement() {
+    return _JamDetailsStateProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is JamDetailsStateProvider && other.jamId == jamId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, jamId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin JamDetailsStateRef on AutoDisposeAsyncNotifierProviderRef<JamModel> {
+  /// The parameter `jamId` of this provider.
+  int get jamId;
+}
+
+class _JamDetailsStateProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<JamDetailsState, JamModel>
+    with JamDetailsStateRef {
+  _JamDetailsStateProviderElement(super.provider);
+
+  @override
+  int get jamId => (origin as JamDetailsStateProvider).jamId;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -21,6 +21,7 @@ UserLocation _$UserLocationFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserLocation {
   String get userId => throw _privateConstructorUsedError;
+  @JsonKey(readValue: _UserLocationJson.readName)
   String get name => throw _privateConstructorUsedError;
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
@@ -43,7 +44,7 @@ abstract class $UserLocationCopyWith<$Res> {
   @useResult
   $Res call(
       {String userId,
-      String name,
+      @JsonKey(readValue: _UserLocationJson.readName) String name,
       List<VibeModel> vibes,
       double latitude,
       double longitude,
@@ -115,7 +116,7 @@ abstract class _$$UserLocationImplCopyWith<$Res>
   @useResult
   $Res call(
       {String userId,
-      String name,
+      @JsonKey(readValue: _UserLocationJson.readName) String name,
       List<VibeModel> vibes,
       double latitude,
       double longitude,
@@ -181,7 +182,7 @@ class __$$UserLocationImplCopyWithImpl<$Res>
 class _$UserLocationImpl extends _UserLocation {
   const _$UserLocationImpl(
       {required this.userId,
-      required this.name,
+      @JsonKey(readValue: _UserLocationJson.readName) required this.name,
       required final List<VibeModel> vibes,
       required this.latitude,
       required this.longitude,
@@ -196,6 +197,7 @@ class _$UserLocationImpl extends _UserLocation {
   @override
   final String userId;
   @override
+  @JsonKey(readValue: _UserLocationJson.readName)
   final String name;
   final List<VibeModel> _vibes;
   @override
@@ -266,6 +268,7 @@ class _$UserLocationImpl extends _UserLocation {
 abstract class _UserLocation extends UserLocation {
   const factory _UserLocation(
       {required final String userId,
+      @JsonKey(readValue: _UserLocationJson.readName)
       required final String name,
       required final List<VibeModel> vibes,
       required final double latitude,
@@ -280,6 +283,7 @@ abstract class _UserLocation extends UserLocation {
   @override
   String get userId;
   @override
+  @JsonKey(readValue: _UserLocationJson.readName)
   String get name;
   @override
   List<VibeModel> get vibes;

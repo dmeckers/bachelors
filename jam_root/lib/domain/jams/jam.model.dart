@@ -38,6 +38,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
       includeIfNull: false,
     )
     required String location,
+    @Default([]) List<JamJoinRequestModel> joinRequests,
     @JsonKey(includeToJson: false) double? lat,
     @JsonKey(includeToJson: false) double? lon,
     required DateTime date,
@@ -78,7 +79,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
     @JsonKey(includeIfNull: false)
     @Default(JamJoinTypeEnum.freeToJoin)
     JamJoinTypeEnum joinType,
-    JamJoinRequestModel? formModel,
+    BaseJamFormModel? formModel,
   }) = _JamModel;
 
   const JamModel._();

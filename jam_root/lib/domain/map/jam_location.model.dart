@@ -20,6 +20,7 @@ class JamLocation with _$JamLocation implements LocationAbstactModel {
     required List<VibeModel> vibes,
     required String creatorId,
     required JamJoinTypeEnum joinType,
+    String? creatorFcmToken,
     @JsonKey(includeIfNull: false) BitmapDescriptor? marker,
   }) = _JamLocation;
 

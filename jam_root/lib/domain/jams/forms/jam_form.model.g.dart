@@ -6,9 +6,9 @@ part of 'jam_form.model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$JamJoinRequestModelImpl _$$JamJoinRequestModelImplFromJson(
+_$BaseJamFormModelImpl _$$BaseJamFormModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$JamJoinRequestModelImpl(
+    _$BaseJamFormModelImpl(
       elements: (json['elements'] as List<dynamic>)
           .map((e) => JamFormElementData.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -16,8 +16,8 @@ _$JamJoinRequestModelImpl _$$JamJoinRequestModelImplFromJson(
       filledByUserId: json['filled_by_user_id'] as String?,
     );
 
-Map<String, dynamic> _$$JamJoinRequestModelImplToJson(
-    _$JamJoinRequestModelImpl instance) {
+Map<String, dynamic> _$$BaseJamFormModelImplToJson(
+    _$BaseJamFormModelImpl instance) {
   final val = <String, dynamic>{
     'elements': instance.elements,
     'title': instance.title,

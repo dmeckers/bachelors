@@ -21,7 +21,8 @@ final class JamViewModel {
   final int? id;
   final UserProfileModel? creator;
   final CommunityModel? relatedCommunity;
-  final JamJoinRequestModel? formModel;
+  final BaseJamFormModel? formModel;
+  final List<JamJoinRequestModel> joinRequests;
   final List<UserProfileModel> admins;
   final List<UserProfileModel> participants;
   final List<VibeModel> relatedVibes;
@@ -53,6 +54,7 @@ final class JamViewModel {
     this.chatId = -1,
     this.maxParticipants = -1,
     this.invitesPerMember = -1,
+    this.joinRequests = const [],
     this.admins = const [],
     this.participants = const [],
     this.relatedVibes = const [],
@@ -138,6 +140,7 @@ final class JamViewModel {
       creator: model.creator,
       relatedCommunity: model.relatedCommunity,
       formModel: model.formModel,
+      joinRequests: model.joinRequests,
       admins: model.admins,
       participants: model.participants,
       relatedVibes: model.relatedVibes,
@@ -165,7 +168,8 @@ final class JamViewModel {
     int? id,
     UserProfileModel? creator,
     CommunityModel? relatedCommunity,
-    JamJoinRequestModel? formModel,
+    BaseJamFormModel? formModel,
+    List<JamJoinRequestModel>? joinRequests,
     List<UserProfileModel>? admins,
     List<UserProfileModel>? participants,
     List<VibeModel>? relatedVibes,
@@ -194,6 +198,7 @@ final class JamViewModel {
       creator: creator ?? this.creator,
       relatedCommunity: relatedCommunity ?? this.relatedCommunity,
       formModel: formModel ?? this.formModel,
+      joinRequests: joinRequests ?? this.joinRequests,
       admins: admins ?? this.admins,
       participants: participants ?? this.participants,
       relatedVibes: relatedVibes ?? this.relatedVibes,
@@ -226,6 +231,7 @@ final class JamViewModel {
       relatedCommunity: relatedCommunity,
       formModel: formModel,
       dropBackground: dropBackground,
+      joinRequests: joinRequests,
       admins: admins,
       participants: participants,
       relatedVibes: relatedVibes,
@@ -251,6 +257,17 @@ final class JamViewModel {
 
 final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
   JamViewModelStateNotifier(super.state);
+  void addJoinRequests(JamJoinRequestModel joinRequests) {
+    state = state.copyWith(joinRequests: [...state.joinRequests, joinRequests]);
+  }
+
+  void removeJoinRequests(JamJoinRequestModel joinRequests) {
+    state = state.copyWith(
+        joinRequests: state.joinRequests
+            .where((element) => element != joinRequests)
+            .toList());
+  }
+
   void addAdmins(UserProfileModel admins) {
     state = state.copyWith(admins: [...state.admins, admins]);
   }
@@ -298,7 +315,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     state = state.copyWith(relatedCommunity: value);
   }
 
-  void updateFormModel(JamJoinRequestModel? value) {
+  void updateFormModel(BaseJamFormModel? value) {
     state = state.copyWith(formModel: value);
   }
 
@@ -355,6 +372,17 @@ final jamViewModelStateProvider = StateNotifierProvider.family
 
 final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
   FreshJamViewModelStateNotifier(super.state);
+  void addJoinRequests(JamJoinRequestModel joinRequests) {
+    state = state.copyWith(joinRequests: [...state.joinRequests, joinRequests]);
+  }
+
+  void removeJoinRequests(JamJoinRequestModel joinRequests) {
+    state = state.copyWith(
+        joinRequests: state.joinRequests
+            .where((element) => element != joinRequests)
+            .toList());
+  }
+
   void addAdmins(UserProfileModel admins) {
     state = state.copyWith(admins: [...state.admins, admins]);
   }
@@ -402,7 +430,7 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     state = state.copyWith(relatedCommunity: value);
   }
 
-  void updateFormModel(JamJoinRequestModel? value) {
+  void updateFormModel(BaseJamFormModel? value) {
     state = state.copyWith(formModel: value);
   }
 

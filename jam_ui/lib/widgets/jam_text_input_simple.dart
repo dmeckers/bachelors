@@ -23,8 +23,12 @@ class JInputSimple extends HookWidget {
     final animation = useAnimation(animationController);
     final focusNode = useFocusNode();
     final isFocused = useState(false);
-    final inputController = (controller ?? useTextEditingController())
-      ..text = initialValue ?? '';
+    final inputController = (controller ?? useTextEditingController());
+
+    useEffect(() {
+      inputController.text = initialValue ?? '';
+      return null;
+    }, const []);
 
     focusNode.addListener(() {
       isFocused.value = focusNode.hasFocus;
