@@ -143,13 +143,11 @@ final class SocialRepository
   Future<JamInvites> getSentJamInvites() async {
     return !(await isOnline(_ref))
         ? await _ref.read(powerSyncSocialServiceProvider).getSentJamInvites()
-        : await supabase
-            .from('jam_invites')
-            .select('* , sender:sended_from_user_id_fkey!profiles(*)')
-            .eq('sended_from_user_id', supabase.auth.currentUser!.id)
-            .withConverter<JamInvites>(ffff
-              (data) => data.map(JamInviteModel.fromJson).toList(),
-            );
+        : await supabase.rpc<Jsons>('get_sent_invites_with_profiles', params: {
+            'user_id': getUserIdOrThrow(),
+          }).withConverter<JamInvites>(
+            (data) => data.map(JamInviteModel.fromJson).toList(),
+          );
   }
 
   @override

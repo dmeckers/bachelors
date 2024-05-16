@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/constants/constants.dart';
 import 'package:jam/data/data.dart';
@@ -11,6 +12,13 @@ import 'package:jam_utils/jam_utils.dart';
 
 final refreshProvider = StateProvider<bool>((ref) => false);
 
+typedef UserRequestMap = Map<
+    String,
+    ({
+      UserProfileModel user,
+      JamJoinRequestModel request,
+    })>;
+
 class JamParticipantsPage extends HookConsumerWidget {
   const JamParticipantsPage({super.key, required this.jamId});
 
@@ -18,7 +26,7 @@ class JamParticipantsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final refresh = ref.watch(refreshProvider);
+    // final refresh = ref.watch(refreshProvider);
     final jam = ref.watch(jamDetailsStateProvider(int.parse(jamId)));
 
     final requests = jam.requireValue.joinRequests.sortCopy(
@@ -27,53 +35,127 @@ class JamParticipantsPage extends HookConsumerWidget {
 
     final p = ref.read(profileRepositoryProvidersProvider);
     final userRepo = ref.watch(p.userProfileRepository);
+    final users = useState<List<UserProfileModel>>([]);
+    final loaded = useState(false);
 
-    return Scaffold(
-      appBar: const SimpleAppBar(
-        title: 'Jam participants page',
+    final tabController = useTabController(initialLength: 2);
+
+    final usersMap = useMemoized<UserRequestMap>(
+      () => users.value.fold(
+        {},
+        (val, el) => val
+          ..[el.id] = (
+            user: el,
+            request: requests.where((req) => req.userId == el.id).first
+          ),
       ),
-      body: RefreshIndicator(
-          onRefresh: () async {
-            ref.read(refreshProvider.notifier).state = !refresh;
-          },
-          child: FutureBuilder(
-            future: userRepo.getUsers(
-              userIds: requests.map((e) => e.userId).toList(),
+      [
+        requests,
+        users.value,
+      ],
+    );
+
+    useEffect(() {
+      if (requests.isEmpty) {
+        loaded.value = true;
+        return null;
+      }
+
+      userRepo
+          .getUsers(userIds: requests.map((e) => e.userId).toList())
+          .then((value) {
+        loaded.value = true;
+        users.value = value;
+      });
+
+      return null;
+    }, []);
+    return Scaffold(
+      appBar: PreferredSize(
+        // title: 'Jam participants page',
+        preferredSize:
+            const Size.fromHeight(DEFAULT_APP_BAR_HEIGHT + TOOLBAR_HEIGHT),
+        child: Column(
+          children: [
+            const SimpleAppBar(
+              title: 'Jam participants page',
             ),
-            builder: (ctx, snapshot) =>
-                snapshot.connectionState == ConnectionState.waiting
-                    ? const Center(child: CircularProgressIndicator())
-                    : snapshot.hasError
-                        ? const Center(
-                            child: JamErrorBox(
-                              errorMessage: 'Whoops! Something went wrong!',
-                            ),
-                          )
-                        : _buildListView(
-                            requests,
-                            snapshot.data as List<UserProfileModel>,
-                            context,
-                          ),
-          )),
+            TabBar(
+              controller: tabController,
+              tabs: const [
+                Tab(
+                  child: Text(
+                    'Pending',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Participanting',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: tabController,
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              // ref.read(refreshProvider.notifier).state = !refresh;
+              ref.invalidate(jamDetailsStateProvider(int.parse(jamId)));
+              users.value = await userRepo.getUsers(
+                userIds: requests.map((e) => e.userId).toList(),
+              );
+            },
+            child: Center(
+              child: loaded.value
+                  ? _buildListView(
+                      usersMap,
+                      context,
+                    )
+                  : const CircularProgressIndicator(),
+            ),
+          ),
+          const Center(
+            child: Text('Accepted'),
+          ),
+        ],
+      ),
     );
   }
 
-  ListView _buildListView(
-    List<JamJoinRequestModel> requests,
-    List<UserProfileModel> users,
+  Widget _buildListView(
+    UserRequestMap map,
     BuildContext context,
   ) {
-    final pending =
-        requests.where((e) => e.status == ProcessStepTypeEnum.pending);
+    final pending = map.values
+        .map((e) => e.request)
+        .where((e) => e.status == ProcessStepTypeEnum.pending);
+
+    if (pending.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.285,
+        ),
+        child: ListView(
+          children: const [
+            NotFoundPlaceholder(
+              message: 'No requests found',
+            ),
+          ],
+        ),
+      );
+    }
 
     return ListView(
       children: [
         ...pending.map(
           (e) {
-            final user = users.firstWhere(
-              (u) => u.id == e.userId,
-              orElse: () => throw 'User not found',
-            );
+            final user = map[e.userId]!.user;
 
             return JamJoinRequestDismissibleTile(
               request: e,
@@ -97,6 +179,10 @@ class JamParticipantsPage extends HookConsumerWidget {
                   user.username?.crop(20) ??
                       user.fullName?.crop(20) ??
                       'Unknown user',
+                ),
+                subtitle: Text(
+                  'Last seen at ${user.lastActiveAt.atTime}',
+                  style: const TextStyle(fontSize: 12),
                 ),
                 trailing: TextButton.icon(
                   onPressed: () => Navigator.push(
@@ -128,89 +214,7 @@ class JamParticipantsPage extends HookConsumerWidget {
             );
           },
         ),
-        if (requests.isEmpty)
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.285,
-            ),
-            child: const NotFoundPlaceholder(
-              message: 'No join requests found',
-            ),
-          ),
       ],
-    );
-  }
-}
-
-class JamJoinRequestDismissibleTile extends ConsumerWidget {
-  const JamJoinRequestDismissibleTile({
-    super.key,
-    required this.request,
-    required this.jamId,
-    required this.child,
-  });
-
-  final JamJoinRequestModel request;
-  final String jamId;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final tileGradient = LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      transform: const GradientRotation(2.35619),
-      colors: [
-        Colors.blue.shade900,
-        Colors.green.shade700,
-      ],
-    );
-    return Dismissible(
-      confirmDismiss: (_) async => request.seenAt != null,
-      key: ValueKey(request.id),
-      background: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: tileGradient,
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          )),
-      onDismissed: (direction) async {
-        if (direction == DismissDirection.endToStart) {
-          ref
-              .read(jamDetailsStateProvider(int.parse(jamId)).notifier)
-              .declineJoinRequest(
-                request.id,
-                request.userId,
-              );
-        }
-
-        if (direction == DismissDirection.startToEnd) {
-          ref
-              .read(jamDetailsStateProvider(int.parse(jamId)).notifier)
-              .acceptJoinRequest(
-                request.id,
-                request.userId,
-              );
-        }
-      },
-      child: child,
     );
   }
 }

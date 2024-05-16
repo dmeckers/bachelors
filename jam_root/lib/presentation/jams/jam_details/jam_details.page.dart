@@ -114,10 +114,8 @@ class JamDetailsPage extends HookConsumerWidget {
                         JamParticipantsTile(jam: data),
                         JamDivider(color: context.jColor.primary),
                         JamExtraInformationTile(jam: data),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height * 0.3,
-                          ),
+                        Flexible(
+                          fit: FlexFit.loose,
                           child: ListView.builder(
                             scrollDirection: Axis.vertical,
                             itemCount: null,
@@ -125,7 +123,7 @@ class JamDetailsPage extends HookConsumerWidget {
                               return buttons[index % buttons.length];
                             },
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
