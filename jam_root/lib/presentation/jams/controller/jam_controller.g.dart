@@ -6,7 +6,7 @@ part of 'jam_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getJamByIdHash() => r'103a394f87c87c9b240ba78efd66cd1c78a9f404';
+String _$getJamByIdHash() => r'23efdc644053b42e51c9d1fa9e55709490482bc9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -830,7 +830,7 @@ class _DeleteJamProviderElement extends AutoDisposeFutureProviderElement<void>
   JamModel get jam => (origin as DeleteJamProvider).jam;
 }
 
-String _$getJamInvitesHash() => r'81e9b5b6737da240bfb36f379cc8d43d45b176f8';
+String _$getJamInvitesHash() => r'7a998e30ce5aa718cbe907b371561cf5314fc172';
 
 /// See also [getJamInvites].
 @ProviderFor(getJamInvites)
@@ -1006,6 +1006,24 @@ final getSentJamInvitesProvider =
 );
 
 typedef GetSentJamInvitesRef = AutoDisposeFutureProviderRef<JamInvites>;
+String _$getSentFriendInvitesHash() =>
+    r'cbfb33729df0cd119efb1d8fbb79f894b2b87276';
+
+/// See also [getSentFriendInvites].
+@ProviderFor(getSentFriendInvites)
+final getSentFriendInvitesProvider =
+    AutoDisposeFutureProvider<List<FriendInviteModel>>.internal(
+  getSentFriendInvites,
+  name: r'getSentFriendInvitesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getSentFriendInvitesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetSentFriendInvitesRef
+    = AutoDisposeFutureProviderRef<List<FriendInviteModel>>;
 String _$getJamParticipantsHash() =>
     r'c7ce324a93982b6e6e90baeb4e768d53f976a8e3';
 
@@ -1690,7 +1708,7 @@ final jamCardViewStateProvider =
 );
 
 typedef _$JamCardViewState = AutoDisposeNotifier<JamCardView>;
-String _$jamDetailsStateHash() => r'7e35fbd06f189125d9bc225a9c558bea361b58a2';
+String _$jamDetailsStateHash() => r'8ff71a6b4915e967a7da677f6bbc72e5449bbe01';
 
 abstract class _$JamDetailsState
     extends BuildlessAutoDisposeAsyncNotifier<JamModel> {

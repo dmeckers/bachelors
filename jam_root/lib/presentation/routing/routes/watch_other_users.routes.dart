@@ -15,7 +15,7 @@ final watchOtherUsersRoutes = [
     path: "user/:${WatchOtherUsersRoutes.otherUserProfilePage.pathParameter}",
     name: WatchOtherUsersRoutes.otherUserProfilePage.name,
     builder: (_, state) => OtherUserProfilePage(
-      userId: state.pathParameters[
+      viewedUserId: state.pathParameters[
           WatchOtherUsersRoutes.otherUserProfilePage.pathParameter]!,
     ),
   ),

@@ -16,6 +16,7 @@ _$JamJoinRequestModelImpl _$$JamJoinRequestModelImplFromJson(
           : DateTime.parse(json['seen_at'] as String),
       userId: json['user_id'] as String,
       status: $enumDecode(_$ProcessStepTypeEnumEnumMap, json['status']),
+      canReceiveFriendRequests: json['can_receive_friend_requests'] as bool?,
       filledForm: json['filled_form'] == null
           ? null
           : BaseJamFormModel.fromJson(
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$JamJoinRequestModelImplToJson(
       'seen_at': instance.seenAt?.toIso8601String(),
       'user_id': instance.userId,
       'status': _$ProcessStepTypeEnumEnumMap[instance.status]!,
+      'can_receive_friend_requests': instance.canReceiveFriendRequests,
       'filled_form': instance.filledForm,
     };
 

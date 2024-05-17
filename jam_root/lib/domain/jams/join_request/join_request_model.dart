@@ -13,6 +13,7 @@ class JamJoinRequestModel with _$JamJoinRequestModel {
     required DateTime? seenAt,
     required String userId,
     required ProcessStepTypeEnum status,
+    bool? canReceiveFriendRequests,
     BaseJamFormModel? filledForm,
   }) = _JamJoinRequestModel;
 

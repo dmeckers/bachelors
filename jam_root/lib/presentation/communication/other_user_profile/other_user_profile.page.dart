@@ -1,47 +1,130 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
+import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
+
+final canInviteProvider = StateProvider<bool?>((ref) => null);
 
 class OtherUserProfilePage extends HookConsumerWidget
     with ProfileRepositoryProviders {
-  const OtherUserProfilePage({super.key, required this.userId});
+  const OtherUserProfilePage({
+    super.key,
+    required this.viewedUserId,
+    this.jamId,
+  });
 
-  final String userId;
+  final String viewedUserId;
+  final String? jamId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(getUserInfoProvider(userId)).maybeWhen(
-          data: (data) {
+    if (jamId.isNull) return const SizedBox();
+
+    final currentUser = ref.read(userStateProvider).getLastValue();
+    final asyncUserInfo = ref.watch(getUserInfoProvider(viewedUserId));
+
+    final joinRequests = ref
+        .watch(jamDetailsStateProvider(int.parse(jamId!)))
+        .requireValue
+        .joinRequests;
+
+    return Scaffold(
+      body: Center(
+        child: asyncUserInfo.when(
+          data: (viewedProfile) {
+            final isFriend = currentUser.friends
+                .where((friend) => friend.id == viewedUserId)
+                .isNotEmpty;
+
+            final canSendInvite = isFriend
+                ? false
+                : joinRequests
+                        .where((req) => req.userId == viewedUserId)
+                        .firstOrNull
+                        ?.canReceiveFriendRequests ??
+                    false;
+
+            final inviteIcon = canSendInvite
+                ? FontAwesomeIcons.userPlus
+                : FontAwesomeIcons.userCheck;
+
+            final inviteColor = canSendInvite ? Colors.green : Colors.yellow;
+            final inviteText =
+                canSendInvite ? 'Send friend request' : 'Friend request sent';
+
             return Scaffold(
-              appBar: SimpleAppBar(title: data.username ?? data.fullName ?? ''),
+              appBar: SimpleAppBar(
+                  title:
+                      viewedProfile.username ?? viewedProfile.fullName ?? ''),
               body: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20),
-                    HeroAvatar(
-                      isPersonal: false,
-                      profile: data,
-                      radius: 60,
-                      onTap: () => data.photoUrls?.isNotEmpty ?? false
-                          ? _showFullScreenImageViewer(
-                              context: context,
-                              images: data.photoUrls!,
-                              mainAvatar: data.avatar ?? '',
-                            )
-                          : null,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: HeroAvatar(
+                        isPersonal: false,
+                        profile: viewedProfile,
+                        radius: 60,
+                        onTap: () =>
+                            viewedProfile.photoUrls?.isNotEmpty ?? false
+                                ? _showFullScreenImageViewer(
+                                    context: context,
+                                    images: viewedProfile.photoUrls!,
+                                    mainAvatar: viewedProfile.avatar ?? '',
+                                  )
+                                : null,
+                      ),
                     ),
-                    const SizedBox(height: 20),
+                    if (!isFriend)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 20,
+                        ),
+                        child: TextButton.icon(
+                          onPressed: () async {
+                            final cancel =
+                                ref.read(canInviteProvider).isNotNullOrFalse;
+                            if (cancel || canSendInvite == false) return;
+
+                            ref.read(canInviteProvider.notifier).state = false;
+
+                            await ref
+                                .read(socialRepositoryProvider)
+                                .sendFriendInvite(userId: viewedUserId);
+
+                            if (!context.mounted) return;
+
+                            JSnackBar.show(
+                              context,
+                              title: 'Friend request sent',
+                            );
+                          },
+                          icon: FaIcon(
+                            inviteIcon,
+                            color: inviteColor,
+                          ),
+                          label: Text(
+                            inviteText,
+                            style: TextStyle(color: inviteColor),
+                          ),
+                        ),
+                      ),
                     ShakesOnNoLongPress(
                       child: ListTile(
                         leading: const Icon(Icons.person),
-                        title: Text(data.fullName ?? 'No Name'),
+                        title: Text(viewedProfile.fullName ?? 'No Name'),
                         subtitle: Text(
                           'Name',
                           style: context.jText.headlineSmall,
@@ -51,7 +134,7 @@ class OtherUserProfilePage extends HookConsumerWidget
                     ShakesOnNoLongPress(
                       child: ListTile(
                         leading: const FaIcon(FontAwesomeIcons.commentDots),
-                        title: Text(data.profileStatus ?? 'No Status'),
+                        title: Text(viewedProfile.profileStatus ?? 'No Status'),
                         subtitle: Text(
                           'Status',
                           style: context.jText.headlineSmall,
@@ -62,7 +145,7 @@ class OtherUserProfilePage extends HookConsumerWidget
                       child: ListTile(
                         leading: const FaIcon(FontAwesomeIcons.fire),
                         title: Text(
-                          data.vibes.map((e) => e.name).join(', '),
+                          viewedProfile.vibes.map((e) => e.name).join(', '),
                         ),
                         subtitle: Text(
                           'Vibes',
@@ -75,12 +158,15 @@ class OtherUserProfilePage extends HookConsumerWidget
               ),
             );
           },
-          orElse: () => const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+          error: (error, s) => const JamErrorBox(
+            errorMessage: 'Whoops! Something went wrong',
           ),
-        );
+          loading: () => const Scaffold(
+            body: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
   }
 
   _showFullScreenImageViewer({

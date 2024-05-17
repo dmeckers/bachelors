@@ -5,6 +5,8 @@ extension CropTextWithTrailingEllipsis on String {
 
 extension NullCheck on dynamic {
   bool get isNotNull => (this as dynamic) != null;
+  bool get isNotNullOrFalse =>
+      (this as dynamic) != null && (this as dynamic) != false;
   bool get isNull => (this as dynamic) == null;
 }
 

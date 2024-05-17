@@ -82,6 +82,10 @@ class UserState with Storer {
     _state.value = profile;
     userRepo.images.setMainAvatar(fileName);
   }
+
+  UserProfileModel getLastValue() {
+    return _state.value;
+  }
 }
 
 final userStateProvider = Provider<UserState>(

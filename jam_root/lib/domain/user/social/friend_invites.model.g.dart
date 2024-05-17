@@ -18,7 +18,8 @@ class FriendInviteModelAdapter extends TypeAdapter<_$FriendInviteModelImpl> {
     };
     return _$FriendInviteModelImpl(
       id: fields[0] as int,
-      userId: fields[1] as String,
+      userReceived: fields[1] as String,
+      userSent: fields[6] as String,
       username: fields[2] as String,
       avatar: fields[3] as String?,
       status: fields[4] as String,
@@ -29,11 +30,13 @@ class FriendInviteModelAdapter extends TypeAdapter<_$FriendInviteModelImpl> {
   @override
   void write(BinaryWriter writer, _$FriendInviteModelImpl obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.userId)
+      ..write(obj.userReceived)
+      ..writeByte(6)
+      ..write(obj.userSent)
       ..writeByte(2)
       ..write(obj.username)
       ..writeByte(3)
@@ -63,7 +66,8 @@ _$FriendInviteModelImpl _$$FriendInviteModelImplFromJson(
         Map<String, dynamic> json) =>
     _$FriendInviteModelImpl(
       id: json['id'] as int,
-      userId: json['user_id'] as String,
+      userReceived: json['user_received'] as String,
+      userSent: json['user_sent'] as String,
       username: json['username'] as String,
       avatar: json['avatar'] as String?,
       status: json['status'] as String,
@@ -74,7 +78,8 @@ Map<String, dynamic> _$$FriendInviteModelImplToJson(
         _$FriendInviteModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'user_id': instance.userId,
+      'user_received': instance.userReceived,
+      'user_sent': instance.userSent,
       'username': instance.username,
       'avatar': instance.avatar,
       'status': instance.status,

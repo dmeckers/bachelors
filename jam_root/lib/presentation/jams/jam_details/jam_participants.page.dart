@@ -165,7 +165,8 @@ class JamParticipantsPage extends HookConsumerWidget {
                   context,
                   MaterialPageRoute(
                     builder: (ctx) => OtherUserProfilePage(
-                      userId: user.id,
+                      viewedUserId: user.id,
+                      jamId: jamId,
                     ),
                   ),
                 ),

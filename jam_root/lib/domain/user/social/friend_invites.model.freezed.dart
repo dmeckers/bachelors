@@ -23,8 +23,9 @@ mixin _$FriendInviteModel {
   @HiveField(0)
   int get id => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get userId =>
-      throw _privateConstructorUsedError; // @HiveField(2) required String email,
+  String get userReceived => throw _privateConstructorUsedError;
+  @HiveField(6)
+  String get userSent => throw _privateConstructorUsedError;
   @HiveField(2)
   String get username => throw _privateConstructorUsedError;
   @HiveField(3)
@@ -48,7 +49,8 @@ abstract class $FriendInviteModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) int id,
-      @HiveField(1) String userId,
+      @HiveField(1) String userReceived,
+      @HiveField(6) String userSent,
       @HiveField(2) String username,
       @HiveField(3) String? avatar,
       @HiveField(4) String status,
@@ -69,7 +71,8 @@ class _$FriendInviteModelCopyWithImpl<$Res, $Val extends FriendInviteModel>
   @override
   $Res call({
     Object? id = null,
-    Object? userId = null,
+    Object? userReceived = null,
+    Object? userSent = null,
     Object? username = null,
     Object? avatar = freezed,
     Object? status = null,
@@ -80,9 +83,13 @@ class _$FriendInviteModelCopyWithImpl<$Res, $Val extends FriendInviteModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      userReceived: null == userReceived
+          ? _value.userReceived
+          : userReceived // ignore: cast_nullable_to_non_nullable
+              as String,
+      userSent: null == userSent
+          ? _value.userSent
+          : userSent // ignore: cast_nullable_to_non_nullable
               as String,
       username: null == username
           ? _value.username
@@ -114,7 +121,8 @@ abstract class _$$FriendInviteModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) int id,
-      @HiveField(1) String userId,
+      @HiveField(1) String userReceived,
+      @HiveField(6) String userSent,
       @HiveField(2) String username,
       @HiveField(3) String? avatar,
       @HiveField(4) String status,
@@ -133,7 +141,8 @@ class __$$FriendInviteModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? userId = null,
+    Object? userReceived = null,
+    Object? userSent = null,
     Object? username = null,
     Object? avatar = freezed,
     Object? status = null,
@@ -144,9 +153,13 @@ class __$$FriendInviteModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      userReceived: null == userReceived
+          ? _value.userReceived
+          : userReceived // ignore: cast_nullable_to_non_nullable
+              as String,
+      userSent: null == userSent
+          ? _value.userSent
+          : userSent // ignore: cast_nullable_to_non_nullable
               as String,
       username: null == username
           ? _value.username
@@ -175,7 +188,8 @@ class __$$FriendInviteModelImplCopyWithImpl<$Res>
 class _$FriendInviteModelImpl extends _FriendInviteModel {
   const _$FriendInviteModelImpl(
       {@HiveField(0) required this.id,
-      @HiveField(1) required this.userId,
+      @HiveField(1) required this.userReceived,
+      @HiveField(6) required this.userSent,
       @HiveField(2) required this.username,
       @HiveField(3) this.avatar,
       @HiveField(4) required this.status,
@@ -190,8 +204,10 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
   final int id;
   @override
   @HiveField(1)
-  final String userId;
-// @HiveField(2) required String email,
+  final String userReceived;
+  @override
+  @HiveField(6)
+  final String userSent;
   @override
   @HiveField(2)
   final String username;
@@ -207,7 +223,7 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
 
   @override
   String toString() {
-    return 'FriendInviteModel(id: $id, userId: $userId, username: $username, avatar: $avatar, status: $status, sentAt: $sentAt)';
+    return 'FriendInviteModel(id: $id, userReceived: $userReceived, userSent: $userSent, username: $username, avatar: $avatar, status: $status, sentAt: $sentAt)';
   }
 
   @override
@@ -216,7 +232,10 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
         (other.runtimeType == runtimeType &&
             other is _$FriendInviteModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.userReceived, userReceived) ||
+                other.userReceived == userReceived) &&
+            (identical(other.userSent, userSent) ||
+                other.userSent == userSent) &&
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
@@ -226,8 +245,8 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, userId, username, avatar, status, sentAt);
+  int get hashCode => Object.hash(runtimeType, id, userReceived, userSent,
+      username, avatar, status, sentAt);
 
   @JsonKey(ignore: true)
   @override
@@ -247,7 +266,8 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
 abstract class _FriendInviteModel extends FriendInviteModel {
   const factory _FriendInviteModel(
       {@HiveField(0) required final int id,
-      @HiveField(1) required final String userId,
+      @HiveField(1) required final String userReceived,
+      @HiveField(6) required final String userSent,
       @HiveField(2) required final String username,
       @HiveField(3) final String? avatar,
       @HiveField(4) required final String status,
@@ -262,8 +282,11 @@ abstract class _FriendInviteModel extends FriendInviteModel {
   int get id;
   @override
   @HiveField(1)
-  String get userId;
-  @override // @HiveField(2) required String email,
+  String get userReceived;
+  @override
+  @HiveField(6)
+  String get userSent;
+  @override
   @HiveField(2)
   String get username;
   @override

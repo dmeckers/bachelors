@@ -25,6 +25,7 @@ mixin _$JamJoinRequestModel {
   DateTime? get seenAt => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   ProcessStepTypeEnum get status => throw _privateConstructorUsedError;
+  bool? get canReceiveFriendRequests => throw _privateConstructorUsedError;
   BaseJamFormModel? get filledForm => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $JamJoinRequestModelCopyWith<$Res> {
       DateTime? seenAt,
       String userId,
       ProcessStepTypeEnum status,
+      bool? canReceiveFriendRequests,
       BaseJamFormModel? filledForm});
 
   $BaseJamFormModelCopyWith<$Res>? get filledForm;
@@ -68,6 +70,7 @@ class _$JamJoinRequestModelCopyWithImpl<$Res, $Val extends JamJoinRequestModel>
     Object? seenAt = freezed,
     Object? userId = null,
     Object? status = null,
+    Object? canReceiveFriendRequests = freezed,
     Object? filledForm = freezed,
   }) {
     return _then(_value.copyWith(
@@ -91,6 +94,10 @@ class _$JamJoinRequestModelCopyWithImpl<$Res, $Val extends JamJoinRequestModel>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ProcessStepTypeEnum,
+      canReceiveFriendRequests: freezed == canReceiveFriendRequests
+          ? _value.canReceiveFriendRequests
+          : canReceiveFriendRequests // ignore: cast_nullable_to_non_nullable
+              as bool?,
       filledForm: freezed == filledForm
           ? _value.filledForm
           : filledForm // ignore: cast_nullable_to_non_nullable
@@ -125,6 +132,7 @@ abstract class _$$JamJoinRequestModelImplCopyWith<$Res>
       DateTime? seenAt,
       String userId,
       ProcessStepTypeEnum status,
+      bool? canReceiveFriendRequests,
       BaseJamFormModel? filledForm});
 
   @override
@@ -147,6 +155,7 @@ class __$$JamJoinRequestModelImplCopyWithImpl<$Res>
     Object? seenAt = freezed,
     Object? userId = null,
     Object? status = null,
+    Object? canReceiveFriendRequests = freezed,
     Object? filledForm = freezed,
   }) {
     return _then(_$JamJoinRequestModelImpl(
@@ -170,6 +179,10 @@ class __$$JamJoinRequestModelImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ProcessStepTypeEnum,
+      canReceiveFriendRequests: freezed == canReceiveFriendRequests
+          ? _value.canReceiveFriendRequests
+          : canReceiveFriendRequests // ignore: cast_nullable_to_non_nullable
+              as bool?,
       filledForm: freezed == filledForm
           ? _value.filledForm
           : filledForm // ignore: cast_nullable_to_non_nullable
@@ -188,6 +201,7 @@ class _$JamJoinRequestModelImpl implements _JamJoinRequestModel {
       required this.seenAt,
       required this.userId,
       required this.status,
+      this.canReceiveFriendRequests,
       this.filledForm});
 
   factory _$JamJoinRequestModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -204,11 +218,13 @@ class _$JamJoinRequestModelImpl implements _JamJoinRequestModel {
   @override
   final ProcessStepTypeEnum status;
   @override
+  final bool? canReceiveFriendRequests;
+  @override
   final BaseJamFormModel? filledForm;
 
   @override
   String toString() {
-    return 'JamJoinRequestModel(id: $id, jamId: $jamId, seenAt: $seenAt, userId: $userId, status: $status, filledForm: $filledForm)';
+    return 'JamJoinRequestModel(id: $id, jamId: $jamId, seenAt: $seenAt, userId: $userId, status: $status, canReceiveFriendRequests: $canReceiveFriendRequests, filledForm: $filledForm)';
   }
 
   @override
@@ -221,14 +237,17 @@ class _$JamJoinRequestModelImpl implements _JamJoinRequestModel {
             (identical(other.seenAt, seenAt) || other.seenAt == seenAt) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(
+                    other.canReceiveFriendRequests, canReceiveFriendRequests) ||
+                other.canReceiveFriendRequests == canReceiveFriendRequests) &&
             (identical(other.filledForm, filledForm) ||
                 other.filledForm == filledForm));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, jamId, seenAt, userId, status, filledForm);
+  int get hashCode => Object.hash(runtimeType, id, jamId, seenAt, userId,
+      status, canReceiveFriendRequests, filledForm);
 
   @JsonKey(ignore: true)
   @override
@@ -252,6 +271,7 @@ abstract class _JamJoinRequestModel implements JamJoinRequestModel {
       required final DateTime? seenAt,
       required final String userId,
       required final ProcessStepTypeEnum status,
+      final bool? canReceiveFriendRequests,
       final BaseJamFormModel? filledForm}) = _$JamJoinRequestModelImpl;
 
   factory _JamJoinRequestModel.fromJson(Map<String, dynamic> json) =
@@ -267,6 +287,8 @@ abstract class _JamJoinRequestModel implements JamJoinRequestModel {
   String get userId;
   @override
   ProcessStepTypeEnum get status;
+  @override
+  bool? get canReceiveFriendRequests;
   @override
   BaseJamFormModel? get filledForm;
   @override

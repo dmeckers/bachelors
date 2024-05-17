@@ -3,6 +3,7 @@ import 'package:jam/domain/events/map/jam_deleted_map_event.dart';
 import 'package:jam/domain/events/map/jam_updated_map_event.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
+import 'package:riverpod/src/framework.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:jam/config/config.dart';
@@ -23,9 +24,8 @@ final class UserJamController extends _$UserJamController
 }
 
 @riverpod
-Future<JamModel> getJamById(GetJamByIdRef ref, {required int jamId}) async {
-  return await ref.read(jamRepositoryProvider).getJam(jamId: jamId);
-}
+Future<JamModel> getJamById(GetJamByIdRef ref, {required int jamId}) async =>
+    await ref.read(jamRepositoryProvider).getJam(jamId: jamId);
 
 @riverpod
 Future<Jams> getOutdatedJams(GetOutdatedJamsRef ref) async {
@@ -129,9 +129,8 @@ final class JamCardViewState extends _$JamCardViewState {
 }
 
 @riverpod
-Future<JamInvites> getJamInvites(GetJamInvitesRef ref) async {
-  return ref.read(socialRepositoryProvider).getJamInvites();
-}
+Future<JamInvites> getJamInvites(GetJamInvitesRef ref) async =>
+    ref.read(socialRepositoryProvider).getJamInvites();
 
 @riverpod
 Future<void> sendJamInvites(
@@ -157,6 +156,12 @@ Future<void> sendJamInvites(
 Future<JamInvites> getSentJamInvites(GetSentJamInvitesRef ref) async {
   return ref.read(socialRepositoryProvider).getSentJamInvites();
 }
+
+@riverpod
+Future<List<FriendInviteModel>> getSentFriendInvites(
+  GetSentFriendInvitesRef ref,
+) async =>
+    await ref.read(socialRepositoryProvider).getSentFriendInvites();
 
 @riverpod
 Future<Users> getJamParticipants(

@@ -14,8 +14,8 @@ abstract class FriendInviteModel
   @HiveType(typeId: 3, adapterName: 'FriendInviteModelAdapter')
   const factory FriendInviteModel({
     @HiveField(0) required int id,
-    @HiveField(1) required String userId,
-    // @HiveField(2) required String email,
+    @HiveField(1) required String userReceived,
+    @HiveField(6) required String userSent,
     @HiveField(2) required String username,
     @HiveField(3) String? avatar,
     @HiveField(4) required String status,

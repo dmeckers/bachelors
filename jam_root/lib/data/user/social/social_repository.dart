@@ -77,26 +77,40 @@ final class SocialRepository
   Future<FriendInvites> getFriendInvites() async {
     return !(await isOnline(_ref))
         ? await _ref.read(powerSyncSocialServiceProvider).getFriendInvites()
-        : await supabase
-            .from('friend_invites')
-            .select("""
+        : await _getFriendInvites(received: true);
+  }
+
+  @override
+  Future<FriendInvites> getSentFriendInvites() async =>
+      await _getFriendInvites(received: false);
+
+  Future<FriendInvites> _getFriendInvites({
+    required bool received,
+  }) async {
+    return await supabase
+        .from('friend_invites')
+        .select("""
                   id ,
                   sent_at:inserted_at ,
                   status ,
-                  user_id:user_sent ,
+                  user_received ,
+                  user_sent ,
                   profiles!friend_invites_user_sent_fkey(
                     username,
                     avatar
                   )
                 """)
-            .eq('user_received', supabase.auth.currentUser!.id)
-            .withConverter<FriendInvites>(
-              (data) => data
-                  .map(
-                    (e) => FriendInviteModel.fromJson(e.flatten()),
-                  )
-                  .toList(),
-            );
+        .eq(
+          received ? 'user_received' : 'user_sent',
+          getUserIdOrThrow(),
+        )
+        .withConverter<FriendInvites>(
+          (data) => data
+              .map(
+                (e) => FriendInviteModel.fromJson(e.flatten()),
+              )
+              .toList(),
+        );
   }
 
   @override

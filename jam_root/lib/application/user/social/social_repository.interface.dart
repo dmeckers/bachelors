@@ -30,6 +30,8 @@ abstract class SocialRepositoryInterface {
 
   Future<List<JamInviteModel>> getSentJamInvites();
 
+  Future<List<FriendInviteModel>> getSentFriendInvites();
+
   Future<void> acceptJamInvite({required int inviteId});
 
   Future<void> rejectJamInvite({required int inviteId});

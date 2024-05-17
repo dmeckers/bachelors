@@ -105,7 +105,7 @@ final class JamsRepository extends JamRepositoryInterface
         ? await _ref.read(powersyncJamServiceProvider).getJam(jamId: jamId)
         : await supabase.rpc(
             GET_JAM_BY_ID_RPC,
-            params: {'jamid': jamId},
+            params: {'jamid': jamId, 'user_id': getUserIdOrThrow()},
           ).withConverter(
             (data) => JamModel.fromJson(data.first),
           );
