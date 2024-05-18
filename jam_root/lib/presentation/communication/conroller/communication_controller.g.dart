@@ -23,7 +23,7 @@ final getFriendInvitesProvider =
 
 typedef GetFriendInvitesRef = AutoDisposeStreamProviderRef<FriendInvites>;
 String _$acceptFriendInviteHash() =>
-    r'ee04cc1fce7244f38393a86b6a8e09e3a9ed7f70';
+    r'cbfae9b2837682ea660398b45c81235fb2dba19d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -57,7 +57,7 @@ class AcceptFriendInviteFamily extends Family<AsyncValue<void>> {
 
   /// See also [acceptFriendInvite].
   AcceptFriendInviteProvider call({
-    required String friendInviteId,
+    required int friendInviteId,
   }) {
     return AcceptFriendInviteProvider(
       friendInviteId: friendInviteId,
@@ -92,7 +92,7 @@ class AcceptFriendInviteFamily extends Family<AsyncValue<void>> {
 class AcceptFriendInviteProvider extends AutoDisposeFutureProvider<void> {
   /// See also [acceptFriendInvite].
   AcceptFriendInviteProvider({
-    required String friendInviteId,
+    required int friendInviteId,
   }) : this._internal(
           (ref) => acceptFriendInvite(
             ref as AcceptFriendInviteRef,
@@ -120,7 +120,7 @@ class AcceptFriendInviteProvider extends AutoDisposeFutureProvider<void> {
     required this.friendInviteId,
   }) : super.internal();
 
-  final String friendInviteId;
+  final int friendInviteId;
 
   @override
   Override overrideWith(
@@ -162,7 +162,7 @@ class AcceptFriendInviteProvider extends AutoDisposeFutureProvider<void> {
 
 mixin AcceptFriendInviteRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `friendInviteId` of this provider.
-  String get friendInviteId;
+  int get friendInviteId;
 }
 
 class _AcceptFriendInviteProviderElement
@@ -170,12 +170,12 @@ class _AcceptFriendInviteProviderElement
   _AcceptFriendInviteProviderElement(super.provider);
 
   @override
-  String get friendInviteId =>
+  int get friendInviteId =>
       (origin as AcceptFriendInviteProvider).friendInviteId;
 }
 
 String _$rejectFriendInviteHash() =>
-    r'484d38ba677d1d93645166c549be246aec888667';
+    r'119aa18fb7436939aeabc4ca2a38e9ba0566e594';
 
 /// See also [rejectFriendInvite].
 @ProviderFor(rejectFriendInvite)
@@ -188,7 +188,7 @@ class RejectFriendInviteFamily extends Family<AsyncValue<void>> {
 
   /// See also [rejectFriendInvite].
   RejectFriendInviteProvider call({
-    required String friendInviteId,
+    required int friendInviteId,
   }) {
     return RejectFriendInviteProvider(
       friendInviteId: friendInviteId,
@@ -223,7 +223,7 @@ class RejectFriendInviteFamily extends Family<AsyncValue<void>> {
 class RejectFriendInviteProvider extends AutoDisposeFutureProvider<void> {
   /// See also [rejectFriendInvite].
   RejectFriendInviteProvider({
-    required String friendInviteId,
+    required int friendInviteId,
   }) : this._internal(
           (ref) => rejectFriendInvite(
             ref as RejectFriendInviteRef,
@@ -251,7 +251,7 @@ class RejectFriendInviteProvider extends AutoDisposeFutureProvider<void> {
     required this.friendInviteId,
   }) : super.internal();
 
-  final String friendInviteId;
+  final int friendInviteId;
 
   @override
   Override overrideWith(
@@ -293,7 +293,7 @@ class RejectFriendInviteProvider extends AutoDisposeFutureProvider<void> {
 
 mixin RejectFriendInviteRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `friendInviteId` of this provider.
-  String get friendInviteId;
+  int get friendInviteId;
 }
 
 class _RejectFriendInviteProviderElement
@@ -301,7 +301,7 @@ class _RejectFriendInviteProviderElement
   _RejectFriendInviteProviderElement(super.provider);
 
   @override
-  String get friendInviteId =>
+  int get friendInviteId =>
       (origin as RejectFriendInviteProvider).friendInviteId;
 }
 

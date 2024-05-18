@@ -11,7 +11,6 @@ class ChatMesssageInputBarWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: context.jTheme.primaryColor),
-      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

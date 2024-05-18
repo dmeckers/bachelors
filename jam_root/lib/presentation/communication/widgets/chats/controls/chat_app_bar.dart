@@ -39,62 +39,42 @@ class ChatAppBar extends ConsumerWidget
         );
   }
 
-  Container _buildBar(
+  ChatBarBase _buildBar(
     BuildContext context,
     ChatModel chat,
     WidgetRef ref,
   ) {
-    return Container(
-      padding: const EdgeInsets.only(top: 16),
-      color: context.jColor.secondaryContainer,
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => context.pop(),
-            icon: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 2),
-          HeroAvatar(
-            isPersonal: false,
-            profile: chat.relatedContact,
-            onTap: () => context.pushNamed(
-              WatchOtherUsersRoutes.otherUserProfilePage.name,
-              pathParameters: {
-                WatchOtherUsersRoutes.otherUserProfilePage.pathParameter!:
-                    chat.relatedContact.id,
-              },
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => context.pushNamed(
-                WatchOtherUsersRoutes.otherUserProfilePage.name,
-                pathParameters: {
-                  WatchOtherUsersRoutes.otherUserProfilePage.pathParameter!:
-                      chat.relatedContact.id,
-                },
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    chat.relatedContact.username ?? 'User',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildChatSubtitle(context, chat),
-                ],
-              ),
-            ),
-          ),
-          ChatPopupMenu(chat: chat),
-        ],
+    return ChatBarBase(
+      avatar: HeroAvatar(
+        isPersonal: false,
+        profile: chat.relatedContact,
+        onTap: () => context.pushNamed(
+          WatchOtherUsersRoutes.otherUserProfilePage.name,
+          pathParameters: {
+            WatchOtherUsersRoutes.otherUserProfilePage.pathParameter!:
+                chat.relatedContact.id,
+          },
+        ),
       ),
+      onTap: () => context.pushNamed(
+        WatchOtherUsersRoutes.otherUserProfilePage.name,
+        pathParameters: {
+          WatchOtherUsersRoutes.otherUserProfilePage.pathParameter!:
+              chat.relatedContact.id,
+        },
+      ),
+      bodyWidgets: [
+        Text(
+          chat.relatedContact.username ?? 'User',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildChatSubtitle(context, chat),
+      ],
+      popupMenu: ChatPopupMenu(chat: chat),
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:jam/application/application.dart';
+import 'package:jam/config/config.dart';
 import 'package:jam/domain/user/profile/json_profile_transformer.dart';
 import 'package:jam/domain/domain.dart';
 
@@ -131,6 +132,9 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       _$UserProfileModelFromJson(json);
+
+  get avatarUrlWithPlaceholder =>
+      avatar ?? ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL;
 
   get isOnlineAndActive =>
       isOnline &&

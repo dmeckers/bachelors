@@ -21,9 +21,9 @@ final class SocialRepository
 
   @override
   Future<bool> sendFriendInvite({required String userId}) async {
-    if (!(await isOnline(_ref))) {
-      return await queue.queueSendFriendInvite(userId: userId);
-    }
+    // if (!(await isOnline(_ref))) {
+    //   return await queue.queueSendFriendInvite(userId: userId);
+    // }
 
     await supabase.from('friend_invites').insert(
       {'user_sent': supabase.auth.currentUser!.id, 'user_received': userId},
@@ -32,26 +32,25 @@ final class SocialRepository
   }
 
   @override
-  Future<void> acceptFriendInvite({required String friendInviteId}) async {
-    return !(await isOnline(_ref))
-        ? await queue.queueAcceptFriendInvite(friendInviteId: friendInviteId)
-        : await supabase
-            .from('friend_invites')
-            .update({'status': 'accepted'}).eq('id', friendInviteId);
+  Future<void> acceptFriendInvite({required int friendInviteId}) async {
+    // return !(await isOnline(_ref))
+    //     ? await queue.queueAcceptFriendInvite(friendInviteId: friendInviteId)
+    //     :
+    await supabase
+        .from('friend_invites')
+        .update({'status': 'accepted'}).eq('id', friendInviteId);
   }
 
   @override
-  Future<void> rejectFriendInvite({required String friendInviteId}) async {
-    return !(await isOnline(_ref))
-        ? await queue.queueRejectFriendInvite(friendInviteId: friendInviteId)
-        : await supabase
-            .from('friend_invites')
-            .delete()
-            .eq('id', friendInviteId);
+  Future<void> rejectFriendInvite({required int friendInviteId}) async {
+    // return !(await isOnline(_ref))
+    //     ? await queue.queueRejectFriendInvite(friendInviteId: friendInviteId)
+    //     :
+    await supabase.from('friend_invites').delete().eq('id', friendInviteId);
   }
 
   @override
-  Future<UserWithRelationshipStatus> getRelationshipStatus({
+  Future<FriendShipStatusModel> getRelationshipStatus({
     required String userId,
   }) async {
     // if (!(await isOnline(_ref))) {
@@ -65,19 +64,15 @@ final class SocialRepository
       'current_user_id': getUserIdOrThrow(),
     }) as Dynamics;
 
-    return (
-      status: RelationshipStatus.fromString(
-        response.first['relationship_status'],
-      ),
-      user: UserProfileModel.fromJson(response.first['profile'])
-    );
+    return FriendShipStatusModel.fromJson(response.first);
   }
 
   @override
   Future<FriendInvites> getFriendInvites() async {
-    return !(await isOnline(_ref))
-        ? await _ref.read(powerSyncSocialServiceProvider).getFriendInvites()
-        : await _getFriendInvites(received: true);
+    // return !(await isOnline(_ref))
+    //     ? await _ref.read(powerSyncSocialServiceProvider).getFriendInvites()
+    //     :
+    return await _getFriendInvites(received: true);
   }
 
   @override

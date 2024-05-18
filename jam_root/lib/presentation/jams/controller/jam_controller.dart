@@ -1,9 +1,7 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jam/domain/events/map/jam_deleted_map_event.dart';
 import 'package:jam/domain/events/map/jam_updated_map_event.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
-import 'package:riverpod/src/framework.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:jam/config/config.dart';
@@ -142,14 +140,12 @@ Future<void> sendJamInvites(
       .read(socialRepositoryProvider)
       .sendJamInvite(jamId: jamId, userIds: users.map((e) => e.id).toList());
 
-  final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
-
-  await supabase.functions.invoke('send_invite_jam_notification', headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer $key'
-  }, body: {
-    'users_fcm_token': users.map((e) => e.fcmToken).toList(),
-  });
+  await PushNotificationsService.sendNotification(
+    NotificationTypeEnum.sendInviteJamNotification,
+    {
+      'users_fcm_token': [...users.map((e) => e.fcmToken)],
+    },
+  );
 }
 
 @riverpod

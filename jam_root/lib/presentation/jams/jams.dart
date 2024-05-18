@@ -8,3 +8,4 @@ export 'list/list.dart';
 export 'extensions/extensions.dart';
 export 'invites_inbox/invites_inbox.dart';
 export 'form_builder/form_builder.dart';
+export 'jam_chat/jam_chat.dart';

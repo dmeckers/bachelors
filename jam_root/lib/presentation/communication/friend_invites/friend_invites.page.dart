@@ -95,9 +95,7 @@ class FriendInvitesPage extends HookConsumerWidget {
     FriendInviteModel invite,
   ) async {
     await ref.read(
-      rejectFriendInviteProvider(
-        friendInviteId: invite.id.toString(),
-      ).future,
+      rejectFriendInviteProvider(friendInviteId: invite.id).future,
     );
 
     if (!context.mounted) return;
@@ -115,9 +113,7 @@ class FriendInvitesPage extends HookConsumerWidget {
     FriendInviteModel invite,
   ) async {
     await ref.read(
-      acceptFriendInviteProvider(
-        friendInviteId: invite.id.toString(),
-      ).future,
+      acceptFriendInviteProvider(friendInviteId: invite.id).future,
     );
 
     final chatId = await supabase.rpc(

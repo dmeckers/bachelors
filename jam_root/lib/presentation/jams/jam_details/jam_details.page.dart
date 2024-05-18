@@ -27,6 +27,7 @@ class JamDetailsPage extends HookConsumerWidget {
     );
 
     return Scaffold(
+      appBar: const SimpleAppBar(title: 'Details'),
       body: jam.maybeWhen(
         data: (data) {
           final buttons = [
@@ -36,6 +37,7 @@ class JamDetailsPage extends HookConsumerWidget {
             _buildEditJamFormButton(context, data),
             _buildInviteFriendsButton(context, data),
             _buildShowOnMapButton(context, data),
+            _buildShowGroupChatButton(context, data),
           ];
           return Container(
             decoration: BoxDecoration(
@@ -54,14 +56,11 @@ class JamDetailsPage extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 100.0),
-                  child: Text(
-                    data.name.jamPostfix(),
-                    textAlign: TextAlign.right,
-                    style: context.jText.displayMedium
-                        ?.copyWith(fontFamily: rubickFamily),
-                  ),
+                Text(
+                  data.name.jamPostfix(),
+                  textAlign: TextAlign.right,
+                  style: context.jText.displayMedium
+                      ?.copyWith(fontFamily: rubickFamily),
                 ),
                 const SizedBox(height: 20),
                 if (!data.isOwner)
@@ -107,6 +106,7 @@ class JamDetailsPage extends HookConsumerWidget {
                                 ))
                           ],
                         ),
+                        const SizedBox(height: 20),
                         JamLocationNameTile(jam: data),
                         JamDivider(color: context.jColor.primary),
                         JamDateTimeTile(jam: data),
@@ -114,6 +114,7 @@ class JamDetailsPage extends HookConsumerWidget {
                         JamParticipantsTile(jam: data),
                         JamDivider(color: context.jColor.primary),
                         JamExtraInformationTile(jam: data),
+                        const SizedBox(height: 20),
                         Flexible(
                           fit: FlexFit.loose,
                           child: ListView.builder(
@@ -179,7 +180,7 @@ class JamDetailsPage extends HookConsumerWidget {
             extra: jam,
           ),
           icon: const Icon(Icons.emoji_people_sharp),
-          label: const Text('Show join requests'),
+          label: const Text('Join requests'),
         ),
       ),
     );
@@ -224,6 +225,26 @@ class JamDetailsPage extends HookConsumerWidget {
     }
 
     return const SizedBox();
+  }
+
+  Widget _buildShowGroupChatButton(BuildContext context, JamModel jam) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Badge(
+        label: const Text('4'),
+        alignment: Alignment.topLeft,
+        offset: const Offset(5, 5),
+        child: TextButton.icon(
+          onPressed: () => context.pushNamed(
+            JamRoutes.jamChat.name,
+            pathParameters: {'jamId': '${jam.id}'},
+            extra: jam,
+          ),
+          icon: const Icon(Icons.chat),
+          label: const Text('Group chat'),
+        ),
+      ),
+    );
   }
 
   Widget _buildShowOnMapButton(BuildContext context, JamModel jam) {

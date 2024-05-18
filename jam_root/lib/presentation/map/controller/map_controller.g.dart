@@ -7,7 +7,7 @@ part of 'map_controller.dart';
 // **************************************************************************
 
 String _$checkRelationShipStatusHash() =>
-    r'adde4a24911c70df419c5524e297ac262ad467de';
+    r'2f12a74cad031ec3d0c4cee01e40e4f8437a2807';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -36,7 +36,7 @@ const checkRelationShipStatusProvider = CheckRelationShipStatusFamily();
 
 /// See also [checkRelationShipStatus].
 class CheckRelationShipStatusFamily
-    extends Family<AsyncValue<UserWithRelationshipStatus>> {
+    extends Family<AsyncValue<FriendShipStatusModel>> {
   /// See also [checkRelationShipStatus].
   const CheckRelationShipStatusFamily();
 
@@ -75,7 +75,7 @@ class CheckRelationShipStatusFamily
 
 /// See also [checkRelationShipStatus].
 class CheckRelationShipStatusProvider
-    extends AutoDisposeFutureProvider<UserWithRelationshipStatus> {
+    extends AutoDisposeFutureProvider<FriendShipStatusModel> {
   /// See also [checkRelationShipStatus].
   CheckRelationShipStatusProvider({
     required String userId,
@@ -110,7 +110,7 @@ class CheckRelationShipStatusProvider
 
   @override
   Override overrideWith(
-    FutureOr<UserWithRelationshipStatus> Function(
+    FutureOr<FriendShipStatusModel> Function(
             CheckRelationShipStatusRef provider)
         create,
   ) {
@@ -129,7 +129,7 @@ class CheckRelationShipStatusProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<UserWithRelationshipStatus> createElement() {
+  AutoDisposeFutureProviderElement<FriendShipStatusModel> createElement() {
     return _CheckRelationShipStatusProviderElement(this);
   }
 
@@ -148,13 +148,13 @@ class CheckRelationShipStatusProvider
 }
 
 mixin CheckRelationShipStatusRef
-    on AutoDisposeFutureProviderRef<UserWithRelationshipStatus> {
+    on AutoDisposeFutureProviderRef<FriendShipStatusModel> {
   /// The parameter `userId` of this provider.
   String get userId;
 }
 
 class _CheckRelationShipStatusProviderElement
-    extends AutoDisposeFutureProviderElement<UserWithRelationshipStatus>
+    extends AutoDisposeFutureProviderElement<FriendShipStatusModel>
     with CheckRelationShipStatusRef {
   _CheckRelationShipStatusProviderElement(super.provider);
 

@@ -1,4 +1,4 @@
-import 'package:jam/application/application.dart';
+import 'package:jam/domain/domain.dart';
 import 'package:location/location.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,7 +13,7 @@ final currentLocationStreamProvider = StreamProvider(
 );
 
 @riverpod
-Future<UserWithRelationshipStatus> checkRelationShipStatus(
+Future<FriendShipStatusModel> checkRelationShipStatus(
   CheckRelationShipStatusRef ref, {
   required String userId,
 }) async =>

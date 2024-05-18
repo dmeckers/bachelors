@@ -12,6 +12,10 @@ extension SetExtensions<T> on Set<T> {
   }
 }
 
+extension GetRandomExtensions<T> on List<T> {
+  T get random => this[Random().nextInt(length)];
+}
+
 extension MapWithIndex<T> on List<T> {
   Iterable<E> mapWithIndex<E>(
     E Function(int index, T item, ItemPositionInList positionInList) map,

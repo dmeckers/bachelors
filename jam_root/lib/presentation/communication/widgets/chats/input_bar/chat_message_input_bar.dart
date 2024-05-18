@@ -62,7 +62,10 @@ class MessageInputBar extends HookConsumerWidget
   }
 
   Consumer _buildBar(
-      Debouncer debouncer, ValueNotifier<bool> isTyping, Debouncer debounced) {
+    Debouncer debouncer,
+    ValueNotifier<bool> isTyping,
+    Debouncer debounced,
+  ) {
     return Consumer(
       builder: (context, ref, child) => Expanded(
         child: TextFormField(

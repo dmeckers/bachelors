@@ -1,21 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jam/application/application.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class SendFriendInviteDialog extends HookConsumerWidget
+class SendFriendInviteBottomSheet extends HookConsumerWidget
     with ProfileRepositoryProviders {
-  const SendFriendInviteDialog({
+  const SendFriendInviteBottomSheet({
     super.key,
     required this.userId,
     required this.onInviteSent,
@@ -26,7 +25,6 @@ class SendFriendInviteDialog extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userProfile = ref.watch(currentUserProfileProvider);
     final otherUserData = ref.watch(
       checkRelationShipStatusProvider(userId: userId),
     );
@@ -38,31 +36,26 @@ class SendFriendInviteDialog extends HookConsumerWidget
       size: BottomSheetSize.medium,
       children: [
         const SizedBox(height: 10),
-        [userProfile, otherUserData].when(
-          data: (data) {
-            final dataList = data.toList();
-            final currentUserProfileData = dataList.first as UserProfileModel;
-            final otherUser = dataList.last as UserWithRelationshipStatus;
-
+        otherUserData.when(
+          data: (otherUser) {
             return Column(
               children: [
                 CircleAvatar(
                   radius: 27,
                   backgroundImage: CachedNetworkImageProvider(
-                    otherUser.user.avatar ??
+                    otherUser.profile.avatar ??
                         ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
                   ),
                 ),
                 Text(
-                  otherUser.user.username ?? 'User',
+                  otherUser.profile.username ?? 'User',
                   style: context.jText.headlineMedium,
                 ),
                 Text(
-                  otherUser.user.profileStatus ?? '',
+                  otherUser.profile.profileStatus ?? '',
                   style: context.jText.headlineSmall,
                 ),
                 _buildBody(
-                  currentUserProfileData,
                   otherUser,
                   context,
                   ref,
@@ -82,24 +75,26 @@ class SendFriendInviteDialog extends HookConsumerWidget
   }
 
   Widget _buildBody(
-      UserProfileModel currentUserProfileData,
-      UserWithRelationshipStatus otherUser,
-      BuildContext context,
-      WidgetRef ref,
-      ValueNotifier<bool> sendingIvnite) {
+    FriendShipStatusModel otherUser,
+    BuildContext context,
+    WidgetRef ref,
+    ValueNotifier<bool> sendingIvnite,
+  ) {
+    final currentUser = ref.watch(userStateProvider).getLastValue();
+
     return Column(
       children: [
         otherUser.status == RelationshipStatus.notFriends
             ? SizedBox(
                 height: 100,
                 child: Text(
-                  'Vibes in common: ${currentUserProfileData.vibes.intersection(otherUser.user.vibes).map((e) => e.name).join(', ')}',
+                  'Vibes in common: ${currentUser.vibes.intersection(otherUser.profile.vibes).map((e) => e.name).join(', ')}',
                   style: context.jText.bodySmall,
                 ),
               )
             : const SizedBox(),
         _buildButton(
-          currentUserProfileData,
+          currentUser,
           otherUser,
           context,
           ref,
@@ -111,67 +106,99 @@ class SendFriendInviteDialog extends HookConsumerWidget
 
   ButtonWithLoader _buildButton(
     UserProfileModel profileData,
-    UserWithRelationshipStatus otherUser,
+    FriendShipStatusModel data,
     BuildContext context,
     WidgetRef ref,
     ValueNotifier<bool> sendingIvnite,
   ) {
+    final styles = switch (data.status) {
+      RelationshipStatus.notFriends => (
+          text: 'Send friend invite',
+          color: Colors.green
+        ),
+      RelationshipStatus.friends => (
+          text: 'Message',
+          color: context.jColor.primary
+        ),
+      RelationshipStatus.friendRequestSent => (
+          text: 'Invite sent',
+          color: Colors.grey
+        ),
+      RelationshipStatus.friendRequestReceived => (
+          text: 'Add friends',
+          color: Colors.green
+        ),
+    };
+
     return ButtonWithLoader(
-      onPressed: () => _handleSendInvite(
-        context,
-        ref,
-        profileData,
-        otherUser,
-        sendingIvnite,
-      ),
-      text: switch (otherUser.status) {
-        RelationshipStatus.notFriends => 'Senf friend invite',
-        RelationshipStatus.friends => 'Message',
-        RelationshipStatus.friendRequestSent => 'Invite sent',
+      onPressed: () async {
+        switch (data.status) {
+          case RelationshipStatus.friendRequestReceived:
+            await _handleAddFriends(context, ref, data: data);
+            break;
+          case RelationshipStatus.notFriends:
+            await _handleSendFriendInvite(context, ref, data: data);
+            break;
+          case RelationshipStatus.friendRequestSent:
+            break;
+          case RelationshipStatus.friends:
+            return context.pushNamed(
+              ChatRoutes.chat.name,
+              pathParameters: {
+                'chatId': '${data.profile.rootChatId}',
+              },
+              extra: data.profile,
+            );
+          default:
+        }
       },
-      color: otherUser.status == RelationshipStatus.friendRequestSent
-          ? Colors.grey
-          : context.jColor.onPrimary,
+      text: styles.text,
+      color: styles.color,
       textStyle: context.jText.bodySmall,
       size: const Size(200, 50),
     );
   }
 
-  _handleSendInvite(
+  _handleAddFriends(
     BuildContext context,
-    WidgetRef ref,
-    UserProfileModel profileData,
-    UserWithRelationshipStatus otherUser,
-    ValueNotifier<bool> sendingIvnite,
-  ) async {
-    if (otherUser.status == RelationshipStatus.friendRequestSent) return;
+    WidgetRef ref, {
+    required FriendShipStatusModel data,
+  }) async {
+    await ref
+        .read(socialRepositoryProvider)
+        .acceptFriendInvite(friendInviteId: data.receivedFriendRequestId!);
 
-    if (otherUser.status == RelationshipStatus.friends) {
-      return context.pushNamed(
-        ChatRoutes.chat.name,
-        pathParameters: {
-          'chatId': otherUser.user.rootChatId.toString(),
-        },
-        extra: otherUser.user,
-      );
+    if (!context.mounted) {
+      return;
     }
 
+    showDialog(
+      context: context,
+      builder: (context) => OkPopup(
+        title: 'You and ${data.profile.username} are now friends!',
+        onOkPressed: () => onInviteSent(),
+      ),
+    );
+  }
+
+  _handleSendFriendInvite(
+    BuildContext context,
+    WidgetRef ref, {
+    required FriendShipStatusModel data,
+  }) async {
     final success = await ref.read(
       sendFriendInviteProvider(userId: userId).future,
     );
 
-    final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
-    sendingIvnite.value = false;
+    // sendingIvnite.value = false;
 
-    await supabase.functions.invoke('send_friend_invite_notifications',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $key'
-        },
-        body: {
-          'user_received': userId,
-          'user_fcm_token': otherUser.user.fcmToken
-        });
+    await PushNotificationsService.sendNotification(
+      NotificationTypeEnum.sendFriendInviteNotifications,
+      {
+        'user_received': userId,
+        'user_fcm_token': data.profile.fcmToken,
+      },
+    );
 
     if (context.mounted) {
       showDialog(
@@ -183,6 +210,6 @@ class SendFriendInviteDialog extends HookConsumerWidget
       );
     }
 
-    sendingIvnite.value = true;
+    // sendingIvnite.value = true;
   }
 }

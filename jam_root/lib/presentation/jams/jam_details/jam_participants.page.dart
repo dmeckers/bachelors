@@ -78,7 +78,7 @@ class JamParticipantsPage extends HookConsumerWidget {
         child: Column(
           children: [
             const SimpleAppBar(
-              title: 'Jam participants page',
+              title: 'Participants page',
             ),
             TabBar(
               controller: tabController,
@@ -166,7 +166,6 @@ class JamParticipantsPage extends HookConsumerWidget {
                   MaterialPageRoute(
                     builder: (ctx) => OtherUserProfilePage(
                       viewedUserId: user.id,
-                      jamId: jamId,
                     ),
                   ),
                 ),
@@ -182,7 +181,7 @@ class JamParticipantsPage extends HookConsumerWidget {
                       'Unknown user',
                 ),
                 subtitle: Text(
-                  'Last seen at ${user.lastActiveAt.atTime}',
+                  'Last seen at ${user.lastActiveAt.nameWithoutYear}',
                   style: const TextStyle(fontSize: 12),
                 ),
                 trailing: TextButton.icon(

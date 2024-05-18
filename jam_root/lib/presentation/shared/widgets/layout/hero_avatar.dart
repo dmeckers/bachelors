@@ -16,16 +16,18 @@ class HeroAvatar extends HookConsumerWidget
     this.radius = 20,
     this.onTap,
     this.isPersonal = true,
+    this.tag,
   });
 
   final bool isPersonal;
   final UserProfileModel profile;
   final double radius;
   final VoidCallback? onTap;
+  final String? tag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Hero(
-        tag: 'profile-${profile.id}',
+        tag: tag ?? 'profile-${profile.id}',
         child: GestureDetector(
           onTap: onTap,
           child: Stack(

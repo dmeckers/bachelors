@@ -285,7 +285,7 @@ class MapWidget extends HookConsumerWidget {
   ) {
     showBottomSheet(
       context: context,
-      builder: (ctx) => SendFriendInviteDialog(
+      builder: (ctx) => SendFriendInviteBottomSheet(
         userId: location.id,
         onInviteSent: () {
           Navigator.of(context).pop();

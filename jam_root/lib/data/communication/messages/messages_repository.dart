@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/application/application.dart';
@@ -78,20 +77,20 @@ final class MessagesRepository
       ),
     );
 
-    final key = dotenv.env[EnvironmentConstants.SUPABASE_API_KEY];
     final user = get<UserProfileModel>();
-    await supabase.functions.invoke('send_message_notification', headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $key'
-    }, body: {
-      'fcm_token': receiver.fcmToken,
-      'message': message.messageText!,
-      'chat_id': chatId,
-      'sender_id': userId,
-      'avatar': user?.avatar,
-      'message_type': 'text',
-      'sender_name': user?.username,
-    });
+
+    PushNotificationsService.sendNotification(
+      NotificationTypeEnum.sendMessageNotification,
+      {
+        'fcm_token': receiver.fcmToken,
+        'message': message.messageText!,
+        'chat_id': chatId,
+        'sender_id': userId,
+        'avatar': user?.avatar,
+        'message_type': 'text',
+        'sender_name': user?.username,
+      },
+    );
 
     return message;
   }

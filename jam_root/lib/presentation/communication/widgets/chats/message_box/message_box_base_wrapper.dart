@@ -28,7 +28,10 @@ class MessageBoxBaseWrapper extends ConsumerWidget with ChattingProviders {
       dismissThresholds: const {
         DismissDirection.endToStart: 0.3,
       },
-      child: _buildWrapper(context),
+      child: MessageBoxBase(
+        message: message,
+        child: child,
+      ),
       confirmDismiss: (direction) async {
         ref
             .read(currentChatStateProvider(message.chatId!).notifier)
@@ -55,30 +58,6 @@ class MessageBoxBaseWrapper extends ConsumerWidget with ChattingProviders {
           const SizedBox(width: 10),
         ],
       ),
-    );
-  }
-
-  _buildWrapper(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.65,
-        minWidth: 10,
-        maxHeight: 500,
-        minHeight: 30,
-      ),
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        color: message.fromMe ? Colors.blueGrey : Colors.green.shade900,
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(16),
-          topRight: const Radius.circular(16),
-          bottomLeft: message.fromMe ? const Radius.circular(16) : Radius.zero,
-          bottomRight:
-              !message.fromMe ? const Radius.circular(16) : Radius.zero,
-        ),
-      ),
-      child: child,
     );
   }
 }

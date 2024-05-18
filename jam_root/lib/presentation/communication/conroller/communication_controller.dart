@@ -11,8 +11,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'communication_controller.g.dart';
 
-// mby someday i will move it to appropriate file
-
 @riverpod
 Stream<FriendInvites> getFriendInvites(GetFriendInvitesRef ref) async* {
   final userId = supaAuth.currentUser!.id;
@@ -64,7 +62,7 @@ Stream<FriendInvites> getFriendInvites(GetFriendInvitesRef ref) async* {
 @riverpod
 Future<void> acceptFriendInvite(
   AcceptFriendInviteRef ref, {
-  required String friendInviteId,
+  required int friendInviteId,
 }) async {
   await ref
       .read(socialRepositoryProvider)
@@ -74,7 +72,7 @@ Future<void> acceptFriendInvite(
 @riverpod
 Future<void> rejectFriendInvite(
   RejectFriendInviteRef ref, {
-  required String friendInviteId,
+  required int friendInviteId,
 }) async {
   await ref
       .read(socialRepositoryProvider)

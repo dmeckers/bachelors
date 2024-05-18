@@ -845,7 +845,7 @@ final getJamInvitesProvider = AutoDisposeFutureProvider<JamInvites>.internal(
 );
 
 typedef GetJamInvitesRef = AutoDisposeFutureProviderRef<JamInvites>;
-String _$sendJamInvitesHash() => r'7bee6b6bd27d0ba1b868bb2068f7bfaa9999697f';
+String _$sendJamInvitesHash() => r'e7266654db8e18f821f069e4f14807272f6ad878';
 
 /// See also [sendJamInvites].
 @ProviderFor(sendJamInvites)

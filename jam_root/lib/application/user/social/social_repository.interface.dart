@@ -1,13 +1,8 @@
 import 'package:jam/application/application.dart';
 import 'package:jam/domain/domain.dart';
 
-typedef UserWithRelationshipStatus = ({
-  RelationshipStatus status,
-  UserProfileModel user
-});
-
 abstract class SocialRepositoryInterface {
-  Future<UserWithRelationshipStatus> getRelationshipStatus({
+  Future<FriendShipStatusModel> getRelationshipStatus({
     required String userId,
   });
 
@@ -15,9 +10,9 @@ abstract class SocialRepositoryInterface {
 
   Future<List<FriendInviteModel>> getFriendInvites();
 
-  Future<void> acceptFriendInvite({required String friendInviteId});
+  Future<void> acceptFriendInvite({required int friendInviteId});
 
-  Future<void> rejectFriendInvite({required String friendInviteId});
+  Future<void> rejectFriendInvite({required int friendInviteId});
 
   Future<List<UserProfileModel>> getFriends();
 
