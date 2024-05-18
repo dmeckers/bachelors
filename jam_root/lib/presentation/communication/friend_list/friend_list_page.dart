@@ -78,6 +78,7 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
           isPersonal: false,
           profile: user,
           radius: 23,
+          navigateOnTap: true,
         ),
         trailing: _buildTileTrailing(user, context),
       ),

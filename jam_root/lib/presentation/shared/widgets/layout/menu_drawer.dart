@@ -137,10 +137,8 @@ class _DrawerHeader extends StatelessWidget {
                 HeroAvatar(
                   profile: profile,
                   radius: 25,
-                  onTap: () => context.pushNamed(
-                    SettingsRoutes.settings.name,
-                    extra: profile,
-                  ),
+                  isPersonal: true,
+                  navigateOnTap: true,
                 ),
                 IconButton(
                   onPressed: () => _toggleThemeMode(context),

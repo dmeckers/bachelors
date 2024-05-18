@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
@@ -17,6 +18,7 @@ class HeroAvatar extends HookConsumerWidget
     this.onTap,
     this.isPersonal = true,
     this.tag,
+    this.navigateOnTap = false,
   });
 
   final bool isPersonal;
@@ -24,12 +26,28 @@ class HeroAvatar extends HookConsumerWidget
   final double radius;
   final VoidCallback? onTap;
   final String? tag;
+  final bool navigateOnTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Hero(
         tag: tag ?? 'profile-${profile.id}',
         child: GestureDetector(
-          onTap: onTap,
+          onTap: navigateOnTap
+              ? () {
+                  isPersonal
+                      ? context.pushNamed(
+                          SettingsRoutes.profile.name,
+                          extra: profile,
+                        )
+                      : context.pushNamed(
+                          WatchOtherUsersRoutes.otherUserProfilePage.name,
+                          pathParameters: {
+                            WatchOtherUsersRoutes.otherUserProfilePage
+                                .pathParameter!: profile.id,
+                          },
+                        );
+                }
+              : onTap,
           child: Stack(
             children: [
               CircleAvatar(

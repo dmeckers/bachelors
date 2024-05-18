@@ -43,7 +43,7 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
     // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
 
     ///
-    /// TODO wait wasn't this supposed to be returned from db?
+    /// Friends of user
     ///
     @HiveField(5)
     @JsonKey(includeFromJson: true, includeToJson: false, includeIfNull: false)
@@ -51,7 +51,7 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
     List<UserProfileModel> friends,
 
     ///
-    /// TODO wait wasn't this supposed to be returned from db?
+    /// User's jams
     ///
     @HiveField(6)
     @JsonKey(includeFromJson: false, includeToJson: false)

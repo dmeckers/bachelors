@@ -13,7 +13,6 @@ BUGS
 > > > CHECK ON MAP IF FORM FILLED/FREEZED/DECLINED BEFORE SHOW BUTTON WITH FORM
 
 > > > Participant list
-> > > Jam details -> invite friend -> error (json `sender` missing)
 > > > distance doesnt work
 > > > invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
 

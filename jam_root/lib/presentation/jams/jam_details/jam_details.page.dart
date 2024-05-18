@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
@@ -37,7 +38,7 @@ class JamDetailsPage extends HookConsumerWidget {
             _buildEditJamFormButton(context, data),
             _buildInviteFriendsButton(context, data),
             _buildShowOnMapButton(context, data),
-            _buildShowGroupChatButton(context, data),
+            _buildShowGroupChatButton(context, ref, data),
           ];
           return Container(
             decoration: BoxDecoration(
@@ -77,13 +78,11 @@ class JamDetailsPage extends HookConsumerWidget {
                         style: context.jText.headlineSmall,
                       ),
                       const SizedBox(width: 10),
-                      CircleAvatar(
+                      HeroAvatar(
+                        profile: data.creator!,
                         radius: 20,
-                        backgroundImage: NetworkImage(
-                          data.creator?.avatar ??
-                              ImagePathConstants
-                                  .DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-                        ),
+                        navigateOnTap: true,
+                        isPersonal: false,
                       )
                     ],
                   ),
@@ -119,10 +118,10 @@ class JamDetailsPage extends HookConsumerWidget {
                           fit: FlexFit.loose,
                           child: ListView.builder(
                             scrollDirection: Axis.vertical,
-                            itemCount: null,
-                            itemBuilder: (context, index) {
-                              return buttons[index % buttons.length];
-                            },
+                            itemCount: 6,
+                            // itemCount:
+                            //     buttons.length < 3 ? buttons.length : null,
+                            itemBuilder: (context, index) => buttons[index],
                           ),
                         )
                       ],
@@ -227,7 +226,17 @@ class JamDetailsPage extends HookConsumerWidget {
     return const SizedBox();
   }
 
-  Widget _buildShowGroupChatButton(BuildContext context, JamModel jam) {
+  Widget _buildShowGroupChatButton(
+    BuildContext context,
+    WidgetRef ref,
+    JamModel jam,
+  ) {
+    final user = ref.watch(userStateProvider).getLastValue();
+
+    if (user.jams.where((element) => jam.id == element.id).isEmpty) {
+      return const SizedBox();
+    }
+
     return Align(
       alignment: Alignment.topLeft,
       child: Badge(

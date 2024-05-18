@@ -48,13 +48,7 @@ class ChatAppBar extends ConsumerWidget
       avatar: HeroAvatar(
         isPersonal: false,
         profile: chat.relatedContact,
-        onTap: () => context.pushNamed(
-          WatchOtherUsersRoutes.otherUserProfilePage.name,
-          pathParameters: {
-            WatchOtherUsersRoutes.otherUserProfilePage.pathParameter!:
-                chat.relatedContact.id,
-          },
-        ),
+        navigateOnTap: true,
       ),
       onTap: () => context.pushNamed(
         WatchOtherUsersRoutes.otherUserProfilePage.name,

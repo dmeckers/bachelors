@@ -90,7 +90,8 @@ final class UserProfileRepository
         final data = (rawData['user_info'] as Json)
           ..flatten()
           ..['vibes'] = rawData['vibes']
-          ..['friends'] = rawData['friends'];
+          ..['friends'] = rawData['friends']
+          ..['jams'] = rawData['jams'];
 
         profile = UserProfileModel.fromJson(data);
       }
