@@ -116,7 +116,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                   visible: showExtraInfo.value,
                   child: Column(
                     children: [
-                      _buildFormInputHeading(context, 'Or name the the spot'),
+                      _buildFormInputHeading(context, 'Name of the place'),
                       _buildFormInput(viewModel.locationNameFormModel),
                       _buildFormInputHeading(context, 'Perhaps some comments?'),
                       _buildFormInput(viewModel.extraInformationFormModel),

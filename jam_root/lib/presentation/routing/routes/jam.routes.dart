@@ -13,6 +13,8 @@ enum JamRoutes {
   jamDetails(),
   jamDetailsParticipants(),
   jamControlParticipants(),
+  jamQrPage(),
+  jamScanQrPage(),
   jamEditVibes(),
   jamEditDetails(),
   editJamForm(),
@@ -46,6 +48,14 @@ final jamRoutes = GoRoute(
         jamId: state.pathParameters['jamId']!,
       ),
       routes: [
+        // GoRoute(
+        //   path: JamRoutes.jamControlParticipants.name,
+        //   name: JamRoutes.jamControlParticipants.name,
+        //   builder: (_, state) => JamControlParticipantsPage(
+        //     jamId: state.pathParameters['jamId']!,
+        //   ),
+        // ),
+
         GoRoute(
           path: JamRoutes.jamChat.name,
           name: JamRoutes.jamChat.name,

@@ -10,7 +10,6 @@ import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
-import 'package:jam_utils/jam_utils.dart';
 
 class InviteFriendToJamDialog extends ConsumerWidget {
   const InviteFriendToJamDialog({super.key, required this.jam});

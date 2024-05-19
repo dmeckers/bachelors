@@ -255,6 +255,31 @@ class JamDetailsPage extends HookConsumerWidget {
     );
   }
 
+  Widget _buildShowQrCode(
+    BuildContext context,
+    WidgetRef ref,
+    JamModel jam,
+  ) {
+    // final user = ref.watch(userStateProvider).getLastValue();
+
+    // if (user.jams.where((element) => jam.id == element.id).isEmpty) {
+    //   return const SizedBox();
+    // }
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: TextButton.icon(
+        onPressed: () => context.pushNamed(
+          JamRoutes.jamChat.name,
+          pathParameters: {'jamId': '${jam.id}'},
+          extra: jam,
+        ),
+        icon: const Icon(Icons.chat),
+        label: const Text('Group chat'),
+      ),
+    );
+  }
+
   Widget _buildShowOnMapButton(BuildContext context, JamModel jam) {
     return Align(
       alignment: Alignment.topLeft,

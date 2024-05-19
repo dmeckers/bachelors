@@ -64,9 +64,7 @@ class JTextFormInput extends HookWidget {
           ),
           child: CustomPaint(
             painter: CustomAnimateBorder(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
+              color: context.jColor.onBackground,
               animationPercent: animation,
               stroke: 4,
             ),

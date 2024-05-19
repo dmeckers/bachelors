@@ -1,17 +1,29 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/generated/l10n.dart';
+import 'package:jam/presentation/map/widgets/widgets.dart';
+import 'package:jam/presentation/shared/widgets/layout/divider.widget.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class PickLocationPage extends StatefulWidget {
+final placesProvider = Provider<GoogleMapsPlaces>((ref) {
+  return GoogleMapsPlaces(
+      apiKey: dotenv.env[EnvironmentConstants.GOOGLE_MAPS_PLACES_API_KEY]);
+});
+
+class PickLocationPage extends HookConsumerWidget {
   static const DEFAULT_ZOOM = 14.4746;
 
   final double initZoom;
@@ -26,110 +38,177 @@ class PickLocationPage extends StatefulWidget {
   });
 
   @override
-  State<PickLocationPage> createState() => _PickLocationPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final position = useState<LatLng?>(null);
+    final mapStyle = useState<String?>(null);
+    final controller = useState<Completer<GoogleMapController>>(
+        Completer<GoogleMapController>());
 
-class _PickLocationPageState extends State<PickLocationPage> {
-  LatLng? position;
-  late String mapStyle;
+    final searchResults = useState<List<Prediction>>([]);
+    final showResults = useState(false);
 
-  final Completer<GoogleMapController> _controller = Completer();
-  @override
-  void initState() {
-    super.initState();
-    _fetchInitialPosition();
-  }
+    useEffect(() {
+      void fetchInitialPosition() async {
+        final loadedMapStyle =
+            await rootBundle.loadString(EnvironmentConstants.MAP_STYLE_PATH);
 
-  Future<void> _fetchInitialPosition() async {
-    final loadedMapStyle =
-        await rootBundle.loadString(EnvironmentConstants.MAP_STYLE_PATH);
+        if (initialPosition != null) {
+          mapStyle.value = loadedMapStyle;
+          position.value = initialPosition;
+          return;
+        }
 
-    if (widget.initialPosition != null) {
-      setState(() {
-        mapStyle = loadedMapStyle;
-        position = widget.initialPosition;
-      });
-      return;
-    }
+        final currentPosition = await _determinePosition();
+        mapStyle.value = loadedMapStyle;
+        position.value =
+            LatLng(currentPosition.latitude, currentPosition.longitude);
+      }
 
-    try {
-      final currentPosition = await _determinePosition();
-      setState(() {
-        mapStyle = loadedMapStyle;
-        position = LatLng(currentPosition.latitude, currentPosition.longitude);
-      });
-    } catch (error) {
-      // Who cares
-    }
-  }
+      fetchInitialPosition();
+      return null;
+    }, []);
 
-  @override
-  Widget build(BuildContext context) {
+    final places = ref.watch(placesProvider);
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: context.jColor.secondary,
       appBar: AppBar(
         title: Text(
-          'Pick location',
+          'Set jam location',
           style: context.jText.bodyMedium,
         ),
-      ),
-      body: Center(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              var maxWidth = constraints.biggest.width;
-              var maxHeight = constraints.biggest.height;
-
-              if (position == null) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              return Stack(
-                children: <Widget>[
-                  SizedBox(
-                    height: maxHeight,
-                    width: maxWidth,
-                    child: _buildMap(),
-                  ),
-                  _buildLocationMarker(maxHeight, maxWidth),
-                  _buildPickLocationButton(maxHeight, maxWidth),
-                  _buildGetCurrentPositionButton(),
-                ],
-              );
-            },
-          ),
+        bottom: MapPlaceTopSearchBar(
+          positionNotifier: position,
+          searchResultsNotifier: searchResults,
+          showResultsNotifier: showResults,
         ),
+      ),
+      body: Column(
+        children: [
+          searchResults.value.isNotEmpty || showResults.value
+              ? LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    height: min(constraints.maxHeight,
+                        searchResults.value.length * 62.0),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const JamDivider(
+                        color: Colors.black,
+                      ),
+                      itemCount: searchResults.value.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          onTap: () async {
+                            // showResults.value = false;
+                            final placeId = searchResults.value[index].placeId;
+                            searchResults.value = [];
+
+                            if (placeId.isEmptyOrNull) return;
+
+                            final response =
+                                await places.getDetailsByPlaceId(placeId!);
+
+                            if (response.result.geometry.isNull) return;
+
+                            controller.value.future.then(
+                              (value) => value.animateCamera(
+                                CameraUpdate.newLatLng(
+                                  LatLng(response.result.geometry!.location.lat,
+                                      response.result.geometry!.location.lng),
+                                ),
+                              ),
+                            );
+                          },
+                          leading: const Icon(
+                            Icons.location_on,
+                            color: Colors.black,
+                          ),
+                          title: Text(
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            searchResults.value[index].description ?? 'nothing',
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                })
+              : const SizedBox(),
+          Expanded(
+            child: Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    var maxWidth = constraints.biggest.width;
+                    var maxHeight = constraints.biggest.height;
+
+                    if (position.value == null) {
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ));
+                    }
+
+                    return Stack(
+                      children: <Widget>[
+                        SizedBox(
+                          height: maxHeight,
+                          width: maxWidth,
+                          child: _buildMap(
+                            positionNotifier: position,
+                            controllerNotifier: controller,
+                            mapStyleNotifier: mapStyle,
+                          ),
+                        ),
+                        _buildLocationMarker(maxHeight, maxWidth),
+                        _buildPickLocationButton(
+                          context,
+                          ref: ref,
+                          positionNotifier: position,
+                          maxHeight: maxHeight,
+                          maxWidth: maxWidth,
+                        ),
+                        _buildGetCurrentPositionButton(
+                          controllerNotifier: controller,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Consumer _buildPickLocationButton(double maxHeight, double maxWidth) {
-    return Consumer(
-      builder: (context, ref, child) {
-        return Positioned(
-          bottom: 30,
-          right: 30,
-          child: ElevatedButton(
-            onPressed: () {
-              widget.jamModel == null
-                  ? ref
-                      .read(freshJamViewModelStateProvider.notifier)
-                      .updateLocation(
-                        position.toString().formatCoords(),
-                      )
-                  : ref
-                      .read(
-                          jamViewModelStateProvider(widget.jamModel!).notifier)
-                      .updateLocation(
-                        position.toString().formatCoords(),
-                      );
-              Navigator.pop(context);
-            },
-            child: const Text('Pick location'),
-          ),
-        );
-      },
+  Widget _buildPickLocationButton(
+    BuildContext context, {
+    required WidgetRef ref,
+    required ValueNotifier<LatLng?> positionNotifier,
+    required double maxHeight,
+    required double maxWidth,
+  }) {
+    return Positioned(
+      bottom: 30,
+      right: 30,
+      child: ElevatedButton(
+        onPressed: () {
+          jamModel == null
+              ? ref
+                  .read(freshJamViewModelStateProvider.notifier)
+                  .updateLocation('${positionNotifier.value}'.formatCoords())
+              : ref
+                  .read(jamViewModelStateProvider(jamModel!).notifier)
+                  .updateLocation('${positionNotifier.value}'.formatCoords());
+          Navigator.pop(context);
+        },
+        child: const Text('Pick location'),
+      ),
     );
   }
 
@@ -151,26 +230,31 @@ class _PickLocationPageState extends State<PickLocationPage> {
     );
   }
 
-  GoogleMap _buildMap() {
+  GoogleMap _buildMap({
+    required ValueNotifier<LatLng?> positionNotifier,
+    required ValueNotifier<Completer<GoogleMapController>> controllerNotifier,
+    required ValueNotifier<String?> mapStyleNotifier,
+  }) {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: position!,
-        zoom: widget.initZoom,
+        target: positionNotifier.value!,
+        zoom: initZoom,
       ),
       zoomControlsEnabled: false,
+      cloudMapId: '5361fdbe18cb28e5',
       onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-        controller.setMapStyle(mapStyle);
+        controllerNotifier.value.complete(controller);
+        // controller.setMapStyle(mapStyleNotifier.value!);
       },
       onCameraMove: (CameraPosition newPosition) {
-        setState(() {
-          position = newPosition.target;
-        });
+        positionNotifier.value = newPosition.target;
       },
     );
   }
 
-  Positioned _buildGetCurrentPositionButton() {
+  Positioned _buildGetCurrentPositionButton({
+    required ValueNotifier<Completer<GoogleMapController>> controllerNotifier,
+  }) {
     return Positioned(
       bottom: 30,
       left: 30,
@@ -190,12 +274,13 @@ class _PickLocationPageState extends State<PickLocationPage> {
         child: IconButton(
           onPressed: () async {
             final position = await _determinePosition();
-            final GoogleMapController controller = await _controller.future;
+            final GoogleMapController controller =
+                await controllerNotifier.value.future;
             controller.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                   target: LatLng(position.latitude, position.longitude),
-                  zoom: widget.initZoom,
+                  zoom: initZoom,
                 ),
               ),
             );

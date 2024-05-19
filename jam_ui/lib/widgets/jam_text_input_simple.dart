@@ -9,12 +9,16 @@ class JInputSimple extends HookWidget {
     this.onChanged,
     this.labelText,
     this.initialValue,
+    this.labelLeadingIcon,
+    this.withTrailingCleaner = false,
   });
 
+  final IconData? labelLeadingIcon;
   final TextEditingController? controller;
   final Function(String value)? onChanged;
   final String? labelText;
   final String? initialValue;
+  final bool withTrailingCleaner;
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +56,7 @@ class JInputSimple extends HookWidget {
       ),
       child: CustomPaint(
         painter: CustomAnimateBorder(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+          color: context.jColor.onBackground,
           animationPercent: animation,
           stroke: 4,
         ),
@@ -62,6 +64,17 @@ class JInputSimple extends HookWidget {
           controller: inputController,
           onChanged: onChanged,
           decoration: InputDecoration(
+            suffixIcon: withTrailingCleaner
+                ? IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      inputController.clear();
+                      onChanged?.call('');
+                    },
+                  )
+                : null,
+            prefixIcon:
+                labelLeadingIcon != null ? Icon(labelLeadingIcon) : null,
             border: InputBorder.none,
             labelText: labelText,
             labelStyle: context.jText.bodySmall,
