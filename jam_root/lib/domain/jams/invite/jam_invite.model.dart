@@ -17,6 +17,7 @@ class JamInviteModel with _$JamInviteModel implements Jsonable<JamInviteModel> {
     @JsonKey(
       includeIfNull: false,
     )
+    // @todo change string on ProcessStepTypeEnum
     required String status,
     required DateTime insertedAt,
     required UserProfileModel sender,

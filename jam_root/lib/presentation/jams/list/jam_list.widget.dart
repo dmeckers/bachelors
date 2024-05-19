@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -58,7 +57,7 @@ class JamListWidget extends HookConsumerWidget {
           FadeIn(
             offset: fadeInOffset,
             child: Text(
-              'No jams yet, create one by yourself!',
+              placeholderTitle ?? 'No jams yet, create one by yourself!',
               style: context.jText.bodyMedium,
             ),
           ),

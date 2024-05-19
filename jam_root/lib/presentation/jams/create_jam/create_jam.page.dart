@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
 
 final class CreateJamPage extends ConsumerWidget {

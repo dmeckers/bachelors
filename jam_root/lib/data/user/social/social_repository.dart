@@ -197,11 +197,12 @@ final class SocialRepository
 
   @override
   Future<void> rejectJamInvite({required int inviteId}) async {
-    return !(await isOnline(_ref))
-        ? await queue.queueRejectJamInvite(jamInviteId: inviteId)
-        : await supabase
-            .from('jam_invites')
-            .update({'status': 'rejected'}).eq('id', inviteId);
+    // return !(await isOnline(_ref))
+    //     ? await queue.queueRejectJamInvite(jamInviteId: inviteId)
+    //     :
+    await supabase
+        .from('jam_invites')
+        .update({'status': 'declined'}).eq('id', inviteId);
   }
 }
 

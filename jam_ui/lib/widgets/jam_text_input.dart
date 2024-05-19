@@ -8,10 +8,12 @@ class JTextFormInput extends HookWidget {
     required this.viewModel,
     this.overrideValidate,
     this.customLabelText,
+    this.leadingIcon,
   });
   final Function? overrideValidate;
   final JamBaseFormModel viewModel;
   final String? customLabelText;
+  final IconData? leadingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +75,7 @@ class JTextFormInput extends HookWidget {
               obscureText: showObscured.value ? obscureText.value : false,
               onChanged: handleOnInputChange,
               decoration: InputDecoration(
+                prefixIcon: leadingIcon != null ? Icon(leadingIcon) : null,
                 border: InputBorder.none,
                 labelText: customLabelText ?? viewModel.labelText,
                 labelStyle: context.jText.bodySmall,

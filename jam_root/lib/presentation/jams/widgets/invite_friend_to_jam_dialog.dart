@@ -163,7 +163,7 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
             : isInvited
                 ? _trailing('Invited', faIcon: FontAwesomeIcons.paperPlane)
                 : selectedFriends.value.contains(friend)
-                    ? const Icon(Icons.mail)
+                    ? _trailing('To send', icon: Icons.mail)
                     : const SizedBox(),
         onTap: () {
           if (isParticipating || isInvited) return;

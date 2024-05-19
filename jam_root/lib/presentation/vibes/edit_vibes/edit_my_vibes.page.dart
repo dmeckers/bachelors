@@ -22,22 +22,22 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
 
   static const MAX_VIBES_AMOUNT = 20;
 
-  searchVibesAI(
-    Vibes selectedVibes,
-    String value,
-    WidgetRef ref,
-    Debouncer debouncer,
-  ) {
-    debouncer(
-      () {
-        if (selectedVibes.length >= MAX_VIBES_AMOUNT || value.isEmpty) return;
+  // searchVibesAI(
+  //   Vibes selectedVibes,
+  //   String value,
+  //   WidgetRef ref,
+  //   Debouncer debouncer,
+  // ) {
+  //   debouncer(
+  //     () {
+  //       if (selectedVibes.length >= MAX_VIBES_AMOUNT || value.isEmpty) return;
 
-        ref
-            .read(searchVibesControllerProvider.notifier)
-            .searchVibesAI(query: value);
-      },
-    );
-  }
+  //       ref
+  //           .read(searchVibesControllerProvider.notifier)
+  //           .searchVibesAI(query: value);
+  //     },
+  //   );
+  // }
 
   searchVibes(
     Vibes selectedVibes,
@@ -104,10 +104,10 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
                             ?.copyWith(color: Colors.red),
                       ),
                     ),
-                  _buildSearchTypeSwitcher(
-                    searchWithAI,
-                    context,
-                  ),
+                  // _buildSearchTypeSwitcher(
+                  //   searchWithAI,
+                  //   context,
+                  // ),
                   const SizedBox(height: 10),
                   _buildSelectedUserChips(
                     selectedVibes,
@@ -123,18 +123,20 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
                   ),
                   const SizedBox(height: 20),
                   if (isDirty.value && selectedVibes.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () => _handleSubmitVibesChange(
-                          context,
-                          ref,
-                          selectedVibes,
-                          isDirty,
-                          canPop,
-                          vibeState,
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ButtonWithLoader(
+                          onPressed: () async => await _handleSubmitVibesChange(
+                            context,
+                            ref,
+                            selectedVibes,
+                            isDirty,
+                            canPop,
+                            vibeState,
+                          ),
+                          text: 'Save',
                         ),
-                        child: const Text('Save'),
                       ),
                     ),
                 ],
@@ -154,59 +156,60 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
     ValueNotifier<bool> isDirty,
     ValueNotifier<bool> canPop,
     ValueNotifier<Vibes> vibeState,
-  ) {
+  ) async {
+    final location = await Location.instance.getLocation();
     ref.read(userStateProvider).updateVibes(vibes: selectedVibes);
-
     ref.invalidate(mapRealtimeProvider);
 
-    Location.instance.getLocation().then(
-          (location) => ref.read(mapRealtimeProvider).fireEvent(
-                UserVibesChangedMapEvent(
-                  latitude: location.latitude!,
-                  longitude: location.longitude!,
-                  userId: supabase.auth.currentUser!.id,
-                  name: localDatabase
-                          .get(
-                            HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
-                          )
-                          ?.name ??
-                      '',
-                  vibes: selectedVibes,
-                ),
-              ),
+    ref.read(mapRealtimeProvider).fireEvent(
+          UserVibesChangedMapEvent(
+            latitude: location.latitude!,
+            longitude: location.longitude!,
+            userId: supabase.auth.currentUser!.id,
+            name: localDatabase
+                    .get(
+                      HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
+                    )
+                    ?.username ??
+                '',
+            vibes: selectedVibes,
+          ),
         );
 
     vibeState.value = selectedVibes;
 
     isDirty.value = false;
     canPop.value = true;
-    context.pop();
+
+    if (context.mounted) {
+      context.pop();
+    }
   }
 
-  ListTile _buildSearchTypeSwitcher(
-    ValueNotifier<bool> searchWithAI,
-    BuildContext context,
-  ) {
-    return ListTile(
-      onTap: () => searchWithAI.value = !searchWithAI.value,
-      contentPadding: EdgeInsets.zero,
-      leading: searchWithAI.value
-          ? const FaIcon(
-              FontAwesomeIcons.wandMagic,
-              size: 15,
-            )
-          : const FaIcon(
-              FontAwesomeIcons.wandMagicSparkles,
-              size: 15,
-            ),
-      title: Text(
-        searchWithAI.value
-            ? 'Default search'
-            : 'Search with AI prompt (experimental)',
-        style: context.jText.headlineSmall,
-      ),
-    );
-  }
+  // ListTile _buildSearchTypeSwitcher(
+  //   ValueNotifier<bool> searchWithAI,
+  //   BuildContext context,
+  // ) {
+  //   return ListTile(
+  //     onTap: () => searchWithAI.value = !searchWithAI.value,
+  //     contentPadding: EdgeInsets.zero,
+  //     leading: searchWithAI.value
+  //         ? const FaIcon(
+  //             FontAwesomeIcons.wandMagic,
+  //             size: 15,
+  //           )
+  //         : const FaIcon(
+  //             FontAwesomeIcons.wandMagicSparkles,
+  //             size: 15,
+  //           ),
+  //     title: Text(
+  //       searchWithAI.value
+  //           ? 'Default search'
+  //           : 'Search with AI prompt (experimental)',
+  //       style: context.jText.headlineSmall,
+  //     ),
+  //   );
+  // }
 
   Padding _buildVibeSelectList(
     AsyncValue<Vibes> vibes,
@@ -285,19 +288,12 @@ class EditUserVibes extends HookConsumerWidget with ProfileRepositoryProviders {
         borderRadius: BorderRadius.circular(10),
       )),
       hintText: 'Find your vibe',
-      onChanged: (value) => searchWithAI.value
-          ? searchVibes(
-              selectedVibes,
-              value,
-              ref,
-              debouncer,
-            )
-          : searchVibesAI(
-              selectedVibes,
-              value,
-              ref,
-              debouncer,
-            ),
+      onChanged: (value) => searchVibes(
+        selectedVibes,
+        value,
+        ref,
+        debouncer,
+      ),
     );
   }
 

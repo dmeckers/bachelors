@@ -55,6 +55,7 @@ class UserState with Storer {
   }
 
   void updateVibes({required List<VibeModel> vibes}) {
+    if (!_state.hasValue) return;
     final profile = _state.value.copyWith(vibes: vibes);
     _state.value = profile;
     vibesRepo.updateVibes(vibes: vibes);

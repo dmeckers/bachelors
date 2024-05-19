@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -28,115 +27,95 @@ class PlanJamFormPage extends HookConsumerWidget {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(
-          child: Column(
-            children: [
-              Text(
-                'JAM PLANNING',
-                textAlign: TextAlign.right,
-                style: context.jText.displayMedium
-                    ?.copyWith(fontFamily: rubickFamily),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              _buildSectionTitle('When will it happen?'),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
-                child: JamDatePicker(jamModel: jam),
-              ),
-              _buildSectionTitle(
-                'Where can i find this?',
-                topPadding: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
-                child: JamLocationPicker(jamModel: jam),
-              ),
-              _buildSectionTitle(
-                'How can i join?',
-                bottomPadding: 20,
-                topPadding: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 20.0,
-                  bottom: 20,
-                  right: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                Text(
+                  'JAM PLANNING',
+                  textAlign: TextAlign.right,
+                  style: context.jText.displayMedium
+                      ?.copyWith(fontFamily: rubickFamily),
                 ),
-                child: ShakesOnNoLongPress(
-                  child: ListTile(
-                    tileColor: context.jTheme.cardColor,
-                    title: Text(
-                      viewModel.joinType.title,
-                      style: context.jText.bodySmall,
+                const SizedBox(height: 60),
+                _buildSectionTitle('What is the name?'),
+                _buildFormInput(
+                  viewModel.nameFormModel,
+                  leadingIcon: Icons.title,
+                ),
+                _buildSectionTitle('When will it happen?'),
+                JamDatePicker(jamModel: jam),
+                const SizedBox(height: 20),
+                _buildSectionTitle('Where can i find this?'),
+                JamLocationPicker(jamModel: jam),
+                const SizedBox(height: 20),
+                _buildSectionTitle('How can i join?'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: ShakesOnNoLongPress(
+                    child: ListTile(
+                      tileColor: context.jTheme.cardColor,
+                      title: Text(
+                        viewModel.joinType.title,
+                        style: context.jText.bodySmall,
+                      ),
+                      leading: const Icon(Icons.link),
+                      onTap: () => showDialog(
+                          context: context,
+                          builder: (ctx) => const JamJoinTypePickerDialog()),
                     ),
-                    leading: const Icon(Icons.link),
-                    onTap: () => showDialog(
-                        context: context,
-                        builder: (ctx) => const JamJoinTypePickerDialog()),
                   ),
                 ),
-              ),
-              if (viewModel.joinType ==
-                      JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
-                  viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)
-                _buildSectionTitle(
-                  'What will be form for registration?',
-                  bottomPadding: 20,
-                ),
-              if (viewModel.joinType ==
-                      JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
-                  viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)
-                JamFormBuilderTile(
-                  jam: jam,
-                ),
-              SizedBox(
-                height: 130,
-                child: Stack(
-                  children: [
-                    _buildWatchingJamJar(),
-                    Row(
-                      children: [
-                        _buildSectionTitle(
-                          'Add some extra info?',
-                          rightPadding: 20,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: InkWell(
-                            onTap: () =>
-                                showExtraInfo.value = !showExtraInfo.value,
-                            child: Ink(
-                              width: 120,
-                              color: Colors.black,
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                showExtraInfo.value ? 'Nah' : 'Yes please!',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
+                if (viewModel.joinType ==
+                        JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
+                    viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)
+                  _buildSectionTitle('What will be form for registration?'),
+                if (viewModel.joinType ==
+                        JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
+                    viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)
+                  JamFormBuilderTile(
+                    jam: jam,
+                  ),
+                SizedBox(
+                  height: 130,
+                  child: Stack(
+                    children: [
+                      _buildWatchingJamJar(),
+                      Row(
+                        children: [
+                          _buildSectionTitle(
+                            'Add some extra info?',
+                            rightPadding: 20,
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: () =>
+                                  showExtraInfo.value = !showExtraInfo.value,
+                              child: Ink(
+                                width: 120,
+                                color: Colors.black,
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  showExtraInfo.value ? 'Nah' : 'Yes please!',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: showExtraInfo.value,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 28.0,
-                    left: 38,
-                    right: 38,
-                    bottom: 10,
+                        ],
+                      ),
+                    ],
                   ),
+                ),
+                Visibility(
+                  visible: showExtraInfo.value,
                   child: Column(
                     children: [
-                      _buildFormInputHeading(context, 'You can give it a name'),
-                      _buildFormInput(viewModel.nameFormModel),
                       _buildFormInputHeading(context, 'Or name the the spot'),
                       _buildFormInput(viewModel.locationNameFormModel),
                       _buildFormInputHeading(context, 'Perhaps some comments?'),
@@ -146,13 +125,13 @@ class PlanJamFormPage extends HookConsumerWidget {
                     ],
                   ),
                 ),
-              ),
-              if (jam.isNotNull)
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: _buildSubmitUpdateButton(viewModel, context, ref),
-                )
-            ],
+                if (jam.isNotNull)
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: _buildSubmitUpdateButton(viewModel, context, ref),
+                  )
+              ],
+            ),
           ),
         )
       ],
@@ -161,7 +140,7 @@ class PlanJamFormPage extends HookConsumerWidget {
 
   Widget _buildSectionTitle(
     String title, {
-    double leftPadding = 38.0,
+    double leftPadding = 0,
     double topPadding = 0,
     double bottomPadding = 0,
     double rightPadding = 0,
@@ -194,10 +173,14 @@ class PlanJamFormPage extends HookConsumerWidget {
     JamBaseFormModel model, {
     double topPadding = 15.0,
     double bottomPadding = 25.0,
+    IconData? leadingIcon,
   }) {
     return Padding(
       padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-      child: JTextFormInput(viewModel: model),
+      child: JTextFormInput(
+        viewModel: model,
+        leadingIcon: leadingIcon,
+      ),
     );
   }
 
@@ -251,7 +234,7 @@ class PlanJamFormPage extends HookConsumerWidget {
 
   Positioned _buildWatchingJamJar() {
     return Positioned(
-      top: -32,
+      top: -30,
       right: 50,
       child: Container(
         width: 120,
