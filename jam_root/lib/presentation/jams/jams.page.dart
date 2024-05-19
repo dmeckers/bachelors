@@ -7,7 +7,6 @@ import 'package:jam/config/config.dart';
 
 import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class JamPage extends HookConsumerWidget {
@@ -15,14 +14,15 @@ class JamPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isSearching = useState(false);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: _buildAppBar(context, ref),
+        appBar: _buildAppBar(context, ref, isSearching),
         body: ref.watch(jams$).when(
               data: (jams) {
                 final notOutdated = [...jams.where((jam) => !jam.isOutdated)];
-
                 return TabBarView(
                   children: [
                     _buildJamList(
@@ -51,14 +51,12 @@ class JamPage extends HookConsumerWidget {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
+  AppBar _buildAppBar(
+    BuildContext context,
+    WidgetRef ref,
+    ValueNotifier<bool> isSearching,
+  ) {
     final jamInvites = ref.watch(getJamInvitesProvider);
-
-    final ownerJams = ref
-        .read(userStateProvider)
-        .getLastValue()
-        .jams
-        .where((jam) => jam.isOwner && !jam.isOutdated);
 
     return AppBar(
       title: Text(
@@ -67,71 +65,79 @@ class JamPage extends HookConsumerWidget {
             ?.copyWith(color: context.jTheme.primaryColor),
       ),
       actions: [
-        IconButton(
-          onPressed: () => _handleToggleCardView(ref),
-          icon: const Icon(Icons.view_list),
-        ),
-        jamInvites.maybeWhen(
-          data: (data) => MenuAnchor(
-            menuChildren: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: MenuItemButton(
-                  onPressed: () =>
-                      context.pushNamed(JamRoutes.invites.name, extra: data),
-                  leadingIcon: const FaIcon(
-                    FontAwesomeIcons.paperPlane,
-                    size: 15,
-                  ),
-                  child: const Text('Jam invites'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: MenuItemButton(
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: isSearching.value
+              ? Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        final ownerJams = ref
+                            .read(jamsStateProvider)
+                            .jams
+                            .where((jam) => jam.isOwner && !jam.isOutdated);
+
+                        ownerJams.length < AppConfigConstants.MAX_JAM_PER_USER
+                            ? context.pushNamed(JamRoutes.createNew.name)
+                            : JSnackBar.show(
+                                context,
+                                title: 'You can only create 3 jams at a time',
+                              );
+                      },
+                      icon: const Icon(
+                        Icons.add,
+                        size: 20,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        isSearching.value = true;
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        size: 20,
+                      ),
+                    ),
+                    jamInvites.maybeWhen(
+                      data: (data) => Badge(
+                        label: Text('${data.length}'),
+                        isLabelVisible: data.isNotEmpty,
+                        alignment: Alignment.topRight,
+                        offset: const Offset(-23, 5),
+                        child: _buildJamInvitesInboxButton(
+                          () => context.pushNamed(JamRoutes.invites.name,
+                              extra: data),
+                        ),
+                      ),
+                      orElse: () => _buildJamInvitesInboxButton(() => {}),
+                    ),
+                    IconButton(
+                      onPressed: () => _handleToggleCardView(ref),
+                      icon: const Icon(
+                        Icons.view_list,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                )
+              : IconButton(
                   onPressed: () {
-                    ownerJams.length <= 3
-                        ? context.pushNamed(JamRoutes.createNew.name)
-                        : JSnackBar.show(
-                            context,
-                            title: 'You can only create 3 jams at a time',
-                          );
+                    isSearching.value = false;
                   },
-                  leadingIcon: const Icon(
-                    Icons.add,
-                    size: 15,
-                  ),
-                  child: const Text('Create jam'),
+                  icon: Icon(Icons.abc_sharp),
                 ),
-              )
-            ],
-            builder: (context, controller, child) => data.isNotEmpty
-                ? Badge(
-                    label: Text(data.length.toString()),
-                    alignment: Alignment.topRight,
-                    offset: const Offset(-23, 5),
-                    child: _buildJamMenuButton(controller),
-                  )
-                : _buildJamMenuButton(controller),
-          ),
-          orElse: () => const Icon(Icons.more_vert),
-        )
+        ),
       ],
-      bottom: TabBar(
-        tabs: [
-          _buildTab(context, 'My jams'),
-          _buildTab(context, 'Upcoming jams'),
-          _buildTab(context, 'Old jams'),
-        ],
-      ),
     );
   }
 
-  IconButton _buildJamMenuButton(MenuController controller) {
+  IconButton _buildJamInvitesInboxButton(void Function()? onPressed) {
     return IconButton(
-      onPressed: () =>
-          controller.isOpen ? controller.close() : controller.open(),
-      icon: const Icon(Icons.more_vert),
+      onPressed: onPressed,
+      icon: const Icon(
+        FontAwesomeIcons.inbox,
+        size: 20,
+      ),
     );
   }
 

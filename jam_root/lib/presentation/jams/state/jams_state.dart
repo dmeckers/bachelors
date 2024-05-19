@@ -39,6 +39,8 @@ class JamsState with Storer {
   updateJam(JamModel jam) {
     _state.value = [jam, ..._state.value.where((j) => jam.id != j.id)];
   }
+
+  Jams get jams => _state.value;
 }
 
 final jamsStateProvider = Provider<JamsState>(

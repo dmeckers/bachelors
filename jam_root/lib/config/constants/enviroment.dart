@@ -11,3 +11,7 @@ final class EnvironmentConstants {
 
   static const PASSWORD_RESET_MAGIC_LINK = 'PASSWORD_RESET_MAGIC_LINK';
 }
+
+final class AppConfigConstants {
+  static const MAX_JAM_PER_USER = 4;
+}
