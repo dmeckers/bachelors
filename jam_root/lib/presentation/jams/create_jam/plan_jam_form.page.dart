@@ -23,6 +23,8 @@ class PlanJamFormPage extends HookConsumerWidget {
         ? ref.watch(freshJamViewModelStateProvider)
         : ref.watch(jamViewModelStateProvider(jam!));
 
+    final useQrState = useState(false);
+
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
@@ -82,7 +84,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                       Row(
                         children: [
                           _buildSectionTitle(
-                            'Add some extra info?',
+                            'Extra information',
                             rightPadding: 20,
                           ),
                           Align(
@@ -95,7 +97,9 @@ class PlanJamFormPage extends HookConsumerWidget {
                                 color: Colors.black,
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  showExtraInfo.value ? 'Nah' : 'Yes please!',
+                                  showExtraInfo.value
+                                      ? 'Show less'
+                                      : 'Show more',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -114,9 +118,10 @@ class PlanJamFormPage extends HookConsumerWidget {
                   visible: showExtraInfo.value,
                   child: Column(
                     children: [
+                      _buildEnableQrs(viewModel, useQrState),
                       _buildFormInputHeading(context, 'Name of the place'),
                       _buildFormInput(viewModel.locationNameFormModel),
-                      _buildFormInputHeading(context, 'Perhaps some comments?'),
+                      _buildFormInputHeading(context, 'Extra information'),
                       _buildFormInput(viewModel.extraInformationFormModel),
                       _buildFormInputHeading(context, 'Background image'),
                       JamImagePicker(jamModel: jam),
@@ -133,6 +138,28 @@ class PlanJamFormPage extends HookConsumerWidget {
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildEnableQrs(
+    JamViewModel viewModel,
+    ValueNotifier<bool> useQrState,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Row(
+        children: [
+          const Text(
+            'Use QR codes for check-in',
+            style: TextStyle(fontSize: 14),
+          ),
+          const SizedBox(width: 10),
+          Switch.adaptive(
+            value: useQrState.value,
+            onChanged: (v) => useQrState.value = v,
+          ),
+        ],
+      ),
     );
   }
 
@@ -203,7 +230,7 @@ class PlanJamFormPage extends HookConsumerWidget {
         ),
       ),
       child: const Text(
-        '٩( ᐛ )و Update jam details',
+        'Update jam details \u{1F525}',
         style: TextStyle(color: Colors.white),
       ),
     );
@@ -233,7 +260,7 @@ class PlanJamFormPage extends HookConsumerWidget {
   Positioned _buildWatchingJamJar() {
     return Positioned(
       top: -30,
-      right: 50,
+      right: 80,
       child: Container(
         width: 120,
         height: 120,

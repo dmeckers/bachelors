@@ -121,7 +121,6 @@ class PushNotificationsService {
 
   static _handleMessageNotification(RemoteMessage message) {
     final routerContext = ROUTER_KEY.currentContext;
-    // we need this context af
     if (routerContext == null) return;
 
     final router = GoRouter.of(routerContext);

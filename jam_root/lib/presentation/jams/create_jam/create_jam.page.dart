@@ -12,8 +12,6 @@ final class CreateJamPage extends ConsumerWidget {
   final LatLng? position;
 
   String? _canSubmit(JamViewModel viewModel) {
-    // viewModel.nameFormModel.isValid &&
-
     final isFilled = viewModel.nameFormModel.isValid &&
         viewModel.descriptionFormModel.isValid &&
         viewModel.locationNameFormModel.isValid &&
@@ -102,7 +100,7 @@ final class CreateJamPage extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final validationErrors = _canSubmit(viewModel);
-    final kamoji = badKamojis[viewModel.hashCode % badKamojis.length];
+    // final kamoji = badKamojis[viewModel.hashCode % badKamojis.length];
     return ElevatedButton(
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
@@ -119,9 +117,7 @@ final class CreateJamPage extends ConsumerWidget {
         validationErrors == null,
       ),
       child: Text(
-        validationErrors == null
-            ? 'Let\'s jam \u{1F525}'
-            : '$kamoji $validationErrors',
+        validationErrors ?? 'Let\'s jam \u{1F525}',
         style: const TextStyle(color: Colors.white),
       ),
     );

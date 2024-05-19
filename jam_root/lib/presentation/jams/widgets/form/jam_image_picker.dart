@@ -38,8 +38,8 @@ class JamImagePicker extends ConsumerWidget {
             : null,
         title: Text(
           isImageSelected || (hasBackgrounUrl && !dropBackground)
-              ? 'Changed your mind?'
-              : 'Because you can',
+              ? 'Click here to change an image'
+              : 'Click here to add an image',
           style: context.jText.bodySmall,
         ),
         leading: const Icon(Icons.image),

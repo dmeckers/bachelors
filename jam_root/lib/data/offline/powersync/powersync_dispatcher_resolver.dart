@@ -65,7 +65,6 @@ Future _defaultUpdateHandler(PostgrestClient rest, CrudEntry entry) {
 
 Future _updateJamHandler(PostgrestClient rest, CrudEntry entry) async {
   final data = Json.of(entry.opData!);
-  // fucked up but who cares
   final vibes = await supabase
       .from('jams_vibes')
       .select('vibe_id')
