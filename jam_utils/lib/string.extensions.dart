@@ -33,7 +33,7 @@ extension StringExtensions on String {
   String formatCoords() {
     final cords = split('(')[1].split(')')[0].split(',');
 
-    return 'Lat: ${cords.last.trim()}, Lng: ${cords.first.trim()}';
+    return 'Lat: ${cords.first.trim()}, Lng: ${cords.last.trim()}';
   }
 
   ({double lat, double lon}) extractCords() {

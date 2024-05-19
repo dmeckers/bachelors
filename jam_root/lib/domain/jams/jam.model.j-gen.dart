@@ -362,6 +362,51 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
   void updateImage(File? value) {
     state = state.copyWith(image: value ?? File(' '));
   }
+
+  void updateCreatorId(String? value) {
+    final controller =
+        state.creatorIdFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateDescription(String? value) {
+    final controller =
+        state.descriptionFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateExtraInformation(String? value) {
+    final controller =
+        state.extraInformationFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateLocationName(String? value) {
+    final controller =
+        state.locationNameFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateName(String value) {
+    final controller =
+        state.nameFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
 }
 
 final jamViewModelStateProvider = StateNotifierProvider.family
@@ -476,6 +521,51 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
 
   void updateImage(File? value) {
     state = state.copyWith(image: value ?? File(' '));
+  }
+
+  void updateCreatorId(String? value) {
+    final controller =
+        state.creatorIdFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateDescription(String? value) {
+    final controller =
+        state.descriptionFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateExtraInformation(String? value) {
+    final controller =
+        state.extraInformationFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateLocationName(String? value) {
+    final controller =
+        state.locationNameFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
+  }
+
+  void updateName(String value) {
+    final controller =
+        state.nameFormModel.controller ?? TextEditingController();
+
+    controller.text = value ?? '';
+
+    state = state;
   }
 }
 

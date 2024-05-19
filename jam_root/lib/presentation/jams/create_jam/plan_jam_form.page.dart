@@ -50,22 +50,20 @@ class PlanJamFormPage extends HookConsumerWidget {
                 JamLocationPicker(jamModel: jam),
                 const SizedBox(height: 20),
                 _buildSectionTitle('How can i join?'),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: ShakesOnNoLongPress(
-                    child: ListTile(
-                      tileColor: context.jTheme.cardColor,
-                      title: Text(
-                        viewModel.joinType.title,
-                        style: context.jText.bodySmall,
-                      ),
-                      leading: const Icon(Icons.link),
-                      onTap: () => showDialog(
-                          context: context,
-                          builder: (ctx) => const JamJoinTypePickerDialog()),
+                ShakesOnNoLongPress(
+                  child: ListTile(
+                    tileColor: context.jTheme.cardColor,
+                    title: Text(
+                      viewModel.joinType.title,
+                      style: context.jText.bodySmall,
                     ),
+                    leading: const Icon(Icons.link),
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (ctx) => const JamJoinTypePickerDialog()),
                   ),
                 ),
+                const SizedBox(height: 20),
                 if (viewModel.joinType ==
                         JamJoinTypeEnum.freetoJoinAfterFormAndApprove ||
                     viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm)

@@ -9,10 +9,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/map/widgets/widgets.dart';
 import 'package:jam/presentation/shared/widgets/layout/divider.widget.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -197,14 +197,38 @@ class PickLocationPage extends HookConsumerWidget {
       bottom: 30,
       right: 30,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
+          final position = positionNotifier.value!;
+          final placemarks = await geocoding.placemarkFromCoordinates(
+              position.latitude, position.longitude);
+
+          if (placemarks.isNotEmpty) {
+            final locationName =
+                '${placemarks.first.street}, ${placemarks.first.locality}';
+
+            jamModel == null
+                ? ref
+                    .read(freshJamViewModelStateProvider)
+                    .locationNameFormModel
+                    .controller!
+                    .text = locationName
+                : ref
+                    .read(jamViewModelStateProvider(jamModel!))
+                    .locationNameFormModel
+                    .controller!
+                    .text = locationName;
+          }
+
           jamModel == null
               ? ref
                   .read(freshJamViewModelStateProvider.notifier)
-                  .updateLocation('${positionNotifier.value}'.formatCoords())
+                  .updateLocation('$position'.formatCoords())
               : ref
                   .read(jamViewModelStateProvider(jamModel!).notifier)
-                  .updateLocation('${positionNotifier.value}'.formatCoords());
+                  .updateLocation('$position'.formatCoords());
+
+          if (!context.mounted) return;
+
           Navigator.pop(context);
         },
         child: const Text('Pick location'),

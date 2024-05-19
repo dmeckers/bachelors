@@ -32,7 +32,7 @@ class MapPage extends HookConsumerWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          'Set jam location',
+          'Local area',
           style: context.jText.bodyMedium,
         ),
         bottom: MapPlaceTopSearchBar(

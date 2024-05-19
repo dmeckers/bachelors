@@ -478,6 +478,20 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
       buffer.writeln('\n');
     }
 
+    for (var element in visitor.forTextFields.entries) {
+      buffer.writeln(
+          'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
+      buffer.writeln("""
+        final controller = state.${element.key}FormModel.controller ?? TextEditingController();
+
+        controller.text = value;
+
+        state = state;
+        """);
+      buffer.writeln('}');
+      buffer.writeln('\n');
+    }
+
     buffer.writeln('}');
 
     buffer.writeln('\n');
@@ -563,6 +577,20 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
           'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
       buffer.writeln(
           'state = state.copyWith(${element.key}: value  ?? File(\' \'));');
+      buffer.writeln('}');
+      buffer.writeln('\n');
+    }
+
+    for (var element in visitor.forTextFields.entries) {
+      buffer.writeln(
+          'void update${_capitalizeFirstLetter(element.key)}(${element.value} value) {');
+      buffer.writeln("""
+        final controller = state.${element.key}FormModel.controller ?? TextEditingController();
+
+        controller.text = value ?? '';
+
+        state = state;
+        """);
       buffer.writeln('}');
       buffer.writeln('\n');
     }
