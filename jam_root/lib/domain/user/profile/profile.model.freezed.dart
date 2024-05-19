@@ -49,17 +49,17 @@ mixin _$UserProfileModel {
   String? get profileStatus =>
       throw _privateConstructorUsedError; // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// Friends of user
   ///
   @HiveField(5)
   @JsonKey(includeFromJson: true, includeToJson: false, includeIfNull: false)
   List<UserProfileModel> get friends => throw _privateConstructorUsedError;
 
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// User's jams
   ///
   @HiveField(6)
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(includeIfNull: false, includeToJson: false)
   List<JamModel> get jams => throw _privateConstructorUsedError;
 
   /// Future feature
@@ -158,7 +158,7 @@ abstract class $UserProfileModelCopyWith<$Res> {
           includeFromJson: true, includeToJson: false, includeIfNull: false)
       List<UserProfileModel> friends,
       @HiveField(6)
-      @JsonKey(includeFromJson: false, includeToJson: false)
+      @JsonKey(includeIfNull: false, includeToJson: false)
       List<JamModel> jams,
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -313,7 +313,7 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
           includeFromJson: true, includeToJson: false, includeIfNull: false)
       List<UserProfileModel> friends,
       @HiveField(6)
-      @JsonKey(includeFromJson: false, includeToJson: false)
+      @JsonKey(includeIfNull: false, includeToJson: false)
       List<JamModel> jams,
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -463,7 +463,7 @@ class _$UserProfileModelImpl extends _UserProfileModel {
           includeFromJson: true, includeToJson: false, includeIfNull: false)
       final List<UserProfileModel> friends = const [],
       @HiveField(6)
-      @JsonKey(includeFromJson: false, includeToJson: false)
+      @JsonKey(includeIfNull: false, includeToJson: false)
       final List<JamModel> jams = const [],
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -540,12 +540,12 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   final String? profileStatus;
 // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// Friends of user
   ///
   final List<UserProfileModel> _friends;
 // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// Friends of user
   ///
   @override
   @HiveField(5)
@@ -557,16 +557,16 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   }
 
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// User's jams
   ///
   final List<JamModel> _jams;
 
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// User's jams
   ///
   @override
   @HiveField(6)
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(includeIfNull: false, includeToJson: false)
   List<JamModel> get jams {
     if (_jams is EqualUnmodifiableListView) return _jams;
     // ignore: implicit_dynamic_type
@@ -769,7 +769,7 @@ abstract class _UserProfileModel extends UserProfileModel {
           includeFromJson: true, includeToJson: false, includeIfNull: false)
       final List<UserProfileModel> friends,
       @HiveField(6)
-      @JsonKey(includeFromJson: false, includeToJson: false)
+      @JsonKey(includeIfNull: false, includeToJson: false)
       final List<JamModel> jams,
       @HiveField(8)
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -830,7 +830,7 @@ abstract class _UserProfileModel extends UserProfileModel {
   String? get profileStatus;
   @override // @JsonKey(includeFromJson: false, includeToJson: false) required UserProfileSettingsModel profileSettings,
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// Friends of user
   ///
   @HiveField(5)
   @JsonKey(includeFromJson: true, includeToJson: false, includeIfNull: false)
@@ -838,10 +838,10 @@ abstract class _UserProfileModel extends UserProfileModel {
   @override
 
   ///
-  /// TODO wait wasn't this supposed to be returned from db?
+  /// User's jams
   ///
   @HiveField(6)
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(includeIfNull: false, includeToJson: false)
   List<JamModel> get jams;
   @override
 

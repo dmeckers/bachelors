@@ -8,7 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class InviteFriendToJamDialog extends ConsumerWidget {
   const InviteFriendToJamDialog({super.key, required this.jam});
@@ -17,7 +19,6 @@ class InviteFriendToJamDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final friends = ref.watch(getFriendsProvider);
     final invitesAndParticipants = ref.watch(
       getJamInvitesAndParticipantsProvider(jamId: jam.id!),
     );
@@ -32,10 +33,12 @@ class InviteFriendToJamDialog extends ConsumerWidget {
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.8,
-            child: [invitesAndParticipants, friends].when(
-              data: (data) {
-                final (invites, participants) = data.first as InvitesAndMembers;
-                final friendList = data.last as Users;
+            child: invitesAndParticipants.when(
+              data: (invitesAndParticipants) {
+                final (invites, participants) = invitesAndParticipants;
+                // final friendList = data.last as Users;
+                final user = ref.watch(userStateProvider).getLastValue();
+                final friendList = user.friends;
 
                 return friendList.isNotEmpty
                     ? _SendInviteFriendListPicker(

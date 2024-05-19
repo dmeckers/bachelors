@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
+part 'jam_join_type.enum.g.dart';
+
+@HiveType(typeId: 31)
 enum JamJoinTypeEnum {
+  @HiveField(0)
   freeToJoin,
+  @HiveField(1)
   invitesOnly,
+  @HiveField(2)
   freeToJoinAfterForm,
+  @HiveField(3)
   freetoJoinAfterFormAndApprove,
+  @HiveField(4)
   requestToJoin;
 
   String get title {

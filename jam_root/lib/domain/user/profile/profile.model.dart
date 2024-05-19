@@ -54,7 +54,7 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
     /// User's jams
     ///
     @HiveField(6)
-    @JsonKey(includeFromJson: false, includeToJson: false)
+    @JsonKey(includeIfNull: false, includeToJson: false)
     @Default([])
     List<JamModel> jams,
 

@@ -32,7 +32,6 @@ class JamDetailsPage extends HookConsumerWidget {
       body: jam.maybeWhen(
         data: (data) {
           final buttons = [
-            // _buildShowJamReque(context, data),
             _buildShowEnterRequests(context, data),
             _buildEditJamButton(context, data),
             _buildEditJamFormButton(context, data),

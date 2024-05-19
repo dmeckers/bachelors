@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
 
-import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class JamPage extends HookConsumerWidget {
@@ -16,35 +19,46 @@ class JamPage extends HookConsumerWidget {
       length: 3,
       child: Scaffold(
         appBar: _buildAppBar(context, ref),
-        body: TabBarView(
-          children: [
-            Consumer(
-              builder: (ctx, ref, child) => _buildAsyncValueWrapper(
-                ctx,
-                ref.watch(userJamControllerProvider),
+        body: ref.watch(jams$).when(
+              data: (jams) {
+                final notOutdated = [...jams.where((jam) => !jam.isOutdated)];
+
+                return TabBarView(
+                  children: [
+                    _buildJamList(
+                      context,
+                      [...notOutdated.where((jam) => jam.isOwner)],
+                    ),
+                    _buildJamList(
+                      context,
+                      notOutdated,
+                    ),
+                    _buildJamList(
+                      context,
+                      [...jams.where((jam) => jam.isOutdated)],
+                      true,
+                    ),
+                  ],
+                );
+              },
+              error: (e, s) => const JamErrorBox(
+                  errorMessage: 'Whoops! Something went wrong fetching jams!'),
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
               ),
             ),
-            Consumer(
-              builder: (ctx, ref, child) => _buildAsyncValueWrapper(
-                ctx,
-                ref.watch(getParticipatingJamsProvider),
-              ),
-            ),
-            Consumer(
-              builder: (ctx, ref, child) => _buildAsyncValueWrapper(
-                ctx,
-                ref.watch(getOutdatedJamsProvider),
-                true,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
   AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     final jamInvites = ref.watch(getJamInvitesProvider);
+
+    final ownerJams = ref
+        .read(userStateProvider)
+        .getLastValue()
+        .jams
+        .where((jam) => jam.isOwner && !jam.isOutdated);
 
     return AppBar(
       title: Text(
@@ -54,7 +68,7 @@ class JamPage extends HookConsumerWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () => _handleToggleCardView(context, ref),
+          onPressed: () => _handleToggleCardView(ref),
           icon: const Icon(Icons.view_list),
         ),
         jamInvites.maybeWhen(
@@ -75,7 +89,14 @@ class JamPage extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: MenuItemButton(
-                  onPressed: () => context.pushNamed(JamRoutes.createNew.name),
+                  onPressed: () {
+                    ownerJams.length <= 3
+                        ? context.pushNamed(JamRoutes.createNew.name)
+                        : JSnackBar.show(
+                            context,
+                            title: 'You can only create 3 jams at a time',
+                          );
+                  },
                   leadingIcon: const Icon(
                     Icons.add,
                     size: 15,
@@ -93,7 +114,6 @@ class JamPage extends HookConsumerWidget {
                   )
                 : _buildJamMenuButton(controller),
           ),
-          //like literally idgaf
           orElse: () => const Icon(Icons.more_vert),
         )
       ],
@@ -125,30 +145,18 @@ class JamPage extends HookConsumerWidget {
     );
   }
 
-  _buildAsyncValueWrapper(
+  _buildJamList(
     BuildContext context,
-    AsyncValue<List<JamModel>> jams, [
+    Jams jams, [
     bool outdated = false,
   ]) =>
-      Container(
-        child: jams.when(
-          data: (data) => JamListWidget(
-            jams: data,
-            canCreate: !outdated,
-            placeholderTitle: outdated ? 'No jams here' : null,
-          ),
-          error: (error, _) => const Center(
-            child: JamErrorBox(
-              errorMessage: 'Whoops! Failed to load jams',
-            ),
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
+      JamListWidget(
+        jams: jams,
+        canCreate: !outdated,
+        placeholderTitle: outdated ? 'No jams here' : null,
       );
 
-  _handleToggleCardView(BuildContext context, WidgetRef ref) {
+  _handleToggleCardView(WidgetRef ref) {
     ref.read(jamCardViewStateProvider.notifier).toggle();
   }
 }

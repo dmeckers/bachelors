@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:jam/config/config.dart';
 
 import 'package:jam/domain/domain.dart';
 
@@ -43,5 +44,7 @@ class JamInviteModel with _$JamInviteModel implements Jsonable<JamInviteModel> {
 }
 
 class _JamInviteJsonTransformer {
-  static Object? readJamName(json, value) => json['jam']['name'];
+  static Object? readJamName(json, value) => (json as Json).containsKey('jam')
+      ? json['jam']['name']
+      : json['jam_name'];
 }

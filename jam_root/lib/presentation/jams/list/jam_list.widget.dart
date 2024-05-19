@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -32,12 +33,17 @@ class JamListWidget extends HookConsumerWidget {
 
     return AnimatedSwitcher(
       duration: DURATION_200_MS,
-      child: ListView.builder(
-        itemBuilder: (ctx, i) => switch (viewState) {
-          JamCardView.big => BigJamCard(jam: jams[i]),
-          JamCardView.small => SmallJamCard(jam: jams[i]),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await ref.read(jamsStateProvider).refetch();
         },
-        itemCount: jams.length,
+        child: ListView.builder(
+          itemBuilder: (ctx, i) => switch (viewState) {
+            JamCardView.big => BigJamCard(jam: jams[i]),
+            JamCardView.small => SmallJamCard(jam: jams[i]),
+          },
+          itemCount: jams.length,
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -232,9 +233,11 @@ class PlanJamFormPage extends HookConsumerWidget {
     JamViewModel viewModel,
     WidgetRef ref,
   ) async {
-    await ref.read(updateJamProvider(jam: viewModel.castToModel()).future);
+    final model = viewModel.castToModel();
+    await ref.read(updateJamProvider(jam: model).future);
+    ref.read(jamsStateProvider).updateJam(model);
+    ref.invalidate(jamDetailsStateProvider(model.id!));
 
-    ref.invalidate(userJamControllerProvider);
     if (!context.mounted) return;
     showDialog(
       context: context,

@@ -97,6 +97,10 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
               ?.map((e) => UserProfileModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      jams: (json['jams'] as List<dynamic>?)
+              ?.map((e) => JamModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       vibes: (json['vibes'] as List<dynamic>?)
               ?.map((e) => VibeModel.fromJson(e as Map<String, dynamic>))
               .toList() ??

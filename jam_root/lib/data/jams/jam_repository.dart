@@ -40,7 +40,6 @@ final class JamsRepository extends JamRepositoryInterface
     final jamWithoutImage = jam.copyWith(image: null);
 
     final json = jamWithoutImage.backfilled.toJson();
-
     final jamId = await supabase.rpc(POST_RPC, params: json);
     final userId = getUserIdOrThrow();
 
@@ -63,7 +62,21 @@ final class JamsRepository extends JamRepositoryInterface
     if (!hasNewImage && !jam.dropBackground) {
       await supabase.rpc(
         UPDATE_RPC,
-        params: json..putIfAbsent('background_url', () => null),
+        params: {
+          'background_url': jam.backgroundUrl,
+          'date': '${jam.date}',
+          'description': jam.description,
+          'extra_information': jam.extraInformation,
+          'icon_url': jam.iconUrl,
+          'id': jam.id,
+          'invites_per_member': jam.invitesPerMember,
+          'join_type': jam.joinType.name,
+          'location': json['location'],
+          'location_name': jam.locationName,
+          'max_participants': jam.maxParticipants,
+          'name': jam.name,
+          'related_vibes': json['related_vibes'],
+        },
       );
 
       return jam;
@@ -83,10 +96,21 @@ final class JamsRepository extends JamRepositoryInterface
 
     await supabase.rpc(
       UPDATE_RPC,
-      params: json.replaceKeyValue(
-        key: 'background_url',
-        value: jam.dropBackground ? null : fileName,
-      ),
+      params: {
+        'background_url': jam.dropBackground ? null : fileName,
+        'date': '${jam.date}',
+        'description': jam.description,
+        'extra_information': jam.extraInformation,
+        'icon_url': jam.iconUrl,
+        'id': jam.id,
+        'invites_per_member': jam.invitesPerMember,
+        'join_type': jam.joinType.name,
+        'location': json['location'],
+        'location_name': jam.locationName,
+        'max_participants': jam.maxParticipants,
+        'name': jam.name,
+        'related_vibes': json['related_vibes'],
+      },
     );
 
     return jam;

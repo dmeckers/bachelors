@@ -21,56 +21,148 @@ JamModel _$JamModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$JamModel {
   @JsonKey(includeIfNull: false)
+  @HiveField(0)
   int? get id => throw _privateConstructorUsedError;
+  /**
+     * Creator of the jam
+     */
+  @HiveField(1)
   @JsonKey(includeToJson: false, includeIfNull: false)
   UserProfileModel? get creator => throw _privateConstructorUsedError;
+  /**
+     * Jam creator id
+     */
+  @HiveField(2)
   @JsonKey(includeToJson: false)
   String? get creatorId => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  /**
+     * Description of the jam
+     */
+  @HiveField(3)
   String? get description => throw _privateConstructorUsedError;
+  /**
+     * Join requests for the jam
+     */
+  @HiveField(4)
+  @JsonKey(includeToJson: false)
+  List<JamJoinRequestModel> get joinRequests =>
+      throw _privateConstructorUsedError;
+  /**
+     * Jam participants
+     */
+  @HiveField(5)
+  @JsonKey(includeToJson: false)
+  double? get lat => throw _privateConstructorUsedError;
+  /**
+     * longitude of the jam
+     */
+  @HiveField(6)
+  @JsonKey(includeToJson: false)
+  double? get lon => throw _privateConstructorUsedError;
+  /**
+     * Date of the jam
+     */
+  @HiveField(7)
+  DateTime get date => throw _privateConstructorUsedError;
+  /**
+     * Image of the jam
+     */
+  @HiveField(8)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  File? get image => throw _privateConstructorUsedError;
+  /**
+     * probably will not be used in alpha version
+     */
+  @HiveField(9)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  int? get chatId => throw _privateConstructorUsedError;
+  /**
+     * Maximum number of participants
+     */
+  @HiveField(10)
+  @Assert('maxParticipants > -2')
+  int get maxParticipants => throw _privateConstructorUsedError;
+  /**
+     * Number of invites per member
+     */
+  @HiveField(11)
+  @Assert('invitesPerMember >-2')
+  int get invitesPerMember => throw _privateConstructorUsedError;
+  /**
+     * Extra information about the jam
+     */
+  @HiveField(12)
+  String? get extraInformation => throw _privateConstructorUsedError;
+  /**
+     * Related community
+     */
+  @HiveField(13)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  CommunityModel? get relatedCommunity => throw _privateConstructorUsedError;
+  /**
+     * Icon of the jam
+     */
+  @HiveField(14)
+  @JsonKey(includeIfNull: false)
+  String get iconUrl => throw _privateConstructorUsedError;
+  /**
+     * Jam admins
+     */
+  @JsonKey(includeToJson: false, includeIfNull: false, includeFromJson: false)
+  @HiveField(15)
+  List<UserProfileModel> get admins => throw _privateConstructorUsedError;
+  /**
+     * Jam participants
+     */
+  @HiveField(16)
+  @JsonKey(includeToJson: false, includeIfNull: false)
+  List<UserProfileModel> get participants => throw _privateConstructorUsedError;
+  /**
+     * Jam background
+     */
+  @HiveField(17)
+  @JsonKey(includeIfNull: false)
+  String? get backgroundUrl => throw _privateConstructorUsedError;
+  /**
+     * Related vibes
+     */
+  @HiveField(18)
+  @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+  List<VibeModel> get relatedVibes => throw _privateConstructorUsedError;
+  /**
+     * Jam background
+     */
+  @HiveField(19)
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  bool get dropBackground => throw _privateConstructorUsedError;
+  /**
+     * Jam join type
+     */
+  @HiveField(20)
+  @JsonKey(includeIfNull: false)
+  JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
+  /**
+     * Jam form model
+     */
+  @HiveField(21)
+  BaseJamFormModel? get formModel => throw _privateConstructorUsedError;
+  /**
+     * Location name of the jam
+     */
+  @HiveField(22)
   String? get locationName => throw _privateConstructorUsedError;
+  /**
+     * Name of the jam
+     */
+  @HiveField(23)
+  String get name => throw _privateConstructorUsedError;
+  @HiveField(24)
   @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
       fromJson: JsonJamTransformer.locationFromJson,
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   String get location => throw _privateConstructorUsedError;
-  List<JamJoinRequestModel> get joinRequests =>
-      throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false)
-  double? get lat => throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false)
-  double? get lon => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  File? get image =>
-      throw _privateConstructorUsedError; //probably will not be used in alpha version
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  int? get chatId => throw _privateConstructorUsedError;
-  @Assert('maxParticipants > -2')
-  int get maxParticipants => throw _privateConstructorUsedError;
-  @Assert('invitesPerMember >-2')
-  int get invitesPerMember => throw _privateConstructorUsedError;
-  String? get extraInformation => throw _privateConstructorUsedError;
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  CommunityModel? get relatedCommunity =>
-      throw _privateConstructorUsedError; // @Default(false) bool invitesOnly,
-  @JsonKey(includeIfNull: false)
-  String get iconUrl => throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false, includeIfNull: false, includeFromJson: false)
-  List<UserProfileModel> get admins => throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false, includeIfNull: false)
-  List<UserProfileModel> get participants => throw _privateConstructorUsedError;
-  @JsonKey(includeIfNull: false)
-  String? get backgroundUrl => throw _privateConstructorUsedError;
-  @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-  @Assert('relatedVibes.length > 0')
-  List<VibeModel> get relatedVibes => throw _privateConstructorUsedError;
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  bool get dropBackground => throw _privateConstructorUsedError;
-  @JsonKey(includeIfNull: false)
-  JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
-  BaseJamFormModel? get formModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -84,44 +176,56 @@ abstract class $JamModelCopyWith<$Res> {
       _$JamModelCopyWithImpl<$Res, JamModel>;
   @useResult
   $Res call(
-      {@JsonKey(includeIfNull: false) int? id,
+      {@JsonKey(includeIfNull: false) @HiveField(0) int? id,
+      @HiveField(1)
       @JsonKey(includeToJson: false, includeIfNull: false)
       UserProfileModel? creator,
-      @JsonKey(includeToJson: false) String? creatorId,
-      String name,
-      String? description,
-      String? locationName,
+      @HiveField(2) @JsonKey(includeToJson: false) String? creatorId,
+      @HiveField(3) String? description,
+      @HiveField(4)
+      @JsonKey(includeToJson: false)
+      List<JamJoinRequestModel> joinRequests,
+      @HiveField(5) @JsonKey(includeToJson: false) double? lat,
+      @HiveField(6) @JsonKey(includeToJson: false) double? lon,
+      @HiveField(7) DateTime date,
+      @HiveField(8)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      File? image,
+      @HiveField(9)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      int? chatId,
+      @HiveField(10) @Assert('maxParticipants > -2') int maxParticipants,
+      @HiveField(11) @Assert('invitesPerMember >-2') int invitesPerMember,
+      @HiveField(12) String? extraInformation,
+      @HiveField(13)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      CommunityModel? relatedCommunity,
+      @HiveField(14) @JsonKey(includeIfNull: false) String iconUrl,
+      @JsonKey(
+          includeToJson: false, includeIfNull: false, includeFromJson: false)
+      @HiveField(15)
+      List<UserProfileModel> admins,
+      @HiveField(16)
+      @JsonKey(includeToJson: false, includeIfNull: false)
+      List<UserProfileModel> participants,
+      @HiveField(17) @JsonKey(includeIfNull: false) String? backgroundUrl,
+      @HiveField(18)
+      @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+      List<VibeModel> relatedVibes,
+      @HiveField(19)
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      bool dropBackground,
+      @HiveField(20) @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
+      @HiveField(21) BaseJamFormModel? formModel,
+      @HiveField(22) String? locationName,
+      @HiveField(23) String name,
+      @HiveField(24)
       @JsonKey(
           toJson: JsonJamTransformer.locationToJson,
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      String location,
-      List<JamJoinRequestModel> joinRequests,
-      @JsonKey(includeToJson: false) double? lat,
-      @JsonKey(includeToJson: false) double? lon,
-      DateTime date,
-      @JsonKey(includeFromJson: false, includeToJson: false) File? image,
-      @JsonKey(includeFromJson: false, includeToJson: false) int? chatId,
-      @Assert('maxParticipants > -2') int maxParticipants,
-      @Assert('invitesPerMember >-2') int invitesPerMember,
-      String? extraInformation,
-      @JsonKey(includeFromJson: false, includeToJson: false)
-      CommunityModel? relatedCommunity,
-      @JsonKey(includeIfNull: false) String iconUrl,
-      @JsonKey(
-          includeToJson: false, includeIfNull: false, includeFromJson: false)
-      List<UserProfileModel> admins,
-      @JsonKey(includeToJson: false, includeIfNull: false)
-      List<UserProfileModel> participants,
-      @JsonKey(includeIfNull: false) String? backgroundUrl,
-      @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-      @Assert('relatedVibes.length > 0')
-      List<VibeModel> relatedVibes,
-      @JsonKey(includeToJson: false, includeFromJson: false)
-      bool dropBackground,
-      @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
-      BaseJamFormModel? formModel});
+      String location});
 
   $UserProfileModelCopyWith<$Res>? get creator;
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
@@ -144,10 +248,7 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
     Object? id = freezed,
     Object? creator = freezed,
     Object? creatorId = freezed,
-    Object? name = null,
     Object? description = freezed,
-    Object? locationName = freezed,
-    Object? location = null,
     Object? joinRequests = null,
     Object? lat = freezed,
     Object? lon = freezed,
@@ -166,6 +267,9 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
     Object? dropBackground = null,
     Object? joinType = null,
     Object? formModel = freezed,
+    Object? locationName = freezed,
+    Object? name = null,
+    Object? location = null,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -180,22 +284,10 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      locationName: freezed == locationName
-          ? _value.locationName
-          : locationName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      location: null == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as String,
       joinRequests: null == joinRequests
           ? _value.joinRequests
           : joinRequests // ignore: cast_nullable_to_non_nullable
@@ -268,6 +360,18 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.formModel
           : formModel // ignore: cast_nullable_to_non_nullable
               as BaseJamFormModel?,
+      locationName: freezed == locationName
+          ? _value.locationName
+          : locationName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -317,44 +421,56 @@ abstract class _$$JamModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(includeIfNull: false) int? id,
+      {@JsonKey(includeIfNull: false) @HiveField(0) int? id,
+      @HiveField(1)
       @JsonKey(includeToJson: false, includeIfNull: false)
       UserProfileModel? creator,
-      @JsonKey(includeToJson: false) String? creatorId,
-      String name,
-      String? description,
-      String? locationName,
+      @HiveField(2) @JsonKey(includeToJson: false) String? creatorId,
+      @HiveField(3) String? description,
+      @HiveField(4)
+      @JsonKey(includeToJson: false)
+      List<JamJoinRequestModel> joinRequests,
+      @HiveField(5) @JsonKey(includeToJson: false) double? lat,
+      @HiveField(6) @JsonKey(includeToJson: false) double? lon,
+      @HiveField(7) DateTime date,
+      @HiveField(8)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      File? image,
+      @HiveField(9)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      int? chatId,
+      @HiveField(10) @Assert('maxParticipants > -2') int maxParticipants,
+      @HiveField(11) @Assert('invitesPerMember >-2') int invitesPerMember,
+      @HiveField(12) String? extraInformation,
+      @HiveField(13)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      CommunityModel? relatedCommunity,
+      @HiveField(14) @JsonKey(includeIfNull: false) String iconUrl,
+      @JsonKey(
+          includeToJson: false, includeIfNull: false, includeFromJson: false)
+      @HiveField(15)
+      List<UserProfileModel> admins,
+      @HiveField(16)
+      @JsonKey(includeToJson: false, includeIfNull: false)
+      List<UserProfileModel> participants,
+      @HiveField(17) @JsonKey(includeIfNull: false) String? backgroundUrl,
+      @HiveField(18)
+      @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+      List<VibeModel> relatedVibes,
+      @HiveField(19)
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      bool dropBackground,
+      @HiveField(20) @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
+      @HiveField(21) BaseJamFormModel? formModel,
+      @HiveField(22) String? locationName,
+      @HiveField(23) String name,
+      @HiveField(24)
       @JsonKey(
           toJson: JsonJamTransformer.locationToJson,
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      String location,
-      List<JamJoinRequestModel> joinRequests,
-      @JsonKey(includeToJson: false) double? lat,
-      @JsonKey(includeToJson: false) double? lon,
-      DateTime date,
-      @JsonKey(includeFromJson: false, includeToJson: false) File? image,
-      @JsonKey(includeFromJson: false, includeToJson: false) int? chatId,
-      @Assert('maxParticipants > -2') int maxParticipants,
-      @Assert('invitesPerMember >-2') int invitesPerMember,
-      String? extraInformation,
-      @JsonKey(includeFromJson: false, includeToJson: false)
-      CommunityModel? relatedCommunity,
-      @JsonKey(includeIfNull: false) String iconUrl,
-      @JsonKey(
-          includeToJson: false, includeIfNull: false, includeFromJson: false)
-      List<UserProfileModel> admins,
-      @JsonKey(includeToJson: false, includeIfNull: false)
-      List<UserProfileModel> participants,
-      @JsonKey(includeIfNull: false) String? backgroundUrl,
-      @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-      @Assert('relatedVibes.length > 0')
-      List<VibeModel> relatedVibes,
-      @JsonKey(includeToJson: false, includeFromJson: false)
-      bool dropBackground,
-      @JsonKey(includeIfNull: false) JamJoinTypeEnum joinType,
-      BaseJamFormModel? formModel});
+      String location});
 
   @override
   $UserProfileModelCopyWith<$Res>? get creator;
@@ -378,10 +494,7 @@ class __$$JamModelImplCopyWithImpl<$Res>
     Object? id = freezed,
     Object? creator = freezed,
     Object? creatorId = freezed,
-    Object? name = null,
     Object? description = freezed,
-    Object? locationName = freezed,
-    Object? location = null,
     Object? joinRequests = null,
     Object? lat = freezed,
     Object? lon = freezed,
@@ -400,6 +513,9 @@ class __$$JamModelImplCopyWithImpl<$Res>
     Object? dropBackground = null,
     Object? joinType = null,
     Object? formModel = freezed,
+    Object? locationName = freezed,
+    Object? name = null,
+    Object? location = null,
   }) {
     return _then(_$JamModelImpl(
       id: freezed == id
@@ -414,22 +530,10 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      locationName: freezed == locationName
-          ? _value.locationName
-          : locationName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      location: null == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as String,
       joinRequests: null == joinRequests
           ? _value._joinRequests
           : joinRequests // ignore: cast_nullable_to_non_nullable
@@ -502,6 +606,18 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.formModel
           : formModel // ignore: cast_nullable_to_non_nullable
               as BaseJamFormModel?,
+      locationName: freezed == locationName
+          ? _value.locationName
+          : locationName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -509,45 +625,65 @@ class __$$JamModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
+@HiveType(typeId: 28, adapterName: 'JamModelAdapter')
 class _$JamModelImpl extends _JamModel {
   const _$JamModelImpl(
-      {@JsonKey(includeIfNull: false) this.id,
-      @JsonKey(includeToJson: false, includeIfNull: false) this.creator,
-      @JsonKey(includeToJson: false) this.creatorId,
-      required this.name,
-      this.description = 'No description this time',
-      this.locationName = 'Check map',
+      {@JsonKey(includeIfNull: false) @HiveField(0) this.id,
+      @HiveField(1)
+      @JsonKey(includeToJson: false, includeIfNull: false)
+      this.creator,
+      @HiveField(2) @JsonKey(includeToJson: false) this.creatorId,
+      @HiveField(3) this.description = 'No description this time',
+      @HiveField(4)
+      @JsonKey(includeToJson: false)
+      final List<JamJoinRequestModel> joinRequests = const [],
+      @HiveField(5) @JsonKey(includeToJson: false) this.lat,
+      @HiveField(6) @JsonKey(includeToJson: false) this.lon,
+      @HiveField(7) required this.date,
+      @HiveField(8)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      this.image,
+      @HiveField(9)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      this.chatId,
+      @HiveField(10)
+      @Assert('maxParticipants > -2')
+      required this.maxParticipants,
+      @HiveField(11)
+      @Assert('invitesPerMember >-2')
+      required this.invitesPerMember,
+      @HiveField(12) this.extraInformation = '',
+      @HiveField(13)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      this.relatedCommunity = null,
+      @HiveField(14) @JsonKey(includeIfNull: false) this.iconUrl = '',
+      @JsonKey(
+          includeToJson: false, includeIfNull: false, includeFromJson: false)
+      @HiveField(15)
+      final List<UserProfileModel> admins = const [],
+      @HiveField(16)
+      @JsonKey(includeToJson: false, includeIfNull: false)
+      final List<UserProfileModel> participants = const [],
+      @HiveField(17) @JsonKey(includeIfNull: false) this.backgroundUrl,
+      @HiveField(18)
+      @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+      final List<VibeModel> relatedVibes = const [],
+      @HiveField(19)
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      this.dropBackground = false,
+      @HiveField(20)
+      @JsonKey(includeIfNull: false)
+      this.joinType = JamJoinTypeEnum.freeToJoin,
+      @HiveField(21) this.formModel,
+      @HiveField(22) this.locationName = 'Check map',
+      @HiveField(23) required this.name,
+      @HiveField(24)
       @JsonKey(
           toJson: JsonJamTransformer.locationToJson,
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      required this.location,
-      final List<JamJoinRequestModel> joinRequests = const [],
-      @JsonKey(includeToJson: false) this.lat,
-      @JsonKey(includeToJson: false) this.lon,
-      required this.date,
-      @JsonKey(includeFromJson: false, includeToJson: false) this.image,
-      @JsonKey(includeFromJson: false, includeToJson: false) this.chatId,
-      @Assert('maxParticipants > -2') required this.maxParticipants,
-      @Assert('invitesPerMember >-2') required this.invitesPerMember,
-      this.extraInformation = '',
-      @JsonKey(includeFromJson: false, includeToJson: false)
-      this.relatedCommunity = null,
-      @JsonKey(includeIfNull: false) this.iconUrl = '',
-      @JsonKey(
-          includeToJson: false, includeIfNull: false, includeFromJson: false)
-      final List<UserProfileModel> admins = const [],
-      @JsonKey(includeToJson: false, includeIfNull: false)
-      final List<UserProfileModel> participants = const [],
-      @JsonKey(includeIfNull: false) this.backgroundUrl,
-      @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-      @Assert('relatedVibes.length > 0')
-      required final List<VibeModel> relatedVibes,
-      @JsonKey(includeToJson: false, includeFromJson: false)
-      this.dropBackground = false,
-      @JsonKey(includeIfNull: false) this.joinType = JamJoinTypeEnum.freeToJoin,
-      this.formModel})
+      required this.location})
       : _joinRequests = joinRequests,
         _admins = admins,
         _participants = participants,
@@ -559,79 +695,139 @@ class _$JamModelImpl extends _JamModel {
 
   @override
   @JsonKey(includeIfNull: false)
+  @HiveField(0)
   final int? id;
+/**
+     * Creator of the jam
+     */
   @override
+  @HiveField(1)
   @JsonKey(includeToJson: false, includeIfNull: false)
   final UserProfileModel? creator;
+/**
+     * Jam creator id
+     */
   @override
+  @HiveField(2)
   @JsonKey(includeToJson: false)
   final String? creatorId;
-  @override
-  final String name;
+/**
+     * Description of the jam
+     */
   @override
   @JsonKey()
+  @HiveField(3)
   final String? description;
-  @override
-  @JsonKey()
-  final String? locationName;
-  @override
-  @JsonKey(
-      toJson: JsonJamTransformer.locationToJson,
-      fromJson: JsonJamTransformer.locationFromJson,
-      readValue: JsonJamTransformer.readItself,
-      includeIfNull: false)
-  final String location;
+/**
+     * Join requests for the jam
+     */
   final List<JamJoinRequestModel> _joinRequests;
+/**
+     * Join requests for the jam
+     */
   @override
-  @JsonKey()
+  @HiveField(4)
+  @JsonKey(includeToJson: false)
   List<JamJoinRequestModel> get joinRequests {
     if (_joinRequests is EqualUnmodifiableListView) return _joinRequests;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_joinRequests);
   }
 
+/**
+     * Jam participants
+     */
   @override
+  @HiveField(5)
   @JsonKey(includeToJson: false)
   final double? lat;
+/**
+     * longitude of the jam
+     */
   @override
+  @HiveField(6)
   @JsonKey(includeToJson: false)
   final double? lon;
+/**
+     * Date of the jam
+     */
   @override
+  @HiveField(7)
   final DateTime date;
+/**
+     * Image of the jam
+     */
   @override
+  @HiveField(8)
   @JsonKey(includeFromJson: false, includeToJson: false)
   final File? image;
-//probably will not be used in alpha version
+/**
+     * probably will not be used in alpha version
+     */
   @override
+  @HiveField(9)
   @JsonKey(includeFromJson: false, includeToJson: false)
   final int? chatId;
+/**
+     * Maximum number of participants
+     */
   @override
+  @HiveField(10)
   @Assert('maxParticipants > -2')
   final int maxParticipants;
+/**
+     * Number of invites per member
+     */
   @override
+  @HiveField(11)
   @Assert('invitesPerMember >-2')
   final int invitesPerMember;
+/**
+     * Extra information about the jam
+     */
   @override
   @JsonKey()
+  @HiveField(12)
   final String? extraInformation;
+/**
+     * Related community
+     */
   @override
+  @HiveField(13)
   @JsonKey(includeFromJson: false, includeToJson: false)
   final CommunityModel? relatedCommunity;
-// @Default(false) bool invitesOnly,
+/**
+     * Icon of the jam
+     */
   @override
+  @HiveField(14)
   @JsonKey(includeIfNull: false)
   final String iconUrl;
+/**
+     * Jam admins
+     */
   final List<UserProfileModel> _admins;
+/**
+     * Jam admins
+     */
   @override
   @JsonKey(includeToJson: false, includeIfNull: false, includeFromJson: false)
+  @HiveField(15)
   List<UserProfileModel> get admins {
     if (_admins is EqualUnmodifiableListView) return _admins;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_admins);
   }
 
+/**
+     * Jam participants
+     */
   final List<UserProfileModel> _participants;
+/**
+     * Jam participants
+     */
   @override
+  @HiveField(16)
   @JsonKey(includeToJson: false, includeIfNull: false)
   List<UserProfileModel> get participants {
     if (_participants is EqualUnmodifiableListView) return _participants;
@@ -639,31 +835,74 @@ class _$JamModelImpl extends _JamModel {
     return EqualUnmodifiableListView(_participants);
   }
 
+/**
+     * Jam background
+     */
   @override
+  @HiveField(17)
   @JsonKey(includeIfNull: false)
   final String? backgroundUrl;
+/**
+     * Related vibes
+     */
   final List<VibeModel> _relatedVibes;
+/**
+     * Related vibes
+     */
   @override
-  @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-  @Assert('relatedVibes.length > 0')
+  @HiveField(18)
+  @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
   List<VibeModel> get relatedVibes {
     if (_relatedVibes is EqualUnmodifiableListView) return _relatedVibes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_relatedVibes);
   }
 
+/**
+     * Jam background
+     */
   @override
+  @HiveField(19)
   @JsonKey(includeToJson: false, includeFromJson: false)
   final bool dropBackground;
+/**
+     * Jam join type
+     */
   @override
+  @HiveField(20)
   @JsonKey(includeIfNull: false)
   final JamJoinTypeEnum joinType;
+/**
+     * Jam form model
+     */
   @override
+  @HiveField(21)
   final BaseJamFormModel? formModel;
+/**
+     * Location name of the jam
+     */
+  @override
+  @JsonKey()
+  @HiveField(22)
+  final String? locationName;
+/**
+     * Name of the jam
+     */
+  @override
+  @HiveField(23)
+  final String name;
+  @override
+  @HiveField(24)
+  @JsonKey(
+      toJson: JsonJamTransformer.locationToJson,
+      fromJson: JsonJamTransformer.locationFromJson,
+      readValue: JsonJamTransformer.readItself,
+      includeIfNull: false)
+  final String location;
 
   @override
   String toString() {
-    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, name: $name, description: $description, locationName: $locationName, location: $location, joinRequests: $joinRequests, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel)';
+    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, description: $description, joinRequests: $joinRequests, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel, locationName: $locationName, name: $name, location: $location)';
   }
 
   @override
@@ -675,13 +914,8 @@ class _$JamModelImpl extends _JamModel {
             (identical(other.creator, creator) || other.creator == creator) &&
             (identical(other.creatorId, creatorId) ||
                 other.creatorId == creatorId) &&
-            (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.locationName, locationName) ||
-                other.locationName == locationName) &&
-            (identical(other.location, location) ||
-                other.location == location) &&
             const DeepCollectionEquality()
                 .equals(other._joinRequests, _joinRequests) &&
             (identical(other.lat, lat) || other.lat == lat) &&
@@ -710,7 +944,12 @@ class _$JamModelImpl extends _JamModel {
             (identical(other.joinType, joinType) ||
                 other.joinType == joinType) &&
             (identical(other.formModel, formModel) ||
-                other.formModel == formModel));
+                other.formModel == formModel) &&
+            (identical(other.locationName, locationName) ||
+                other.locationName == locationName) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.location, location) ||
+                other.location == location));
   }
 
   @JsonKey(ignore: true)
@@ -720,10 +959,7 @@ class _$JamModelImpl extends _JamModel {
         id,
         creator,
         creatorId,
-        name,
         description,
-        locationName,
-        location,
         const DeepCollectionEquality().hash(_joinRequests),
         lat,
         lon,
@@ -741,7 +977,10 @@ class _$JamModelImpl extends _JamModel {
         const DeepCollectionEquality().hash(_relatedVibes),
         dropBackground,
         joinType,
-        formModel
+        formModel,
+        locationName,
+        name,
+        location
       ]);
 
   @JsonKey(ignore: true)
@@ -760,44 +999,62 @@ class _$JamModelImpl extends _JamModel {
 
 abstract class _JamModel extends JamModel {
   const factory _JamModel(
-      {@JsonKey(includeIfNull: false) final int? id,
+      {@JsonKey(includeIfNull: false) @HiveField(0) final int? id,
+      @HiveField(1)
       @JsonKey(includeToJson: false, includeIfNull: false)
       final UserProfileModel? creator,
-      @JsonKey(includeToJson: false) final String? creatorId,
-      required final String name,
-      final String? description,
-      final String? locationName,
+      @HiveField(2) @JsonKey(includeToJson: false) final String? creatorId,
+      @HiveField(3) final String? description,
+      @HiveField(4)
+      @JsonKey(includeToJson: false)
+      final List<JamJoinRequestModel> joinRequests,
+      @HiveField(5) @JsonKey(includeToJson: false) final double? lat,
+      @HiveField(6) @JsonKey(includeToJson: false) final double? lon,
+      @HiveField(7) required final DateTime date,
+      @HiveField(8)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      final File? image,
+      @HiveField(9)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      final int? chatId,
+      @HiveField(10)
+      @Assert('maxParticipants > -2')
+      required final int maxParticipants,
+      @HiveField(11)
+      @Assert('invitesPerMember >-2')
+      required final int invitesPerMember,
+      @HiveField(12) final String? extraInformation,
+      @HiveField(13)
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      final CommunityModel? relatedCommunity,
+      @HiveField(14) @JsonKey(includeIfNull: false) final String iconUrl,
+      @JsonKey(
+          includeToJson: false, includeIfNull: false, includeFromJson: false)
+      @HiveField(15)
+      final List<UserProfileModel> admins,
+      @HiveField(16)
+      @JsonKey(includeToJson: false, includeIfNull: false)
+      final List<UserProfileModel> participants,
+      @HiveField(17) @JsonKey(includeIfNull: false) final String? backgroundUrl,
+      @HiveField(18)
+      @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+      final List<VibeModel> relatedVibes,
+      @HiveField(19)
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      final bool dropBackground,
+      @HiveField(20)
+      @JsonKey(includeIfNull: false)
+      final JamJoinTypeEnum joinType,
+      @HiveField(21) final BaseJamFormModel? formModel,
+      @HiveField(22) final String? locationName,
+      @HiveField(23) required final String name,
+      @HiveField(24)
       @JsonKey(
           toJson: JsonJamTransformer.locationToJson,
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      required final String location,
-      final List<JamJoinRequestModel> joinRequests,
-      @JsonKey(includeToJson: false) final double? lat,
-      @JsonKey(includeToJson: false) final double? lon,
-      required final DateTime date,
-      @JsonKey(includeFromJson: false, includeToJson: false) final File? image,
-      @JsonKey(includeFromJson: false, includeToJson: false) final int? chatId,
-      @Assert('maxParticipants > -2') required final int maxParticipants,
-      @Assert('invitesPerMember >-2') required final int invitesPerMember,
-      final String? extraInformation,
-      @JsonKey(includeFromJson: false, includeToJson: false)
-      final CommunityModel? relatedCommunity,
-      @JsonKey(includeIfNull: false) final String iconUrl,
-      @JsonKey(
-          includeToJson: false, includeIfNull: false, includeFromJson: false)
-      final List<UserProfileModel> admins,
-      @JsonKey(includeToJson: false, includeIfNull: false)
-      final List<UserProfileModel> participants,
-      @JsonKey(includeIfNull: false) final String? backgroundUrl,
-      @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-      @Assert('relatedVibes.length > 0')
-      required final List<VibeModel> relatedVibes,
-      @JsonKey(includeToJson: false, includeFromJson: false)
-      final bool dropBackground,
-      @JsonKey(includeIfNull: false) final JamJoinTypeEnum joinType,
-      final BaseJamFormModel? formModel}) = _$JamModelImpl;
+      required final String location}) = _$JamModelImpl;
   const _JamModel._() : super._();
 
   factory _JamModel.fromJson(Map<String, dynamic> json) =
@@ -805,77 +1062,171 @@ abstract class _JamModel extends JamModel {
 
   @override
   @JsonKey(includeIfNull: false)
+  @HiveField(0)
   int? get id;
   @override
+  /**
+     * Creator of the jam
+     */
+  @HiveField(1)
   @JsonKey(includeToJson: false, includeIfNull: false)
   UserProfileModel? get creator;
   @override
+  /**
+     * Jam creator id
+     */
+  @HiveField(2)
   @JsonKey(includeToJson: false)
   String? get creatorId;
   @override
-  String get name;
-  @override
+  /**
+     * Description of the jam
+     */
+  @HiveField(3)
   String? get description;
   @override
+  /**
+     * Join requests for the jam
+     */
+  @HiveField(4)
+  @JsonKey(includeToJson: false)
+  List<JamJoinRequestModel> get joinRequests;
+  @override
+  /**
+     * Jam participants
+     */
+  @HiveField(5)
+  @JsonKey(includeToJson: false)
+  double? get lat;
+  @override
+  /**
+     * longitude of the jam
+     */
+  @HiveField(6)
+  @JsonKey(includeToJson: false)
+  double? get lon;
+  @override
+  /**
+     * Date of the jam
+     */
+  @HiveField(7)
+  DateTime get date;
+  @override
+  /**
+     * Image of the jam
+     */
+  @HiveField(8)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  File? get image;
+  @override
+  /**
+     * probably will not be used in alpha version
+     */
+  @HiveField(9)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  int? get chatId;
+  @override
+  /**
+     * Maximum number of participants
+     */
+  @HiveField(10)
+  @Assert('maxParticipants > -2')
+  int get maxParticipants;
+  @override
+  /**
+     * Number of invites per member
+     */
+  @HiveField(11)
+  @Assert('invitesPerMember >-2')
+  int get invitesPerMember;
+  @override
+  /**
+     * Extra information about the jam
+     */
+  @HiveField(12)
+  String? get extraInformation;
+  @override
+  /**
+     * Related community
+     */
+  @HiveField(13)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  CommunityModel? get relatedCommunity;
+  @override
+  /**
+     * Icon of the jam
+     */
+  @HiveField(14)
+  @JsonKey(includeIfNull: false)
+  String get iconUrl;
+  @override
+  /**
+     * Jam admins
+     */
+  @JsonKey(includeToJson: false, includeIfNull: false, includeFromJson: false)
+  @HiveField(15)
+  List<UserProfileModel> get admins;
+  @override
+  /**
+     * Jam participants
+     */
+  @HiveField(16)
+  @JsonKey(includeToJson: false, includeIfNull: false)
+  List<UserProfileModel> get participants;
+  @override
+  /**
+     * Jam background
+     */
+  @HiveField(17)
+  @JsonKey(includeIfNull: false)
+  String? get backgroundUrl;
+  @override
+  /**
+     * Related vibes
+     */
+  @HiveField(18)
+  @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+  List<VibeModel> get relatedVibes;
+  @override
+  /**
+     * Jam background
+     */
+  @HiveField(19)
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  bool get dropBackground;
+  @override
+  /**
+     * Jam join type
+     */
+  @HiveField(20)
+  @JsonKey(includeIfNull: false)
+  JamJoinTypeEnum get joinType;
+  @override
+  /**
+     * Jam form model
+     */
+  @HiveField(21)
+  BaseJamFormModel? get formModel;
+  @override
+  /**
+     * Location name of the jam
+     */
+  @HiveField(22)
   String? get locationName;
   @override
+  /**
+     * Name of the jam
+     */
+  @HiveField(23)
+  String get name;
+  @override
+  @HiveField(24)
   @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
       fromJson: JsonJamTransformer.locationFromJson,
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   String get location;
-  @override
-  List<JamJoinRequestModel> get joinRequests;
-  @override
-  @JsonKey(includeToJson: false)
-  double? get lat;
-  @override
-  @JsonKey(includeToJson: false)
-  double? get lon;
-  @override
-  DateTime get date;
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  File? get image;
-  @override //probably will not be used in alpha version
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  int? get chatId;
-  @override
-  @Assert('maxParticipants > -2')
-  int get maxParticipants;
-  @override
-  @Assert('invitesPerMember >-2')
-  int get invitesPerMember;
-  @override
-  String? get extraInformation;
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  CommunityModel? get relatedCommunity;
-  @override // @Default(false) bool invitesOnly,
-  @JsonKey(includeIfNull: false)
-  String get iconUrl;
-  @override
-  @JsonKey(includeToJson: false, includeIfNull: false, includeFromJson: false)
-  List<UserProfileModel> get admins;
-  @override
-  @JsonKey(includeToJson: false, includeIfNull: false)
-  List<UserProfileModel> get participants;
-  @override
-  @JsonKey(includeIfNull: false)
-  String? get backgroundUrl;
-  @override
-  @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-  @Assert('relatedVibes.length > 0')
-  List<VibeModel> get relatedVibes;
-  @override
-  @JsonKey(includeToJson: false, includeFromJson: false)
-  bool get dropBackground;
-  @override
-  @JsonKey(includeIfNull: false)
-  JamJoinTypeEnum get joinType;
-  @override
-  BaseJamFormModel? get formModel;
   @override
   @JsonKey(ignore: true)
   _$$JamModelImplCopyWith<_$JamModelImpl> get copyWith =>

@@ -11,6 +11,7 @@ final class SocialRepository
     implements SocialRepositoryInterface {
   static const CHECK_USER_HAS_INVITE_RPC = 'check_user_has_ivnite';
   static const GET_USER_FRIENDS = 'get_user_friends';
+  static const GET_INVITES_RPC = 'get_sent_invites_with_profile';
 
   @override
   final SocialQueueInterface queue;
@@ -110,17 +111,19 @@ final class SocialRepository
 
   @override
   Future<Users> getFriends() async {
-    return !(await isOnline(_ref))
-        ? await _ref.read(powerSyncSocialServiceProvider).getFriends()
-        : await supabase.rpc(
-            GET_USER_FRIENDS,
-            params: {'user_id': getUserIdOrThrow()},
-          ).withConverter<Users>(
-            (data) => (data as Dynamics)
-                .cast<Json>()
-                .map(UserProfileModel.fromJson)
-                .toList(),
-          );
+    return
+        // !(await isOnline(_ref))
+        //     ? await _ref.read(powerSyncSocialServiceProvider).getFriends()
+        //     :
+        await supabase.rpc(
+      GET_USER_FRIENDS,
+      params: {'user_id': getUserIdOrThrow()},
+    ).withConverter<Users>(
+      (data) => (data as Dynamics)
+          .cast<Json>()
+          .map(UserProfileModel.fromJson)
+          .toList(),
+    );
   }
 
   @override
@@ -150,13 +153,16 @@ final class SocialRepository
 
   @override
   Future<JamInvites> getSentJamInvites() async {
-    return !(await isOnline(_ref))
-        ? await _ref.read(powerSyncSocialServiceProvider).getSentJamInvites()
-        : await supabase.rpc<Jsons>('get_sent_invites_with_profiles', params: {
-            'user_id': getUserIdOrThrow(),
-          }).withConverter<JamInvites>(
-            (data) => data.map(JamInviteModel.fromJson).toList(),
-          );
+    return
+        //  !(await isOnline(_ref))
+        //     ? await _ref.read(powerSyncSocialServiceProvider).getSentJamInvites()
+        //     :
+
+        await supabase.rpc<Jsons>(GET_INVITES_RPC, params: {
+      'user_id': getUserIdOrThrow(),
+    }).withConverter<JamInvites>(
+      (data) => data.map(JamInviteModel.fromJson).toList(),
+    );
   }
 
   @override

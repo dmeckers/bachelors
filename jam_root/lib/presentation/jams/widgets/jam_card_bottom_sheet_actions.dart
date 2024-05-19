@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/jams/state/jams_state.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class JamCardBottomSheetActions extends ConsumerWidget {
@@ -83,9 +84,10 @@ class JamCardBottomSheetActions extends ConsumerWidget {
 
   void _handleDeleteJam(BuildContext context, WidgetRef ref, JamModel jam) {
     ref.read(deleteJamProvider(jam: jam).future).then(
-      (_) {
+      (_) async {
+        await ref.read(jamsStateProvider).refetch();
+        if (!context.mounted) return;
         Navigator.of(context).pop();
-        ref.invalidate(userJamControllerProvider);
       },
     );
   }

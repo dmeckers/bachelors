@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:annotations/annotations.dart';
 
@@ -23,14 +24,144 @@ abstract class Jsonable<T> {
 @freezed
 class JamModel with _$JamModel implements Jsonable<JamModel> {
   @JsonSerializable(fieldRename: FieldRename.snake)
+  @HiveType(typeId: 28, adapterName: 'JamModelAdapter')
   const factory JamModel({
-    @JsonKey(includeIfNull: false) int? id,
+    @JsonKey(includeIfNull: false) @HiveField(0) int? id,
+    /**
+     * Creator of the jam
+     */
+    @HiveField(1)
     @JsonKey(includeToJson: false, includeIfNull: false)
     UserProfileModel? creator,
-    @JsonKey(includeToJson: false) String? creatorId,
-    required String name,
-    @Default('No description this time') String? description,
-    @Default('Check map') String? locationName,
+    /**
+     * Jam creator id
+     */
+    @HiveField(2) @JsonKey(includeToJson: false) String? creatorId,
+
+    /**
+     * Description of the jam
+     */
+    @Default('No description this time') @HiveField(3) String? description,
+
+    /**
+     * Join requests for the jam
+     */
+    @HiveField(4)
+    @Default([])
+    @JsonKey(includeToJson: false)
+    List<JamJoinRequestModel> joinRequests,
+    /**
+     * Jam participants
+     */
+    @HiveField(5) @JsonKey(includeToJson: false) double? lat,
+    /**
+     * longitude of the jam
+     */
+    @HiveField(6) @JsonKey(includeToJson: false) double? lon,
+    /**
+     * Date of the jam
+     */
+    @HiveField(7) required DateTime date,
+    /**
+     * Image of the jam
+     */
+    @HiveField(8)
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    File? image,
+    /**
+     * probably will not be used in alpha version
+     */
+    @HiveField(9)
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    int? chatId,
+    /**
+     * Maximum number of participants
+     */
+    @HiveField(10) @Assert('maxParticipants > -2') required int maxParticipants,
+    /**
+     * Number of invites per member
+     */
+    @HiveField(11)
+    @Assert('invitesPerMember >-2')
+    required int invitesPerMember,
+    /**
+     * Extra information about the jam
+     */
+    @HiveField(12) @Default('') String? extraInformation,
+    /**
+     * Related community
+     */
+    @HiveField(13)
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(null)
+    CommunityModel? relatedCommunity,
+    /**
+     * Icon of the jam
+     */
+    @HiveField(14) @JsonKey(includeIfNull: false) @Default('') String iconUrl,
+    /**
+     * Jam admins
+     */
+    @JsonKey(
+      includeToJson: false,
+      includeIfNull: false,
+      includeFromJson: false,
+    )
+    @HiveField(15)
+    @Default([])
+    List<UserProfileModel> admins,
+    /**
+     * Jam participants
+     */
+    @HiveField(16)
+    @JsonKey(
+      includeToJson: false,
+      includeIfNull: false,
+    )
+    @Default([])
+    List<UserProfileModel> participants,
+    /**
+     * Jam background
+     */
+    @HiveField(17) @JsonKey(includeIfNull: false) String? backgroundUrl,
+    /**
+     * Related vibes
+     */
+    @HiveField(18)
+    @Default([])
+    @JsonKey(toJson: JsonVibeTransformer.vibesToIds, includeIfNull: false)
+    // @Assert('relatedVibes.length > 0')
+    List<VibeModel> relatedVibes,
+    /**
+     * Jam background
+     */
+    @HiveField(19)
+    @JsonKey(
+      includeToJson: false,
+      includeFromJson: false,
+    )
+    @Default(false)
+    bool dropBackground,
+    /**
+     * Jam join type
+     */
+    @HiveField(20)
+    @JsonKey(includeIfNull: false)
+    @Default(JamJoinTypeEnum.freeToJoin)
+    JamJoinTypeEnum joinType,
+    /**
+     * Jam form model
+     */
+    @HiveField(21) BaseJamFormModel? formModel,
+    /**
+     * Location name of the jam
+     */
+    @HiveField(22) @Default('Check map') String? locationName,
+    /**
+     * Name of the jam
+     */
+    @HiveField(23) required String name,
+    @HiveField(24)
     @JsonKey(
       toJson: JsonJamTransformer.locationToJson,
       fromJson: JsonJamTransformer.locationFromJson,
@@ -38,48 +169,6 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
       includeIfNull: false,
     )
     required String location,
-    @Default([]) List<JamJoinRequestModel> joinRequests,
-    @JsonKey(includeToJson: false) double? lat,
-    @JsonKey(includeToJson: false) double? lon,
-    required DateTime date,
-    @JsonKey(includeFromJson: false, includeToJson: false) File? image,
-    //probably will not be used in alpha version
-    @JsonKey(includeFromJson: false, includeToJson: false) int? chatId,
-    @Assert('maxParticipants > -2') required int maxParticipants,
-    @Assert('invitesPerMember >-2') required int invitesPerMember,
-    @Default('') String? extraInformation,
-    @JsonKey(includeFromJson: false, includeToJson: false)
-    @Default(null)
-    CommunityModel? relatedCommunity,
-    // @Default(false) bool invitesOnly,
-    @JsonKey(includeIfNull: false) @Default('') String iconUrl,
-    @JsonKey(
-      includeToJson: false,
-      includeIfNull: false,
-      includeFromJson: false,
-    )
-    @Default([])
-    List<UserProfileModel> admins,
-    @JsonKey(
-      includeToJson: false,
-      includeIfNull: false,
-    )
-    @Default([])
-    List<UserProfileModel> participants,
-    @JsonKey(includeIfNull: false) String? backgroundUrl,
-    @JsonKey(toJson: JsonVibeTransformer.vibesToIds)
-    @Assert('relatedVibes.length > 0')
-    required List<VibeModel> relatedVibes,
-    @JsonKey(
-      includeToJson: false,
-      includeFromJson: false,
-    )
-    @Default(false)
-    bool dropBackground,
-    @JsonKey(includeIfNull: false)
-    @Default(JamJoinTypeEnum.freeToJoin)
-    JamJoinTypeEnum joinType,
-    BaseJamFormModel? formModel,
   }) = _JamModel;
 
   const JamModel._();
@@ -94,6 +183,8 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
 
   // static identifier for go router codec converter
   static const jsonClassId = 'JamModel';
+
+  bool get isOutdated => date.isBefore(DateTime.now());
 
   @override
   String getJsonClassId() => jsonClassId;
