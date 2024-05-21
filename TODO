@@ -1,35 +1,24 @@
-<!-- > > > Participant list -->
-<!-- name fo the place in location from google? -->
-<!-- > > > jam_root/lib/presentation/jams/jam_details/jam_participants.page.dart <--- participants tab is emptty -->
-<!-- > > > jam search bar (search in list) -->
-<!-- > > > old data when jam updated
-> > > jam restrictrion -->
-<!-- instant jam  &  -->
-
 13.theme -> black by def
 PPA - db functions and triggers
 
 > > > 2 invites 1 accepted what wiill happen when click on second? (replicate first)
 > > > create jam button form state
-> > > distance doesnt work
-> > > CHECK ON MAP IF FORM FILLED/FREEZED/DECLINED BEFORE SHOW BUTTON WITH FORM
 > > > invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
+> > > update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
 
 ?solved?
 WHAT WILL HAPPEN IF FRIEND REQUEST SENT FROM ONE AND OTHER IGNORING REQUESTS SENDS REQUEST TO FIRST PERSON
 4.jam vibe change (probably this will affect also map stream)
 
+<!-- > > > distance doesnt work -->
+
 > > > ?solved?
 
 papers
-PSA????
+PSA
 konfiguracija
-dokumentacija (lietotaju celvedis)
+dokumentacija (lietotaju celvedis / may skip and use presenter package)
 
-0.update map stream if it was open by new vibe ids (refetch) when vibes changed to test
-
-<!-- 3.jam invites filter from BE -->
-
-improve searching mechanism - how ? add music and feed?
+improve searching mechanism - how ?
 enrich vibe selection (devian art example) vibe select like in debianart would be cool
 999.populate some vibes
