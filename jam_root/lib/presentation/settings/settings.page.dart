@@ -8,11 +8,18 @@ import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:http/http.dart' as http;
 
 class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
   const SettingsPage({super.key, required this.profile});
 
   final UserProfileModel profile;
+
+  _handleTest(BuildContext context, WidgetRef ref) {
+    const privateTokenk = '4GQGJRYV3TR45IBTWQ5A';
+
+    // http.get(url)
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +50,7 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
                   title: Text(
                     userState.requireValue.username ??
                         userState.requireValue.fullName ??
-                        'Wtf where is my name',
+                        'User name',
                     style: context.jText.bodyMedium,
                   ),
                   subtitle: Padding(
@@ -83,66 +90,32 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
                   subtitle: 'Contact us , privacy policy , terms of use.',
                   onTap: () => context.pushNamed(SettingsRoutes.help.name),
                 ),
+                ElevatedButton(
+                  onPressed: () async => await _handleTest(context, ref),
+                  child: const Text('test'),
+                ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () => ref.read(authRepositoryProvider).logout(),
                   child: const Text('Logout'),
                 ),
                 const SizedBox(height: 20),
-                const _MadeByPlaceholder()
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MadeByPlaceholder extends HookWidget {
-  const _MadeByPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final tappedTimes = useState(0);
-
-    tappedTimes.addListener(
-      () {
-        if (tappedTimes.value == 5) {
-          showAdaptiveDialog(
-            context: context,
-            builder: (ctx) => GestureDetector(
-              onTap: () => Navigator.of(ctx).pop(),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.8,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/default.jpg'),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text('made by ', style: context.jText.headlineSmall),
+                        Text('Dmitriy Mecker',
+                            style: context.jText.headlineMedium),
+                        const SizedBox(height: 50)
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          );
-          tappedTimes.value = 0;
-        }
-      },
-    );
-
-    return GestureDetector(
-      onTap: () =>
-          tappedTimes.value < 5 ? tappedTimes.value++ : tappedTimes.value = 0,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text('made by ', style: context.jText.headlineSmall),
-              Text('Dmitriy Mecker', style: context.jText.headlineMedium),
-              const SizedBox(height: 50)
-            ],
           ),
         ),
       ),
