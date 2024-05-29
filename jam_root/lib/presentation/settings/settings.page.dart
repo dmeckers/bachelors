@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -8,7 +7,6 @@ import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
-import 'package:http/http.dart' as http;
 
 class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
   const SettingsPage({super.key, required this.profile});
@@ -16,7 +14,7 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
   final UserProfileModel profile;
 
   _handleTest(BuildContext context, WidgetRef ref) {
-    const privateTokenk = '4GQGJRYV3TR45IBTWQ5A';
+    // const privateTokenk = '4GQGJRYV3TR45IBTWQ5A';
 
     // http.get(url)
   }

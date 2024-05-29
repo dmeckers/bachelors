@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class JamPageListController extends StateNotifier<List<Widget>> {
-  JamPageListController() : super(const [PickVibePage(), JamTypeSelectPage()]);
+  JamPageListController() : super(const [JamTypeSelectPage()]);
 
   void addPage(Widget page) {
     if (state.contains(page)) return;
@@ -13,6 +13,10 @@ class JamPageListController extends StateNotifier<List<Widget>> {
 
   void removePage(Widget page) {
     state = state.where((element) => element != page).toList();
+  }
+
+  void reset() {
+    state = const [JamTypeSelectPage()];
   }
 }
 

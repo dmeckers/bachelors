@@ -205,7 +205,7 @@ class SelectVibe extends HookConsumerWidget {
         minHeight: 60,
       ),
       leading: const Icon(Icons.search),
-      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+      shape: WidgetStateProperty.all(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       )),
       hintText: 'Find your vibe',

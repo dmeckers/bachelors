@@ -27,10 +27,10 @@ final jamRoutes = GoRoute(
   name: JamRoutes.jams.name,
   builder: (_, state) => const JamPage(),
   routes: [
-    GoRouteTransitions.holeClipperGoRouterTransition(
+    GoRoute(
       path: JamRoutes.createNew.name,
       name: JamRoutes.createNew.name,
-      pageBuilder: (ctx, state) => CreateJamPage(
+      builder: (_, state) => CreateJamPage(
         position: (state.extra as LatLng?),
       ),
     ),

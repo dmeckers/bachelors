@@ -1,8 +1,6 @@
 13.theme -> black by def
-PPA - db functions and triggers
 
 > > > 2 invites 1 accepted what wiill happen when click on second? (replicate first)
-> > > create jam button form state
 > > > invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
 > > > update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
 

@@ -133,6 +133,8 @@ class PlanJamFormPage extends HookConsumerWidget {
                     padding: const EdgeInsets.all(15.0),
                     child: _buildSubmitUpdateButton(viewModel, context, ref),
                   )
+                else
+                  _buildSubmitButton(viewModel, context, ref),
               ],
             ),
           ),
@@ -222,10 +224,10 @@ class PlanJamFormPage extends HookConsumerWidget {
         _handleUpdateJam(context, viewModel, ref);
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
+        backgroundColor: WidgetStateProperty.all(
           canSubmit ? Colors.black : Colors.grey,
         ),
-        padding: MaterialStateProperty.all(
+        padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         ),
       ),
@@ -272,6 +274,96 @@ class PlanJamFormPage extends HookConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  String? _canSubmit2(JamViewModel viewModel) {
+    final isFilled = viewModel.nameFormModel.isValid &&
+        viewModel.descriptionFormModel.isValid &&
+        viewModel.locationNameFormModel.isValid &&
+        viewModel.location.isNotEmpty &&
+        viewModel.date != null;
+
+    final formValidation = viewModel.joinType.isWithForm
+        ? viewModel.formModel != null &&
+            viewModel.formModel!.elements.isNotEmpty
+        : true;
+
+    if (!isFilled) {
+      return 'Mandatory fields are unfilled';
+    }
+
+    if (!formValidation) {
+      return 'No registration form created';
+    }
+
+    if (viewModel.relatedVibes.isEmpty) {
+      return 'No related vibes selected';
+    }
+
+    return null;
+  }
+
+  Widget _buildSubmitButton(
+    JamViewModel viewModel,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    final validationErrors = _canSubmit2(viewModel);
+    // final kamoji = badKamojis[viewModel.hashCode % badKamojis.length];
+    return ElevatedButton(
+      style: ButtonStyle(
+        padding: WidgetStateProperty.all(
+          const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        ),
+        backgroundColor: WidgetStateProperty.all(
+          validationErrors == null ? Colors.black : Colors.grey,
+        ),
+      ),
+      onPressed: () => _handleSubmitJam(
+        context,
+        viewModel,
+        ref,
+        validationErrors == null,
+      ),
+      child: Text(
+        validationErrors ?? 'Let\'s jam \u{1F525}',
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  static const badKamojis = [
+    '(」°ロ°)」',
+    '(ノ°益°)ノ',
+    '(╥﹏╥)',
+    '¯\\_(ツ)_/¯',
+    'ლ(ಠ_ಠ ლ)',
+  ];
+
+  _handleSubmitJam(
+    BuildContext context,
+    JamViewModel viewModel,
+    WidgetRef ref,
+    bool canSubmit,
+  ) async {
+    if (!canSubmit) return;
+
+    await ref.read(
+      createJamProvider(jam: viewModel.castToModel().backfilled).future,
+    );
+
+    await ref.read(jamsStateProvider).refetch();
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => OkPopup(
+        imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
+        title: 'Jam created',
+        onOkPressed: () => Navigator.of(context).pop(),
       ),
     );
   }

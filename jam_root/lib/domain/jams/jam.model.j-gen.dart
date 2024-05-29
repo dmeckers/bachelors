@@ -403,7 +403,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.nameFormModel.controller ?? TextEditingController();
 
-    controller.text = value ?? '';
+    controller.text = value;
 
     state = state;
   }
@@ -563,7 +563,7 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.nameFormModel.controller ?? TextEditingController();
 
-    controller.text = value ?? '';
+    controller.text = value;
 
     state = state;
   }
