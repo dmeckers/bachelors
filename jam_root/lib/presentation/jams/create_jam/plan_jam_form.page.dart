@@ -278,7 +278,7 @@ class PlanJamFormPage extends HookConsumerWidget {
     );
   }
 
-  String? _canSubmit2(JamViewModel viewModel) {
+  String? getValidationErrors(JamViewModel viewModel) {
     final isFilled = viewModel.nameFormModel.isValid &&
         viewModel.descriptionFormModel.isValid &&
         viewModel.locationNameFormModel.isValid &&
@@ -310,7 +310,7 @@ class PlanJamFormPage extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final validationErrors = _canSubmit2(viewModel);
+    final validationErrors = getValidationErrors(viewModel);
     // final kamoji = badKamojis[viewModel.hashCode % badKamojis.length];
     return ElevatedButton(
       style: ButtonStyle(
@@ -333,14 +333,6 @@ class PlanJamFormPage extends HookConsumerWidget {
       ),
     );
   }
-
-  static const badKamojis = [
-    '(」°ロ°)」',
-    '(ノ°益°)ノ',
-    '(╥﹏╥)',
-    '¯\\_(ツ)_/¯',
-    'ლ(ಠ_ಠ ლ)',
-  ];
 
   _handleSubmitJam(
     BuildContext context,

@@ -170,6 +170,10 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
       includeIfNull: false,
     )
     required String location,
+    @HiveField(25)
+    @JsonKey(includeIfNull: false)
+    @Default(JamQrModeEnum.none)
+    JamQrModeEnum qrMode,
   }) = _JamModel;
 
   const JamModel._();

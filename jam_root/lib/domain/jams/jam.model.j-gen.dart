@@ -36,6 +36,7 @@ final class JamViewModel {
   final String location;
   final DateTime? date;
   final JamJoinTypeEnum joinType;
+  final JamQrModeEnum qrMode;
   final File? image;
 
   const JamViewModel({
@@ -63,6 +64,7 @@ final class JamViewModel {
     this.location = '',
     this.date,
     this.joinType = JamJoinTypeEnum.freeToJoin,
+    this.qrMode = JamQrModeEnum.none,
     this.image,
   });
 
@@ -155,6 +157,7 @@ final class JamViewModel {
       date: model.date,
       image: model.image,
       joinType: model.joinType,
+      qrMode: model.qrMode,
     );
   }
 
@@ -184,6 +187,7 @@ final class JamViewModel {
     DateTime? date,
     File? image,
     JamJoinTypeEnum? joinType,
+    JamQrModeEnum? qrMode,
   }) {
     return JamViewModel(
       creatorIdFormModel: creatorIdFormModel ?? this.creatorIdFormModel,
@@ -212,6 +216,7 @@ final class JamViewModel {
       location: location ?? this.location,
       date: date ?? this.date,
       joinType: joinType ?? this.joinType,
+      qrMode: qrMode ?? this.qrMode,
       image: image ?? this.image,
     );
   }
@@ -244,6 +249,7 @@ final class JamViewModel {
       backgroundUrl: backgroundUrl,
       location: location,
       joinType: joinType,
+      qrMode: qrMode,
       date: date ?? DateTime.now(),
       image: image,
       creatorId: creatorIdFormModel.controller!.text,
@@ -359,6 +365,10 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     state = state.copyWith(joinType: value);
   }
 
+  void updateQrMode(JamQrModeEnum value) {
+    state = state.copyWith(qrMode: value);
+  }
+
   void updateImage(File? value) {
     state = state.copyWith(image: value ?? File(' '));
   }
@@ -367,7 +377,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.creatorIdFormModel.controller ?? TextEditingController();
 
-    controller.text = value ?? '';
+    controller.text = value;
 
     state = state;
   }
@@ -376,7 +386,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.descriptionFormModel.controller ?? TextEditingController();
 
-    controller.text = value ?? '';
+    controller.text = value;
 
     state = state;
   }
@@ -385,7 +395,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.extraInformationFormModel.controller ?? TextEditingController();
 
-    controller.text = value ?? '';
+    controller.text = value;
 
     state = state;
   }
@@ -394,7 +404,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.locationNameFormModel.controller ?? TextEditingController();
 
-    controller.text = value ?? '';
+    controller.text = value;
 
     state = state;
   }
@@ -503,6 +513,10 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     state = state.copyWith(joinType: value);
   }
 
+  void updateQrMode(JamQrModeEnum value) {
+    state = state.copyWith(qrMode: value);
+  }
+
   void updateIconUrl(String value) {
     state = state.copyWith(iconUrl: value);
   }
@@ -563,7 +577,7 @@ final class FreshJamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.nameFormModel.controller ?? TextEditingController();
 
-    controller.text = value;
+    controller.text = value ?? '';
 
     state = state;
   }

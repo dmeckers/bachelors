@@ -163,6 +163,9 @@ mixin _$JamModel {
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   String get location => throw _privateConstructorUsedError;
+  @HiveField(25)
+  @JsonKey(includeIfNull: false)
+  JamQrModeEnum get qrMode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -225,7 +228,8 @@ abstract class $JamModelCopyWith<$Res> {
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      String location});
+      String location,
+      @HiveField(25) @JsonKey(includeIfNull: false) JamQrModeEnum qrMode});
 
   $UserProfileModelCopyWith<$Res>? get creator;
   $CommunityModelCopyWith<$Res>? get relatedCommunity;
@@ -270,6 +274,7 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
     Object? locationName = freezed,
     Object? name = null,
     Object? location = null,
+    Object? qrMode = null,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -372,6 +377,10 @@ class _$JamModelCopyWithImpl<$Res, $Val extends JamModel>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      qrMode: null == qrMode
+          ? _value.qrMode
+          : qrMode // ignore: cast_nullable_to_non_nullable
+              as JamQrModeEnum,
     ) as $Val);
   }
 
@@ -470,7 +479,8 @@ abstract class _$$JamModelImplCopyWith<$Res>
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      String location});
+      String location,
+      @HiveField(25) @JsonKey(includeIfNull: false) JamQrModeEnum qrMode});
 
   @override
   $UserProfileModelCopyWith<$Res>? get creator;
@@ -516,6 +526,7 @@ class __$$JamModelImplCopyWithImpl<$Res>
     Object? locationName = freezed,
     Object? name = null,
     Object? location = null,
+    Object? qrMode = null,
   }) {
     return _then(_$JamModelImpl(
       id: freezed == id
@@ -618,6 +629,10 @@ class __$$JamModelImplCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      qrMode: null == qrMode
+          ? _value.qrMode
+          : qrMode // ignore: cast_nullable_to_non_nullable
+              as JamQrModeEnum,
     ));
   }
 }
@@ -683,7 +698,10 @@ class _$JamModelImpl extends _JamModel {
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      required this.location})
+      required this.location,
+      @HiveField(25)
+      @JsonKey(includeIfNull: false)
+      this.qrMode = JamQrModeEnum.none})
       : _joinRequests = joinRequests,
         _admins = admins,
         _participants = participants,
@@ -899,10 +917,14 @@ class _$JamModelImpl extends _JamModel {
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   final String location;
+  @override
+  @HiveField(25)
+  @JsonKey(includeIfNull: false)
+  final JamQrModeEnum qrMode;
 
   @override
   String toString() {
-    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, description: $description, joinRequests: $joinRequests, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel, locationName: $locationName, name: $name, location: $location)';
+    return 'JamModel(id: $id, creator: $creator, creatorId: $creatorId, description: $description, joinRequests: $joinRequests, lat: $lat, lon: $lon, date: $date, image: $image, chatId: $chatId, maxParticipants: $maxParticipants, invitesPerMember: $invitesPerMember, extraInformation: $extraInformation, relatedCommunity: $relatedCommunity, iconUrl: $iconUrl, admins: $admins, participants: $participants, backgroundUrl: $backgroundUrl, relatedVibes: $relatedVibes, dropBackground: $dropBackground, joinType: $joinType, formModel: $formModel, locationName: $locationName, name: $name, location: $location, qrMode: $qrMode)';
   }
 
   @override
@@ -949,7 +971,8 @@ class _$JamModelImpl extends _JamModel {
                 other.locationName == locationName) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.location, location) ||
-                other.location == location));
+                other.location == location) &&
+            (identical(other.qrMode, qrMode) || other.qrMode == qrMode));
   }
 
   @JsonKey(ignore: true)
@@ -980,7 +1003,8 @@ class _$JamModelImpl extends _JamModel {
         formModel,
         locationName,
         name,
-        location
+        location,
+        qrMode
       ]);
 
   @JsonKey(ignore: true)
@@ -1054,7 +1078,10 @@ abstract class _JamModel extends JamModel {
           fromJson: JsonJamTransformer.locationFromJson,
           readValue: JsonJamTransformer.readItself,
           includeIfNull: false)
-      required final String location}) = _$JamModelImpl;
+      required final String location,
+      @HiveField(25)
+      @JsonKey(includeIfNull: false)
+      final JamQrModeEnum qrMode}) = _$JamModelImpl;
   const _JamModel._() : super._();
 
   factory _JamModel.fromJson(Map<String, dynamic> json) =
@@ -1227,6 +1254,10 @@ abstract class _JamModel extends JamModel {
       readValue: JsonJamTransformer.readItself,
       includeIfNull: false)
   String get location;
+  @override
+  @HiveField(25)
+  @JsonKey(includeIfNull: false)
+  JamQrModeEnum get qrMode;
   @override
   @JsonKey(ignore: true)
   _$$JamModelImplCopyWith<_$JamModelImpl> get copyWith =>

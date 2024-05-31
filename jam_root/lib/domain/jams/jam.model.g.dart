@@ -42,13 +42,14 @@ class JamModelAdapter extends TypeAdapter<_$JamModelImpl> {
       locationName: fields[22] as String?,
       name: fields[23] as String,
       location: fields[24] as String,
+      qrMode: fields[25] as JamQrModeEnum,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$JamModelImpl obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(26)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -91,6 +92,8 @@ class JamModelAdapter extends TypeAdapter<_$JamModelImpl> {
       ..write(obj.name)
       ..writeByte(24)
       ..write(obj.location)
+      ..writeByte(25)
+      ..write(obj.qrMode)
       ..writeByte(4)
       ..write(obj.joinRequests)
       ..writeByte(15)
@@ -156,6 +159,8 @@ _$JamModelImpl _$$JamModelImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       location: JsonJamTransformer.locationFromJson(
           JsonJamTransformer.readItself(json, 'location')),
+      qrMode: $enumDecodeNullable(_$JamQrModeEnumEnumMap, json['qr_mode']) ??
+          JamQrModeEnum.none,
     );
 
 Map<String, dynamic> _$$JamModelImplToJson(_$JamModelImpl instance) {
@@ -181,6 +186,7 @@ Map<String, dynamic> _$$JamModelImplToJson(_$JamModelImpl instance) {
   val['location_name'] = instance.locationName;
   val['name'] = instance.name;
   val['location'] = JsonJamTransformer.locationToJson(instance.location);
+  val['qr_mode'] = _$JamQrModeEnumEnumMap[instance.qrMode]!;
   return val;
 }
 
@@ -191,4 +197,10 @@ const _$JamJoinTypeEnumEnumMap = {
   JamJoinTypeEnum.freetoJoinAfterFormAndApprove:
       'freetoJoinAfterFormAndApprove',
   JamJoinTypeEnum.requestToJoin: 'requestToJoin',
+};
+
+const _$JamQrModeEnumEnumMap = {
+  JamQrModeEnum.none: 'none',
+  JamQrModeEnum.creatorChecksIn: 'creatorChecksIn',
+  JamQrModeEnum.participantsCheckInThemself: 'participantsCheckInThemself',
 };
