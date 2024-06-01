@@ -56,8 +56,6 @@ Deno.serve(async (req) => {
     //   record_id: id.trim(),
     // });
 
-    console.log("ALJE BLJA");
-
     return new Response("ok", {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
