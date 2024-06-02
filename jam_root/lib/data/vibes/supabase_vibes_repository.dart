@@ -102,6 +102,13 @@ final class SupabaseVibesRepository extends VibesRepositoryInterface
 
     return record.isNotEmpty;
   }
+
+  @override
+  Future<List<VibeModel>> getVibeSuperCategories() async {
+    final response = await supabase.rpc('get_vibe_super_categories');
+
+    return (response as Dynamics).cast<Json>().map(VibeModel.fromJson).toList();
+  }
 }
 
 final vibesRepositoryProvider = Provider<VibesRepositoryInterface>(

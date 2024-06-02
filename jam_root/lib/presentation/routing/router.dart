@@ -16,6 +16,23 @@ GoRouter router(RouterRef ref) {
       ValueNotifier<AsyncValue<JUserAuthState>>(const AsyncLoading());
   var hasVibes = true;
 
+  Future<dynamic> checkThirdPartyVibes() async {
+    final tokenIssuer = supaAuth.currentUser?.userMetadata?['iss'] as String?;
+    if (tokenIssuer == null) return;
+
+    // TODO::// add more third party auth providers
+    if (!tokenIssuer.contains('google')) return;
+
+    final user = ref.read(storerProvider).get<UserProfileModel>();
+
+    if (user == null) {
+      return hasVibes =
+          await ref.read(vibesRepositoryProvider).doesCurrentUserHaveVibes();
+    }
+
+    hasVibes = user.vibes.isNotEmpty;
+  }
+
   ref
     ..onDispose(authState.dispose)
     ..listen(
@@ -23,19 +40,7 @@ GoRouter router(RouterRef ref) {
         (value) => value.whenData((value) => value.authState),
       ),
       (_, next) async {
-        final iss = supaAuth.currentUser?.userMetadata?['iss'] as String?;
-        if (iss?.contains('google') ?? false) {
-          final cached = localDatabase.get('hasVibes');
-
-          if (cached != null) {
-            hasVibes = cached;
-          } else {
-            hasVibes = await ref
-                .read(vibesRepositoryProvider)
-                .doesCurrentUserHaveVibes();
-          }
-        }
-
+        await checkThirdPartyVibes();
         authState.value = next;
       },
     );

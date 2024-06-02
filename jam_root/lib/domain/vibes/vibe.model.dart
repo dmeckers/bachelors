@@ -18,14 +18,24 @@ class VibeModel
     @HiveField(1) required String name,
     @HiveField(2) required String? description,
     @HiveField(3) required String? iconUrl,
-    @HiveField(4) @Default([]) List<VibeModel>? childVibes,
-    @HiveField(5) @Default([]) List<VibeModel>? parentVibes,
+    @JsonKey(includeIfNull: false)
+    @HiveField(4)
+    @Default([])
+    List<VibeModel>? childVibes,
+    @JsonKey(includeIfNull: false)
+    @HiveField(5)
+    @Default([])
+    List<VibeModel>? parentVibes,
   }) = _VibeModel;
 
   const VibeModel._();
 
   factory VibeModel.fromJson(Map<String, dynamic> json) =>
       _$VibeModelFromJson(json);
+
+  get iconAsEmoji => iconUrl != null
+      ? String.fromCharCode(int.parse(iconUrl!, radix: 16))
+      : '';
 
   @override
   VibeModel fromJson(Map<String, dynamic> json) => VibeModel.fromJson(json);

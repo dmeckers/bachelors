@@ -37,7 +37,7 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
     /**
      * Jam creator id
      */
-    @HiveField(2) @JsonKey(includeToJson: false) String creatorId,
+    @HiveField(2) @JsonKey(includeToJson: false) String? creatorId,
 
     /**
      * Description of the jam

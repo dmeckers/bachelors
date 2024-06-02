@@ -28,8 +28,10 @@ mixin _$VibeModel {
   String? get description => throw _privateConstructorUsedError;
   @HiveField(3)
   String? get iconUrl => throw _privateConstructorUsedError;
+  @JsonKey(includeIfNull: false)
   @HiveField(4)
   List<VibeModel>? get childVibes => throw _privateConstructorUsedError;
+  @JsonKey(includeIfNull: false)
   @HiveField(5)
   List<VibeModel>? get parentVibes => throw _privateConstructorUsedError;
 
@@ -49,8 +51,10 @@ abstract class $VibeModelCopyWith<$Res> {
       @HiveField(1) String name,
       @HiveField(2) String? description,
       @HiveField(3) String? iconUrl,
-      @HiveField(4) List<VibeModel>? childVibes,
-      @HiveField(5) List<VibeModel>? parentVibes});
+      @JsonKey(includeIfNull: false) @HiveField(4) List<VibeModel>? childVibes,
+      @JsonKey(includeIfNull: false)
+      @HiveField(5)
+      List<VibeModel>? parentVibes});
 }
 
 /// @nodoc
@@ -115,8 +119,10 @@ abstract class _$$VibeModelImplCopyWith<$Res>
       @HiveField(1) String name,
       @HiveField(2) String? description,
       @HiveField(3) String? iconUrl,
-      @HiveField(4) List<VibeModel>? childVibes,
-      @HiveField(5) List<VibeModel>? parentVibes});
+      @JsonKey(includeIfNull: false) @HiveField(4) List<VibeModel>? childVibes,
+      @JsonKey(includeIfNull: false)
+      @HiveField(5)
+      List<VibeModel>? parentVibes});
 }
 
 /// @nodoc
@@ -176,8 +182,12 @@ class _$VibeModelImpl extends _VibeModel {
       @HiveField(1) required this.name,
       @HiveField(2) required this.description,
       @HiveField(3) required this.iconUrl,
-      @HiveField(4) final List<VibeModel>? childVibes = const [],
-      @HiveField(5) final List<VibeModel>? parentVibes = const []})
+      @JsonKey(includeIfNull: false)
+      @HiveField(4)
+      final List<VibeModel>? childVibes = const [],
+      @JsonKey(includeIfNull: false)
+      @HiveField(5)
+      final List<VibeModel>? parentVibes = const []})
       : _childVibes = childVibes,
         _parentVibes = parentVibes,
         super._();
@@ -199,7 +209,7 @@ class _$VibeModelImpl extends _VibeModel {
   final String? iconUrl;
   final List<VibeModel>? _childVibes;
   @override
-  @JsonKey()
+  @JsonKey(includeIfNull: false)
   @HiveField(4)
   List<VibeModel>? get childVibes {
     final value = _childVibes;
@@ -211,7 +221,7 @@ class _$VibeModelImpl extends _VibeModel {
 
   final List<VibeModel>? _parentVibes;
   @override
-  @JsonKey()
+  @JsonKey(includeIfNull: false)
   @HiveField(5)
   List<VibeModel>? get parentVibes {
     final value = _parentVibes;
@@ -273,8 +283,12 @@ abstract class _VibeModel extends VibeModel {
       @HiveField(1) required final String name,
       @HiveField(2) required final String? description,
       @HiveField(3) required final String? iconUrl,
-      @HiveField(4) final List<VibeModel>? childVibes,
-      @HiveField(5) final List<VibeModel>? parentVibes}) = _$VibeModelImpl;
+      @JsonKey(includeIfNull: false)
+      @HiveField(4)
+      final List<VibeModel>? childVibes,
+      @JsonKey(includeIfNull: false)
+      @HiveField(5)
+      final List<VibeModel>? parentVibes}) = _$VibeModelImpl;
   const _VibeModel._() : super._();
 
   factory _VibeModel.fromJson(Map<String, dynamic> json) =
@@ -293,9 +307,11 @@ abstract class _VibeModel extends VibeModel {
   @HiveField(3)
   String? get iconUrl;
   @override
+  @JsonKey(includeIfNull: false)
   @HiveField(4)
   List<VibeModel>? get childVibes;
   @override
+  @JsonKey(includeIfNull: false)
   @HiveField(5)
   List<VibeModel>? get parentVibes;
   @override

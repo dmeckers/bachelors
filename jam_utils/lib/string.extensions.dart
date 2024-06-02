@@ -8,6 +8,10 @@ extension NullCheck on dynamic {
   bool get isNotNullOrFalse =>
       (this as dynamic) != null && (this as dynamic) != false;
   bool get isNull => (this as dynamic) == null;
+  bool get isNullOrEmpty =>
+      (this as dynamic) == null || (this as dynamic) == '';
+  bool get isNotNullOrEmpty =>
+      (this as dynamic) != null && (this as dynamic) != '';
 }
 
 extension StringExtensions on String {

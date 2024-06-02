@@ -75,12 +75,21 @@ _$VibeModelImpl _$$VibeModelImplFromJson(Map<String, dynamic> json) =>
           const [],
     );
 
-Map<String, dynamic> _$$VibeModelImplToJson(_$VibeModelImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'description': instance.description,
-      'icon_url': instance.iconUrl,
-      'child_vibes': instance.childVibes,
-      'parent_vibes': instance.parentVibes,
-    };
+Map<String, dynamic> _$$VibeModelImplToJson(_$VibeModelImpl instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'name': instance.name,
+    'description': instance.description,
+    'icon_url': instance.iconUrl,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('child_vibes', instance.childVibes);
+  writeNotNull('parent_vibes', instance.parentVibes);
+  return val;
+}

@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 
+import '../../vibes/edit_vibes/edit_my_vibes.page.dart';
+
 enum ChatRoutes {
   friendInvites(null),
   friendList(null),

@@ -1,5 +1,3 @@
-13.theme -> black by def
-
 > > > 2 invites 1 accepted what wiill happen when click on second? (replicate first)
 > > > invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
 > > > update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
@@ -8,10 +6,11 @@
 WHAT WILL HAPPEN IF FRIEND REQUEST SENT FROM ONE AND OTHER IGNORING REQUESTS SENDS REQUEST TO FIRST PERSON
 4.jam vibe change (probably this will affect also map stream)
 
-<!-- > > > distance doesnt work -->
-
 > > > ?solved?
 
 improve searching mechanism - how ?
-enrich vibe selection (devian art example) vibe select like in debianart would be cool
-999.populate some vibes
+13.theme -> black by def
+
+<!-- > > > distance doesnt work -->
+
+-> working on change vibes edit_my_vibes.dart

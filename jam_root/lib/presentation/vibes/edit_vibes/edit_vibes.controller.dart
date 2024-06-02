@@ -31,6 +31,14 @@ class UserEditVibesController extends _$UserEditVibesController
 }
 
 @riverpod
+class CategorizedVibesController extends _$CategorizedVibesController {
+  @override
+  FutureOr<VibesCollection> build() async {
+    return await ref.read(vibesRepositoryProvider).getVibeSuperCategories();
+  }
+}
+
+@riverpod
 class SearchVibesController extends _$SearchVibesController {
   @override
   FutureOr<VibesCollection> build() {

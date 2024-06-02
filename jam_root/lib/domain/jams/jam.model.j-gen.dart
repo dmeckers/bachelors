@@ -377,7 +377,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.creatorIdFormModel.controller ?? TextEditingController();
 
-    controller.text = value;
+    controller.text = value ?? '';
 
     state = state;
   }
@@ -386,7 +386,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.descriptionFormModel.controller ?? TextEditingController();
 
-    controller.text = value;
+    controller.text = value ?? '';
 
     state = state;
   }
@@ -395,7 +395,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.extraInformationFormModel.controller ?? TextEditingController();
 
-    controller.text = value;
+    controller.text = value ?? '';
 
     state = state;
   }
@@ -404,7 +404,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.locationNameFormModel.controller ?? TextEditingController();
 
-    controller.text = value;
+    controller.text = value ?? '';
 
     state = state;
   }
@@ -413,7 +413,7 @@ final class JamViewModelStateNotifier extends StateNotifier<JamViewModel> {
     final controller =
         state.nameFormModel.controller ?? TextEditingController();
 
-    controller.text = value;
+    controller.text = value ?? '';
 
     state = state;
   }

@@ -484,7 +484,7 @@ class ViewModelGenerator extends GeneratorForAnnotation<ViewModelAnnotation> {
       buffer.writeln("""
         final controller = state.${element.key}FormModel.controller ?? TextEditingController();
 
-        controller.text = value;
+        controller.text = value ?? '';
 
         state = state;
         """);

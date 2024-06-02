@@ -23,6 +23,24 @@ final userEditVibesControllerProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$UserEditVibesController = AutoDisposeAsyncNotifier<VibesCollection>;
+String _$categorizedVibesControllerHash() =>
+    r'cc3e51e7468a1710e17978483d060499f12d3905';
+
+/// See also [CategorizedVibesController].
+@ProviderFor(CategorizedVibesController)
+final categorizedVibesControllerProvider = AutoDisposeAsyncNotifierProvider<
+    CategorizedVibesController, VibesCollection>.internal(
+  CategorizedVibesController.new,
+  name: r'categorizedVibesControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$categorizedVibesControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CategorizedVibesController
+    = AutoDisposeAsyncNotifier<VibesCollection>;
 String _$searchVibesControllerHash() =>
     r'82b18e4c91f14cfde2e6bb3f5badef2e2e08d556';
 

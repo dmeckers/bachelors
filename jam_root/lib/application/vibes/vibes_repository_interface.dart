@@ -6,4 +6,6 @@ abstract class VibesRepositoryInterface {
   Future<List<VibeModel>> getVibesByUserId({required String userId});
   Future<void> updateVibes({required List<VibeModel> vibes});
   Future<bool> doesCurrentUserHaveVibes();
+
+  Future<List<VibeModel>> getVibeSuperCategories();
 }
