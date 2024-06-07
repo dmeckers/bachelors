@@ -16,10 +16,9 @@ class MapPageAppBar extends HookConsumerWidget implements PreferredSizeWidget {
     required WidgetRef ref,
     required String searchTerm,
   }) async {
-    final position = ref.watch(userCurrentLocationProvider);
-
-    print(position);
-    print(position);
+    final position = ref.watch(
+      mapStateViewModelProvider.select((vm) => vm.userCurrentLocation),
+    );
 
     if (position.isNull) {
       return;
@@ -33,8 +32,9 @@ class MapPageAppBar extends HookConsumerWidget implements PreferredSizeWidget {
           language: S.delegate.supportedLocales.first.languageCode,
         );
 
-    ref.read(placesSearchResultsProvider.notifier).state =
-        response.status == 'OK' ? response.predictions : [];
+    ref.read(mapStateViewModelProvider.notifier).setPlacesSearchResults(
+          response.status == 'OK' ? response.predictions : [],
+        );
   }
 
   @override
@@ -71,8 +71,8 @@ class MapPageAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                             onPressed: () {
                               isSearchMode.value = false;
                               ref
-                                  .read(placesSearchResultsProvider.notifier)
-                                  .state = const [];
+                                  .read(mapStateViewModelProvider.notifier)
+                                  .setPlacesSearchResults(const []);
                             },
                             icon: const Icon(Icons.close),
                           ),

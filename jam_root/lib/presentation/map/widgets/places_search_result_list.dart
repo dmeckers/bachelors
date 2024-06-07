@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -10,16 +8,13 @@ import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 class MapPageSearchResultList extends ConsumerWidget {
-  const MapPageSearchResultList({
-    super.key,
-    required this.completer,
-  });
-
-  final ObjectRef<Completer<GoogleMapController>> completer;
+  const MapPageSearchResultList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchedPlaces = ref.watch(placesSearchResultsProvider);
+    final searchedPlaces = ref.watch(
+      mapStateViewModelProvider.select((vm) => vm.placesSearchResults),
+    );
 
     return LayoutBuilder(
       builder: (ctx, constraints) => Container(
@@ -39,7 +34,9 @@ class MapPageSearchResultList extends ConsumerWidget {
               onTap: () async {
                 final placeId = searchedPlaces[index].placeId;
 
-                ref.read(placesSearchResultsProvider.notifier).state = [];
+                ref
+                    .read(mapStateViewModelProvider.notifier)
+                    .setPlacesSearchResults(const []);
 
                 if (placeId.isEmptyOrNull) return;
 
@@ -49,16 +46,17 @@ class MapPageSearchResultList extends ConsumerWidget {
 
                 if (response.result.geometry.isNull) return;
 
-                // completer.value.future.then(
-                //   (value) => value.animateCamera(
-                //     CameraUpdate.newLatLng(
-                //       LatLng(
-                //         response.result.geometry!.location.lat,
-                //         response.result.geometry!.location.lng,
-                //       ),
-                //     ),
-                //   ),
-                // );
+                ref
+                    .read(mapStateViewModelProvider)
+                    .googleMapsController
+                    ?.animateCamera(
+                      CameraUpdate.newLatLng(
+                        LatLng(
+                          response.result.geometry!.location.lat,
+                          response.result.geometry!.location.lng,
+                        ),
+                      ),
+                    );
               },
               leading: const Icon(
                 Icons.location_on,

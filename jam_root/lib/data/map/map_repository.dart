@@ -47,36 +47,25 @@ final class MapRepository extends MapRepositoryInterface
   }
 
   UsersJamsLocations _mapToLocationModels(Json response, String userId) {
-    final users = List<UserLocation>.empty(growable: true);
-    final jams = List<JamLocation>.empty(growable: true);
+    final users = (response['users'] as List<dynamic>?)
+            ?.map((userRaw) => UserLocation.fromJson(userRaw).copyWith(
+                  marker: userRaw['is_friend']
+                      ? JamMarker.getFriendsMarker()
+                      : JamMarker.getUserMarker(),
+                ))
+            .toList() ??
+        [];
 
-    if (response['users'] != null) {
-      for (final userRaw in response['users']) {
-        final user = UserLocation.fromJson(userRaw);
-
-        users.add(
-          user.copyWith(
-            marker: user.isFriend
-                ? JamMarker.getFriendsMarker()
-                : JamMarker.getUserMarker(),
-          ),
-        );
-      }
-    }
-
-    if (response['jams'] != null) {
-      for (final jamRaw in response['jams']) {
-        final jam = JamLocation.fromJson(jamRaw);
-
-        jams.add(
-          jam.copyWith(
-            marker: jam.creatorId == userId
-                ? JamMarker.getUserJamMarker()
-                : JamMarker.getJamMarker(),
-          ),
-        );
-      }
-    }
+    final jams = (response['jams'] as List<dynamic>?)
+            ?.map(
+              (jamRaw) => JamLocation.fromJson(jamRaw).copyWith(
+                marker: jamRaw['creator_id'] == userId
+                    ? JamMarker.getUserJamMarker()
+                    : JamMarker.getJamMarker(),
+              ),
+            )
+            .toList() ??
+        [];
 
     return (users: users, jams: jams);
   }

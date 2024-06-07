@@ -41,6 +41,21 @@ class SpotJamLocation with _$SpotJamLocation implements LocationAbstactModel {
     );
   }
 
+  factory SpotJamLocation.dummy() {
+    return SpotJamLocation(
+      id: '1',
+      name: 'Jam',
+      description: 'Jam',
+      locationName: 'Jam',
+      date: DateTime.now(),
+      latitude: 0,
+      longitude: 0,
+      vibes: [],
+      creatorId: '1',
+      marker: BitmapDescriptor.defaultMarkerWithHue(0),
+    );
+  }
+
   LatLng get toLatLng => LatLng(latitude, longitude);
 
   @override

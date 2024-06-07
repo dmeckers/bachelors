@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jam/config/config.dart';
-import 'package:jam/presentation/presentation.dart';
 
 enum JamMarkerType {
   user,
