@@ -78,11 +78,11 @@ class PickLocationPage extends HookConsumerWidget {
           'Set jam location',
           style: context.jText.bodyMedium,
         ),
-        bottom: MapPlaceTopSearchBar(
-          positionNotifier: position,
-          searchResultsNotifier: searchResults,
-          showResultsNotifier: showResults,
-        ),
+        // bottom: MapPlaceTopSearchBar(
+        //   positionNotifier: position,
+        //   searchResultsNotifier: searchResults,
+        //   showResultsNotifier: showResults,
+        // ),
       ),
       body: Column(
         children: [

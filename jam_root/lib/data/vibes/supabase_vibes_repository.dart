@@ -89,11 +89,13 @@ final class SupabaseVibesRepository extends VibesRepositoryInterface
 
   @override
   Future<bool> doesCurrentUserHaveVibes() async {
-    if (!(await isOnline(_ref))) {
-      final row = await PowerSync.db.get(
-          'SELECT id FROM users_vibes WHERE user_id = ?', [getUserIdOrThrow()]);
-      return row.isNotEmpty;
-    }
+    if (supabase.auth.currentUser == null) return false;
+
+    // if (!(await isOnline(_ref))) {
+    //   final row = await PowerSync.db.get(
+    //       'SELECT id FROM users_vibes WHERE user_id = ?', []);
+    //   return row.isNotEmpty;
+    // }
 
     final record = await supabase
         .from('users_vibes')

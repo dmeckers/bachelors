@@ -1,7 +1,41 @@
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:jam/config/config.dart';
+import 'package:jam/presentation/presentation.dart';
+
+enum JamMarkerType {
+  user,
+  currentUser,
+  friends,
+  jam,
+  userJam,
+  spotJam;
+
+  String get assetPath {
+    return switch (this) {
+      JamMarkerType.user => ImagePathConstants.MAP_USER_MARKER_IMAGE_PATH,
+      JamMarkerType.currentUser =>
+        ImagePathConstants.MAP_CURRENT_USER_MARKER_IMAGE_PATH,
+      JamMarkerType.friends => ImagePathConstants.MAP_FRIEND_MARKER_IMAGE_PATH,
+      JamMarkerType.jam => ImagePathConstants.MAP_JAM_MARKER_IMAGE_PATH,
+      JamMarkerType.userJam =>
+        ImagePathConstants.MAP_USERS_JAM_MARKER_IMAGE_PATH,
+      JamMarkerType.spotJam =>
+        ImagePathConstants.MAP_SPOT_JAM_MARKER_IMAGE_PATH,
+    };
+  }
+
+  String get legendText {
+    return switch (this) {
+      JamMarkerType.user => 'Other people',
+      JamMarkerType.currentUser => 'Your location',
+      JamMarkerType.friends => 'Friends',
+      JamMarkerType.jam => 'Jams',
+      JamMarkerType.userJam => 'Your jams',
+      JamMarkerType.spotJam => 'Spot jams',
+    };
+  }
+}
 
 class JamMarker {
   static Uint8List _userMarkerBytes = Uint8List(0);

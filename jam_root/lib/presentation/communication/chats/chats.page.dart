@@ -8,6 +8,7 @@ import 'package:jam/data/data.dart';
 import 'package:jam/globals.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:location/location.dart';
 
 class ChatsPage extends HookConsumerWidget
     with ChattingProviders, ChatBuilderHelper, ProfileRepositoryProviders {
@@ -18,14 +19,24 @@ class ChatsPage extends HookConsumerWidget
     final selectedChats = ref.watch(selectedChatsProvider);
     final c$ = ref.watch(chatsState$);
 
-    // useEffect(() {
-    //   final chatsListener = ref.listenManual(chatsState$, (previous, next) {});
+    useEffect(() {
+      final location = localDatabase.get('LOCATION');
+      if (location != null) return () {};
 
-    //   return () {
-    //     debugPrint('statement');
-    //     chatsListener.close();
-    //   };
-    // }, []);
+      // TODO::QUICK FIX
+      try {
+        Location().getLocation().then(
+              (location) => localDatabase.put(
+                'LOCATION',
+                'Lat: ${location.latitude}, Lng: ${location.longitude}',
+              ),
+            );
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+
+      return () {};
+    }, []);
 
     _initOnlineStatusObserver(ref);
 

@@ -6,10 +6,6 @@ import 'package:jam/data/data.dart';
 
 class PowerSyncMessagesService with SupabaseUserGetter {
   Stream<Messages> messages$(int chatId) async* {
-    // final aljeBlja = await PowerSync.db.getAll('SELECT * FROM message_status');
-
-    // debugPrint(aljeBlja.toString());
-
     yield* PowerSync.db
         .watch(
           PowerSyncMessagingQueries.QUERY_GET_MESSAGES(

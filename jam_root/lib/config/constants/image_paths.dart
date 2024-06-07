@@ -53,12 +53,12 @@ final class ImagePathConstants {
       'assets/images/jam_waving_red.webp';
   static const MAP_USER_MARKER_IMAGE_PATH =
       'assets/images/jam_waving_blue.webp';
-  static const MAP_JAM_MARKER_IMAGE_PATH =
-      'assets/images/jam_waving_green.webp';
-  static const MAP_USERS_JAM_MARKER_IMAGE_PATH =
-      'assets/images/jam_waving_yellow.png';
   static const MAP_CURRENT_USER_MARKER_IMAGE_PATH =
       'assets/images/jam_waving_orange.webp';
+
+  static const MAP_JAM_MARKER_IMAGE_PATH = 'assets/images/jam_party_red.webp';
+  static const MAP_USERS_JAM_MARKER_IMAGE_PATH =
+      'assets/images/jam_party_blue.webp';
   static const MAP_SPOT_JAM_MARKER_IMAGE_PATH =
-      'assets/images/jam_waving_light_blue.webp';
+      'assets/images/jam_party_yellow.webp';
 }

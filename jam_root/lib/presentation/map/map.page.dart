@@ -35,18 +35,15 @@ class MapPage extends HookConsumerWidget {
           'Local area',
           style: context.jText.bodyMedium,
         ),
-        bottom: MapPlaceTopSearchBar(
-          positionNotifier: positionNotifier,
-          searchResultsNotifier: searchResultsNotifier,
-          showResultsNotifier: showResults,
-        ),
+        // bottom: MapPlaceTopSearchBar(
+        //   positionNotifier: positionNotifier,
+        //   searchResultsNotifier: searchResultsNotifier,
+        //   showResultsNotifier: showResults,
+        // ),
       ),
       body: Stack(
         children: [
-          MapWidget(
-            completer: completer,
-            positionNotifier: positionNotifier,
-          ),
+          MapWidget(completer: completer),
           searchResultsNotifier.value.isNotEmpty || showResults.value
               ? LayoutBuilder(
                   builder: (ctx, constraints) => Container(
@@ -223,173 +220,173 @@ class MapPage extends HookConsumerWidget {
   // }
 }
 
-class MapWidget extends HookConsumerWidget {
-  const MapWidget({
-    super.key,
-    required this.completer,
-    this.positionNotifier,
-  });
+// class MapWidget extends HookConsumerWidget {
+//   const MapWidget({
+//     super.key,
+//     required this.completer,
+//     this.positionNotifier,
+//   });
 
-  final ObjectRef<Completer<GoogleMapController>> completer;
-  final ValueNotifier<LatLng?>? positionNotifier;
+//   final ObjectRef<Completer<GoogleMapController>> completer;
+//   final ValueNotifier<LatLng?>? positionNotifier;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final location$ = ref.watch(locations$);
-    // final completer = useRef(Completer<GoogleMapController>());
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final location$ = ref.watch(locations$);
+//     // final completer = useRef(Completer<GoogleMapController>());
 
-    return location$.maybeWhen(
-      data: (data) {
-        final position = LatLng(
-          data.currentPosition.latitude!,
-          data.currentPosition.longitude!,
-        );
+//     return location$.maybeWhen(
+//       data: (data) {
+//         final position = LatLng(
+//           data.currentPosition.latitude!,
+//           data.currentPosition.longitude!,
+//         );
 
-        positionNotifier?.value = position;
+//         positionNotifier?.value = position;
 
-        final markers = useMemoized(() {
-          return data.locations
-              .map((e) => _mapToMarker(context, e, ref))
-              .toSet();
-        }, [data.locations]);
+//         final markers = useMemoized(() {
+//           return data.locations
+//               .map((e) => _mapToMarker(context, e, ref))
+//               .toSet();
+//         }, [data.locations]);
 
-        final userMarker = useMemoized(() {
-          return Marker(
-            markerId: const MarkerId('currentPosition'),
-            position: position,
-            icon: JamMarker.getCurrentUserMarker(),
-            infoWindow: const InfoWindow(title: 'Your location'),
-          );
-        }, [position]);
+//         final userMarker = useMemoized(() {
+//           return Marker(
+//             markerId: const MarkerId('currentPosition'),
+//             position: position,
+//             icon: JamMarker.getCurrentUserMarker(),
+//             infoWindow: const InfoWindow(title: 'Your location'),
+//           );
+//         }, [position]);
 
-        return GoogleMap(
-          zoomControlsEnabled: false,
-          cloudMapId: '5361fdbe18cb28e5',
-          onLongPress: (LatLng position) async {
-            ref.read(locationStateProvider).addTempMarker(
-                  lat: position.latitude,
-                  lon: position.longitude,
-                );
+//         return GoogleMap(
+//           zoomControlsEnabled: false,
+//           cloudMapId: '5361fdbe18cb28e5',
+//           onLongPress: (LatLng position) async {
+//             ref.read(locationStateProvider).addTempMarker(
+//                   lat: position.latitude,
+//                   lon: position.longitude,
+//                 );
 
-            _handleNewJamLocationMapTap(context, position, ref);
+//             _handleNewJamLocationMapTap(context, position, ref);
 
-            completer.value.future.then((value) {
-              value.animateCamera(CameraUpdate.newLatLng(position));
-            });
-          },
-          onTap: (_) async {
-            if (ref.read(showBottomSheetProvider)) {
-              Navigator.pop(context);
-              ref.read(showBottomSheetProvider.notifier).state = false;
-              ref.read(showPutJamBottomSheetProvider.notifier).state = false;
-            }
-          },
-          onMapCreated: (controller) {
-            completer.value.complete(controller);
-          },
-          initialCameraPosition: CameraPosition(
-            target: position,
-            zoom: 14.4746,
-          ),
-          compassEnabled: false,
-          cameraTargetBounds:
-              CameraTargetBounds(PositionService.getBounds(position, 0.5)),
-          minMaxZoomPreference: const MinMaxZoomPreference(10, 16),
-          markers: markers..add(userMarker),
-        );
-      },
-      orElse: () => const MapBackdrop(isLoading: true),
-    );
-  }
+//             completer.value.future.then((value) {
+//               value.animateCamera(CameraUpdate.newLatLng(position));
+//             });
+//           },
+//           onTap: (_) async {
+//             if (ref.read(showBottomSheetProvider)) {
+//               Navigator.pop(context);
+//               ref.read(showBottomSheetProvider.notifier).state = false;
+//               ref.read(showPutJamBottomSheetProvider.notifier).state = false;
+//             }
+//           },
+//           onMapCreated: (controller) {
+//             completer.value.complete(controller);
+//           },
+//           initialCameraPosition: CameraPosition(
+//             target: position,
+//             zoom: 14.4746,
+//           ),
+//           compassEnabled: false,
+//           cameraTargetBounds:
+//               CameraTargetBounds(PositionService.getBounds(position, 0.5)),
+//           minMaxZoomPreference: const MinMaxZoomPreference(10, 16),
+//           markers: markers..add(userMarker),
+//         );
+//       },
+//       orElse: () => const MapBackdrop(isLoading: true),
+//     );
+//   }
 
-  Marker _mapToMarker(
-    BuildContext context,
-    LocationAbstactModel location,
-    WidgetRef ref,
-  ) {
-    return Marker(
-      markerId: MarkerId(location.id.toString()),
-      position: LatLng(location.latitude, location.longitude),
-      infoWindow: InfoWindow(title: location.name),
-      icon: location.marker ?? BitmapDescriptor.defaultMarkerWithHue(0),
-      onTap: () {
-        switch (location.type) {
-          case LocationType.jam:
-            _handleJamLocationMarkerTap(context, location, ref);
-            break;
-          case LocationType.spottedJam:
-            break;
-          case LocationType.user:
-            _handleUserLocationMarkerTap(context, location, ref);
-            break;
-        }
-      },
-    );
-  }
+//   Marker _mapToMarker(
+//     BuildContext context,
+//     LocationAbstactModel location,
+//     WidgetRef ref,
+//   ) {
+//     return Marker(
+//       markerId: MarkerId(location.id.toString()),
+//       position: LatLng(location.latitude, location.longitude),
+//       infoWindow: InfoWindow(title: location.name),
+//       icon: location.marker ?? BitmapDescriptor.defaultMarkerWithHue(0),
+//       onTap: () {
+//         switch (location.type) {
+//           case LocationType.jam:
+//             _handleJamLocationMarkerTap(context, location, ref);
+//             break;
+//           case LocationType.spottedJam:
+//             break;
+//           case LocationType.user:
+//             _handleUserLocationMarkerTap(context, location, ref);
+//             break;
+//         }
+//       },
+//     );
+//   }
 
-  _handleNewJamLocationMapTap(
-    BuildContext context,
-    LatLng position,
-    WidgetRef ref,
-  ) {
-    if (ref.read(showPutJamBottomSheetProvider)) return;
+//   _handleNewJamLocationMapTap(
+//     BuildContext context,
+//     LatLng position,
+//     WidgetRef ref,
+//   ) {
+//     if (ref.read(showPutJamBottomSheetProvider)) return;
 
-    ref.read(showPutJamBottomSheetProvider.notifier).state = true;
-    ref.read(showBottomSheetProvider.notifier).state = true;
+//     ref.read(showPutJamBottomSheetProvider.notifier).state = true;
+//     ref.read(showBottomSheetProvider.notifier).state = true;
 
-    showBottomSheet(
-      context: context,
-      builder: (ctx) => NewJamBottomSheet(
-        position: position,
-        onActionPressed: () {
-          context.pushNamed(JamRoutes.createNew.name, extra: position);
-        },
-      ),
-    );
-  }
+//     showBottomSheet(
+//       context: context,
+//       builder: (ctx) => NewJamBottomSheet(
+//         position: position,
+//         onActionPressed: () {
+//           context.pushNamed(JamRoutes.createNew.name, extra: position);
+//         },
+//       ),
+//     );
+//   }
 
-  _handleJamLocationMarkerTap(
-    BuildContext context,
-    LocationAbstactModel location,
-    WidgetRef ref,
-  ) {
-    ref.read(showBottomSheetProvider.notifier).state = true;
-    showBottomSheet(
-      context: context,
-      builder: (ctx) => JamBottomSheet(
-        jamLocation: location as JamLocation,
-        onActionPressed: () {
-          Navigator.of(context).pop();
-          ref.read(showBottomSheetProvider.notifier).state = false;
-        },
-      ),
-    );
-  }
+//   _handleJamLocationMarkerTap(
+//     BuildContext context,
+//     LocationAbstactModel location,
+//     WidgetRef ref,
+//   ) {
+//     ref.read(showBottomSheetProvider.notifier).state = true;
+//     showBottomSheet(
+//       context: context,
+//       builder: (ctx) => JamBottomSheet(
+//         jamLocation: location as JamLocation,
+//         onActionPressed: () {
+//           Navigator.of(context).pop();
+//           ref.read(showBottomSheetProvider.notifier).state = false;
+//         },
+//       ),
+//     );
+//   }
 
-  _handleUserLocationMarkerTap(
-    BuildContext context,
-    LocationAbstactModel location,
-    WidgetRef ref,
-  ) {
-    showBottomSheet(
-      context: context,
-      builder: (ctx) => SendFriendInviteBottomSheet(
-        userId: location.id,
-        onInviteSent: () {
-          Navigator.of(context).pop();
-          ref.read(showBottomSheetProvider.notifier).state = false;
-        },
-      ),
-    );
-    ref.read(showBottomSheetProvider.notifier).state = true;
-  }
-}
+//   _handleUserLocationMarkerTap(
+//     BuildContext context,
+//     LocationAbstactModel location,
+//     WidgetRef ref,
+//   ) {
+//     showBottomSheet(
+//       context: context,
+//       builder: (ctx) => SendFriendInviteBottomSheet(
+//         userId: location.id,
+//         onInviteSent: () {
+//           Navigator.of(context).pop();
+//           ref.read(showBottomSheetProvider.notifier).state = false;
+//         },
+//       ),
+//     );
+//     ref.read(showBottomSheetProvider.notifier).state = true;
+//   }
+// }
 
-// ? LayoutBuilder(builder: (context, constraints) {
-//                   return SizedBox(
-//                     height: min(constraints.maxHeight,
-//                         searchResultsNotifier.value.length * 62.0),
-//                     child:
-//                   );
-//                 })
-//               : const SizedBox()
+// // ? LayoutBuilder(builder: (context, constraints) {
+// //                   return SizedBox(
+// //                     height: min(constraints.maxHeight,
+// //                         searchResultsNotifier.value.length * 62.0),
+// //                     child:
+// //                   );
+// //                 })
+// //               : const SizedBox()

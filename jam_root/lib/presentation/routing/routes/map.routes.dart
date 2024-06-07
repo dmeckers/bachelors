@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:jam/presentation/map/map.page_alt.dart';
 
 import 'package:jam/presentation/presentation.dart';
 
@@ -13,5 +14,5 @@ enum MapRoutes {
 final mapRoute = GoRoute(
   path: MapRoutes.map.name,
   name: MapRoutes.map.name,
-  builder: (_, state) => const MapPage(),
+  builder: (_, state) => const MapPageALT(),
 );

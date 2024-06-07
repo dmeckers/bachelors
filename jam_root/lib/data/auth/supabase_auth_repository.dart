@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:location/location.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -59,21 +60,27 @@ class SupabaseAuthRepository
     required String password,
   }) async {
     try {
-      await localDatabase.clear();
-      final authResponse =
-          await Supabase.instance.client.auth.signInWithPassword(
-        password: password,
-        email: email,
-      );
+      final futures = await Future.wait([
+        localDatabase.clear(),
+        Supabase.instance.client.auth.signInWithPassword(
+          password: password,
+          email: email,
+        )
+      ]);
+
+      final authResponse = futures.last as AuthResponse;
 
       if (authResponse.user == null) {
         throw UnauthorizedException('Wrong credentials', StackTrace.current);
       }
       final userId = authResponse.user!.id;
 
-      await supabase
-          .from('profiles')
-          .update({'is_online': true}).eq('id', supaUser!.id);
+      await Future.wait([
+        hotQuickFix(),
+        supabase
+            .from('profiles')
+            .update({'is_online': true}).eq('id', supaUser!.id)
+      ]);
 
       return JUser(
         uid: userId,
@@ -238,12 +245,28 @@ class SupabaseAuthRepository
       }).eq('id', authResponse.user!.id);
     }
 
+    await hotQuickFix();
+
     return authResponse;
   }
 
   @override
   Future<void> updateUserPassword({required String password}) async {
     await supaAuth.updateUser(UserAttributes(password: password));
+  }
+
+  Future<void> hotQuickFix() async {
+    // TODO::QUICK FIX
+    try {
+      final location = await Location().getLocation();
+      localDatabase.put(
+        'LOCATION',
+        'Lat: ${location.latitude}, Lng: ${location.longitude}',
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    // TODO::QUICK FIX
   }
 }
 

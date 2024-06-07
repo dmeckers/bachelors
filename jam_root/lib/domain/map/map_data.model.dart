@@ -1,9 +1,9 @@
-import 'package:location/location.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:jam/domain/domain.dart';
 
 class MapData {
-  final LocationData currentPosition;
+  final LatLng currentPosition;
   final List<LocationAbstactModel> locations;
 
   MapData({
@@ -12,7 +12,7 @@ class MapData {
   });
 
   MapData copyWith({
-    LocationData? currentPosition,
+    LatLng? currentPosition,
     List<LocationAbstactModel>? locations,
   }) {
     return MapData(

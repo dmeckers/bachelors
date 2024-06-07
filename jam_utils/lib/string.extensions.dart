@@ -4,14 +4,11 @@ extension CropTextWithTrailingEllipsis on String {
 }
 
 extension NullCheck on dynamic {
-  bool get isNotNull => (this as dynamic) != null;
-  bool get isNotNullOrFalse =>
-      (this as dynamic) != null && (this as dynamic) != false;
-  bool get isNull => (this as dynamic) == null;
-  bool get isNullOrEmpty =>
-      (this as dynamic) == null || (this as dynamic) == '';
-  bool get isNotNullOrEmpty =>
-      (this as dynamic) != null && (this as dynamic) != '';
+  bool get isNotNull => this != null;
+  bool get isNotNullOrFalse => this != null && this != false;
+  bool get isNull => this == null;
+  bool get isNullOrEmpty => this == null || this == '';
+  bool get isNotNullOrEmpty => this != null && this != '';
 }
 
 extension StringExtensions on String {
