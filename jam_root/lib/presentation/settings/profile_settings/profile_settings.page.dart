@@ -61,14 +61,13 @@ class ProfileSettingsPage extends HookConsumerWidget
                 children: [
                   SettingsTile(
                     leading: Icon(Icons.person, color: iconColor),
-                    title: userState.requireValue.username ??
-                        'Wtf where is my name',
+                    title: userState.requireValue.username ?? 'No Name',
                     subtitle: 'Username',
                     trailing: Icon(Icons.edit, color: iconColor),
                     onTap: () => _handleChangeTileTap(
                       context,
-                      initialValue: userState.requireValue.username ??
-                          'Wtf where is my name',
+                      initialValue:
+                          userState.requireValue.username ?? 'No username',
                       onConfirm: (value) async {
                         ref
                             .read(userStateProvider)

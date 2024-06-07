@@ -4,28 +4,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class SelectVibe extends HookConsumerWidget {
+class SelectVibe extends HookConsumerWidget with Storer {
   const SelectVibe({super.key});
 
   static const MAX_VIBES_AMOUNT = 20;
-
-  searchVibesAI(
-    Vibes selectedVibes,
-    String value,
-    WidgetRef ref,
-    Debouncer debouncer,
-  ) {
-    debouncer(() {
-      if (selectedVibes.length >= MAX_VIBES_AMOUNT || value.isEmpty) return;
-
-      ref.read(vibesControllerProvider.notifier).searchVibesAI(query: value);
-    });
-  }
 
   searchVibes(
     Vibes selectedVibes,
@@ -42,70 +30,164 @@ class SelectVibe extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchWithAI = useState(false);
+    final debouncer = useDebouncer(duration: const Duration(milliseconds: 300));
 
     final selectedVibes = ref.watch(
       registerModelStateNotifierProvider.select((value) => value.vibes),
     );
-    final vibesWithColors = selectedVibes
-        .map(
-          (e) => (
-            e,
-            CHIP_COLORS[selectedVibes.indexOf(e) % CHIP_COLORS.length],
-          ),
-        )
-        .toList();
-    final vibes = ref.watch(vibesControllerProvider);
-    final debouncer = useDebouncer(duration: const Duration(milliseconds: 300));
+    final searchQuery = useState<String?>(null);
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.6,
-        maxWidth: MediaQuery.of(context).size.width * 0.9,
-      ),
+    final searchVibesProvider = ref.watch(vibesControllerProvider);
+
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.65,
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Select at least one thing you like',
-              style: context.jText.headlineLarge,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Select at least one thing you like',
+                style: context.jText.headlineLarge,
+              ),
             ),
-            const SizedBox(height: 20),
-            _buildSearchBar(
-              searchWithAI,
-              selectedVibes,
-              ref,
-              debouncer,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _searchBar((value) {
+                searchQuery.value = value;
+                searchVibes(selectedVibes, value, ref, debouncer);
+              }),
             ),
             if (selectedVibes.length >= MAX_VIBES_AMOUNT)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
-                child: Text(
-                  'You can select up to $MAX_VIBES_AMOUNT vibes',
-                  style:
-                      context.jText.headlineSmall?.copyWith(color: Colors.red),
+              Flexible(
+                flex: 1,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 8.0, top: 4.0, bottom: 100),
+                  child: Text(
+                    'You can select up to $MAX_VIBES_AMOUNT vibes',
+                    style: context.jText.headlineSmall
+                        ?.copyWith(color: Colors.red),
+                  ),
                 ),
               ),
-            _buildSearchTypeSwitcher(
-              searchWithAI,
-              context,
-            ),
-            const SizedBox(height: 10),
-            _buildSelectedUserChips(
-              vibesWithColors,
-              ref,
-            ),
-            _buildVibeSelectList(
-              vibes,
-              selectedVibes,
-              context,
-              ref,
-            ),
+            if (selectedVibes.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Selected Vibes: ${selectedVibes.map((el) => el.name).join(',')}',
+                  style: context.jText.headlineSmall,
+                ),
+              ),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              child: searchQuery.value.isNullOrEmpty
+                  ? const RegisterVibeSelectByCategoryWidget()
+                  : searchVibesProvider.maybeWhen(
+                      data: (queryResults) {
+                        if (queryResults.isEmpty) {
+                          return const NotFoundPlaceholder(
+                            message: 'No results',
+                          );
+                        }
+
+                        return ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 300),
+                          child: ListView.builder(
+                            itemBuilder: (ctx, index) {
+                              final notifier = ref.read(
+                                  registerModelStateNotifierProvider.notifier);
+                              final name = queryResults[index].name;
+
+                              final hasSelected = selectedVibes
+                                  .any((vibe) => vibe.name == name);
+                              return ListTile(
+                                onTap: () {
+                                  if (hasSelected) {
+                                    notifier.removeVibe(
+                                      queryResults[index],
+                                    );
+                                    return;
+                                  }
+
+                                  notifier.addVibes(queryResults[index]);
+                                },
+                                leading: Icon(
+                                  hasSelected
+                                      ? FontAwesomeIcons.check
+                                      : FontAwesomeIcons.plus,
+                                  color: Colors.green,
+                                ),
+                                title: Text(queryResults[index].name),
+                              );
+                            },
+                            itemCount: queryResults.length,
+                          ),
+                        );
+                      },
+                      orElse: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+            )
           ],
         ),
       ),
     );
+
+    // return ConstrainedBox(
+    //   constraints: BoxConstraints(
+    //     maxHeight: MediaQuery.of(context).size.height * 0.6,
+    //     maxWidth: MediaQuery.of(context).size.width * 0.9,
+    //   ),
+    //   child: SingleChildScrollView(
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           'Select at least one thing you like',
+    //           style: context.jText.headlineLarge,
+    //         ),
+    //         const SizedBox(height: 20),
+    //         _buildSearchBar(
+    //           selectedVibes,
+    //           ref,
+    //           debouncer,
+    //         ),
+    //         if (selectedVibes.length >= MAX_VIBES_AMOUNT)
+    //           Padding(
+    //             padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+    //             child: Text(
+    //               'You can select up to $MAX_VIBES_AMOUNT vibes',
+    //               style:
+    //                   context.jText.headlineSmall?.copyWith(color: Colors.red),
+    //             ),
+    //           ),
+    //         _buildSearchTypeSwitcher(
+    //           searchWithAI,
+    //           context,
+    //         ),
+    //         const SizedBox(height: 10),
+    //         _buildSelectedUserChips(
+    //           vibesWithColors,
+    //           ref,
+    //         ),
+    //         _buildVibeSelectList(
+    //           vibes,
+    //           selectedVibes,
+    //           context,
+    //           ref,
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   Row _buildSearchTypeSwitcher(
@@ -194,35 +276,26 @@ class SelectVibe extends HookConsumerWidget {
   }
 
   SearchBar _buildSearchBar(
-    ValueNotifier<bool> searchWithAI,
     List<VibeModel> selectedVibes,
     WidgetRef ref,
     Debouncer debouncer,
   ) {
     return SearchBar(
-      constraints: const BoxConstraints(
-        maxHeight: 60,
-        minHeight: 60,
-      ),
-      leading: const Icon(Icons.search),
-      shape: WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      )),
-      hintText: 'Find your vibe',
-      onChanged: (value) => searchWithAI.value
-          ? searchVibes(
+        constraints: const BoxConstraints(
+          maxHeight: 60,
+          minHeight: 60,
+        ),
+        leading: const Icon(Icons.search),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        )),
+        hintText: 'Find your vibe',
+        onChanged: (value) => searchVibes(
               selectedVibes,
               value,
               ref,
               debouncer,
-            )
-          : searchVibesAI(
-              selectedVibes,
-              value,
-              ref,
-              debouncer,
-            ),
-    );
+            ));
   }
 
   void removeVibe(VibeModel e, WidgetRef ref) =>
@@ -254,4 +327,21 @@ class SelectVibe extends HookConsumerWidget {
           ),
         ),
       );
+
+  SearchBar _searchBar(
+    void Function(String)? onChanged,
+  ) {
+    return SearchBar(
+      constraints: const BoxConstraints(
+        maxHeight: 60,
+        minHeight: 60,
+      ),
+      leading: const Icon(Icons.search),
+      shape: WidgetStateProperty.all(RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      )),
+      hintText: 'Find topics you like',
+      onChanged: onChanged,
+    );
+  }
 }

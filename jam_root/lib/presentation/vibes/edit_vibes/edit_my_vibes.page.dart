@@ -178,6 +178,8 @@ class EditUserVibes extends HookConsumerWidget
                                     cached.copyWith(vibes: selectedVibes));
                               }
 
+                              // todo fix it later
+                              // see router strategy
                               canPop.value = true;
                               if (!context.mounted) return;
                               context.pushNamed(HomeRoutes.home.name);

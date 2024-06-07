@@ -14,24 +14,6 @@ part 'router.g.dart';
 GoRouter router(RouterRef ref) {
   final authState =
       ValueNotifier<AsyncValue<JUserAuthState>>(const AsyncLoading());
-  var hasVibes = true;
-
-  Future<dynamic> checkThirdPartyVibes() async {
-    final tokenIssuer = supaAuth.currentUser?.userMetadata?['iss'] as String?;
-    if (tokenIssuer == null) return;
-
-    // TODO::// add more third party auth providers
-    if (!tokenIssuer.contains('google')) return;
-
-    final user = ref.read(storerProvider).get<UserProfileModel>();
-
-    if (user == null) {
-      return hasVibes =
-          await ref.read(vibesRepositoryProvider).doesCurrentUserHaveVibes();
-    }
-
-    hasVibes = user.vibes.isNotEmpty;
-  }
 
   ref
     ..onDispose(authState.dispose)
@@ -39,8 +21,7 @@ GoRouter router(RouterRef ref) {
       authStatChangesProvider.select(
         (value) => value.whenData((value) => value.authState),
       ),
-      (_, next) async {
-        await checkThirdPartyVibes();
+      (_, next) {
         authState.value = next;
       },
     );
@@ -54,6 +35,13 @@ GoRouter router(RouterRef ref) {
     routes: [homeRoute, ...guestRoutes, ...utilityRoutes],
     errorBuilder: (_, state) => NotFoundPage(state: state),
     redirect: (context, state) async {
+      final hasVibes = ref
+              .read(storerProvider)
+              .get<UserProfileModel>()
+              ?.vibes
+              .isNotEmpty ??
+          await ref.read(vibesRepositoryProvider).doesCurrentUserHaveVibes();
+
       final isLoading = authState.value.isLoading;
       final hasValue = authState.value.hasValue;
       final hasError = authState.value.hasError;

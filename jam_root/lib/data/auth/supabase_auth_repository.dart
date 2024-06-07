@@ -221,11 +221,24 @@ class SupabaseAuthRepository
       throw 'No ID Token found.';
     }
 
-    return Supabase.instance.client.auth.signInWithIdToken(
+    final authResponse = await Supabase.instance.client.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
       accessToken: accessToken,
     );
+
+    final metadata = authResponse.user?.userMetadata;
+
+    if (metadata != null) {
+      await supabase.from('profiles').update({
+        'full_name': metadata['full_name'],
+        'username': metadata['name'],
+        'is_online': true,
+        'avatar': metadata['picture'],
+      }).eq('id', authResponse.user!.id);
+    }
+
+    return authResponse;
   }
 
   @override

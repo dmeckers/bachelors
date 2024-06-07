@@ -5,12 +5,6 @@ final class ImagePathConstants {
       'assets/images/login_page_background.webp';
   static const DEFAULT_USER_MARKER_IMAGE_PATH = 'assets/images/pizza.png';
   static const DEFAULT_JAM_MARKER_IMAGE_PATH = 'assets/images/pizza.png';
-  static const FEMALE_GENDER_AVATAR_IMAGE_PATH =
-      'assets/images/gender_avatars/women_gender.webp';
-  static const MALE_GENDER_AVATAR_IMAGE_PATH =
-      'assets/images/gender_avatars/men_gender.webp';
-  static const CROISSANT_GENDER_AVATAR_IMAGE_PATH =
-      'assets/images/gender_avatars/croissant_gender.webp';
   static const DEFAULT_JAM_IMAGE_BUCKET_URL =
       "https://iftwgsudzkdfekfwxmti.supabase.co/storage/v1/object/public/shared/jams/default_background.jpg";
   static const DEFAULT_AVATAR_IMAGE_BUCKET_URL =

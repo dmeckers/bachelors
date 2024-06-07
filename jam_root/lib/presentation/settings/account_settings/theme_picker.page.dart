@@ -15,101 +15,33 @@ class ThemePickerPage extends HookConsumerWidget {
     final isCustomColorThemeDefined = JamCustomColorTheme().isDefined != null &&
         JamCustomColorTheme().isDefined!;
 
-    final selectedTheme = useState(
-      ThemeSwitcher.of(context).themeData.themeInfo,
-    );
-
-    final oldTheme = useMemoized(
-      () => ThemeSwitcher.of(context).themeData.themeInfo,
-      [selectedTheme.value],
-    );
-
     final selectedColor = useState<Color?>(
         isCustomColorThemeDefined ? JamCustomColorTheme().color : null);
 
     return Scaffold(
       appBar: const SimpleAppBar(title: 'Choose theme'),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.only(left: 22.0),
-            child: Text(
-              'Select on of jams themes',
-              style: context.jText.headlineMedium,
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => _ColorPickerDialog(
+              onColorSelect: (color) {
+                selectedColor.value = color;
+                JamTheme.setThemeMode(
+                    mode: ThemeMode.system,
+                    theme: SupportedThemes.customColorTheme,
+                    color: color);
+                ThemeSwitcher.of(context).switchTheme(
+                  JamCustomColorTheme(),
+                );
+              },
             ),
           ),
-          const SizedBox(height: 20),
-          ...SupportedThemes.values
-              .where(
-                (element) => element == SupportedThemes.customColorTheme
-                    ? isCustomColorThemeDefined
-                    : true,
-              )
-              .map(
-                (e) => RadioListTile(
-                  value: e,
-                  groupValue: selectedTheme.value,
-                  title: Text(e.displayName),
-                  onChanged: (value) {
-                    selectedTheme.value = value!;
-                    if (e != oldTheme) {
-                      JamTheme.setThemeMode(
-                        mode: ThemeMode.system,
-                        theme: e,
-                        color: e == SupportedThemes.customColorTheme
-                            ? selectedColor.value
-                            : null,
-                      );
-                    }
-                    ThemeSwitcher.of(context).switchTheme(_switchTheme(e));
-                  },
-                ),
-              ),
-          const SizedBox(height: 20),
-          Center(
-            child: Text(
-              'Or select color of theme by yourself',
-              style: context.jText.headlineMedium,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: ElevatedButton(
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => _ColorPickerDialog(
-                  onColorSelect: (color) {
-                    selectedColor.value = color;
-                    JamTheme.setThemeMode(
-                        mode: ThemeMode.system,
-                        theme: SupportedThemes.customColorTheme,
-                        color: color);
-                    ThemeSwitcher.of(context).switchTheme(
-                      JamCustomColorTheme(),
-                    );
-                  },
-                ),
-              ),
-              child: const Text('Select color from pallete'),
-            ),
-          ),
-        ],
+          child: const Text('Select color from pallete'),
+        ),
       ),
     );
   }
-
-  _switchTheme(SupportedThemes theme) => switch (theme) {
-        SupportedThemes.cobraTheme => JamCobraTheme(),
-        SupportedThemes.monaTheme => JamMonaTheme(),
-        SupportedThemes.defaultTheme => JamDefaultTheme(),
-        SupportedThemes.customColorTheme =>
-          JamCustomColorTheme().isDefined != null &&
-                  JamCustomColorTheme().isDefined!
-              ? JamCustomColorTheme()
-              : JamDefaultTheme(),
-      };
 }
 
 class _ColorPickerDialog extends HookWidget {

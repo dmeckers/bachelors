@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:jam_theme/colors/colors.dart';
 import 'package:jam_theme/typography/typography.dart';
@@ -31,7 +33,7 @@ abstract class JamTheme {
     final themeIndex = _preferences?.getInt(kThemeModeKey);
 
     return themeIndex == null
-        ? ThemeMode.system
+        ? ThemeMode.dark
         : themeIndex == 1
             ? ThemeMode.dark
             : ThemeMode.light;
@@ -62,17 +64,22 @@ abstract class JamTheme {
   static JamTheme of(BuildContext context) {
     final themeName = _preferences?.getString(kThemeKey);
     final theme = themeName == null
-        ? SupportedThemes.defaultTheme
+        ? SupportedThemes.customColorTheme
         : SupportedThemes.values
             .where((element) => element.name == themeName)
             .first;
 
-    return switch (theme) {
-      SupportedThemes.defaultTheme => JamDefaultTheme(),
-      SupportedThemes.monaTheme => JamMonaTheme(),
-      SupportedThemes.cobraTheme => JamCobraTheme(),
-      SupportedThemes.customColorTheme => JamCustomColorTheme(),
-    };
+    switch (theme) {
+      case SupportedThemes.defaultTheme:
+        return JamDefaultTheme();
+      case SupportedThemes.monaTheme:
+        return JamMonaTheme();
+      case SupportedThemes.cobraTheme:
+        return JamCobraTheme();
+      case SupportedThemes.customColorTheme:
+      default:
+        return JamCustomColorTheme();
+    }
   }
 }
 
@@ -80,8 +87,28 @@ class JamCustomColorTheme extends JamTheme {
   @override
   ThemeData get darkTheme {
     final customColor = _preferences?.getString(kCustomThemeKey)?.split(' ');
-    final color = Color.fromRGBO(int.parse(customColor!.first),
-        int.parse(customColor[1]), int.parse(customColor.last), 1);
+    final r = Random();
+
+    final randomColor = Color.fromRGBO(
+      r.nextInt(255),
+      r.nextInt(255),
+      r.nextInt(255),
+      1,
+    );
+
+    final color = customColor != null
+        ? Color.fromRGBO(
+            int.parse(customColor.first),
+            int.parse(customColor[1]),
+            int.parse(customColor.last),
+            1,
+          )
+        : randomColor;
+    if (customColor == null) {
+      _preferences?.setString(
+          kCustomThemeKey, '${color.red} ${color.green} ${color.blue}');
+    }
+
     return ThemeData(
         colorScheme:
             ColorScheme.fromSeed(seedColor: color, brightness: Brightness.dark),
@@ -105,8 +132,27 @@ class JamCustomColorTheme extends JamTheme {
   @override
   ThemeData get lightTheme {
     final customColor = _preferences?.getString(kCustomThemeKey)?.split(' ');
-    final color = Color.fromRGBO(int.parse(customColor!.first),
-        int.parse(customColor[1]), int.parse(customColor.last), 1);
+    final r = Random();
+
+    final randomColor = Color.fromRGBO(
+      r.nextInt(255),
+      r.nextInt(255),
+      r.nextInt(255),
+      1,
+    );
+
+    final color = customColor != null
+        ? Color.fromRGBO(
+            int.parse(customColor.first),
+            int.parse(customColor[1]),
+            int.parse(customColor.last),
+            1,
+          )
+        : randomColor;
+    if (customColor == null) {
+      _preferences?.setString(
+          kCustomThemeKey, '${color.red} ${color.green} ${color.blue}');
+    }
 
     return ThemeData(
         colorScheme: ColorScheme.fromSeed(
