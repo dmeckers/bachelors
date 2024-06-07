@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class FriendInviteButton extends HookConsumerWidget {
   const FriendInviteButton({super.key, required this.viewedUser});
@@ -24,11 +25,11 @@ class FriendInviteButton extends HookConsumerWidget {
               friendInviteId: viewedUser.receivedFriendRequestId!,
             );
 
-        if (!context.mounted) return;
-
-        JSnackBar.show(
-          context,
-          title: 'You and ${viewedUser.profile.username} are now friends',
+        context.doIfMounted(
+          () => JSnackBar.show(
+            context,
+            title: 'You and ${viewedUser.profile.username} are now friends',
+          ),
         );
       },
       icon: const FaIcon(
@@ -98,11 +99,11 @@ class FriendInviteButton extends HookConsumerWidget {
             .read(socialRepositoryProvider)
             .sendFriendInvite(userId: viewedUser.profile.id);
 
-        if (!context.mounted) return;
-
-        JSnackBar.show(
-          context,
-          title: 'Send friend request',
+        context.doIfMounted(
+          () => JSnackBar.show(
+            context,
+            title: 'Send friend request',
+          ),
         );
       },
       icon: const FaIcon(

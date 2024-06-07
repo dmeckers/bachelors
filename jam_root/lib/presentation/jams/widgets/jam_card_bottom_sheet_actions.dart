@@ -42,7 +42,7 @@ class JamCardBottomSheetActions extends ConsumerWidget {
       leading: const Icon(Icons.edit),
       title: const Text('Edit'),
       onTap: () {
-        Navigator.of(context).pop();
+        _hideJamCardBottomSheet(context);
         context.pushNamed(
           JamRoutes.edit.name,
           pathParameters: {
@@ -83,10 +83,11 @@ class JamCardBottomSheetActions extends ConsumerWidget {
 
   void _handleDeleteJam(BuildContext context, WidgetRef ref, JamModel jam) {
     ref.read(deleteJamProvider(jam: jam).future).then(
-      (_) async {
-        await ref.read(jamsStateProvider).refetch();
-        if (!context.mounted) return;
-      },
-    );
+          (_) async => await ref.read(jamsStateProvider).invalidate(),
+        );
+  }
+
+  void _hideJamCardBottomSheet(BuildContext context) {
+    Navigator.of(context).pop();
   }
 }

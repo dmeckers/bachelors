@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
@@ -37,7 +36,7 @@ GoRouter router(RouterRef ref) {
     redirect: (context, state) async {
       final hasVibes = ref
               .read(storerProvider)
-              .get<UserProfileModel>()
+              .hiveGet<UserProfileModel>()
               ?.vibes
               .isNotEmpty ??
           await ref.read(vibesRepositoryProvider).doesCurrentUserHaveVibes();

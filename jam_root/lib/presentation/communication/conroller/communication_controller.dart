@@ -60,31 +60,11 @@ Stream<FriendInvites> getFriendInvites(GetFriendInvitesRef ref) async* {
 }
 
 @riverpod
-Future<void> acceptFriendInvite(
-  AcceptFriendInviteRef ref, {
-  required int friendInviteId,
-}) async {
-  await ref
-      .read(socialRepositoryProvider)
-      .acceptFriendInvite(friendInviteId: friendInviteId);
-}
-
-@riverpod
-Future<void> rejectFriendInvite(
-  RejectFriendInviteRef ref, {
-  required int friendInviteId,
-}) async {
-  await ref
-      .read(socialRepositoryProvider)
-      .rejectFriendInvite(friendInviteId: friendInviteId);
-}
-
-@riverpod
 Stream<List<UserProfileModel>> getFriends(GetFriendsRef ref) async* {
   final storer = ref.read(storerProvider);
-  final user = storer.get<UserProfileModel>();
+  final user = storer.hiveGet<UserProfileModel>();
   yield user!.friends;
   final friends = await ref.read(socialRepositoryProvider).getFriends();
-  await storer.refresh<UserProfileModel>(user.copyWith(friends: friends));
+  await storer.hiveRefresh<UserProfileModel>(user.copyWith(friends: friends));
   yield friends;
 }

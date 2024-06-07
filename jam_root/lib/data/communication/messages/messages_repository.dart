@@ -11,7 +11,7 @@ import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 final class MessagesRepository
-    with SupabaseUserGetter, Storer
+    with SupabaseUserGetter
     implements MessagesRepositoryInterface {
   static const SEND_DEFAULT_TEXT_MESSAGE_RPC = 'send_default_text_message';
   static const DELETE_MESSAGE_RPC = 'delete_message';
@@ -50,7 +50,7 @@ final class MessagesRepository
         message: message,
         receiver: receiver,
       );
-
+      //TODO: Implement the following method
       messagesRealtime.pushMessage(
         messageModel.copyWith(
           senderId: userId,
@@ -77,7 +77,8 @@ final class MessagesRepository
       ),
     );
 
-    final user = get<UserProfileModel>();
+    final user = localDatabase.get(HiveConstants.LOCAL_DB_USER_PROFILE_KEY)
+        as UserProfileModel?;
 
     PushNotificationsService.sendNotification(
       NotificationTypeEnum.sendMessageNotification,

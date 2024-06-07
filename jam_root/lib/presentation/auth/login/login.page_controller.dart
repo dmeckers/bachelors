@@ -31,8 +31,7 @@ class LoginPageController extends _$LoginPageController {
     state = await AsyncValue.guard(
         () => authRepo.thirdPartyLogin(provider: provider));
   }
-}
 
-@riverpod
-Future<Strings> loginBackgrounds(LoginBackgroundsRef ref) =>
-    ref.read(authMediaServiceProvider).getLoginBackgrounds();
+  Future<Strings> getLoginBackground() =>
+      ref.read(authMediaServiceProvider).getLoginBackgrounds();
+}

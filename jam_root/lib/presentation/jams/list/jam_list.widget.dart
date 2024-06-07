@@ -34,7 +34,7 @@ class JamListWidget extends HookConsumerWidget {
       duration: DURATION_200_MS,
       child: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(jamsStateProvider).refetch();
+          await ref.read(jamsStateProvider).invalidate();
         },
         child: ListView.builder(
           itemBuilder: (ctx, i) => switch (viewState) {

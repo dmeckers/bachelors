@@ -576,7 +576,7 @@ class _GetJamFormProviderElement
   int get jamId => (origin as GetJamFormProvider).jamId;
 }
 
-String _$createJamHash() => r'609b98394f5657a4e33a0e83c1ed06605bc49357';
+String _$createJamHash() => r'4b9829e6fd3c6855bdac6af5ee45d72d08e43abe';
 
 /// See also [createJam].
 @ProviderFor(createJam)
@@ -990,7 +990,7 @@ class _SendJamInvitesProviderElement
   List<UserProfileModel> get users => (origin as SendJamInvitesProvider).users;
 }
 
-String _$getSentJamInvitesHash() => r'71adc29c97fcc8000efe789483e4a217aeba9f74';
+String _$getSentJamInvitesHash() => r'69a8da2a79987fdd975fd585b89faceae93602d1';
 
 /// See also [getSentJamInvites].
 @ProviderFor(getSentJamInvites)
@@ -1025,7 +1025,7 @@ final getSentFriendInvitesProvider =
 typedef GetSentFriendInvitesRef
     = AutoDisposeFutureProviderRef<List<FriendInviteModel>>;
 String _$getJamParticipantsHash() =>
-    r'c7ce324a93982b6e6e90baeb4e768d53f976a8e3';
+    r'03f738dc3d850b9e96d8b130ac62754a038118ca';
 
 /// See also [getJamParticipants].
 @ProviderFor(getJamParticipants)
@@ -1288,262 +1288,6 @@ class _GetJamInvitesAndParticipantsProviderElement
 
   @override
   int get jamId => (origin as GetJamInvitesAndParticipantsProvider).jamId;
-}
-
-String _$acceptJamInviteHash() => r'58a3521a09e24e0bbb53d58ee58d8dd9fb62b35b';
-
-/// See also [acceptJamInvite].
-@ProviderFor(acceptJamInvite)
-const acceptJamInviteProvider = AcceptJamInviteFamily();
-
-/// See also [acceptJamInvite].
-class AcceptJamInviteFamily extends Family<AsyncValue<void>> {
-  /// See also [acceptJamInvite].
-  const AcceptJamInviteFamily();
-
-  /// See also [acceptJamInvite].
-  AcceptJamInviteProvider call({
-    required int inviteId,
-  }) {
-    return AcceptJamInviteProvider(
-      inviteId: inviteId,
-    );
-  }
-
-  @override
-  AcceptJamInviteProvider getProviderOverride(
-    covariant AcceptJamInviteProvider provider,
-  ) {
-    return call(
-      inviteId: provider.inviteId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'acceptJamInviteProvider';
-}
-
-/// See also [acceptJamInvite].
-class AcceptJamInviteProvider extends AutoDisposeFutureProvider<void> {
-  /// See also [acceptJamInvite].
-  AcceptJamInviteProvider({
-    required int inviteId,
-  }) : this._internal(
-          (ref) => acceptJamInvite(
-            ref as AcceptJamInviteRef,
-            inviteId: inviteId,
-          ),
-          from: acceptJamInviteProvider,
-          name: r'acceptJamInviteProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$acceptJamInviteHash,
-          dependencies: AcceptJamInviteFamily._dependencies,
-          allTransitiveDependencies:
-              AcceptJamInviteFamily._allTransitiveDependencies,
-          inviteId: inviteId,
-        );
-
-  AcceptJamInviteProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.inviteId,
-  }) : super.internal();
-
-  final int inviteId;
-
-  @override
-  Override overrideWith(
-    FutureOr<void> Function(AcceptJamInviteRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: AcceptJamInviteProvider._internal(
-        (ref) => create(ref as AcceptJamInviteRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        inviteId: inviteId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _AcceptJamInviteProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is AcceptJamInviteProvider && other.inviteId == inviteId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, inviteId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin AcceptJamInviteRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `inviteId` of this provider.
-  int get inviteId;
-}
-
-class _AcceptJamInviteProviderElement
-    extends AutoDisposeFutureProviderElement<void> with AcceptJamInviteRef {
-  _AcceptJamInviteProviderElement(super.provider);
-
-  @override
-  int get inviteId => (origin as AcceptJamInviteProvider).inviteId;
-}
-
-String _$declineJamInviteHash() => r'85b442a753ca75dd824c2fec118a938990a74037';
-
-/// See also [declineJamInvite].
-@ProviderFor(declineJamInvite)
-const declineJamInviteProvider = DeclineJamInviteFamily();
-
-/// See also [declineJamInvite].
-class DeclineJamInviteFamily extends Family<AsyncValue<void>> {
-  /// See also [declineJamInvite].
-  const DeclineJamInviteFamily();
-
-  /// See also [declineJamInvite].
-  DeclineJamInviteProvider call({
-    required int inviteId,
-  }) {
-    return DeclineJamInviteProvider(
-      inviteId: inviteId,
-    );
-  }
-
-  @override
-  DeclineJamInviteProvider getProviderOverride(
-    covariant DeclineJamInviteProvider provider,
-  ) {
-    return call(
-      inviteId: provider.inviteId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'declineJamInviteProvider';
-}
-
-/// See also [declineJamInvite].
-class DeclineJamInviteProvider extends AutoDisposeFutureProvider<void> {
-  /// See also [declineJamInvite].
-  DeclineJamInviteProvider({
-    required int inviteId,
-  }) : this._internal(
-          (ref) => declineJamInvite(
-            ref as DeclineJamInviteRef,
-            inviteId: inviteId,
-          ),
-          from: declineJamInviteProvider,
-          name: r'declineJamInviteProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$declineJamInviteHash,
-          dependencies: DeclineJamInviteFamily._dependencies,
-          allTransitiveDependencies:
-              DeclineJamInviteFamily._allTransitiveDependencies,
-          inviteId: inviteId,
-        );
-
-  DeclineJamInviteProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.inviteId,
-  }) : super.internal();
-
-  final int inviteId;
-
-  @override
-  Override overrideWith(
-    FutureOr<void> Function(DeclineJamInviteRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: DeclineJamInviteProvider._internal(
-        (ref) => create(ref as DeclineJamInviteRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        inviteId: inviteId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _DeclineJamInviteProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is DeclineJamInviteProvider && other.inviteId == inviteId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, inviteId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin DeclineJamInviteRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `inviteId` of this provider.
-  int get inviteId;
-}
-
-class _DeclineJamInviteProviderElement
-    extends AutoDisposeFutureProviderElement<void> with DeclineJamInviteRef {
-  _DeclineJamInviteProviderElement(super.provider);
-
-  @override
-  int get inviteId => (origin as DeclineJamInviteProvider).inviteId;
 }
 
 String _$getUsersByIdsHash() => r'4a2d926f29aa33a120aeb8012e2214ff0be1814e';

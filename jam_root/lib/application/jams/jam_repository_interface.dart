@@ -3,7 +3,7 @@ import 'package:jam/domain/domain.dart';
 
 abstract class JamRepositoryInterface {
   Future<JamModel> getJam({required int jamId});
-  Future<JamModel> createJam(JamModel jam);
+  Future<JamModel> createJam({required JamModel jamModel});
   Future<JamModel> updateJamDetails(JamModel jam);
   Future<JamModel> updateJamVibes(JamModel jam);
   Future<void> deleteJam({required int jamId});

@@ -14,7 +14,7 @@ class JamsState with Storer {
   final UserProfileRepositoryInterface userRepo;
 
   Stream<Jams> jams$() async* {
-    final cached = get<UserProfileModel>();
+    final cached = hiveGet<UserProfileModel>();
     if (cached != null) {
       _state.value = cached.jams;
       yield cached.jams;
@@ -26,11 +26,14 @@ class JamsState with Storer {
 
     yield* _state.stream
         .doOnData(
-            (event) => refresh<UserProfileModel>(profile.copyWith(jams: event)))
+          (jams) => hiveRefresh<UserProfileModel>(
+            profile.copyWith(jams: jams),
+          ),
+        )
         .asBroadcastStream();
   }
 
-  Future refetch() async {
+  Future invalidate() async {
     final profile = await userRepo.getCurrentUserProfile();
 
     _state.value = profile.jams;

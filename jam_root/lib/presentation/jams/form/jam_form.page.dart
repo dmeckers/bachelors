@@ -5,6 +5,7 @@ import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/widgets/jam_text_input_simple.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class JamFormPage extends HookConsumerWidget {
   const JamFormPage({
@@ -87,32 +88,29 @@ class JamFormPage extends HookConsumerWidget {
                     return;
                   }
 
+                  final forms = ref.read(jamFormsServiceProvider);
+
                   formKey.currentState!.save();
 
                   toJoin
-                      ? await ref
-                          .read(jamFormsServiceProvider)
-                          .submitFormAndJoin(
-                            jamId: jamId,
-                            creatorFcmToken: jamCreatorFcmToken,
-                            form: formData.value!,
-                          )
-                      : await ref
-                          .read(jamFormsServiceProvider)
-                          .submitFormAndSendRequest(
-                            jamId: jamId,
-                            creatorFcmToken: jamCreatorFcmToken,
-                            form: formData.value!,
-                          );
+                      ? await forms.submitFormAndJoin(
+                          jamId: jamId,
+                          creatorFcmToken: jamCreatorFcmToken,
+                          form: formData.value!,
+                        )
+                      : await forms.submitFormAndSendRequest(
+                          jamId: jamId,
+                          creatorFcmToken: jamCreatorFcmToken,
+                          form: formData.value!,
+                        );
 
-                  if (!context.mounted) return;
-
-                  Navigator.of(context).pop();
-
-                  JSnackBar.show(
-                    context,
-                    title: 'Form submitted',
-                    type: SnackbarInfoType.success,
+                  context.doIfMounted(
+                    () => JSnackBar.show(
+                      context,
+                      title: 'Form submitted',
+                      type: SnackbarInfoType.success,
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
                   );
                 },
                 child: const Text('Submit'),

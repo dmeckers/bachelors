@@ -32,32 +32,34 @@ final class JamsRepository extends JamRepositoryInterface
   final AttachmentServiceInterface attachmentService;
 
   @override
-  Future<JamModel> createJam(JamModel jam) async {
+  Future<JamModel> createJam({required JamModel jamModel}) async {
     if (!await isOnline(_ref)) {
-      return queue.queueCreate(jam);
+      return queue.queueCreate(jamModel);
     }
 
-    final jamWithoutImage = jam.copyWith(image: null);
+    final jamWithoutImage = jamModel.copyWith(image: null);
 
-    final json = jamWithoutImage.backfilled.toJson();
+    final json = jamWithoutImage.filledWithDefaults.toJson();
     final jamId = await supabase.rpc(POST_RPC, params: json);
     final userId = getUserIdOrThrow();
 
-    if (jam.image != null) {
-      final fileName = await attachmentService.upload(file: jam.image!);
-      await supabase
-          .from('jams')
-          .update({'background_url': fileName}).eq('id', jamId);
+    if (jamModel.image.isNotNull) {
+      await supabase.from('jams').update(
+        {
+          'background_url':
+              await attachmentService.upload(file: jamModel.image!)
+        },
+      ).eq('id', jamId);
     }
 
-    return jam.copyWith(id: jamId, creatorId: userId);
+    return jamModel.copyWith(id: jamId, creatorId: userId);
   }
 
   @override
   Future<JamModel> updateJamDetails(JamModel jam) async {
     if (!await isOnline(_ref)) return queue.queueUpdateDetails(jam);
     final hasNewImage = jam.image != null && jam.image!.path.trim().isNotEmpty;
-    final json = jam.backfilled.toJson();
+    final json = jam.filledWithDefaults.toJson();
 
     if (!hasNewImage && !jam.dropBackground) {
       await supabase.rpc(

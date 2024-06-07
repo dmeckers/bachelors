@@ -212,18 +212,13 @@ class JamModel with _$JamModel implements Jsonable<JamModel> {
 
 //presentation layer specific todo move to presentation layer
 extension JamModelExtension on JamModel {
-  JamModel get backfilled {
-    var jam = this;
-    if (name.isNull || (name.isEmpty)) {
-      jam = jam.copyWith(name: 'Anonymous Jam');
-    }
-    if (description.isNull || (description?.isEmpty ?? true)) {
-      jam = jam.copyWith(description: 'No description this time');
-    }
-    if (locationName.isNull || (locationName?.isEmpty ?? true)) {
-      jam = jam.copyWith(locationName: 'Check map');
-    }
-    return jam;
+  JamModel get filledWithDefaults {
+    return copyWith(
+      name: name.isNullOrEmpty ? 'Anonymous Jam' : name,
+      description:
+          description.isNullOrEmpty ? 'No description this time' : description,
+      locationName: locationName.isNullOrEmpty ? 'Not specified' : locationName,
+    );
   }
 
   String get backgroundUrlWithPlaceholder {

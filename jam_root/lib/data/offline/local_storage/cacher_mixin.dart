@@ -14,31 +14,32 @@ mixin class Storer {
     JamCardView: HiveConstants.LOCAL_DB_JAM_CARD_VIEW_KEY,
   };
 
-  Future<void> store<T>(T value) async {
+  Future<void> hivePut<T>(T value) async {
     await localDatabase.put(_typeKeys[T], value);
   }
 
-  Future<T> storeAndReturn<T>(T value) async {
-    await store<T>(value);
+  Future<T> hivePutAndReturn<T>(T value) async {
+    await hivePut<T>(value);
     return value;
   }
 
-  T? get<T>() {
+  T? hiveGet<T>() {
     final data = localDatabase.get(_typeKeys[T]);
     return data is List ? data.cast<T?>().toList() : data;
   }
 
-  void remove<T>() {
+  void hiveRemove<T>() {
     localDatabase.delete(_typeKeys[T]);
   }
 
-  Future refresh<T>(T value) async {
-    remove<T>();
-    await store<T>(value);
+  Future<bool> hiveRefresh<T>(T value) async {
+    hiveRemove<T>();
+    await hivePut<T>(value);
+    return true;
   }
 
-  Future<T> refreshAndReturn<T>(T value) async {
-    await refresh<T>(value);
+  Future<T> hiveRefreshAndReturn<T>(T value) async {
+    await hiveRefresh<T>(value);
     return value;
   }
 }

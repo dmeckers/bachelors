@@ -2,26 +2,17 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam/presentation/map/widgets/widgets.dart';
-import 'package:jam/presentation/shared/widgets/layout/divider.widget.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
-
-final placesProvider = Provider<GoogleMapsPlaces>((ref) {
-  return GoogleMapsPlaces(
-      apiKey: dotenv.env[EnvironmentConstants.GOOGLE_MAPS_PLACES_API_KEY]);
-});
 
 class PickLocationPage extends HookConsumerWidget {
   static const DEFAULT_ZOOM = 14.4746;
@@ -49,19 +40,7 @@ class PickLocationPage extends HookConsumerWidget {
 
     useEffect(() {
       void fetchInitialPosition() async {
-        final loadedMapStyle =
-            await rootBundle.loadString(EnvironmentConstants.MAP_STYLE_PATH);
-
-        if (initialPosition != null) {
-          mapStyle.value = loadedMapStyle;
-          position.value = initialPosition;
-          return;
-        }
-
-        final currentPosition = await _determinePosition();
-        mapStyle.value = loadedMapStyle;
-        position.value =
-            LatLng(currentPosition.latitude, currentPosition.longitude);
+        position.value = initialPosition ?? await requestLocation(ref);
       }
 
       fetchInitialPosition();
@@ -73,17 +52,7 @@ class PickLocationPage extends HookConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.jColor.secondary,
-      appBar: AppBar(
-        title: Text(
-          'Set jam location',
-          style: context.jText.bodyMedium,
-        ),
-        // bottom: MapPlaceTopSearchBar(
-        //   positionNotifier: position,
-        //   searchResultsNotifier: searchResults,
-        //   showResultsNotifier: showResults,
-        // ),
-      ),
+      appBar: const MapPageAppBar(),
       body: Column(
         children: [
           searchResults.value.isNotEmpty || showResults.value
@@ -158,7 +127,7 @@ class PickLocationPage extends HookConsumerWidget {
                           height: maxHeight,
                           width: maxWidth,
                           child: _buildMap(
-                            positionNotifier: position,
+                            selectedJamLocationNotifier: position,
                             controllerNotifier: controller,
                             mapStyleNotifier: mapStyle,
                           ),
@@ -167,12 +136,13 @@ class PickLocationPage extends HookConsumerWidget {
                         _buildPickLocationButton(
                           context,
                           ref: ref,
-                          positionNotifier: position,
+                          selectedJamLocationNotifier: position,
                           maxHeight: maxHeight,
                           maxWidth: maxWidth,
                         ),
                         _buildGetCurrentPositionButton(
                           controllerNotifier: controller,
+                          ref: ref,
                         ),
                       ],
                     );
@@ -186,10 +156,13 @@ class PickLocationPage extends HookConsumerWidget {
     );
   }
 
+  Future<LatLng> requestLocation(WidgetRef ref) async =>
+      (await ref.read(locationServiceProvider).getLocation()).toLatLng();
+
   Widget _buildPickLocationButton(
     BuildContext context, {
     required WidgetRef ref,
-    required ValueNotifier<LatLng?> positionNotifier,
+    required ValueNotifier<LatLng?> selectedJamLocationNotifier,
     required double maxHeight,
     required double maxWidth,
   }) {
@@ -198,38 +171,30 @@ class PickLocationPage extends HookConsumerWidget {
       right: 30,
       child: ElevatedButton(
         onPressed: () async {
-          final position = positionNotifier.value!;
-          final placemarks = await geocoding.placemarkFromCoordinates(
-              position.latitude, position.longitude);
+          final selectedJamLocation = selectedJamLocationNotifier.value!;
 
-          if (placemarks.isNotEmpty) {
-            final locationName =
-                '${placemarks.first.street}, ${placemarks.first.locality}';
+          final placemark = (await geocoding.placemarkFromCoordinates(
+            selectedJamLocation.latitude,
+            selectedJamLocation.longitude,
+          ))
+              .firstOrNull;
 
-            jamModel == null
-                ? ref
-                    .read(freshJamViewModelStateProvider)
-                    .locationNameFormModel
-                    .controller!
-                    .text = locationName
-                : ref
-                    .read(jamViewModelStateProvider(jamModel!))
-                    .locationNameFormModel
-                    .controller!
-                    .text = locationName;
-          }
+          final locationName = placemark.isNotNull
+              ? '${placemark!.street}, ${placemark.locality}'
+              : '';
 
-          jamModel == null
-              ? ref
-                  .read(freshJamViewModelStateProvider.notifier)
-                  .updateLocation('$position'.formatCoords())
-              : ref
-                  .read(jamViewModelStateProvider(jamModel!).notifier)
-                  .updateLocation('$position'.formatCoords());
+          final vm = jamModel.isNull
+              ? freshJamViewModelStateProvider
+              : jamViewModelStateProvider(jamModel!);
 
-          if (!context.mounted) return;
+          ref.read(vm).locationNameFormModel.controller!.text = locationName;
+          // Caution unsafe code
+          (ref.read(vm.notifier) as dynamic).updateLocation(
+            '$selectedJamLocation'.formatCoords(),
+          );
+          // Caution unsafe code
 
-          Navigator.pop(context);
+          context.doIfMounted(() => Navigator.pop(context));
         },
         child: const Text('Pick location'),
       ),
@@ -255,13 +220,13 @@ class PickLocationPage extends HookConsumerWidget {
   }
 
   GoogleMap _buildMap({
-    required ValueNotifier<LatLng?> positionNotifier,
+    required ValueNotifier<LatLng?> selectedJamLocationNotifier,
     required ValueNotifier<Completer<GoogleMapController>> controllerNotifier,
     required ValueNotifier<String?> mapStyleNotifier,
   }) {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: positionNotifier.value!,
+        target: selectedJamLocationNotifier.value!,
         zoom: initZoom,
       ),
       zoomControlsEnabled: false,
@@ -271,13 +236,14 @@ class PickLocationPage extends HookConsumerWidget {
         // controller.setMapStyle(mapStyleNotifier.value!);
       },
       onCameraMove: (CameraPosition newPosition) {
-        positionNotifier.value = newPosition.target;
+        selectedJamLocationNotifier.value = newPosition.target;
       },
     );
   }
 
   Positioned _buildGetCurrentPositionButton({
     required ValueNotifier<Completer<GoogleMapController>> controllerNotifier,
+    required WidgetRef ref,
   }) {
     return Positioned(
       bottom: 30,
@@ -297,7 +263,7 @@ class PickLocationPage extends HookConsumerWidget {
         ),
         child: IconButton(
           onPressed: () async {
-            final position = await _determinePosition();
+            final position = await requestLocation(ref);
             final GoogleMapController controller =
                 await controllerNotifier.value.future;
             controller.animateCamera(
@@ -313,30 +279,5 @@ class PickLocationPage extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition();
   }
 }

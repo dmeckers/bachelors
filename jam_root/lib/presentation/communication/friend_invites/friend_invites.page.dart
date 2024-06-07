@@ -94,16 +94,16 @@ class FriendInvitesPage extends HookConsumerWidget {
     WidgetRef ref,
     FriendInviteModel invite,
   ) async {
-    await ref.read(
-      rejectFriendInviteProvider(friendInviteId: invite.id).future,
-    );
+    await ref
+        .read(socialRepositoryProvider)
+        .rejectFriendInvite(friendInviteId: invite.id);
 
-    if (!context.mounted) return;
-
-    JSnackBar.show(
-      context,
-      description: 'Friend invite rejected.',
-      type: SnackbarInfoType.info,
+    context.doIfMounted(
+      () => JSnackBar.show(
+        context,
+        description: 'Friend invite rejected.',
+        type: SnackbarInfoType.info,
+      ),
     );
   }
 
@@ -112,9 +112,9 @@ class FriendInvitesPage extends HookConsumerWidget {
     WidgetRef ref,
     FriendInviteModel invite,
   ) async {
-    await ref.read(
-      acceptFriendInviteProvider(friendInviteId: invite.id).future,
-    );
+    await ref
+        .read(socialRepositoryProvider)
+        .acceptFriendInvite(friendInviteId: invite.id);
 
     final chatId = await supabase.rpc(
       'get_chat_with_user',
@@ -128,12 +128,12 @@ class FriendInvitesPage extends HookConsumerWidget {
     await chatRealtime.pushChatAndSubscribe(chatId);
     chatRealtime.fireEvent(TrackChatEvent(chatId, invite.userReceived));
 
-    if (!context.mounted) return;
-
-    JSnackBar.show(
-      context,
-      description: '${invite.username} is now your friend',
-      type: SnackbarInfoType.success,
+    context.doIfMounted(
+      () => JSnackBar.show(
+        context,
+        description: '${invite.username} is now your friend',
+        type: SnackbarInfoType.success,
+      ),
     );
   }
 }

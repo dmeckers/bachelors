@@ -34,7 +34,8 @@ final class MapRepository extends MapRepositoryInterface
   }) async {
     final userId = getUserIdOrThrow();
 
-    final usersLocation = await _ref.read(locatorServiceProvider).getLocation();
+    final usersLocation =
+        await _ref.read(locationServiceProvider).getLocation();
 
     final response = (await supabase.rpc('get_users_and_jams', params: {
       'userid': userId,
@@ -54,7 +55,7 @@ final class MapRepository extends MapRepositoryInterface
                       : JamMarker.getUserMarker(),
                 ))
             .toList() ??
-        [];
+        const [];
 
     final jams = (response['jams'] as List<dynamic>?)
             ?.map(
@@ -65,7 +66,7 @@ final class MapRepository extends MapRepositoryInterface
               ),
             )
             .toList() ??
-        [];
+        const [];
 
     return (users: users, jams: jams);
   }

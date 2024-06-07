@@ -1,7 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/application/application.dart';
+import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -24,7 +27,7 @@ class MapPageLocationsController {
     final city = await _getRealtimChannelIdentifier(coords);
 
     final location$ = _ref
-        .read(locatorServiceProvider)
+        .read(locationServiceProvider)
         .onLocationChanged
         .debounceTime(const Duration(seconds: 5))
         .map((data) => LatLng(data.latitude ?? 0, data.longitude ?? 0))
@@ -129,7 +132,7 @@ class MapPageLocationsController {
   void dispose() => _state.close();
 }
 
-final locatorServiceProvider = Provider<lc.Location>((ref) => lc.Location());
+final locationServiceProvider = Provider<lc.Location>((ref) => lc.Location());
 
 final mapPageLocationsStateProvider = Provider<MapPageLocationsController>(
   (ref) => MapPageLocationsController(ref),
@@ -137,4 +140,10 @@ final mapPageLocationsStateProvider = Provider<MapPageLocationsController>(
 
 final locations$ = StreamProvider<MapData>(
   (ref) => ref.read(mapPageLocationsStateProvider).locations$(),
+);
+
+final placesProvider = Provider<GoogleMapsPlaces>(
+  (ref) => GoogleMapsPlaces(
+    apiKey: dotenv.env[EnvironmentConstants.GOOGLE_MAPS_PLACES_API_KEY],
+  ),
 );

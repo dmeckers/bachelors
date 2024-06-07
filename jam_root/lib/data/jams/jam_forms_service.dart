@@ -54,7 +54,7 @@ class JamFormsService
 
     if (creatorFcmToken.isEmptyOrNull) return;
 
-    final user = get<UserProfileModel>();
+    final user = hiveGet<UserProfileModel>();
 
     await PushNotificationsService.sendNotification(
         NotificationTypeEnum.sendJamFormSubmittedJoinedNotification, {

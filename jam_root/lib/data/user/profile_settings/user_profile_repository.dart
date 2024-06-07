@@ -31,9 +31,9 @@ final class UserProfileRepository
   );
 
   @override
-  Future<UserProfileModel> getCurrentUserProfile() async {
-    return getUserProfileById(userId: getUserIdOrThrow());
-  }
+  Future<UserProfileModel> getCurrentUserProfile() async => getUserProfileById(
+        userId: getUserIdOrThrow(),
+      );
 
   @override
   Future<void> updateUserName({required String username}) async {

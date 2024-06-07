@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
-import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/vibes/edit_vibes/edit_vibes.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -169,20 +167,16 @@ class EditUserVibes extends HookConsumerWidget
                           child: ButtonWithLoader(
                             onPressed: () async {
                               if (selectedVibes.isEmpty) return;
+
                               await ref
                                   .read(vibesRepositoryProvider)
                                   .updateVibes(vibes: selectedVibes);
-                              final cached = get<UserProfileModel>();
-                              if (cached != null) {
-                                await refresh(
-                                    cached.copyWith(vibes: selectedVibes));
-                              }
 
                               // todo fix it later
                               // see router strategy
                               canPop.value = true;
-                              if (!context.mounted) return;
-                              context.pushNamed(HomeRoutes.home.name);
+
+                              context.pushIfMounted(HomeRoutes.home.name);
                             },
                             text: selectedVibes.isNotEmpty
                                 ? 'Save Vibes'

@@ -147,11 +147,14 @@ class FullScreenImageViewer extends HookConsumerWidget
 
     final currentPageIndex = pageController.page!.round();
     final imageToRemove = imagesState.value[currentPageIndex];
+
     pageController.jumpToPage(
-      currentPageIndex == 0 ? currentPageIndex + 1 : currentPageIndex - 1,
+      currentPageIndex + (currentPageIndex == 0 ? 1 : -1),
     );
-    imagesState.value =
-        imagesState.value.where((element) => element != imageToRemove).toList();
+
+    imagesState.value = [
+      ...imagesState.value.where((img) => img != imageToRemove)
+    ];
   }
 
   void _handleSetMainAvatar(

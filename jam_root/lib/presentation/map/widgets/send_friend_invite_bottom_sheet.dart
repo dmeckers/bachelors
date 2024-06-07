@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -29,41 +28,36 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
       checkRelationShipStatusProvider(userId: userId),
     );
 
-    final sendingIvnite = useState(false);
-
     return BottomSheetLayout(
       paddingTop: 20,
       size: BottomSheetSize.medium,
       children: [
         const SizedBox(height: 10),
         otherUserData.when(
-          data: (otherUser) {
-            return Column(
-              children: [
-                CircleAvatar(
-                  radius: 27,
-                  backgroundImage: CachedNetworkImageProvider(
-                    otherUser.profile.avatar ??
-                        ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-                  ),
+          data: (otherUser) => Column(
+            children: [
+              CircleAvatar(
+                radius: 27,
+                backgroundImage: CachedNetworkImageProvider(
+                  otherUser.profile.avatar ??
+                      ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
                 ),
-                Text(
-                  otherUser.profile.username ?? 'User',
-                  style: context.jText.headlineMedium,
-                ),
-                Text(
-                  otherUser.profile.profileStatus ?? '',
-                  style: context.jText.headlineSmall,
-                ),
-                _buildBody(
-                  otherUser,
-                  context,
-                  ref,
-                  sendingIvnite,
-                ),
-              ],
-            );
-          },
+              ),
+              Text(
+                otherUser.profile.username ?? 'User',
+                style: context.jText.headlineMedium,
+              ),
+              Text(
+                otherUser.profile.profileStatus ?? '',
+                style: context.jText.headlineSmall,
+              ),
+              _buildBody(
+                otherUser,
+                context,
+                ref,
+              ),
+            ],
+          ),
           error: (e, _) => const JamErrorBox(
             errorMessage: 'Whoops! Could not send friend invite',
             compact: true,
@@ -78,7 +72,6 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
     FriendShipStatusModel otherUser,
     BuildContext context,
     WidgetRef ref,
-    ValueNotifier<bool> sendingIvnite,
   ) {
     final currentUser = ref.watch(userStateProvider).getLastValue();
 
@@ -98,7 +91,6 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
           otherUser,
           context,
           ref,
-          sendingIvnite,
         )
       ],
     );
@@ -109,7 +101,6 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
     FriendShipStatusModel data,
     BuildContext context,
     WidgetRef ref,
-    ValueNotifier<bool> sendingIvnite,
   ) {
     final styles = switch (data.status) {
       RelationshipStatus.notFriends => (
@@ -168,15 +159,13 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
         .read(socialRepositoryProvider)
         .acceptFriendInvite(friendInviteId: data.receivedFriendRequestId!);
 
-    if (!context.mounted) {
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) => OkPopup(
-        title: 'You and ${data.profile.username} are now friends!',
-        onOkPressed: () => onInviteSent(),
+    context.doIfMounted(
+      () => showDialog(
+        context: context,
+        builder: (context) => OkPopup(
+          title: 'You and ${data.profile.username} are now friends!',
+          onOkPressed: () => onInviteSent(),
+        ),
       ),
     );
   }
@@ -186,30 +175,26 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
     WidgetRef ref, {
     required FriendShipStatusModel data,
   }) async {
-    final success = await ref.read(
-      sendFriendInviteProvider(userId: userId).future,
-    );
+    // TODO refactor later
+    final result = await Future.wait([
+      ref.read(socialRepositoryProvider).sendFriendInvite(userId: userId),
+      PushNotificationsService.sendNotification(
+        NotificationTypeEnum.sendFriendInviteNotifications,
+        {
+          'user_received': userId,
+          'user_fcm_token': data.profile.fcmToken,
+        },
+      )
+    ]);
 
-    // sendingIvnite.value = false;
-
-    await PushNotificationsService.sendNotification(
-      NotificationTypeEnum.sendFriendInviteNotifications,
-      {
-        'user_received': userId,
-        'user_fcm_token': data.profile.fcmToken,
-      },
-    );
-
-    if (context.mounted) {
-      showDialog(
+    context.doIfMounted(
+      () => showDialog(
         context: context,
         builder: (context) => OkPopup(
-          title: success ? 'Invite sent' : 'Could not send invite',
+          title: result.first as bool ? 'Invite sent' : 'Could not send invite',
           onOkPressed: () => onInviteSent(),
         ),
-      );
-    }
-
-    // sendingIvnite.value = true;
+      ),
+    );
   }
 }

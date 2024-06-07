@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class JamInvitesPage extends HookConsumerWidget {
   const JamInvitesPage({super.key, required this.invites});
@@ -100,19 +102,19 @@ class JamInvitesPage extends HookConsumerWidget {
     ValueNotifier<JamInvites> invites,
     JamInviteModel rejected,
   ) async {
-    _removeInviteFromState(invites, rejected);
+    _removeInviteFromList(invites, rejected);
 
-    await ref.read(
-      declineJamInviteProvider(inviteId: rejected.id).future,
-    );
+    await ref
+        .read(socialRepositoryProvider)
+        .rejectJamInvite(inviteId: rejected.id);
 
-    if (context.mounted) {
-      JSnackBar.show(
+    context.doIfMounted(
+      () => JSnackBar.show(
         context,
         description: 'Invite declined',
         type: SnackbarInfoType.info,
-      );
-    }
+      ),
+    );
 
     ref.invalidate(getJamInvitesProvider);
   }
@@ -123,31 +125,27 @@ class JamInvitesPage extends HookConsumerWidget {
     ValueNotifier<JamInvites> invites,
     JamInviteModel accepted,
   ) async {
-    _removeInviteFromState(invites, accepted);
+    _removeInviteFromList(invites, accepted);
 
-    await ref.read(
-      acceptJamInviteProvider(inviteId: accepted.id).future,
-    );
+    await ref
+        .read(socialRepositoryProvider)
+        .acceptJamInvite(inviteId: accepted.id);
 
-    if (context.mounted) {
-      JSnackBar.show(
+    context.doIfMounted(
+      () => JSnackBar.show(
         context,
         description: 'Jam invite accepted',
         type: SnackbarInfoType.success,
-      );
-    }
+      ),
+    );
 
     ref.invalidate(getJamInvitesProvider);
   }
 
-  void _removeInviteFromState(
+  void _removeInviteFromList(
     ValueNotifier<JamInvites> invites,
     JamInviteModel toRemove,
   ) {
-    invites.value = invites.value
-        .where(
-          (element) => element.id != toRemove.id,
-        )
-        .toList();
+    invites.value = [...invites.value.where((inv) => inv.id != toRemove.id)];
   }
 }

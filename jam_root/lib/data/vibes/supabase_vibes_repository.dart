@@ -1,3 +1,4 @@
+import 'package:jam/domain/domain.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -9,7 +10,7 @@ import 'package:jam/domain/vibes/vibe.model.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 final class SupabaseVibesRepository extends VibesRepositoryInterface
-    with SupabaseUserGetter {
+    with SupabaseUserGetter, Storer {
   static const SEARCH_RPC = 'search_vibes_by_name';
   static const UPDATE_RPC = 'update_user_vibes';
 
@@ -85,6 +86,10 @@ final class SupabaseVibesRepository extends VibesRepositoryInterface
       'userid': userId,
       'vibeids': vibes.map((e) => e.id).toList(),
     });
+
+    final cached = hiveGet<UserProfileModel>();
+
+    cached.isNotNull && await hiveRefresh(cached!.copyWith(vibes: vibes));
   }
 
   @override

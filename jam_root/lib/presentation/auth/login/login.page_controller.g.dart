@@ -6,23 +6,8 @@ part of 'login.page_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginBackgroundsHash() => r'8b9e1b3d0016ed32337e8ad5a41ba630152cfe7d';
-
-/// See also [loginBackgrounds].
-@ProviderFor(loginBackgrounds)
-final loginBackgroundsProvider = AutoDisposeFutureProvider<Strings>.internal(
-  loginBackgrounds,
-  name: r'loginBackgroundsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loginBackgroundsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef LoginBackgroundsRef = AutoDisposeFutureProviderRef<Strings>;
 String _$loginPageControllerHash() =>
-    r'27bd03e952f59e24121fa24283bf1d1a50f82c48';
+    r'a9bf43ca5c7841a101099858c404291c31a68b98';
 
 /// See also [LoginPageController].
 @ProviderFor(LoginPageController)

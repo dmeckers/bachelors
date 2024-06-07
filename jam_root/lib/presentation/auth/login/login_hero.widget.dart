@@ -30,22 +30,25 @@ class _LoginHeroState extends ConsumerState<LoginHero> {
     );
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
-        final value = await ref.read(loginBackgroundsProvider.future);
+        final value = await ref
+            .read(loginPageControllerProvider.notifier)
+            .getLoginBackground();
+
         networkImages = value;
         var imageLoaders = <Future>[];
         for (var imageUrl in networkImages) {
-          if (imageUrl.startsWith('http')) {
-            var completer = Completer();
-            var image = NetworkImage(imageUrl);
-            image.resolve(const ImageConfiguration()).addListener(
-                  ImageStreamListener(
-                    (info, _) => completer.complete(),
-                    onError: (exception, stackTrace) =>
-                        completer.completeError(exception, stackTrace),
-                  ),
-                );
-            imageLoaders.add(completer.future);
-          }
+          if (!imageUrl.startsWith('http')) continue;
+
+          var completer = Completer();
+          var image = NetworkImage(imageUrl);
+          image.resolve(const ImageConfiguration()).addListener(
+                ImageStreamListener(
+                  (info, _) => completer.complete(),
+                  onError: (exception, stackTrace) =>
+                      completer.completeError(exception, stackTrace),
+                ),
+              );
+          imageLoaders.add(completer.future);
         }
         await Future.wait(imageLoaders);
         imageTimer = Timer.periodic(

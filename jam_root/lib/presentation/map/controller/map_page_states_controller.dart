@@ -18,20 +18,6 @@ Future<FriendShipStatusModel> checkRelationShipStatus(
         .read(socialRepositoryProvider)
         .getRelationshipStatus(userId: userId);
 
-@riverpod
-Future<bool> sendFriendInvite(
-  SendFriendInviteRef ref, {
-  required String userId,
-}) async =>
-    await ref.read(socialRepositoryProvider).sendFriendInvite(userId: userId);
-
-@riverpod
-Future<bool> joinJamFromMap(
-  JoinJamFromMapRef ref, {
-  required int jamId,
-}) async =>
-    await ref.read(jamRepositoryProvider).joinJam(jamId: jamId);
-
 class MapStateViewModelNotifier extends StateNotifier<MapStateViewModel> {
   MapStateViewModelNotifier(super.state);
 

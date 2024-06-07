@@ -56,7 +56,7 @@ class MapRealtime
           event: MapRealTime.JAM_CREATED_MAP_EVENT,
           callback: (data) {
             final newJam = JamLocation.fromJson(data);
-            final userVibes = get<UserProfileModel>()!.vibes;
+            final userVibes = hiveGet<UserProfileModel>()!.vibes;
             final hasCommonVibe =
                 userVibes.intersectById(newJam.vibes).isNotEmpty;
 
@@ -191,7 +191,7 @@ class MapRealtime
           callback: (data) {
             final userLocation = UserLocation.fromJson(data);
 
-            final hasCommonVibe = get<UserProfileModel>()!
+            final hasCommonVibe = hiveGet<UserProfileModel>()!
                 .vibes
                 .intersectById(userLocation.vibes)
                 .isNotEmpty;

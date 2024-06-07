@@ -98,12 +98,12 @@ class AccountSettingsPage extends ConsumerWidget
                         .read(authRepositoryProvider)
                         .updateUserPassword(password: value);
 
-                    if (!context.mounted) return;
-
-                    JSnackBar.show(
-                      context,
-                      description: 'Password changed successfully',
-                      type: SnackbarInfoType.success,
+                    context.doIfMounted(
+                      () => JSnackBar.show(
+                        context,
+                        description: 'Password changed successfully',
+                        type: SnackbarInfoType.success,
+                      ),
                     );
                   },
                   title: 'Change password',

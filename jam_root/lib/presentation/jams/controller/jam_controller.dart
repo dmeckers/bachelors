@@ -75,7 +75,9 @@ Future<BaseJamFormModel> getJamForm(
 
 @riverpod
 Future<JamModel> createJam(CreateJamRef ref, {required JamModel jam}) async {
-  final jamModel = await ref.read(jamRepositoryProvider).createJam(jam);
+  final jamModel = await ref.read(jamRepositoryProvider).createJam(
+        jamModel: jam,
+      );
 
   ref.invalidate(userJamControllerProvider);
 
@@ -149,9 +151,8 @@ Future<void> sendJamInvites(
 }
 
 @riverpod
-Future<JamInvites> getSentJamInvites(GetSentJamInvitesRef ref) async {
-  return ref.read(socialRepositoryProvider).getSentJamInvites();
-}
+Future<JamInvites> getSentJamInvites(GetSentJamInvitesRef ref) async =>
+    ref.read(socialRepositoryProvider).getSentJamInvites();
 
 @riverpod
 Future<List<FriendInviteModel>> getSentFriendInvites(
@@ -163,9 +164,8 @@ Future<List<FriendInviteModel>> getSentFriendInvites(
 Future<Users> getJamParticipants(
   GetJamParticipantsRef ref, {
   required int jamId,
-}) async {
-  return ref.read(jamRepositoryProvider).getJamParticipants(jamId: jamId);
-}
+}) async =>
+    ref.read(jamRepositoryProvider).getJamParticipants(jamId: jamId);
 
 @riverpod
 Future<(JamInvites, Users)> getJamInvitesAndParticipants(
@@ -176,22 +176,6 @@ Future<(JamInvites, Users)> getJamInvitesAndParticipants(
     await ref.read(socialRepositoryProvider).getSentJamInvites(),
     await ref.read(jamRepositoryProvider).getJamParticipants(jamId: jamId),
   );
-}
-
-@riverpod
-Future<void> acceptJamInvite(
-  AcceptJamInviteRef ref, {
-  required int inviteId,
-}) async {
-  return ref.read(socialRepositoryProvider).acceptJamInvite(inviteId: inviteId);
-}
-
-@riverpod
-Future<void> declineJamInvite(
-  DeclineJamInviteRef ref, {
-  required int inviteId,
-}) async {
-  return ref.read(socialRepositoryProvider).rejectJamInvite(inviteId: inviteId);
 }
 
 @riverpod

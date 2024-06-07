@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
+import 'package:jam/data/jams/jam_repository.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
@@ -244,17 +245,19 @@ class PlanJamFormPage extends HookConsumerWidget {
     WidgetRef ref,
   ) async {
     final model = viewModel.castToModel();
+
     await ref.read(updateJamProvider(jam: model).future);
     ref.read(jamsStateProvider).updateJam(model);
     ref.invalidate(jamDetailsStateProvider(model.id!));
 
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (ctx) => OkPopup(
-        imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
-        title: 'Jam updated sucessfully',
-        onOkPressed: () => Navigator.of(context).pop(),
+    context.doIfMounted(
+      () => showDialog(
+        context: context,
+        builder: (ctx) => OkPopup(
+          imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
+          title: 'Jam updated sucessfully',
+          onOkPressed: () => Navigator.of(context).pop(),
+        ),
       ),
     );
   }
@@ -278,40 +281,12 @@ class PlanJamFormPage extends HookConsumerWidget {
     );
   }
 
-  String? getValidationErrors(JamViewModel viewModel) {
-    final isFilled = viewModel.nameFormModel.isValid &&
-        viewModel.descriptionFormModel.isValid &&
-        viewModel.locationNameFormModel.isValid &&
-        viewModel.location.isNotEmpty &&
-        viewModel.date != null;
-
-    final formValidation = viewModel.joinType.isWithForm
-        ? viewModel.formModel != null &&
-            viewModel.formModel!.elements.isNotEmpty
-        : true;
-
-    if (!isFilled) {
-      return 'Mandatory fields are unfilled';
-    }
-
-    if (!formValidation) {
-      return 'No registration form created';
-    }
-
-    if (viewModel.relatedVibes.isEmpty) {
-      return 'No related vibes selected';
-    }
-
-    return null;
-  }
-
   Widget _buildSubmitButton(
     JamViewModel viewModel,
     BuildContext context,
     WidgetRef ref,
   ) {
     final validationErrors = getValidationErrors(viewModel);
-    // final kamoji = badKamojis[viewModel.hashCode % badKamojis.length];
     return ElevatedButton(
       style: ButtonStyle(
         padding: WidgetStateProperty.all(
@@ -341,25 +316,24 @@ class PlanJamFormPage extends HookConsumerWidget {
     bool canSubmit,
   ) async {
     if (!canSubmit) return;
+    final model = viewModel.castToModel().filledWithDefaults;
+    await ref.read(jamRepositoryProvider).createJam(jamModel: model);
+    await ref.read(jamsStateProvider).invalidate();
 
-    await ref.read(
-      createJamProvider(jam: viewModel.castToModel().backfilled).future,
-    );
-
-    await ref.read(jamsStateProvider).refetch();
-
-    if (!context.mounted) return;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => OkPopup(
-        imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
-        title: 'Jam created',
-        onOkPressed: () => Navigator.of(context).pop(),
+    context.doIfMounted(
+      () => showDialog(
+        context: context,
+        builder: (ctx) => OkPopup(
+          imagePath: ImagePathConstants.HAPPY_JAM_IMAGE_PATH,
+          title: 'Jam created',
+          onOkPressed: () => Navigator.of(context).pop(),
+        ),
       ),
     );
   }
 }
+
+// TODO add posobility to add to generated view model custom methods
 
 bool _canSubmit(JamViewModel viewModel) {
   final condition = viewModel.nameFormModel.isValid &&
@@ -373,4 +347,30 @@ bool _canSubmit(JamViewModel viewModel) {
           viewModel.joinType == JamJoinTypeEnum.freetoJoinAfterFormAndApprove
       ? condition && viewModel.formModel != null
       : condition;
+}
+
+String? getValidationErrors(JamViewModel viewModel) {
+  final isFilled = viewModel.nameFormModel.isValid &&
+      viewModel.descriptionFormModel.isValid &&
+      viewModel.locationNameFormModel.isValid &&
+      viewModel.location.isNotEmpty &&
+      viewModel.date != null;
+
+  final formValidation = viewModel.joinType.isWithForm
+      ? viewModel.formModel != null && viewModel.formModel!.elements.isNotEmpty
+      : true;
+
+  if (!isFilled) {
+    return 'Mandatory fields are unfilled';
+  }
+
+  if (!formValidation) {
+    return 'No registration form created';
+  }
+
+  if (viewModel.relatedVibes.isEmpty) {
+    return 'No related vibes selected';
+  }
+
+  return null;
 }

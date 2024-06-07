@@ -5,7 +5,7 @@ import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
-class ChatCache with Storer implements ChatCacheInterface {
+class ChatCache implements ChatCacheInterface {
   @override
   void cacheDraftMessage({required int chatId, required ChatState state}) {
     localDatabase.put(

@@ -9,7 +9,7 @@ import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
 final class ChatRepository
-    with SupabaseUserGetter, Storer
+    with SupabaseUserGetter
     implements ChatRepositoryInterface {
   const ChatRepository(
     this._ref,

@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class ForgotPasswordPage extends HookWidget {
   const ForgotPasswordPage({super.key});
@@ -74,21 +75,28 @@ class ForgotPasswordPage extends HookWidget {
     if (!vm.isValid) {
       return;
     }
+
     try {
       await supabase.auth.resetPasswordForEmail(
         vm.controller!.text,
         redirectTo: EnvironmentConstants.PASSWORD_RESET_MAGIC_LINK,
       );
     } catch (e) {
-      debugPrint(e.toString());
+      context.doIfMounted(
+        () => JSnackBar.show(
+          context,
+          description: 'Failed to send password reset link',
+          type: SnackbarInfoType.error,
+        ),
+      );
     }
 
-    if (!context.mounted) return;
-
-    JSnackBar.show(
-      context,
-      description: 'Link for password reset sent to your email',
-      type: SnackbarInfoType.success,
+    context.doIfMounted(
+      () => JSnackBar.show(
+        context,
+        description: 'Link for password reset sent to your email',
+        type: SnackbarInfoType.success,
+      ),
     );
   }
 }

@@ -16,18 +16,18 @@ class UserState with Storer {
   final VibesRepositoryInterface vibesRepo;
 
   Stream<UserProfileModel> user$() async* {
-    final cached = get<UserProfileModel>();
-    if (cached != null) {
-      _state.value = cached;
-      yield cached;
-    }
+    UserProfileModel currentUser;
 
-    final profile = await userRepo.getCurrentUserProfile();
+    final cached = hiveGet<UserProfileModel>();
 
-    _state.value = profile;
+    currentUser = cached ?? await userRepo.getCurrentUserProfile();
+
+    _state.value = currentUser;
 
     yield* _state.stream
-        .doOnData((event) => refresh<UserProfileModel>(profile))
+        .doOnData(
+          (userModel) => hiveRefresh<UserProfileModel>(userModel),
+        )
         .asBroadcastStream();
   }
 

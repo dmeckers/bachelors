@@ -109,25 +109,26 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
   }
 
   Future _handleFreeToJoin(BuildContext context, WidgetRef ref) async {
-    final success =
-        await ref.read(joinJamFromMapProvider(jamId: jamLocation.id).future);
+    final success = await ref.read(jamRepositoryProvider).joinJam(
+          jamId: jamLocation.id,
+        );
 
-    if (!context.mounted) return;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => OkPopup(
-        title: success ? 'You have joined the jam' : 'Failed to join the jam',
-        onOkPressed: () {
-          onActionPressed();
-          Navigator.of(context, rootNavigator: true).pop();
-          if (success) {
-            context.pushNamed(
-              JamRoutes.details.name,
-              pathParameters: {'jamId': jamLocation.id.toString()},
-            );
-          }
-        },
+    context.doIfMounted(
+      () => showDialog(
+        context: context,
+        builder: (ctx) => OkPopup(
+          title: success ? 'You have joined the jam' : 'Failed to join the jam',
+          onOkPressed: () {
+            onActionPressed();
+            Navigator.of(context, rootNavigator: true).pop();
+            if (success) {
+              context.pushNamed(
+                JamRoutes.details.name,
+                pathParameters: {'jamId': jamLocation.id.toString()},
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -138,15 +139,15 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
           jamId: jamLocation.id,
         );
 
-    if (!context.mounted) return;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => OkPopup(
-        title: 'Request to join sent',
-        onOkPressed: () {
-          Navigator.of(context, rootNavigator: true).pop();
-        },
+    context.doIfMounted(
+      () => showDialog(
+        context: context,
+        builder: (ctx) => OkPopup(
+          title: 'Request to join sent',
+          onOkPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
       ),
     );
   }
@@ -183,7 +184,7 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
       onPressed: () {
         context.pushNamed(
           JamRoutes.details.name,
-          pathParameters: {'jamId': jamLocation.id.toString()},
+          pathParameters: {'jamId': '${jamLocation.id}'},
         );
       },
       icon: const Icon(Icons.details),
