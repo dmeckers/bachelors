@@ -32,7 +32,7 @@ mixin class Storer {
     localDatabase.delete(_typeKeys[T]);
   }
 
-  refresh<T>(T value) async {
+  Future refresh<T>(T value) async {
     remove<T>();
     await store<T>(value);
   }
