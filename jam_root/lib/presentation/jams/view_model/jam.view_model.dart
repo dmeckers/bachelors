@@ -102,7 +102,7 @@ class JamViewModel with _$JamViewModel {
       );
 
   bool isValid() {
-    final areMandatoryFilled = nameValidator(name).isNull &&
+    final areMandatoryFilled = Validators.nameValidator(name).isNull &&
         location.isNotEmpty &&
         date.isNotNull &&
         relatedVibes.isNotEmpty;
@@ -114,8 +114,9 @@ class JamViewModel with _$JamViewModel {
   }
 
   String? validationErros() {
-    final areMandatoryFilled =
-        nameValidator(name).isNull && location.isNotEmpty && date.isNotNull;
+    final areMandatoryFilled = Validators.nameValidator(name).isNull &&
+        location.isNotEmpty &&
+        date.isNotNull;
 
     final formValidation = joinType.isWithForm
         ? formModel.isNotNull && formModel!.elements.isNotEmpty

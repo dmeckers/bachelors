@@ -46,14 +46,14 @@ class PlanJamFormPage extends HookConsumerWidget {
                       ?.copyWith(fontFamily: rubickFamily),
                 ),
                 const SizedBox(height: 60),
-                _buildSectionTitle('What is the name?'),
+                _buildSectionTitle('Title'),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: JFormTextInput(
-                    labelText: 'Place name',
+                    labelText: 'Jam name',
                     onChange: vmNotifier.updateName,
                     leadingIcon: Icons.title,
-                    validator: nameValidator,
+                    validator: Validators.nameValidator,
                   ),
                 ),
                 _buildSectionTitle('When will it happen?'),
@@ -137,7 +137,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                           labelText: 'Place name',
                           onChange: vmNotifier.updateLocationName,
                           leadingIcon: FontAwesomeIcons.locationPin,
-                          validator: nameValidator,
+                          validator: Validators.nameValidator,
                         ),
                       ),
                       _inputHeading(context, 'Extra information'),
@@ -147,7 +147,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                           labelText: 'Extra information',
                           onChange: vmNotifier.updateName,
                           leadingIcon: FontAwesomeIcons.circleInfo,
-                          validator: nameValidator,
+                          validator: Validators.nameValidator,
                         ),
                       ),
                       _inputHeading(context, 'Background image'),
@@ -195,8 +195,8 @@ class PlanJamFormPage extends HookConsumerWidget {
   Widget _buildSectionTitle(
     String title, {
     double leftPadding = 0,
-    double topPadding = 0,
-    double bottomPadding = 0,
+    double topPadding = 16,
+    double bottomPadding = 16,
     double rightPadding = 0,
   }) {
     return Padding(

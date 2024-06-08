@@ -15,7 +15,7 @@ class ForgotPasswordModel with _$ForgotPasswordModel {
 
   bool isValid() => validator(email).isNull;
 
-  ValidationFunction get validator => emailValidator;
+  ValidationFunction get validator => Validators.emailValidator;
 }
 
 class ForgotPasswordModelStateNotifier

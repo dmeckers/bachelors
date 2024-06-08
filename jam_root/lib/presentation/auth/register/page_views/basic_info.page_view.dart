@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 
-class BasicInfoStep extends HookConsumerWidget {
-  const BasicInfoStep({super.key});
+class BasicInfoPageView extends HookConsumerWidget {
+  const BasicInfoPageView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +40,7 @@ class BasicInfoStep extends HookConsumerWidget {
             JFormTextInput(
               labelText: 'Name',
               leadingIcon: Icons.person,
-              validator: nameValidator,
+              validator: Validators.nameValidator,
               onChange: vmNotifier.updateFullName,
             ),
             const SizedBox(height: 18),
@@ -48,7 +48,7 @@ class BasicInfoStep extends HookConsumerWidget {
               inputType: JFormTextInputType.email,
               labelText: 'Email',
               leadingIcon: Icons.email,
-              validator: emailValidator,
+              validator: Validators.emailValidator,
               onChange: vmNotifier.updateEmail,
             ),
             const SizedBox(height: 18),
@@ -57,35 +57,34 @@ class BasicInfoStep extends HookConsumerWidget {
               onChange: vmNotifier.updatePassword,
               labelText: 'Password',
               leadingIcon: Icons.lock,
-              validator: passwordValidator,
+              validator: Validators.passwordValidator,
             ),
             const SizedBox(height: 18),
             JFormTextInput(
               inputType: JFormTextInputType.password,
               labelText: 'Confirm password',
               leadingIcon: Icons.lock,
-              validator: (value) => registerModel.password == value
-                  ? null
-                  : 'Passwords do not match',
-              onChange: vmNotifier.updateFullName,
+              validator: (value) =>
+                  registerModel.password == registerModel.confirmPassword
+                      ? null
+                      : 'Passwords do not match',
+              onChange: vmNotifier.updateConfirmPassword,
             ),
             const Spacer(),
             Padding(
               padding: const EdgeInsets.only(bottom: 50.0),
               child: ElevatedButton(
                 onPressed: () {
-                  registerModel.doIfValid(
-                    () {
-                      ref
-                          .read(registerFormPagesProvider.notifier)
-                          .addPage(const SelectVibe());
+                  if (registerModel.canProceedToVibes) {
+                    ref
+                        .read(registerFormPagesProvider.notifier)
+                        .addPage(const RegisetVibeSelectPageView());
 
-                      ref.read(registerFormPageViewControllerProvider).nextPage(
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.bounceInOut,
-                          );
-                    },
-                  );
+                    ref.read(registerFormPageViewControllerProvider).nextPage(
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.bounceInOut,
+                        );
+                  }
                 },
                 child: Text(buttonText),
               ),

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/presentation/presentation.dart';
 
 class RegisterPageListController extends StateNotifier<List<Widget>> {
-  RegisterPageListController() : super(const [BasicInfoStep()]);
+  RegisterPageListController() : super(const [BasicInfoPageView()]);
 
   void addPage(Widget page) {
     if (state.contains(page)) return;
@@ -15,7 +15,7 @@ class RegisterPageListController extends StateNotifier<List<Widget>> {
         ...state.where((pages) => pages != page),
       ];
 
-  void reset() => state = const [BasicInfoStep()];
+  void reset() => state = const [BasicInfoPageView()];
 }
 
 final registerFormPagesProvider =

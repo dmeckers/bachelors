@@ -61,7 +61,7 @@ GoRouter router(RouterRef ref) {
       final isSplash = state.uri.path == "/${GuestRoutes.splash.name}";
 
       if (authStateValue == JUserAuthState.authenticated && !hasVibes) {
-        return "/${HomeRoutes.home.name}/${VibeRoutes.editMyVibes.name}";
+        return "/${GuestRoutes.thirdPartyVibeSelect.name}";
       }
 
       return switch ((isGuestRoute, authStateValue, isSplash)) {

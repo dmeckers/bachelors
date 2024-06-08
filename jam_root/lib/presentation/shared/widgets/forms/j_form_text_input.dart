@@ -15,7 +15,7 @@ class JFormTextInput extends HookConsumerWidget {
     this.inputType = JFormTextInputType.text,
     this.validateOnSubmit = false,
     this.isSubmitted,
-  }) : assert(validateOnSubmit || isSubmitted != null);
+  });
 
   final JFormTextInputType inputType;
   final ValueNotifier<bool>? isSubmitted;
@@ -34,6 +34,7 @@ class JFormTextInput extends HookConsumerWidget {
     final focus = useFocusNode();
     final textEditingController = useTextEditingController();
     final isObscured = useState(true);
+    final isPristine = useState(true);
 
     focus.addListener(
       () => focus.hasFocus
@@ -66,7 +67,10 @@ class JFormTextInput extends HookConsumerWidget {
               controller: textEditingController,
               obscureText:
                   inputType == JFormTextInputType.password && isObscured.value,
-              onChanged: (v) => onChange?.call(v),
+              onChanged: (v) {
+                isPristine.value = v.isEmpty;
+                onChange?.call(v);
+              },
               decoration: InputDecoration(
                 prefixIcon: Icon(leadingIcon),
                 border: InputBorder.none,
@@ -95,7 +99,7 @@ class JFormTextInput extends HookConsumerWidget {
           ),
         ),
         Visibility(
-          visible: showValidationError,
+          visible: showValidationError && !isPristine.value,
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Align(

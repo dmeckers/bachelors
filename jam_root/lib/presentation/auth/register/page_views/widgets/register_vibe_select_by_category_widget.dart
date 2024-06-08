@@ -56,7 +56,8 @@ class RegisterVibeSelectByCategoryWidget extends HookConsumerWidget {
                   ),
                 ),
               ),
-              Text('Subcategories', style: context.jText.headlineSmall),
+              if (focusedVibeCategory.value.isNotNull)
+                Text('Subcategories', style: context.jText.headlineSmall),
               _vibeSubCategorySection(
                 ref,
                 isParentFocused: focusedVibeCategory.value.isNotNull,
@@ -65,13 +66,14 @@ class RegisterVibeSelectByCategoryWidget extends HookConsumerWidget {
                 nextSubCategory: nextSubCategory,
                 hasChildren: true,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 18.0),
-                child: Text(
-                  'Subcategory Devisions',
-                  style: context.jText.headlineSmall,
+              if (nextSubCategory.value.isNotNull)
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: Text(
+                    'Subcategory Devisions',
+                    style: context.jText.headlineSmall,
+                  ),
                 ),
-              ),
               _vibeSubCategorySection(
                 ref,
                 isParentFocused: focusedVibeSubCategory.value.isNotNull,
@@ -154,54 +156,51 @@ class RegisterVibeSelectByCategoryWidget extends HookConsumerWidget {
       registerModelStateNotifierProvider.select((vm) => vm.vibes),
     );
 
-    return SizedBox(
-      height: 200,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14.0),
-        child: Wrap(
-          spacing: 18,
-          runSpacing: 4,
-          children: List.generate(
-            children.length,
-            (index) {
-              final selectedVibe = children[index];
-              final chipsState = chipState(
-                isSelected: selectedVibes.any((v) => v.id == selectedVibe.id),
-                isFocused: focusedCategory.value == index,
-              );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14.0),
+      child: Wrap(
+        spacing: 18,
+        runSpacing: 4,
+        children: List.generate(
+          children.length,
+          (index) {
+            final selectedVibe = children[index];
+            final chipsState = chipState(
+              isSelected: selectedVibes.any((v) => v.id == selectedVibe.id),
+              isFocused: focusedCategory.value == index,
+            );
 
-              return GestureDetector(
-                onTap: () async {
-                  await HapticFeedback.selectionClick();
+            return GestureDetector(
+              onTap: () async {
+                await HapticFeedback.selectionClick();
 
-                  (switch (chipsState.state) {
-                    RegisterChipState.selected => () {
-                        if (hasChildren) nextSubCategory?.value = index;
+                (switch (chipsState.state) {
+                  RegisterChipState.selected => () {
+                      if (hasChildren) nextSubCategory?.value = index;
 
-                        focusedCategory.value = index;
-                      },
-                    RegisterChipState.focusedForDelete => () {
-                        vmNotifier(ref).removeVibe(selectedVibe);
-                        focusedCategory.value = null;
-                      },
-                    RegisterChipState.none => () {
-                        if (hasChildren) nextSubCategory?.value = index;
+                      focusedCategory.value = index;
+                    },
+                  RegisterChipState.focusedForDelete => () {
+                      vmNotifier(ref).removeVibe(selectedVibe);
+                      focusedCategory.value = null;
+                    },
+                  RegisterChipState.none => () {
+                      if (hasChildren) nextSubCategory?.value = index;
 
-                        focusedCategory.value = index;
-                      },
-                    RegisterChipState.focused => () {
-                        vmNotifier(ref).addVibes(selectedVibe);
-                        focusedCategory.value = null;
-                      },
-                  })();
-                },
-                child: Chip(
-                  label: Text(children[index].name),
-                  color: WidgetStatePropertyAll(chipsState.color),
-                ),
-              );
-            },
-          ),
+                      focusedCategory.value = index;
+                    },
+                  RegisterChipState.focused => () {
+                      vmNotifier(ref).addVibes(selectedVibe);
+                      focusedCategory.value = null;
+                    },
+                })();
+              },
+              child: Chip(
+                label: Text(children[index].name),
+                color: WidgetStatePropertyAll(chipsState.color),
+              ),
+            );
+          },
         ),
       ),
     );

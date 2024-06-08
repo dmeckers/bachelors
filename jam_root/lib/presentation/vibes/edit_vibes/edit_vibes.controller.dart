@@ -21,7 +21,8 @@ class UserEditVibesController extends _$UserEditVibesController
   }
 
   removeVibe({required VibeModel vibe}) {
-    state = AsyncValue.data([...state.requireValue]..remove(vibe));
+    state =
+        AsyncValue.data([...state.requireValue.where((v) => v.id != vibe.id)]);
   }
 
   updateVibes({required VibesCollection vibes}) async {

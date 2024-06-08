@@ -48,6 +48,7 @@ class InviteFriendToJamDialog extends ConsumerWidget {
                       )
                     : const NotFoundPlaceholder(
                         message: 'No one to invite to found',
+                        backgroundColor: Colors.black,
                       );
               },
               loading: () => _buildLoader(),

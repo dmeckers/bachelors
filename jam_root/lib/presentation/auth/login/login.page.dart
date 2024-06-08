@@ -77,7 +77,7 @@ class LoginPage extends HookConsumerWidget {
                         labelText: 'Email',
                         leadingIcon: Icons.email,
                         onChange: loginVmNotifier.updateEmail,
-                        validator: emailValidator,
+                        validator: Validators.emailValidator,
                       ),
                     ),
                     SizedBox(
@@ -91,7 +91,7 @@ class LoginPage extends HookConsumerWidget {
                         labelText: 'Password',
                         leadingIcon: Icons.lock,
                         onChange: loginVmNotifier.updatePassword,
-                        validator: passwordValidator,
+                        validator: Validators.passwordValidator,
                       ),
                     ),
                     SizedBox(

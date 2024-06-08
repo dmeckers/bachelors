@@ -17,14 +17,14 @@ class ResetPasswordModel with _$ResetPasswordModel {
   String? Function(String? value) get validator =>
       (String? value) => password != confirmPassword
           ? 'Passwords do not match'
-          : passwordValidator(password).isNotNull
-              ? passwordValidator(password)
-              : passwordValidator(confirmPassword);
+          : Validators.passwordValidator(password).isNotNull
+              ? Validators.passwordValidator(password)
+              : Validators.passwordValidator(confirmPassword);
 
   bool isValid() =>
       password == confirmPassword &&
-      passwordValidator(password).isNull &&
-      passwordValidator(confirmPassword).isNull;
+      Validators.passwordValidator(password).isNull &&
+      Validators.passwordValidator(confirmPassword).isNull;
 }
 
 class ResetPasswordModelStateNotifier

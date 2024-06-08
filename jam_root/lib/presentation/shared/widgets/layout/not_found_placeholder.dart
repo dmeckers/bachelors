@@ -4,10 +4,14 @@ import 'package:jam/config/config.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class NotFoundPlaceholder extends StatelessWidget {
-  const NotFoundPlaceholder({super.key, this.message, this.color});
+  const NotFoundPlaceholder({
+    super.key,
+    this.message,
+    this.backgroundColor,
+  });
 
   final String? message;
-  final Color? color;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +19,7 @@ class NotFoundPlaceholder extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
+          color: backgroundColor,
           width: MediaQuery.of(context).size.width * 0.5,
           height: MediaQuery.of(context).size.width * 0.5,
           decoration: const BoxDecoration(

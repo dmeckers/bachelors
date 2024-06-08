@@ -17,7 +17,8 @@ class LoginPageModel with _$LoginPageModel {
 
   const LoginPageModel._();
 
-  bool isValid() => password.isNotEmptyOrNull && emailValidator(email).isNull;
+  bool isValid() =>
+      password.isNotEmptyOrNull && Validators.emailValidator(email).isNull;
 }
 
 class LoginPageModelStateNotifier extends StateNotifier<LoginPageModel> {

@@ -1,283 +1,216 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
+import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/vibes/edit_vibes/edit_vibes.controller.dart';
 import 'package:jam/presentation/vibes/edit_vibes/row_floating_chips.row.dart';
+import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 enum ChipState { focused, selected, focusedForDelete, none }
 
-//TODO::decompose this widget
 class VibeSelectByCategoryWidget extends HookConsumerWidget {
   const VibeSelectByCategoryWidget({super.key});
-
-  ({ChipState state, Color color}) chipState({
-    required bool isSelected,
-    required bool isFocused,
-  }) {
-    return switch ((isSelected, isFocused)) {
-      (true, false) => (state: ChipState.selected, color: Colors.green[800]!),
-      (false, true) => (state: ChipState.focused, color: Colors.orange[800]!),
-      (true, true) => (
-          state: ChipState.focusedForDelete,
-          color: Colors.red[800]!
-        ),
-      (false, false) => (state: ChipState.none, color: Colors.transparent),
-    };
-  }
-
-  Widget chipWithGestureDetector({
-    required int index,
-    required Vibes vibes,
-    required Vibes userSelectedVibes,
-    required ValueNotifier<int?> focusedVibe,
-    required ValueNotifier<int?> nextSubCategory,
-  }) {
-    final isFocused = focusedVibe.value == index;
-    return GestureDetector(
-      onTap: () {
-        focusedVibe.value = isFocused ? null : index;
-        nextSubCategory.value = null;
-      },
-      child: Chip(
-        label: Text('${vibes[index].iconAsEmoji} ${vibes[index].name}'),
-        color: WidgetStatePropertyAll(
-          chipState(
-                  isFocused: isFocused,
-                  isSelected: userSelectedVibes
-                      .map((e) => e.id)
-                      .contains(vibes[index].id))
-              .color,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final focusedVibeCategory = useState<int?>(null);
-    final nextSubCategory = useState<int?>(null);
     final focusedVibeSubCategory = useState<int?>(null);
+    final focusedVibeDevision = useState<int?>(null);
 
-    final focusedVibeSubSubCategory = useState<int?>(null);
+    final nextSubCategory = useState<int?>(null);
 
-    final asyncCategorizedVibes$ =
-        ref.watch(categorizedVibesControllerProvider);
-    final asyncUserSelectedVibes$ = ref.watch(userEditVibesControllerProvider);
+    final asyncCategorizedVibes$ = ref.watch(
+      categorizedVibesControllerProvider,
+    );
 
-    final isParentFocused = focusedVibeCategory.value != null;
+    return asyncCategorizedVibes$.when(
+      data: (categorizedVibes) {
+        final vibeSubCategories = focusedVibeCategory.value.isNotNull
+            ? categorizedVibes[focusedVibeCategory.value!].childVibes ?? []
+            : Vibes.empty();
 
-    return [asyncCategorizedVibes$, asyncUserSelectedVibes$].when(
-      data: (data) {
-        final categorizedVibes = data.first;
-        final userSelectedVibes = data.last;
-        final r = Random();
-        return Column(
-          children: [
-            RowFloatingChips(
-              chips: List.generate(
-                categorizedVibes.length,
-                (index) => chipWithGestureDetector(
-                  index: index,
-                  nextSubCategory: nextSubCategory,
-                  focusedVibe: focusedVibeCategory,
-                  userSelectedVibes: userSelectedVibes,
-                  vibes: categorizedVibes,
+        final vibeDevisions = nextSubCategory.value.isNotNull
+            ? vibeSubCategories[nextSubCategory.value!].childVibes ?? []
+            : Vibes.empty();
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              RowFloatingChips(
+                chips: List.generate(
+                  categorizedVibes.length,
+                  (index) => chipWithGestureDetector(
+                    ref,
+                    index: index,
+                    nextSubCategory: nextSubCategory,
+                    focusedVibe: focusedVibeCategory,
+                    vibe: categorizedVibes[index],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: isParentFocused ? 200 : 0,
-              child: isParentFocused
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                      child: Wrap(
-                        spacing: 18.0,
-                        runSpacing: 4.0,
-                        children: List.generate(
-                          categorizedVibes[focusedVibeCategory.value!]
-                              .childVibes!
-                              .length,
-                          (int index) {
-                            final subVibes =
-                                categorizedVibes[focusedVibeCategory.value!]
-                                    .childVibes!;
-
-                            final isSelected = userSelectedVibes
-                                .map((e) => e.id)
-                                .contains(subVibes[index].id);
-
-                            final isFocused =
-                                focusedVibeSubCategory.value == index;
-
-                            final chipsState = chipState(
-                              isSelected: isSelected,
-                              isFocused: isFocused,
-                            );
-
-                            return GestureDetector(
-                              onTap: () async {
-                                await HapticFeedback.selectionClick();
-                                final cb = switch (chipsState.state) {
-                                  ChipState.selected => () {
-                                      nextSubCategory.value = index;
-                                      focusedVibeSubCategory.value = index;
-                                    },
-                                  ChipState.focusedForDelete => () {
-                                      ref
-                                          .read(userEditVibesControllerProvider
-                                              .notifier)
-                                          .removeVibe(vibe: subVibes[index]);
-
-                                      // focusedVibeSubCategory.value = null;
-                                      focusedVibeSubCategory.value = null;
-                                    },
-                                  ChipState.none => () {
-                                      nextSubCategory.value = index;
-                                      focusedVibeSubCategory.value = index;
-                                    },
-                                  ChipState.focused => () {
-                                      ref
-                                          .read(userEditVibesControllerProvider
-                                              .notifier)
-                                          .addVibe(vibe: subVibes[index]);
-
-                                      focusedVibeSubCategory.value = null;
-                                    },
-                                };
-
-                                cb();
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: r.nextDouble() * 5,
-                                  right: r.nextDouble() * 5,
-                                  top: r.nextDouble() * 5,
-                                  bottom: r.nextDouble() * 5,
-                                ),
-                                child: Chip(
-                                  label: Text(subVibes[index].name),
-                                  color: WidgetStatePropertyAll(
-                                    chipsState.color,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  : null,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: ValueListenableBuilder(
-                  valueListenable: nextSubCategory,
-                  builder: (context, value, child) {
-                    if (value == null) return const SizedBox();
-                    return SizedBox(
-                      height: nextSubCategory.value != null ? 200 : 0,
-                      child: nextSubCategory.value != null
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 14.0),
-                              child: Wrap(
-                                spacing: 18.0,
-                                runSpacing: 4.0,
-                                children: List.generate(
-                                  categorizedVibes[focusedVibeCategory.value!]
-                                      .childVibes![nextSubCategory.value!]
-                                      .childVibes!
-                                      .length,
-                                  (int index) {
-                                    final subSubVibes = categorizedVibes[
-                                            focusedVibeCategory.value!]
-                                        .childVibes![nextSubCategory.value!]
-                                        .childVibes!;
-
-                                    final isSelected = userSelectedVibes
-                                        .map((e) => e.id)
-                                        .contains(subSubVibes[index].id);
-
-                                    final isFocused =
-                                        focusedVibeSubSubCategory.value ==
-                                            index;
-
-                                    final chipsState = chipState(
-                                      isSelected: isSelected,
-                                      isFocused: isFocused,
-                                    );
-
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        await HapticFeedback.selectionClick();
-
-                                        final cb = switch (chipsState.state) {
-                                          ChipState.selected => () {
-                                              focusedVibeSubSubCategory.value =
-                                                  index;
-                                            },
-                                          ChipState.focusedForDelete => () {
-                                              ref
-                                                  .read(
-                                                      userEditVibesControllerProvider
-                                                          .notifier)
-                                                  .removeVibe(
-                                                      vibe: subSubVibes[index]);
-
-                                              focusedVibeSubSubCategory.value =
-                                                  null;
-                                            },
-                                          ChipState.none => () {
-                                              focusedVibeSubSubCategory.value =
-                                                  index;
-                                            },
-                                          ChipState.focused => () {
-                                              ref
-                                                  .read(
-                                                      userEditVibesControllerProvider
-                                                          .notifier)
-                                                  .addVibe(
-                                                      vibe: subSubVibes[index]);
-                                              focusedVibeSubSubCategory.value =
-                                                  null;
-                                            },
-                                        };
-
-                                        cb();
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: r.nextDouble() * 5,
-                                          right: r.nextDouble() * 5,
-                                          top: r.nextDouble() * 5,
-                                          bottom: r.nextDouble() * 5,
-                                        ),
-                                        child: Chip(
-                                          label: Text(subSubVibes[index].name),
-                                          color: WidgetStatePropertyAll(
-                                            chipsState.color,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            )
-                          : null,
-                    );
-                  }),
-            ),
-          ],
+              if (focusedVibeCategory.value.isNotNull)
+                Text('Subcategories', style: context.jText.headlineSmall),
+              _vibeSubCategorySection(
+                ref,
+                isParentFocused: focusedVibeCategory.value.isNotNull,
+                children: vibeSubCategories,
+                focusedCategory: focusedVibeSubCategory,
+                nextSubCategory: nextSubCategory,
+                hasChildren: true,
+              ),
+              if (nextSubCategory.value.isNotNull)
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: Text(
+                    'Subcategory Devisions',
+                    style: context.jText.headlineSmall,
+                  ),
+                ),
+              _vibeSubCategorySection(
+                ref,
+                isParentFocused: focusedVibeSubCategory.value.isNotNull,
+                children: vibeDevisions,
+                focusedCategory: focusedVibeDevision,
+                nextSubCategory: nextSubCategory,
+                hasChildren: false,
+              ),
+            ],
+          ),
         );
       },
       error: (error, _) => const SizedBox(),
       loading: () => const JShimmer(),
     );
   }
+
+  ({RegisterChipState state, Color color}) chipState({
+    required bool isSelected,
+    required bool isFocused,
+  }) =>
+      switch ((isSelected, isFocused)) {
+        (true, false) => (
+            state: RegisterChipState.selected,
+            color: Colors.green[800]!
+          ),
+        (false, true) => (
+            state: RegisterChipState.focused,
+            color: Colors.orange[800]!
+          ),
+        (true, true) => (
+            state: RegisterChipState.focusedForDelete,
+            color: Colors.red[800]!
+          ),
+        (false, false) => (
+            state: RegisterChipState.none,
+            color: Colors.transparent
+          ),
+      };
+
+  Widget chipWithGestureDetector(
+    WidgetRef ref, {
+    required int index,
+    required VibeModel vibe,
+    required ValueNotifier<int?> focusedVibe,
+    required ValueNotifier<int?> nextSubCategory,
+  }) {
+    final isFocused = focusedVibe.value == index;
+
+    return ref.watch(userEditVibesControllerProvider).when(
+          data: (selectedVibes) {
+            final isSelected = selectedVibes.map((e) => e.id).contains(vibe.id);
+            return GestureDetector(
+              onTap: () {
+                focusedVibe.value = isFocused ? null : index;
+                nextSubCategory.value = null;
+              },
+              child: Chip(
+                label: Text('${vibe.iconAsEmoji} ${vibe.name}'),
+                color: WidgetStatePropertyAll(
+                  chipState(isSelected: isSelected, isFocused: isFocused).color,
+                ),
+              ),
+            );
+          },
+          error: (e, s) => const SizedBox(),
+          loading: () => const SizedBox(),
+        );
+  }
+
+  _vibeSubCategorySection(
+    WidgetRef ref, {
+    required bool isParentFocused,
+    required Vibes children,
+    required ValueNotifier<int?> focusedCategory,
+    required ValueNotifier<int?>? nextSubCategory,
+    required bool hasChildren,
+  }) {
+    final toHide = nextSubCategory?.value.isNotNull ?? false
+        ? nextSubCategory!.value.isNull
+        : !isParentFocused;
+
+    if (toHide) return const SizedBox();
+
+    return ref.watch(userEditVibesControllerProvider).when(
+          data: (selectedVibes) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14.0),
+              child: Wrap(
+                spacing: 18,
+                runSpacing: 4,
+                children: List.generate(
+                  children.length,
+                  (index) {
+                    final selectedVibe = children[index];
+                    final chipsState = chipState(
+                      isSelected:
+                          selectedVibes.any((v) => v.id == selectedVibe.id),
+                      isFocused: focusedCategory.value == index,
+                    );
+
+                    return GestureDetector(
+                      onTap: () async {
+                        await HapticFeedback.selectionClick();
+
+                        (switch (chipsState.state) {
+                          RegisterChipState.selected => () {
+                              if (hasChildren) nextSubCategory?.value = index;
+
+                              focusedCategory.value = index;
+                            },
+                          RegisterChipState.focusedForDelete => () {
+                              vmNotifier(ref).removeVibe(vibe: selectedVibe);
+                              focusedCategory.value = null;
+                            },
+                          RegisterChipState.none => () {
+                              if (hasChildren) nextSubCategory?.value = index;
+
+                              focusedCategory.value = index;
+                            },
+                          RegisterChipState.focused => () {
+                              vmNotifier(ref).addVibe(vibe: selectedVibe);
+                              focusedCategory.value = null;
+                            },
+                        })();
+                      },
+                      child: Chip(
+                        label: Text(children[index].name),
+                        color: WidgetStatePropertyAll(chipsState.color),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+          error: (e, s) => const SizedBox(),
+          loading: () => const SizedBox(),
+        );
+  }
+
+  UserEditVibesController vmNotifier(WidgetRef ref) => ref.read(
+        userEditVibesControllerProvider.notifier,
+      );
 }

@@ -28,10 +28,11 @@ class RegisterModel with _$RegisterModel {
       agreeWithTerms;
 
   get canProceedToVibes =>
-      emailValidator(email).isNull &&
-      nameValidator(fullName).isNull &&
-      passwordValidator(password).isNull &&
-      passwordValidator(confirmPassword).isNull;
+      Validators.emailValidator(email).isNull &&
+      Validators.nameValidator(fullName).isNull &&
+      Validators.passwordValidator(password).isNull &&
+      Validators.passwordValidator(confirmPassword).isNull &&
+      password == confirmPassword;
 
   doIfValid(void Function() callback) {
     if (isValid) {
@@ -47,27 +48,27 @@ class RegisterModelStateNotifier extends StateNotifier<RegisterModel> {
         vibes: [...state.vibes, vibe],
       );
 
-  void updateEmail(String value) => state = state.copyWith(
-        email: state.email,
+  void updateEmail(String email) => state = state.copyWith(
+        email: email,
       );
 
-  void updateFullName(String value) => state = state.copyWith(
-        fullName: state.fullName,
+  void updateFullName(String fullName) => state = state.copyWith(
+        fullName: fullName,
       );
 
-  void updatePassword(String value) => state = state.copyWith(
-        password: state.password,
+  void updatePassword(String password) => state = state.copyWith(
+        password: password,
       );
 
-  void updateConfirmPassword(String value) =>
-      state = state.copyWith(confirmPassword: state.confirmPassword);
+  void updateConfirmPassword(String confirmPassword) =>
+      state = state.copyWith(confirmPassword: confirmPassword);
 
   void removeVibe(VibeModel vibe) => state = state.copyWith(
         vibes: [...state.vibes.where((v) => v != vibe)],
       );
 
-  void updateAgreeWithTerms(bool value) => state = state.copyWith(
-        agreeWithTerms: value,
+  void updateAgreeWithTerms(bool agree) => state = state.copyWith(
+        agreeWithTerms: agree,
       );
 
   Future<void> handleRegister({required RegisterModel model}) async {

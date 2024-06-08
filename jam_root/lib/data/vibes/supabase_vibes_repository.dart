@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
-import 'package:jam/domain/vibes/vibe.model.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 final class SupabaseVibesRepository extends VibesRepositoryInterface
