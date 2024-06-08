@@ -1,5 +1,5 @@
 import 'package:jam/application/auth/auth.dart';
-import 'package:jam/domain/user/auth/auth.model.dart';
+import 'package:jam/domain/domain.dart';
 
 abstract interface class AuthRepositoryInterface {
   Future<AppUser> login({required String email, required String password});
@@ -14,7 +14,7 @@ abstract interface class AuthRepositoryInterface {
     required String email,
     required String name,
     required String password,
-    required List<String> vibes,
+    required List<VibeModel> vibes,
   });
 
   Future<void> logout();

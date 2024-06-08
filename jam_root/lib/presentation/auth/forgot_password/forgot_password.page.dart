@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class ForgotPasswordPage extends HookWidget {
+class ForgotPasswordPage extends HookConsumerWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = useState(ForgotPasswordViewModel.generate());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final forgotPasswordVm = ref.watch(forgotPasswordViewModelProvider);
+    final forgotPasswordVmNotifier =
+        ref.read(forgotPasswordViewModelProvider.notifier);
 
     return Scaffold(
       appBar: const SimpleAppBar(title: 'Password Recovery'),
@@ -44,8 +46,12 @@ class ForgotPasswordPage extends HookWidget {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: JTextFormInput(
-                    viewModel: viewModel.value.emailFormModel,
+                  child: JFormTextInput(
+                    inputType: JFormTextInputType.email,
+                    labelText: 'Email',
+                    leadingIcon: Icons.email,
+                    onChange: forgotPasswordVmNotifier.updateEmail,
+                    validator: forgotPasswordVm.validator,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -54,7 +60,7 @@ class ForgotPasswordPage extends HookWidget {
                   size: const Size(200, 50),
                   onPressed: () => _handleSendResetPasswordLink(
                     context,
-                    viewModel,
+                    forgotPasswordVm,
                   ),
                   text: 'Send email',
                   withSuccessGradient: true,
@@ -69,16 +75,15 @@ class ForgotPasswordPage extends HookWidget {
 
   _handleSendResetPasswordLink(
     BuildContext context,
-    ValueNotifier<ForgotPasswordViewModel> viewModel,
+    ForgotPasswordModel viewModel,
   ) async {
-    final vm = viewModel.value.emailFormModel;
-    if (!vm.isValid) {
+    if (!viewModel.isValid()) {
       return;
     }
 
     try {
       await supabase.auth.resetPasswordForEmail(
-        vm.controller!.text,
+        viewModel.email,
         redirectTo: EnvironmentConstants.PASSWORD_RESET_MAGIC_LINK,
       );
     } catch (e) {

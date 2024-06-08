@@ -1,15 +1,34 @@
-import 'package:annotations/annotations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/presentation/presentation.dart';
+import 'package:jam_utils/jam_utils.dart';
 
-import 'package:jam_ui/view_models/base_form_model.dart';
-
-part 'forgot_password.view_model.j-gen.dart';
 part 'forgot_password.view_model.freezed.dart';
 
-@jvmodel
 @freezed
 class ForgotPasswordModel with _$ForgotPasswordModel {
   const factory ForgotPasswordModel({
     required String email,
   }) = _ForgotPasswordModel;
+
+  const ForgotPasswordModel._();
+
+  bool isValid() => validator(email).isNull;
+
+  ValidationFunction get validator => emailValidator;
 }
+
+class ForgotPasswordModelStateNotifier
+    extends StateNotifier<ForgotPasswordModel> {
+  ForgotPasswordModelStateNotifier()
+      : super(const ForgotPasswordModel(email: ''));
+
+  void updateEmail(String email) {
+    state = state.copyWith(email: email);
+  }
+}
+
+final forgotPasswordViewModelProvider = StateNotifierProvider.autoDispose<
+    ForgotPasswordModelStateNotifier, ForgotPasswordModel>(
+  (ref) => ForgotPasswordModelStateNotifier(),
+);

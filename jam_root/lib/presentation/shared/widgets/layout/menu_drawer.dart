@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -22,40 +21,35 @@ class MenuDrawer extends HookConsumerWidget with ProfileRepositoryProviders {
                   const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               child: Stack(
                 children: [
-                  Positioned(
-                    bottom: -100,
-                    left: -50,
-                    child: Transform.rotate(
-                      angle: 3.14 / 1.3,
-                      child: Container(
-                        color: context.jColor.secondary,
-                        width: MediaQuery.of(context).size.width + 50,
-                        height: 150,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -60,
-                    left: -50,
-                    child: Transform.rotate(
-                      angle: 3.14 / 10,
-                      child: Container(
-                        color: context.jColor.primary,
-                        width: MediaQuery.of(context).size.width + 50,
-                        height: 150,
-                      ),
-                    ),
-                  ),
-                  DrawerMenu(profile: data),
+                  _decorationContainer(context, true),
+                  _decorationContainer(context, false),
+                  DrawerWidget(profile: data),
                 ],
               ),
             ),
             orElse: () => const SizedBox(),
           );
+
+  Widget _decorationContainer(
+    BuildContext context,
+    bool first,
+  ) =>
+      Positioned(
+        bottom: first ? -100 : -60,
+        left: -50,
+        child: Transform.rotate(
+          angle: first ? 3.14 / 1.3 : 3.14 / 10,
+          child: Container(
+            color: first ? context.jColor.secondary : context.jColor.primary,
+            width: MediaQuery.of(context).size.width + 50,
+            height: 150,
+          ),
+        ),
+      );
 }
 
-class DrawerMenu extends ConsumerWidget {
-  const DrawerMenu({super.key, required this.profile});
+class DrawerWidget extends ConsumerWidget {
+  const DrawerWidget({super.key, required this.profile});
 
   final UserProfileModel profile;
 
@@ -68,17 +62,17 @@ class DrawerMenu extends ConsumerWidget {
           children: [
             _DrawerHeader(profile: profile),
             _DrawerTile(
-              imagePath: ImagePathConstants.JAM_WITH_MAP_IMAGE_PATH,
+              icon: FontAwesomeIcons.map,
               title: 'Map',
               routeName: MapRoutes.map.name,
             ),
             _DrawerTile(
-              imagePath: ImagePathConstants.JAM_HOLDING_JAM_IMAGE_PATH,
+              icon: FontAwesomeIcons.fire,
               title: 'Jams',
               routeName: JamRoutes.jams.name,
             ),
             _DrawerTile(
-              imagePath: ImagePathConstants.JAM_ENGINEER_IMAGE_PATH,
+              icon: Icons.settings,
               title: 'Settings',
               routeName: SettingsRoutes.settings.name,
               profile: profile,
@@ -185,13 +179,13 @@ class _DrawerHeader extends StatelessWidget {
 
 class _DrawerTile extends StatelessWidget {
   const _DrawerTile({
-    required this.imagePath,
+    required this.icon,
     required this.title,
     required this.routeName,
     this.profile,
   });
 
-  final String imagePath;
+  final IconData icon;
   final String title;
   final String routeName;
   final UserProfileModel? profile;
@@ -199,17 +193,11 @@ class _DrawerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 10),
-      leading: Container(
-        padding: const EdgeInsets.all(0),
-        width: 50,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              imagePath,
-            ),
-          ),
-        ),
+      contentPadding: const EdgeInsets.only(left: 18),
+      leading: Icon(
+        icon,
+        color: context.jColor.primary,
+        size: 20,
       ),
       title: Text(
         title,

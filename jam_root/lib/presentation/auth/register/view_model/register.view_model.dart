@@ -1,75 +1,93 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/data/data.dart';
 
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 part 'register.view_model.freezed.dart';
 
 @freezed
 class RegisterModel with _$RegisterModel {
   const factory RegisterModel({
-    required JamBaseFormModel emailModel,
-    required JamBaseFormModel fullNameModel,
-    required JamBaseFormModel passwordModel,
-    required JamBaseFormModel confirmPasswordModel,
+    @Default('') String email,
+    @Default('') String fullName,
+    @Default('') String password,
+    @Default('') String confirmPassword,
     @Default(false) bool agreeWithTerms,
-    required List<VibeModel> vibes,
+    @Default([]) List<VibeModel> vibes,
   }) = _RegisterModel;
 
   const RegisterModel._();
 
-  bool validate() {
-    return emailModel.controller!.text.isNotEmpty &&
-        fullNameModel.controller!.text.isNotEmpty &&
-        passwordModel.controller!.text.isNotEmpty &&
-        confirmPasswordModel.controller!.text.isNotEmpty &&
-        passwordModel.controller!.text ==
-            confirmPasswordModel.controller!.text &&
-        vibes.isNotEmpty &&
-        agreeWithTerms;
+  get isValid =>
+      canProceedToVibes &&
+      password == confirmPassword &&
+      vibes.isNotNullOrEmpty &&
+      agreeWithTerms;
+
+  get canProceedToVibes =>
+      emailValidator(email).isNull &&
+      nameValidator(fullName).isNull &&
+      passwordValidator(password).isNull &&
+      passwordValidator(confirmPassword).isNull;
+
+  doIfValid(void Function() callback) {
+    if (isValid) {
+      callback();
+    }
   }
 }
-
-final registerModelProvider = Provider<RegisterModel>((ref) {
-  return RegisterModel(
-    emailModel: JamBaseFormModel.generate(
-        labelText: 'Email', validator: emailValidator),
-    fullNameModel: JamBaseFormModel.generate(
-        labelText: 'Full name', validator: fullNameValidator),
-    passwordModel: JamBaseFormModel.generate(
-        labelText: 'Password',
-        obscureFieldText: true,
-        validator: passwordValidator),
-    confirmPasswordModel: JamBaseFormModel.generate(
-      labelText: 'Confirm password',
-      obscureFieldText: true,
-    ),
-    vibes: [],
-  );
-});
 
 class RegisterModelStateNotifier extends StateNotifier<RegisterModel> {
   RegisterModelStateNotifier(super.state);
 
-  void addVibes(VibeModel vibe) {
-    state = state.copyWith(vibes: [...state.vibes, vibe]);
-  }
+  void addVibes(VibeModel vibe) => state = state.copyWith(
+        vibes: [...state.vibes, vibe],
+      );
 
-  void removeVibe(VibeModel vibe) {
-    state = state.copyWith(
-        vibes: state.vibes.where((element) => element != vibe).toList());
-  }
+  void updateEmail(String value) => state = state.copyWith(
+        email: state.email,
+      );
 
-  void updateAgreeWithTerms(bool value) {
-    state = state.copyWith(agreeWithTerms: value);
+  void updateFullName(String value) => state = state.copyWith(
+        fullName: state.fullName,
+      );
+
+  void updatePassword(String value) => state = state.copyWith(
+        password: state.password,
+      );
+
+  void updateConfirmPassword(String value) =>
+      state = state.copyWith(confirmPassword: state.confirmPassword);
+
+  void removeVibe(VibeModel vibe) => state = state.copyWith(
+        vibes: [...state.vibes.where((v) => v != vibe)],
+      );
+
+  void updateAgreeWithTerms(bool value) => state = state.copyWith(
+        agreeWithTerms: value,
+      );
+
+  Future<void> handleRegister({required RegisterModel model}) async {
+    try {
+      final ref = ProviderContainer();
+      final authRepo = ref.read(authRepositoryProvider);
+
+      await authRepo.register(
+        name: model.fullName,
+        email: model.email,
+        password: model.password,
+        vibes: model.vibes,
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 }
 
 final registerModelStateNotifierProvider = StateNotifierProvider.autoDispose<
     RegisterModelStateNotifier, RegisterModel>(
-  (ref) => RegisterModelStateNotifier(
-    ref.watch(registerModelProvider),
-  ),
+  (ref) => RegisterModelStateNotifier(const RegisterModel()),
 );

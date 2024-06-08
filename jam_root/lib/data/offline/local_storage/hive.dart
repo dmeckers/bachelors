@@ -24,6 +24,7 @@ final class HiveService {
     Hive.registerAdapter(MessageDeliveryStatusAdapter());
     Hive.registerAdapter(JamModelAdapter());
     Hive.registerAdapter(JamJoinTypeEnumAdapter());
+    Hive.registerAdapter(JamQrModeEnumAdapter());
 
     localDatabase = await Hive.openBox('localDatabase');
   }

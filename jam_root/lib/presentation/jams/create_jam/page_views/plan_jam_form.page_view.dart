@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
@@ -24,6 +25,10 @@ class PlanJamFormPage extends HookConsumerWidget {
         ? ref.watch(freshJamViewModelStateProvider)
         : ref.watch(jamViewModelStateProvider(jam!));
 
+    final vmNotifier = jam.isNull
+        ? ref.read(freshJamViewModelStateProvider.notifier)
+        : ref.read(jamViewModelStateProvider(jam!).notifier);
+
     final useQrState = useState(false);
 
     return CustomScrollView(
@@ -42,9 +47,14 @@ class PlanJamFormPage extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 60),
                 _buildSectionTitle('What is the name?'),
-                _buildFormInput(
-                  viewModel.nameFormModel,
-                  leadingIcon: Icons.title,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: JFormTextInput(
+                    labelText: 'Place name',
+                    onChange: vmNotifier.updateName,
+                    leadingIcon: Icons.title,
+                    validator: nameValidator,
+                  ),
                 ),
                 _buildSectionTitle('When will it happen?'),
                 JamDatePicker(jamModel: jam),
@@ -120,11 +130,27 @@ class PlanJamFormPage extends HookConsumerWidget {
                   child: Column(
                     children: [
                       _buildEnableQrs(viewModel, useQrState),
-                      _buildFormInputHeading(context, 'Name of the place'),
-                      _buildFormInput(viewModel.locationNameFormModel),
-                      _buildFormInputHeading(context, 'Extra information'),
-                      _buildFormInput(viewModel.extraInformationFormModel),
-                      _buildFormInputHeading(context, 'Background image'),
+                      _inputHeading(context, 'Name of the place'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: JFormTextInput(
+                          labelText: 'Place name',
+                          onChange: vmNotifier.updateLocationName,
+                          leadingIcon: FontAwesomeIcons.locationPin,
+                          validator: nameValidator,
+                        ),
+                      ),
+                      _inputHeading(context, 'Extra information'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: JFormTextInput(
+                          labelText: 'Extra information',
+                          onChange: vmNotifier.updateName,
+                          leadingIcon: FontAwesomeIcons.circleInfo,
+                          validator: nameValidator,
+                        ),
+                      ),
+                      _inputHeading(context, 'Background image'),
                       JamImagePicker(jamModel: jam),
                     ],
                   ),
@@ -187,7 +213,7 @@ class PlanJamFormPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFormInputHeading(BuildContext context, String title) {
+  Widget _inputHeading(BuildContext context, String title) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
@@ -197,36 +223,21 @@ class PlanJamFormPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFormInput(
-    JamBaseFormModel model, {
-    double topPadding = 15.0,
-    double bottomPadding = 25.0,
-    IconData? leadingIcon,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-      child: JTextFormInput(
-        viewModel: model,
-        leadingIcon: leadingIcon,
-      ),
-    );
-  }
-
   ElevatedButton _buildSubmitUpdateButton(
     JamViewModel viewModel,
     BuildContext context,
     WidgetRef ref,
   ) {
-    final canSubmit = _canSubmit(viewModel);
+    final isValid = viewModel.isValid();
 
     return ElevatedButton(
       onPressed: () {
-        if (!canSubmit) return;
+        if (!isValid) return;
         _handleUpdateJam(context, viewModel, ref);
       },
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(
-          canSubmit ? Colors.black : Colors.grey,
+          isValid ? Colors.black : Colors.grey,
         ),
         padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -244,9 +255,11 @@ class PlanJamFormPage extends HookConsumerWidget {
     JamViewModel viewModel,
     WidgetRef ref,
   ) async {
-    final model = viewModel.castToModel();
+    if (!viewModel.isValid()) return;
 
-    await ref.read(updateJamProvider(jam: model).future);
+    final model = viewModel.castToModelIfValid();
+
+    await ref.read(updateJamProvider(jam: model!).future);
     ref.read(jamsStateProvider).updateJam(model);
     ref.invalidate(jamDetailsStateProvider(model.id!));
 
@@ -286,21 +299,21 @@ class PlanJamFormPage extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final validationErrors = getValidationErrors(viewModel);
+    final validationErrors = viewModel.validationErros();
     return ElevatedButton(
       style: ButtonStyle(
         padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         ),
         backgroundColor: WidgetStateProperty.all(
-          validationErrors == null ? Colors.black : Colors.grey,
+          validationErrors.isNull ? Colors.black : Colors.grey,
         ),
       ),
       onPressed: () => _handleSubmitJam(
         context,
         viewModel,
         ref,
-        validationErrors == null,
+        validationErrors.isNull,
       ),
       child: Text(
         validationErrors ?? 'Let\'s jam \u{1F525}',
@@ -316,7 +329,7 @@ class PlanJamFormPage extends HookConsumerWidget {
     bool canSubmit,
   ) async {
     if (!canSubmit) return;
-    final model = viewModel.castToModel().filledWithDefaults;
+    final model = viewModel.castToModelIfValid()!.filledWithDefaults;
     await ref.read(jamRepositoryProvider).createJam(jamModel: model);
     await ref.read(jamsStateProvider).invalidate();
 
@@ -331,46 +344,4 @@ class PlanJamFormPage extends HookConsumerWidget {
       ),
     );
   }
-}
-
-// TODO add posobility to add to generated view model custom methods
-
-bool _canSubmit(JamViewModel viewModel) {
-  final condition = viewModel.nameFormModel.isValid &&
-      viewModel.descriptionFormModel.isValid &&
-      viewModel.locationNameFormModel.isValid &&
-      viewModel.location.isNotEmpty &&
-      viewModel.date != null &&
-      viewModel.relatedVibes.isNotEmpty;
-
-  return viewModel.joinType == JamJoinTypeEnum.freeToJoinAfterForm ||
-          viewModel.joinType == JamJoinTypeEnum.freetoJoinAfterFormAndApprove
-      ? condition && viewModel.formModel != null
-      : condition;
-}
-
-String? getValidationErrors(JamViewModel viewModel) {
-  final isFilled = viewModel.nameFormModel.isValid &&
-      viewModel.descriptionFormModel.isValid &&
-      viewModel.locationNameFormModel.isValid &&
-      viewModel.location.isNotEmpty &&
-      viewModel.date != null;
-
-  final formValidation = viewModel.joinType.isWithForm
-      ? viewModel.formModel != null && viewModel.formModel!.elements.isNotEmpty
-      : true;
-
-  if (!isFilled) {
-    return 'Mandatory fields are unfilled';
-  }
-
-  if (!formValidation) {
-    return 'No registration form created';
-  }
-
-  if (viewModel.relatedVibes.isEmpty) {
-    return 'No related vibes selected';
-  }
-
-  return null;
 }

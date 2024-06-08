@@ -1,19 +1,14 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:annotations/annotations.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
-import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 part 'jam.model.freezed.dart';
 part 'jam.model.g.dart';
-part 'jam.model.j-gen.dart';
 
 abstract class Jsonable<T> {
   Map<String, dynamic> toJson();
@@ -21,7 +16,6 @@ abstract class Jsonable<T> {
   String getJsonClassId();
 }
 
-@ViewModelAnnotation(withStateNotifier: true)
 @freezed
 class JamModel with _$JamModel implements Jsonable<JamModel> {
   @JsonSerializable(fieldRename: FieldRename.snake)

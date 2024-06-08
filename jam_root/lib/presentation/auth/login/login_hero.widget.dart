@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
-import 'package:jam/presentation/presentation.dart';
+import 'package:jam/data/data.dart';
 import 'package:jam_ui/jam_ui.dart';
 
 class LoginHero extends StatefulHookConsumerWidget {
@@ -30,9 +30,8 @@ class _LoginHeroState extends ConsumerState<LoginHero> {
     );
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
-        final value = await ref
-            .read(loginPageControllerProvider.notifier)
-            .getLoginBackground();
+        final value =
+            await ref.read(authMediaServiceProvider).getLoginBackgrounds();
 
         networkImages = value;
         var imageLoaders = <Future>[];

@@ -25,6 +25,6 @@ final pageListControllerProvider =
   (ref) => JamPageListController(),
 );
 
-final pageControllerProvider = Provider<PageController>(
+final pageControllerProvider = Provider.autoDispose<PageController>(
   (ref) => PageController(),
 );

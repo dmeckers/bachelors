@@ -10,3 +10,4 @@ export 'invites_inbox/invites_inbox.dart';
 export 'form_builder/form_builder.dart';
 export 'jam_chat/jam_chat.dart';
 export 'state/state.dart';
+export 'view_model/view_model.dart';

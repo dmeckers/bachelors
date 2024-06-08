@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 
 final class CreateJamPage extends ConsumerWidget {

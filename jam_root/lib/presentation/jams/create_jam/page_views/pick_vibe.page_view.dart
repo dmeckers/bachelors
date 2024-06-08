@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/aliases/models.dart';
 import 'package:jam/data/vibes/powersync_vibes_service.dart';
-import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -74,6 +73,7 @@ class PickVibePage extends HookConsumerWidget {
   }
 
   _buildSelectors(JamViewModel viewModel, Vibes data, WidgetRef ref) {
+    final vmNotifier = ref.read(freshJamViewModelStateProvider.notifier);
     return Flexible(
       flex: 10,
       child: Column(
@@ -88,12 +88,8 @@ class PickVibePage extends HookConsumerWidget {
                 return VibeContainer(
                   isSelected: isSelected,
                   onTap: () => isSelected
-                      ? ref
-                          .read(freshJamViewModelStateProvider.notifier)
-                          .removeRelatedVibes(data[i])
-                      : ref
-                          .read(freshJamViewModelStateProvider.notifier)
-                          .addRelatedVibes(data[i]),
+                      ? vmNotifier.removeRelatedVibes(data[i])
+                      : vmNotifier.addRelatedVibes(data[i]),
                   vibe: data[i],
                 );
               },

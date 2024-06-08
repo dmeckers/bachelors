@@ -91,8 +91,8 @@ class __$$ForgotPasswordModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ForgotPasswordModelImpl implements _ForgotPasswordModel {
-  const _$ForgotPasswordModelImpl({required this.email});
+class _$ForgotPasswordModelImpl extends _ForgotPasswordModel {
+  const _$ForgotPasswordModelImpl({required this.email}) : super._();
 
   @override
   final String email;
@@ -121,9 +121,10 @@ class _$ForgotPasswordModelImpl implements _ForgotPasswordModel {
           this, _$identity);
 }
 
-abstract class _ForgotPasswordModel implements ForgotPasswordModel {
+abstract class _ForgotPasswordModel extends ForgotPasswordModel {
   const factory _ForgotPasswordModel({required final String email}) =
       _$ForgotPasswordModelImpl;
+  const _ForgotPasswordModel._() : super._();
 
   @override
   String get email;

@@ -31,14 +31,11 @@ class LoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loginPageModel = useLoginPageModel();
+    final loginVm = ref.watch(loginPageViewModelProvider);
+    final loginVmNotifier = ref.read(loginPageViewModelProvider.notifier);
+
     final subtitle = useState('');
     final title = useState('');
-
-    ref.listen(
-      loginPageControllerProvider,
-      (_, state) => state.showSnackBarOnError(context),
-    );
 
     useEffect(() {
       final random = Random();
@@ -55,81 +52,107 @@ class LoginPage extends HookConsumerWidget {
               const LoginHero(),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.7,
-                child: Form(
-                  key: loginPageModel.formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        title.value,
-                        style: context.jText.displayMedium,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      title.value,
+                      style: context.jText.displayMedium,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      subtitle.value,
+                      style: context.jText.headlineMedium,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 7.0, horizontal: 16),
+                      child: JFormTextInput(
+                        inputType: JFormTextInputType.email,
+                        labelText: 'Email',
+                        leadingIcon: Icons.email,
+                        onChange: loginVmNotifier.updateEmail,
+                        validator: emailValidator,
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        subtitle.value,
-                        style: context.jText.headlineMedium,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16),
+                      child: JFormTextInput(
+                        inputType: JFormTextInputType.password,
+                        labelText: 'Password',
+                        leadingIcon: Icons.lock,
+                        onChange: loginVmNotifier.updatePassword,
+                        validator: passwordValidator,
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 7.0, horizontal: 16),
-                        child: JTextFormInput(
-                          viewModel: loginPageModel.emailFormModel,
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16),
-                        child: JTextFormInput(
-                          viewModel: loginPageModel.passwordFormModel,
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      _buildButton(context, ref, loginPageModel),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            S.of(context).dontHaveAccount,
-                            style: context.jText.bodySmall,
-                          ),
-                          SplashTextButton(
-                            text: S.of(context).createAccount,
-                            style: context.jText.headlineSmall,
-                            padding: const EdgeInsets.only(left: 5),
-                            onTap: () => context.pushNamed(
-                              GuestRoutes.register.name,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    ButtonWithLoader(
+                      onPressed: () async {
+                        if (!loginVm.isValid()) return;
+                        try {
+                          await loginVmNotifier.handleLogin(
+                            email: loginVm.email,
+                            password: loginVm.password,
+                          );
+                        } catch (e) {
+                          context.doIfMounted(
+                            () => JSnackBar.show(
+                              context,
+                              description: '$e',
+                              type: SnackbarInfoType.error,
                             ),
+                          );
+                        }
+                      },
+                      size: Size(MediaQuery.of(context).size.width * 0.7, 50),
+                      withSuccessGradient: true,
+                      text: S.of(context).login,
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          S.of(context).dontHaveAccount,
+                          style: context.jText.bodySmall,
+                        ),
+                        SplashTextButton(
+                          text: S.of(context).createAccount,
+                          style: context.jText.headlineSmall,
+                          padding: const EdgeInsets.only(left: 5),
+                          onTap: () => context.pushNamed(
+                            GuestRoutes.register.name,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Or sign in with',
-                        style: context.jText.bodySmall,
-                      ),
-                      const SizedBox(height: 10),
-                      _buildThirdPartyIconLoginButtons(ref),
-                      const Spacer(),
-                      SplashTextButton(
-                        text: S.of(context).forgotPassword,
-                        style: context.jText.headlineLarge,
-                        onTap: () =>
-                            context.pushNamed(GuestRoutes.forgotPassword.name),
-                      ),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Or sign in with',
+                      style: context.jText.bodySmall,
+                    ),
+                    const SizedBox(height: 10),
+                    _buildThirdPartyIconLoginButtons(ref),
+                    const Spacer(),
+                    SplashTextButton(
+                      text: S.of(context).forgotPassword,
+                      style: context.jText.headlineLarge,
+                      onTap: () =>
+                          context.pushNamed(GuestRoutes.forgotPassword.name),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
               ),
             ],
@@ -139,60 +162,29 @@ class LoginPage extends HookConsumerWidget {
     );
   }
 
-  ButtonWithLoader _buildButton(
-    BuildContext context,
-    WidgetRef ref,
-    LoginPageModel loginPageModel,
-  ) {
-    return ButtonWithLoader(
-      onPressed: () async => await _handlePressLoginButton(
-        context,
-        ref,
-        loginPageModel,
-      ),
-      size: Size(MediaQuery.of(context).size.width * 0.7, 50),
-      withSuccessGradient: true,
-      text: S.of(context).login,
-    );
-  }
-
   Row _buildThirdPartyIconLoginButtons(WidgetRef ref) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: ThirdPartyProviders.values
-          .toList()
-          .mapWithIndex(
-            (index, provider, position) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: GestureDetector(
-                onTap: () => ref
-                    .read(loginPageControllerProvider.notifier)
-                    .loginWithThirdPartyProvider(provider: provider),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage(
-                    ImagePathConstants.thirdPartyLogos[provider]!,
+      children: [
+        ...ThirdPartyProviders.values.toList().mapWithIndex(
+              (index, provider, position) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: GestureDetector(
+                  onTap: () async => await ref
+                      .read(loginPageViewModelProvider.notifier)
+                      .loginWithThirdPartyProvider(provider: provider),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage(
+                      ImagePathConstants.thirdPartyLogos[provider]!,
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-          .toList(),
+            )
+      ],
     );
-  }
-
-  _handlePressLoginButton(
-    BuildContext context,
-    WidgetRef ref,
-    LoginPageModel loginPageModel,
-  ) async {
-    if (!loginPageModel.validate()) return;
-
-    ref.read(loginPageControllerProvider.notifier).login(
-          email: loginPageModel.emailFormModel.controller!.text,
-          password: loginPageModel.passwordFormModel.controller!.text,
-        );
   }
 }

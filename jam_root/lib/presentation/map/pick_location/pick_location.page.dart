@@ -187,12 +187,10 @@ class PickLocationPage extends HookConsumerWidget {
               ? freshJamViewModelStateProvider
               : jamViewModelStateProvider(jamModel!);
 
-          ref.read(vm).locationNameFormModel.controller!.text = locationName;
-          // Caution unsafe code
-          (ref.read(vm.notifier) as dynamic).updateLocation(
-            '$selectedJamLocation'.formatCoords(),
-          );
-          // Caution unsafe code
+          final vmNotifier = ref.read(vm.notifier);
+
+          vmNotifier.updateLocationName(locationName);
+          vmNotifier.updateLocation('$selectedJamLocation'.formatCoords());
 
           context.doIfMounted(() => Navigator.pop(context));
         },
@@ -233,7 +231,6 @@ class PickLocationPage extends HookConsumerWidget {
       cloudMapId: '5361fdbe18cb28e5',
       onMapCreated: (GoogleMapController controller) {
         controllerNotifier.value.complete(controller);
-        // controller.setMapStyle(mapStyleNotifier.value!);
       },
       onCameraMove: (CameraPosition newPosition) {
         selectedJamLocationNotifier.value = newPosition.target;

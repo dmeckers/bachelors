@@ -102,9 +102,10 @@ class __$$ResetPasswordModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ResetPasswordModelImpl implements _ResetPasswordModel {
+class _$ResetPasswordModelImpl extends _ResetPasswordModel {
   const _$ResetPasswordModelImpl(
-      {required this.password, required this.confirmPassword});
+      {required this.password, required this.confirmPassword})
+      : super._();
 
   @override
   final String password;
@@ -138,10 +139,11 @@ class _$ResetPasswordModelImpl implements _ResetPasswordModel {
           this, _$identity);
 }
 
-abstract class _ResetPasswordModel implements ResetPasswordModel {
+abstract class _ResetPasswordModel extends ResetPasswordModel {
   const factory _ResetPasswordModel(
       {required final String password,
       required final String confirmPassword}) = _$ResetPasswordModelImpl;
+  const _ResetPasswordModel._() : super._();
 
   @override
   String get password;

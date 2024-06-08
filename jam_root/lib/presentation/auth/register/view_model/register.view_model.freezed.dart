@@ -16,11 +16,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$RegisterModel {
-  JamBaseFormModel get emailModel => throw _privateConstructorUsedError;
-  JamBaseFormModel get fullNameModel => throw _privateConstructorUsedError;
-  JamBaseFormModel get passwordModel => throw _privateConstructorUsedError;
-  JamBaseFormModel get confirmPasswordModel =>
-      throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
+  String get fullName => throw _privateConstructorUsedError;
+  String get password => throw _privateConstructorUsedError;
+  String get confirmPassword => throw _privateConstructorUsedError;
   bool get agreeWithTerms => throw _privateConstructorUsedError;
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
 
@@ -36,10 +35,10 @@ abstract class $RegisterModelCopyWith<$Res> {
       _$RegisterModelCopyWithImpl<$Res, RegisterModel>;
   @useResult
   $Res call(
-      {JamBaseFormModel emailModel,
-      JamBaseFormModel fullNameModel,
-      JamBaseFormModel passwordModel,
-      JamBaseFormModel confirmPasswordModel,
+      {String email,
+      String fullName,
+      String password,
+      String confirmPassword,
       bool agreeWithTerms,
       List<VibeModel> vibes});
 }
@@ -57,30 +56,30 @@ class _$RegisterModelCopyWithImpl<$Res, $Val extends RegisterModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? emailModel = null,
-    Object? fullNameModel = null,
-    Object? passwordModel = null,
-    Object? confirmPasswordModel = null,
+    Object? email = null,
+    Object? fullName = null,
+    Object? password = null,
+    Object? confirmPassword = null,
     Object? agreeWithTerms = null,
     Object? vibes = null,
   }) {
     return _then(_value.copyWith(
-      emailModel: null == emailModel
-          ? _value.emailModel
-          : emailModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
-      fullNameModel: null == fullNameModel
-          ? _value.fullNameModel
-          : fullNameModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
-      passwordModel: null == passwordModel
-          ? _value.passwordModel
-          : passwordModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
-      confirmPasswordModel: null == confirmPasswordModel
-          ? _value.confirmPasswordModel
-          : confirmPasswordModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      fullName: null == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      confirmPassword: null == confirmPassword
+          ? _value.confirmPassword
+          : confirmPassword // ignore: cast_nullable_to_non_nullable
+              as String,
       agreeWithTerms: null == agreeWithTerms
           ? _value.agreeWithTerms
           : agreeWithTerms // ignore: cast_nullable_to_non_nullable
@@ -102,10 +101,10 @@ abstract class _$$RegisterModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {JamBaseFormModel emailModel,
-      JamBaseFormModel fullNameModel,
-      JamBaseFormModel passwordModel,
-      JamBaseFormModel confirmPasswordModel,
+      {String email,
+      String fullName,
+      String password,
+      String confirmPassword,
       bool agreeWithTerms,
       List<VibeModel> vibes});
 }
@@ -121,30 +120,30 @@ class __$$RegisterModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? emailModel = null,
-    Object? fullNameModel = null,
-    Object? passwordModel = null,
-    Object? confirmPasswordModel = null,
+    Object? email = null,
+    Object? fullName = null,
+    Object? password = null,
+    Object? confirmPassword = null,
     Object? agreeWithTerms = null,
     Object? vibes = null,
   }) {
     return _then(_$RegisterModelImpl(
-      emailModel: null == emailModel
-          ? _value.emailModel
-          : emailModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
-      fullNameModel: null == fullNameModel
-          ? _value.fullNameModel
-          : fullNameModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
-      passwordModel: null == passwordModel
-          ? _value.passwordModel
-          : passwordModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
-      confirmPasswordModel: null == confirmPasswordModel
-          ? _value.confirmPasswordModel
-          : confirmPasswordModel // ignore: cast_nullable_to_non_nullable
-              as JamBaseFormModel,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      fullName: null == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      confirmPassword: null == confirmPassword
+          ? _value.confirmPassword
+          : confirmPassword // ignore: cast_nullable_to_non_nullable
+              as String,
       agreeWithTerms: null == agreeWithTerms
           ? _value.agreeWithTerms
           : agreeWithTerms // ignore: cast_nullable_to_non_nullable
@@ -161,28 +160,33 @@ class __$$RegisterModelImplCopyWithImpl<$Res>
 
 class _$RegisterModelImpl extends _RegisterModel {
   const _$RegisterModelImpl(
-      {required this.emailModel,
-      required this.fullNameModel,
-      required this.passwordModel,
-      required this.confirmPasswordModel,
+      {this.email = '',
+      this.fullName = '',
+      this.password = '',
+      this.confirmPassword = '',
       this.agreeWithTerms = false,
-      required final List<VibeModel> vibes})
+      final List<VibeModel> vibes = const []})
       : _vibes = vibes,
         super._();
 
   @override
-  final JamBaseFormModel emailModel;
+  @JsonKey()
+  final String email;
   @override
-  final JamBaseFormModel fullNameModel;
+  @JsonKey()
+  final String fullName;
   @override
-  final JamBaseFormModel passwordModel;
+  @JsonKey()
+  final String password;
   @override
-  final JamBaseFormModel confirmPasswordModel;
+  @JsonKey()
+  final String confirmPassword;
   @override
   @JsonKey()
   final bool agreeWithTerms;
   final List<VibeModel> _vibes;
   @override
+  @JsonKey()
   List<VibeModel> get vibes {
     if (_vibes is EqualUnmodifiableListView) return _vibes;
     // ignore: implicit_dynamic_type
@@ -191,7 +195,7 @@ class _$RegisterModelImpl extends _RegisterModel {
 
   @override
   String toString() {
-    return 'RegisterModel(emailModel: $emailModel, fullNameModel: $fullNameModel, passwordModel: $passwordModel, confirmPasswordModel: $confirmPasswordModel, agreeWithTerms: $agreeWithTerms, vibes: $vibes)';
+    return 'RegisterModel(email: $email, fullName: $fullName, password: $password, confirmPassword: $confirmPassword, agreeWithTerms: $agreeWithTerms, vibes: $vibes)';
   }
 
   @override
@@ -199,14 +203,13 @@ class _$RegisterModelImpl extends _RegisterModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RegisterModelImpl &&
-            (identical(other.emailModel, emailModel) ||
-                other.emailModel == emailModel) &&
-            (identical(other.fullNameModel, fullNameModel) ||
-                other.fullNameModel == fullNameModel) &&
-            (identical(other.passwordModel, passwordModel) ||
-                other.passwordModel == passwordModel) &&
-            (identical(other.confirmPasswordModel, confirmPasswordModel) ||
-                other.confirmPasswordModel == confirmPasswordModel) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.fullName, fullName) ||
+                other.fullName == fullName) &&
+            (identical(other.password, password) ||
+                other.password == password) &&
+            (identical(other.confirmPassword, confirmPassword) ||
+                other.confirmPassword == confirmPassword) &&
             (identical(other.agreeWithTerms, agreeWithTerms) ||
                 other.agreeWithTerms == agreeWithTerms) &&
             const DeepCollectionEquality().equals(other._vibes, _vibes));
@@ -215,10 +218,10 @@ class _$RegisterModelImpl extends _RegisterModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      emailModel,
-      fullNameModel,
-      passwordModel,
-      confirmPasswordModel,
+      email,
+      fullName,
+      password,
+      confirmPassword,
       agreeWithTerms,
       const DeepCollectionEquality().hash(_vibes));
 
@@ -231,22 +234,22 @@ class _$RegisterModelImpl extends _RegisterModel {
 
 abstract class _RegisterModel extends RegisterModel {
   const factory _RegisterModel(
-      {required final JamBaseFormModel emailModel,
-      required final JamBaseFormModel fullNameModel,
-      required final JamBaseFormModel passwordModel,
-      required final JamBaseFormModel confirmPasswordModel,
+      {final String email,
+      final String fullName,
+      final String password,
+      final String confirmPassword,
       final bool agreeWithTerms,
-      required final List<VibeModel> vibes}) = _$RegisterModelImpl;
+      final List<VibeModel> vibes}) = _$RegisterModelImpl;
   const _RegisterModel._() : super._();
 
   @override
-  JamBaseFormModel get emailModel;
+  String get email;
   @override
-  JamBaseFormModel get fullNameModel;
+  String get fullName;
   @override
-  JamBaseFormModel get passwordModel;
+  String get password;
   @override
-  JamBaseFormModel get confirmPasswordModel;
+  String get confirmPassword;
   @override
   bool get agreeWithTerms;
   @override

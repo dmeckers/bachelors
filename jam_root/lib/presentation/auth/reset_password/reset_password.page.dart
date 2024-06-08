@@ -10,7 +10,8 @@ class ResetPasswordPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = useResetPasswordViewModel();
+    final resetModel = ref.watch(resetPasswordViewModelProvider);
+    final modelNotifier = ref.read(resetPasswordViewModelProvider.notifier);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -26,30 +27,31 @@ class ResetPasswordPage extends HookConsumerWidget {
                     ?.copyWith(fontFamily: rubickFamily),
               ),
               const SizedBox(height: 40),
-              JTextFormInput(viewModel: viewModel.passwordFormModel),
+              JFormTextInput(
+                inputType: JFormTextInputType.password,
+                labelText: 'New Password',
+                leadingIcon: Icons.lock,
+                onChange: modelNotifier.updatePassword,
+                validator: resetModel.validator,
+              ),
               const SizedBox(height: 20),
-              JTextFormInput(
-                viewModel: viewModel.confirmPasswordFormModel,
-                overrideValidate: () =>
-                    viewModel.confirmPasswordFormModel.controller!.text ==
-                            viewModel.passwordFormModel.controller!.text
-                        ? null
-                        : 'Passwords do not match',
+              JFormTextInput(
+                inputType: JFormTextInputType.password,
+                labelText: 'New Password',
+                leadingIcon: Icons.lock,
+                onChange: modelNotifier.updatePassword,
+                validator: resetModel.validator,
               ),
               const SizedBox(height: 40),
               ButtonWithLoader(
                 text: 'Reset Password',
                 size: const Size(200, 50),
                 onPressed: () async {
-                  final uglyValidate =
-                      (viewModel.confirmPasswordFormModel.validate() == null &&
-                          viewModel.passwordFormModel.validate() == null);
+                  if (!resetModel.isValid()) return;
 
-                  if (!uglyValidate) return;
-
-                  await ref.read(authRepositoryProvider).updateUserPassword(
-                        password: viewModel.castToModel().password,
-                      );
+                  await ref
+                      .read(authRepositoryProvider)
+                      .updateUserPassword(password: resetModel.password);
                 },
               )
             ],

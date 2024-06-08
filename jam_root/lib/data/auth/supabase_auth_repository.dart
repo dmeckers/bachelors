@@ -1,10 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:location/location.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
@@ -17,18 +14,7 @@ class SupabaseAuthRepository
   @override
   Stream<AppUser> authStateChanges$() {
     return Supabase.instance.client.auth.onAuthStateChange.map((e) {
-      if (e.event == AuthChangeEvent.passwordRecovery) {
-        return const AppUser.passwordRecovery();
-      }
-
-      final isInitializingSession =
-          e.event == AuthChangeEvent.initialSession && e.session != null;
-
-      final isSigningOut = e.event == AuthChangeEvent.signedOut &&
-          e.event != AuthChangeEvent.tokenRefreshed;
-
-      if (e.event == AuthChangeEvent.tokenRefreshed ||
-          e.event == AuthChangeEvent.userUpdated) {
+      AppUser createSignedInUser() {
         final user = e.session!.user;
         return AppUser.signedIn(
           uid: user.id,
@@ -38,19 +24,17 @@ class SupabaseAuthRepository
         );
       }
 
-      if (isSigningOut) return const AppUser.signedOut();
-
-      if (e.event == AuthChangeEvent.signedIn || isInitializingSession) {
-        final user = e.session!.user;
-        return AppUser.signedIn(
-          uid: user.id,
-          displayName: user.email!,
-          email: user.email!,
-          phone: user.phone!,
-        );
-      }
-
-      return const AppUser.signedOut();
+      return switch (e.event) {
+        AuthChangeEvent.passwordRecovery => const AppUser.passwordRecovery(),
+        AuthChangeEvent.tokenRefreshed ||
+        AuthChangeEvent.userUpdated ||
+        AuthChangeEvent.signedIn =>
+          createSignedInUser(),
+        AuthChangeEvent.signedOut => const AppUser.signedOut(),
+        AuthChangeEvent.initialSession =>
+          e.session != null ? createSignedInUser() : const AppUser.signedOut(),
+        _ => const AppUser.signedOut(),
+      };
     });
   }
 
@@ -59,57 +43,43 @@ class SupabaseAuthRepository
     required String email,
     required String password,
   }) async {
-    try {
-      final futures = await Future.wait([
-        localDatabase.clear(),
-        Supabase.instance.client.auth.signInWithPassword(
-          password: password,
-          email: email,
-        )
-      ]);
+    final authResponse = await supaAuth.signInWithPassword(
+      password: password,
+      email: email,
+    );
 
-      final authResponse = futures.last as AuthResponse;
+    final userId = authResponse.user!.id;
+    final ref = ProviderContainer();
+    final user = await ref
+        .read(ProfileRepositoryProviders().userProfileRepository)
+        .getCurrentUserProfile();
 
-      if (authResponse.user == null) {
-        throw UnauthorizedException('Wrong credentials', StackTrace.current);
-      }
-      final userId = authResponse.user!.id;
+    await localDatabase.put(
+      HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
+      user,
+    );
 
-      await Future.wait([
-        hotQuickFix(),
-        supabase
-            .from('profiles')
-            .update({'is_online': true}).eq('id', supaUser!.id)
-      ]);
-
-      return JUser(
-        uid: userId,
-        displayName: authResponse.user!.email!,
-        email: authResponse.user!.email!,
-        phone: authResponse.user!.phone!,
-      );
-    } catch (e, s) {
-      debugPrint("$e , $s");
-      throw UnauthorizedException('Wrong credentials', StackTrace.current);
-    }
+    return JUser(
+      uid: userId,
+      displayName: authResponse.user!.email!,
+      email: authResponse.user!.email!,
+      phone: authResponse.user!.phone!,
+    );
   }
 
   @override
   Future<void> logout() async {
     final connectivity = await Connectivity().checkConnectivity();
-
-    if (connectivity == ConnectivityResult.none) {
-      supabase.auth.signOut(scope: SignOutScope.local);
-    }
-
-    await supabase.from('profiles').update(
+    final updateOnline = supabase.from('profiles').update(
       {
         'is_online': false,
-        'last_sign_in_at': DateTime.now().toString(),
+        'last_sign_in_at': '${DateTime.now()}',
       },
     ).eq('id', supaUser!.id);
 
-    await Supabase.instance.client.auth.signOut();
+    return connectivity == ConnectivityResult.none
+        ? supabase.auth.signOut(scope: SignOutScope.local)
+        : Future.wait([updateOnline, supaAuth.signOut()]);
   }
 
   @override
@@ -117,20 +87,16 @@ class SupabaseAuthRepository
     required String name,
     required String email,
     required String password,
-    required List<String> vibes,
+    required List<VibeModel> vibes,
   }) async {
     try {
-      await Supabase.instance.client.auth.signUp(
+      final authResponse = await Supabase.instance.client.auth.signUp(
         email: email,
         password: password,
         emailRedirectTo: kIsWeb ? null : 'dmeckers://confirm-email-callback',
       );
 
-      await supabase.rpc('post_vibes', params: {'vibe_ids': vibes});
-
-      // await _generateAndSaveKeys();
-
-      await supabase.from('profiles').update({
+      final updateProfileData = supabase.from('profiles').update({
         'is_online': true,
         'full_name': name,
         'username': name,
@@ -139,15 +105,78 @@ class SupabaseAuthRepository
         supaUser!.id,
       );
 
-      // final ref = ProviderContainer();
+      final userId = authResponse.user?.id;
 
-      // await ref.read(userProfileRepository).getCurrentUserProfile();
+      final putUserInHive = localDatabase.put(
+        HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
+        UserProfileModel(
+          id: userId ?? '',
+          lastActiveAt: DateTime.now(),
+          username: name,
+          fullName: name,
+          vibes: vibes,
+        ),
+      );
 
-      // ref.dispose();
+      await Future.wait([
+        supabase.rpc('post_vibes', params: {
+          'vibe_ids': [...vibes.map((e) => '${e.id}')]
+        }),
+        updateProfileData,
+        putUserInHive
+      ]);
     } on AuthException catch (exception) {
-      handleAuthException(exception);
+      switch (int.parse(exception.statusCode!)) {
+        case 429:
+          throw const RateLimitException();
+        case 400:
+          {
+            if (exception.message == 'User already registered') {
+              throw const EmailUsedException();
+            }
+          }
+        case 500:
+          throw const ServerException();
+        default:
+          throw UnauthorizedException('Wrong credentials', StackTrace.current);
+      }
     }
   }
+
+  @override
+  Future thirdPartyLogin({required ThirdPartyProviders provider}) async {
+    await localDatabase.clear();
+    final cb = switch (provider) {
+      ThirdPartyProviders.google => GoogleAuthHandler.login,
+      ThirdPartyProviders.facebook => loginWithFacebook,
+      ThirdPartyProviders.twitter => loginWithTwitter,
+    };
+    await cb();
+  }
+
+  Future loginWithTwitter() async => await supaAuth.signInWithOAuth(
+        OAuthProvider.twitter,
+      );
+
+  Future loginWithFacebook() async => await supaAuth.signInWithOAuth(
+        OAuthProvider.facebook,
+      );
+
+  @override
+  Future<void> updateUserPassword({required String password}) async =>
+      await supaAuth.updateUser(
+        UserAttributes(password: password),
+      );
+}
+
+final authRepositoryProvider = Provider<AuthRepositoryInterface>(
+  (ref) => SupabaseAuthRepository(),
+);
+
+final authStatChangesProvider = StreamProvider<AppUser>(
+  (ref) => ref.watch(authRepositoryProvider).authStateChanges$(),
+);
+
 
   // _generateAndSaveKeys() async {
   //   // final container = ProviderContainer();
@@ -166,114 +195,3 @@ class SupabaseAuthRepository
 
   //   // await SecureStorage.instance.write(key: 'secret', value: keys.privateKey);
   // }
-
-  void handleAuthException(dynamic exception) {
-    switch (int.parse(exception.statusCode!)) {
-      case 429:
-        throw const RateLimitException();
-      case 400:
-        {
-          if (exception.message == 'User already registered') {
-            throw const EmailUsedException();
-          }
-        }
-      case 500:
-        throw const ServerException();
-      default:
-        throw UnauthorizedException('Wrong credentials', StackTrace.current);
-    }
-  }
-
-  @override
-  Future thirdPartyLogin({required ThirdPartyProviders provider}) async {
-    await localDatabase.clear();
-
-    switch (provider) {
-      case ThirdPartyProviders.google:
-        loginWithGoogle();
-        break;
-      case ThirdPartyProviders.facebook:
-        loginWithFacebook();
-        break;
-      case ThirdPartyProviders.twitter:
-        loginWithTwitter();
-        break;
-    }
-  }
-
-  Future loginWithTwitter() async {
-    await Supabase.instance.client.auth.signInWithOAuth(OAuthProvider.twitter);
-  }
-
-  Future loginWithFacebook() async {
-    await Supabase.instance.client.auth.signInWithOAuth(OAuthProvider.facebook);
-  }
-
-  Future loginWithGoogle() async {
-    final googleWebClientId =
-        dotenv.env[EnvironmentConstants.GOOGLE_OAUTH_CLIENT_ID_WEB];
-
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      serverClientId: googleWebClientId,
-    );
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
-
-    if (accessToken == null) {
-      throw 'No Access Token found.';
-    }
-    if (idToken == null) {
-      throw 'No ID Token found.';
-    }
-
-    final authResponse = await Supabase.instance.client.auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-      accessToken: accessToken,
-    );
-
-    final metadata = authResponse.user?.userMetadata;
-
-    if (metadata != null) {
-      await supabase.from('profiles').update({
-        'full_name': metadata['full_name'],
-        'username': metadata['name'],
-        'is_online': true,
-        'avatar': metadata['picture'],
-      }).eq('id', authResponse.user!.id);
-    }
-
-    await hotQuickFix();
-
-    return authResponse;
-  }
-
-  @override
-  Future<void> updateUserPassword({required String password}) async {
-    await supaAuth.updateUser(UserAttributes(password: password));
-  }
-
-  Future<void> hotQuickFix() async {
-    // TODO::QUICK FIX
-    try {
-      final location = await Location().getLocation();
-      localDatabase.put(
-        'LOCATION',
-        'Lat: ${location.latitude}, Lng: ${location.longitude}',
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    // TODO::QUICK FIX
-  }
-}
-
-final authRepositoryProvider = Provider<AuthRepositoryInterface>(
-  (ref) => SupabaseAuthRepository(),
-);
-
-final authStatChangesProvider = StreamProvider<AppUser>(
-  (ref) => ref.watch(authRepositoryProvider).authStateChanges$(),
-);

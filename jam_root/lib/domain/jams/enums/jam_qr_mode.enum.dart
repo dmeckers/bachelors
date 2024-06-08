@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'jam_qr_mode.enum.g.dart';
+
 @HiveType(typeId: 32)
 enum JamQrModeEnum {
   @HiveField(0)
