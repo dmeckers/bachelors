@@ -23,39 +23,38 @@ class ChatsPopupMenu extends HookConsumerWidget with ChattingProviders {
     }, []);
 
     return PopupMenuButton<ChatsPopupMenuActions>(
-        offset: const Offset(20, 40),
-        itemBuilder: (context) => [
-              PopupMenuItem(
-                onTap: () => _navigateToFriendListPage(context),
-                child: const Row(
-                  children: [
-                    FaIcon(FontAwesomeIcons.addressBook),
-                    SizedBox(width: 10),
-                    Text('Friends'),
-                  ],
-                ),
+      offset: const Offset(20, 40),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          onTap: () => _navigateToFriendListPage(context),
+          child: const Row(
+            children: [
+              FaIcon(FontAwesomeIcons.addressBook),
+              SizedBox(width: 10),
+              Text('Friends'),
+            ],
+          ),
+        ),
+        ref.watch(getFriendInvitesProvider).maybeWhen(
+              data: (friendInvites) => PopupMenuItem<ChatsPopupMenuActions>(
+                padding: EdgeInsets.zero,
+                value: ChatsPopupMenuActions.friendInvites,
+                child: friendInvites.isEmpty
+                    ? _buildFriendInvitesPopupButton(context, friendInvites)
+                    : Badge(
+                        label: Text(
+                          friendInvites.length.toString(),
+                        ),
+                        alignment: Alignment.topLeft,
+                        offset: const Offset(0, 0),
+                        child: _buildFriendInvitesPopupButton(
+                            context, friendInvites),
+                      ),
               ),
-              ref.watch(getFriendInvitesProvider).maybeWhen(
-                    data: (friendInvites) =>
-                        PopupMenuItem<ChatsPopupMenuActions>(
-                      padding: EdgeInsets.zero,
-                      value: ChatsPopupMenuActions.friendInvites,
-                      child: friendInvites.isEmpty
-                          ? _buildFriendInvitesPopupButton(
-                              context, friendInvites)
-                          : Badge(
-                              label: Text(
-                                friendInvites.length.toString(),
-                              ),
-                              alignment: Alignment.topLeft,
-                              offset: const Offset(0, 0),
-                              child: _buildFriendInvitesPopupButton(
-                                  context, friendInvites),
-                            ),
-                    ),
-                    orElse: () => _buildFriendInvitesPopupButton(context, []),
-                  ),
-            ]);
+              orElse: () => _buildFriendInvitesPopupButton(context, []),
+            ),
+      ],
+    );
   }
 
   PopupMenuItem<ChatsPopupMenuActions> _buildFriendInvitesPopupButton(

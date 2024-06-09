@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
@@ -9,26 +11,49 @@ import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:showcaseview/showcaseview.dart';
+
+final _showcaseKey1 = GlobalKey();
+final _showcaseKey2 = GlobalKey();
 
 class MenuDrawer extends HookConsumerWidget with ProfileRepositoryProviders {
   const MenuDrawer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(user$).maybeWhen(
-            data: (data) => Drawer(
-              shape:
-                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-              child: Stack(
-                children: [
-                  _decorationContainer(context, true),
-                  _decorationContainer(context, false),
-                  DrawerWidget(profile: data),
-                ],
-              ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        supabase
+            .from('profiles')
+            .select('is_introduced')
+            .eq('id', supaUser!.id)
+            .then((res) {
+          if (res.first['is_introduced']) return;
+
+          ShowCaseWidget.of(context).startShowCase([
+            _showcaseKey1,
+            _showcaseKey2,
+          ]);
+        });
+      });
+      return null;
+    });
+
+    return ref.watch(user$).maybeWhen(
+          data: (data) => Drawer(
+            shape:
+                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            child: Stack(
+              children: [
+                _decorationContainer(context, true),
+                _decorationContainer(context, false),
+                DrawerWidget(profile: data),
+              ],
             ),
-            orElse: () => const SizedBox(),
-          );
+          ),
+          orElse: () => const SizedBox(),
+        );
+  }
 
   Widget _decorationContainer(
     BuildContext context,
@@ -53,6 +78,18 @@ class DrawerWidget extends ConsumerWidget {
 
   final UserProfileModel profile;
 
+  void _setUserIntroduced() {
+    supabase
+        .from('profiles')
+        .update({'is_introduced': true})
+        .eq('id', supaUser!.id)
+        .then(
+          (r) {
+            debugPrint('user introduced');
+          },
+        );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
@@ -61,15 +98,27 @@ class DrawerWidget extends ConsumerWidget {
         Column(
           children: [
             _DrawerHeader(profile: profile),
-            _DrawerTile(
-              icon: FontAwesomeIcons.map,
-              title: 'Map',
-              routeName: MapRoutes.map.name,
+            Showcase(
+              key: _showcaseKey1,
+              description: 'Here you can find new friends',
+              child: _DrawerTile(
+                icon: FontAwesomeIcons.map,
+                title: 'Map',
+                routeName: MapRoutes.map.name,
+              ),
             ),
-            _DrawerTile(
-              icon: FontAwesomeIcons.fire,
-              title: 'Jams',
-              routeName: JamRoutes.jams.name,
+            Showcase(
+              key: _showcaseKey2,
+              onBarrierClick: _setUserIntroduced,
+              onTargetClick: _setUserIntroduced,
+              onToolTipClick: _setUserIntroduced,
+              disposeOnTap: true,
+              description: 'Here you access your jams',
+              child: _DrawerTile(
+                icon: FontAwesomeIcons.fire,
+                title: 'Jams',
+                routeName: JamRoutes.jams.name,
+              ),
             ),
             _DrawerTile(
               icon: Icons.settings,

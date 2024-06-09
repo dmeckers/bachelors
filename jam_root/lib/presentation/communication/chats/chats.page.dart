@@ -3,13 +3,59 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/config/config.dart';
+import 'package:jam/config/constants/constants.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/globals.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
-import 'package:location/location.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:showcaseview/showcaseview.dart';
+
+final _showcaseKey1 = GlobalKey();
+final _showcaseKey2 = GlobalKey();
+
+class ShowcasedAppBar extends ConsumerWidget
+    with ChattingProviders, ChatBuilderHelper, ProfileRepositoryProviders
+    implements PreferredSizeWidget {
+  const ShowcasedAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedChats = ref.watch(selectedChatsProvider);
+
+    return Showcase(
+      key: _showcaseKey1,
+      title: 'Welcome user to the prototype presentation!',
+      titleAlignment: TextAlign.center,
+      descriptionAlignment: TextAlign.center,
+      titleTextStyle: TextStyle(
+        color: context.jTheme.primaryColor,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      descTextStyle: TextStyle(
+        color: context.jTheme.primaryColor,
+        fontSize: 16,
+      ),
+      blurValue: 5,
+      descriptionPadding: const EdgeInsets.only(left: 25),
+      description: 'Access settings and map from menu drawer',
+      // tooltipPosition: TooltipPosition.bottom,
+      child: AppBar(
+        actions: selectedChats.isNotEmpty
+            ? buildContextActionButtons(context, selectedChats, ref)
+            : [
+                const ChatsPopupMenu(),
+              ],
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(DEFAULT_APP_BAR_HEIGHT);
+}
 
 class ChatsPage extends HookConsumerWidget
     with ChattingProviders, ChatBuilderHelper, ProfileRepositoryProviders {
@@ -17,47 +63,44 @@ class ChatsPage extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedChats = ref.watch(selectedChatsProvider);
     final c$ = ref.watch(chatsState$);
 
-    useEffect(() {
-      final location = localDatabase.get('LOCATION');
-      if (location != null) return () {};
-
-      // TODO::QUICK FIX
-      try {
-        Location().getLocation().then(
-              (location) => localDatabase.put(
-                'LOCATION',
-                'Lat: ${location.latitude}, Lng: ${location.longitude}',
-              ),
-            );
-      } catch (e) {
-        debugPrint(e.toString());
-      }
-
-      return () {};
-    }, []);
-
     _initOnlineStatusObserver(ref);
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        supabase
+            .from('profiles')
+            .select('is_introduced')
+            .eq('id', supaUser!.id)
+            .then((res) {
+          if (res.first['is_introduced']) return;
+
+          ShowCaseWidget.of(context).startShowCase([
+            _showcaseKey1,
+            _showcaseKey2,
+          ]);
+        });
+      });
+      return null;
+    });
 
     return Scaffold(
       backgroundColor: context.jTheme.primaryColor,
       key: MAIN_PAGE_KEY,
-      appBar: AppBar(
-        actions: selectedChats.isNotEmpty
-            ? buildContextActionButtons(context, selectedChats, ref)
-            : [
-                const ChatsPopupMenu(),
-              ],
-      ),
+      appBar: const ShowcasedAppBar(),
       drawer: const MenuDrawer(),
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(300),
+      floatingActionButton: Showcase(
+        key: _showcaseKey2,
+        blurValue: 5,
+        description: 'Here you access your friend list',
+        child: FloatingActionButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(300),
+          ),
+          onPressed: () => context.pushNamed(ChatRoutes.friendList.name),
+          child: const FaIcon(FontAwesomeIcons.message),
         ),
-        onPressed: () => context.pushNamed(ChatRoutes.friendList.name),
-        child: const FaIcon(FontAwesomeIcons.message),
       ),
       body: c$.maybeWhen(
         data: (chats) {

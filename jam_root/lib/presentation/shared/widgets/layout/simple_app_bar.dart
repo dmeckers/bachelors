@@ -24,3 +24,22 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(DEFAULT_APP_BAR_HEIGHT);
 }
+
+    // useEffect(() {
+    //   final location = localDatabase.get('LOCATION');
+    //   if (location != null) return () {};
+
+    //   // TODO::QUICK FIX
+    //   try {
+    //     Location().getLocation().then(
+    //           (location) => localDatabase.put(
+    //             'LOCATION',
+    //             'Lat: ${location.latitude}, Lng: ${location.longitude}',
+    //           ),
+    //         );
+    //   } catch (e) {
+    //     debugPrint(e.toString());
+    //   }
+
+    //   return () {};
+    // }, []);

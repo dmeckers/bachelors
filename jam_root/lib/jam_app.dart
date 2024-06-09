@@ -7,6 +7,7 @@ import 'package:jam/generated/l10n.dart';
 import 'package:jam/presentation/routing/routing.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 final _refreshKey = UniqueKey();
 final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
@@ -37,21 +38,24 @@ class JamApp extends StatelessWidget with ProfileRepositoryProviders {
           //   },
           // );
 
-          return MaterialApp.router(
-            title: 'Jam',
-            key: _refreshKey,
-            themeMode: ThemeSwitcher.of(context).themeMode,
-            darkTheme: ThemeSwitcher.of(context).themeData.darkTheme,
-            theme: ThemeSwitcher.of(context).themeData.lightTheme,
-            scaffoldMessengerKey: scaffoldKey,
-            routerConfig: router,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
+          return ShowCaseWidget(
+            builder: (context) => Builder(
+                builder: (context) => MaterialApp.router(
+                      title: 'Jam',
+                      key: _refreshKey,
+                      themeMode: ThemeSwitcher.of(context).themeMode,
+                      darkTheme: ThemeSwitcher.of(context).themeData.darkTheme,
+                      theme: ThemeSwitcher.of(context).themeData.lightTheme,
+                      scaffoldMessengerKey: scaffoldKey,
+                      routerConfig: router,
+                      localizationsDelegates: const [
+                        S.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                      ],
+                      supportedLocales: S.delegate.supportedLocales,
+                    )),
           );
         },
       ),
