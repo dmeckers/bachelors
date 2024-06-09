@@ -39,14 +39,65 @@ class UserLocation with _$UserLocation implements LocationAbstactModel {
   LocationType get type => LocationType.user;
 
   @override
-  LocationAbstactModel copyWithResolvedMarker() {
-    return copyWith(
-      marker: marker ??
-          (isFriend ? JamMarker.getFriendsMarker() : JamMarker.getUserMarker()),
-    );
-  }
+  LocationAbstactModel copyWithResolvedMarker() => copyWith(
+        marker: resolvedMarker,
+      );
+
+  BitmapDescriptor get resolvedMarker =>
+      marker ??
+      (isFriend ? JamMarker.getFriendsMarker() : JamMarker.getUserMarker());
 }
 
 final class _UserLocationJson {
   static Object? readName(json, key) => json['full_name'];
+}
+
+class ClustarableUserLocation implements TapableClusterable {
+  final UserLocation userLocation;
+
+  ClustarableUserLocation({
+    required this.userLocation,
+    this.isCluster = false,
+    this.clusterId,
+    this.pointsSize,
+    this.childMarkerId,
+  });
+
+  @override
+  Marker toMarker() => Marker(
+        markerId: MarkerId(userLocation.id),
+        position: LatLng(
+          userLocation.latitude,
+          userLocation.longitude,
+        ),
+        onTap: onTap,
+        icon: userLocation.resolvedMarker,
+      );
+
+  @override
+  String? childMarkerId;
+
+  @override
+  int? clusterId;
+
+  @override
+  bool? isCluster;
+
+  @override
+  double? latitude;
+
+  @override
+  double? longitude;
+
+  @override
+  String? markerId;
+
+  @override
+  void Function()? onTap;
+
+  @override
+  int? pointsSize;
+
+  @override
+  Type get type => UserLocation;
 }

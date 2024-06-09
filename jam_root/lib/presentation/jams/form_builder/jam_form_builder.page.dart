@@ -121,7 +121,7 @@ class JamFormBuilderPage extends HookConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.green),
+                  backgroundColor: WidgetStateProperty.all(Colors.green),
                 ),
                 child: Text(
                   toCreate ? 'Save form' : 'Update form',

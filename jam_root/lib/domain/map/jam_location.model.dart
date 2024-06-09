@@ -1,3 +1,4 @@
+import 'package:fluster/fluster.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
@@ -43,13 +44,70 @@ class JamLocation with _$JamLocation implements LocationAbstactModel {
   LocationType get type => LocationType.jam;
 
   @override
-  LocationAbstactModel copyWithResolvedMarker() {
-    final resolvedMarker = marker.isNotNull
-        ? marker
-        : supaAuth.currentUser!.id == creatorId
-            ? JamMarker.getUserJamMarker()
-            : JamMarker.getJamMarker();
+  LocationAbstactModel copyWithResolvedMarker() => copyWith(
+        marker: resolvedMarker,
+      );
 
-    return copyWith(marker: resolvedMarker);
-  }
+  BitmapDescriptor get resolvedMarker => marker.isNotNull
+      ? marker!
+      : supaAuth.currentUser!.id == creatorId
+          ? JamMarker.getUserJamMarker()
+          : JamMarker.getJamMarker();
+}
+
+abstract class TapableClusterable implements Clusterable {
+  void Function()? onTap;
+  Marker toMarker();
+  Type get type;
+}
+
+class ClustarableJamLocation implements TapableClusterable {
+  final JamLocation jamLocation;
+
+  ClustarableJamLocation({
+    required this.jamLocation,
+    required this.isCluster,
+    required this.clusterId,
+    required this.pointsSize,
+    required this.childMarkerId,
+    required this.onTap,
+  });
+
+  @override
+  Marker toMarker() => Marker(
+        markerId: MarkerId('${jamLocation.jamId}'),
+        position: LatLng(
+          jamLocation.latitude,
+          jamLocation.longitude,
+        ),
+        onTap: onTap,
+        icon: jamLocation.resolvedMarker,
+      );
+
+  @override
+  String? childMarkerId;
+
+  @override
+  int? clusterId;
+
+  @override
+  bool? isCluster;
+
+  @override
+  double? latitude;
+
+  @override
+  double? longitude;
+
+  @override
+  String? markerId;
+
+  @override
+  int? pointsSize;
+
+  @override
+  void Function()? onTap;
+
+  @override
+  Type get type => JamLocation;
 }

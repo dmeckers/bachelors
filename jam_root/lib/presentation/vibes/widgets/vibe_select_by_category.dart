@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/vibes/edit_vibes/edit_my_vibes.page.dart';
 import 'package:jam/presentation/vibes/edit_vibes/edit_vibes.controller.dart';
 import 'package:jam/presentation/vibes/edit_vibes/row_floating_chips.row.dart';
 import 'package:jam_ui/jam_ui.dart';
@@ -151,6 +152,14 @@ class VibeSelectByCategoryWidget extends HookConsumerWidget {
         ? nextSubCategory!.value.isNull
         : !isParentFocused;
 
+    markAsDirty() {
+      final isPristine = ref.read(didChangesStateProvider);
+
+      if (!isPristine) {
+        ref.read(didChangesStateProvider.notifier).state = true;
+      }
+    }
+
     if (toHide) return const SizedBox();
 
     return ref.watch(userEditVibesControllerProvider).when(
@@ -183,6 +192,7 @@ class VibeSelectByCategoryWidget extends HookConsumerWidget {
                           RegisterChipState.focusedForDelete => () {
                               vmNotifier(ref).removeVibe(vibe: selectedVibe);
                               focusedCategory.value = null;
+                              markAsDirty();
                             },
                           RegisterChipState.none => () {
                               if (hasChildren) nextSubCategory?.value = index;
@@ -192,6 +202,7 @@ class VibeSelectByCategoryWidget extends HookConsumerWidget {
                           RegisterChipState.focused => () {
                               vmNotifier(ref).addVibe(vibe: selectedVibe);
                               focusedCategory.value = null;
+                              markAsDirty();
                             },
                         })();
                       },

@@ -12,6 +12,8 @@ import 'package:jam/presentation/vibes/edit_vibes/edit_vibes.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
+final didChangesStateProvider = StateProvider<bool>((ref) => false);
+
 class EditUserVibes extends HookConsumerWidget
     with ProfileRepositoryProviders, Storer {
   const EditUserVibes({
@@ -45,9 +47,35 @@ class EditUserVibes extends HookConsumerWidget
     final userVibesState = useState(vibes ?? []);
     final canPop = useState(userVibesState.value.isNotEmpty);
     final searchQuery = useState<String?>(null);
+    final didChanges = ref.watch(didChangesStateProvider);
+    final can = canPop.value && !didChanges;
 
     return PopScope(
-      canPop: canPop.value,
+      canPop: can,
+      onPopInvoked: (didPop) {
+        if (didChanges) {
+          showDialog(
+            context: context,
+            builder: (ctx) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: DecisionDialog(
+                dialogData: DecisionDialogData(
+                  title: 'Leave page',
+                  subtitle:
+                      'You have unsaved changes. Are you sure you want to leave?',
+                  onConfirm: (_) {
+                    ref.invalidate(didChangesStateProvider);
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => context.canPop() ? context.pop() : null,
+                    );
+                  },
+                  onCancel: () {},
+                ),
+              ),
+            ),
+          );
+        }
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -159,9 +187,8 @@ class EditUserVibes extends HookConsumerWidget
                         .read(userStateProvider)
                         .updateVibes(vibes: selectedVibes);
 
-                    if (context.mounted) {
-                      context.pop();
-                    }
+                    ref.invalidate(didChangesStateProvider);
+                    context.popIfMounted();
                   },
                   text: selectedVibes.isNotEmpty
                       ? 'Save Vibes'

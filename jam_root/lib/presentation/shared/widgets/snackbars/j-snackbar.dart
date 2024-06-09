@@ -28,53 +28,58 @@ class JSnackBar {
     final data = jSnackbarQueue.removeFirst();
     isShowing = true;
 
-    return JCherryToast(
-      backgroundColor: Colors.black,
-      onToastClosed: () {
-        isShowing = false;
-        _show(context);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        JCherryToast(
+          snackbarQueue: jSnackbarQueue,
+          backgroundColor: Colors.black,
+          onToastClosed: () {
+            isShowing = false;
+            _show(context);
+          },
+          title: data.title != null
+              ? Text(
+                  data.title!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                )
+              : null,
+          icon: switch (data.type) {
+            SnackbarInfoType.error => Icons.error,
+            SnackbarInfoType.success => Icons.check,
+            SnackbarInfoType.warning => Icons.warning,
+            SnackbarInfoType.info => Icons.info,
+            _ => Icons.info,
+          },
+          iconColor: Colors.white,
+          onTap: data.onTap,
+          iconWidget: data.avatarUrl != null
+              ? CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(data.avatarUrl!),
+                )
+              : null,
+          themeColor: switch (data.type) {
+            SnackbarInfoType.error => Colors.red,
+            SnackbarInfoType.success => Colors.green,
+            SnackbarInfoType.warning => Colors.orange,
+            SnackbarInfoType.info => Colors.blue,
+            _ => Colors.blue,
+          },
+          animationDuration: const Duration(milliseconds: 3000),
+          toastDuration: const Duration(seconds: 2),
+          animationCurve: Curves.ease,
+          description: data.description != null
+              ? Text(
+                  data.description!,
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                )
+              : null,
+          animationType: AnimationType.fromLeft,
+        ).show(context);
       },
-      title: data.title != null
-          ? Text(
-              data.title!,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-              ),
-            )
-          : null,
-      icon: switch (data.type) {
-        SnackbarInfoType.error => Icons.error,
-        SnackbarInfoType.success => Icons.check,
-        SnackbarInfoType.warning => Icons.warning,
-        SnackbarInfoType.info => Icons.info,
-        _ => Icons.info,
-      },
-      iconColor: Colors.white,
-      onTap: data.onTap,
-      iconWidget: data.avatarUrl != null
-          ? CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(data.avatarUrl!),
-            )
-          : null,
-      themeColor: switch (data.type) {
-        SnackbarInfoType.error => Colors.red,
-        SnackbarInfoType.success => Colors.green,
-        SnackbarInfoType.warning => Colors.orange,
-        SnackbarInfoType.info => Colors.blue,
-        _ => Colors.blue,
-      },
-      animationDuration: const Duration(milliseconds: 3000),
-      toastDuration: const Duration(seconds: 2),
-      animationCurve: Curves.ease,
-      description: data.description != null
-          ? Text(
-              data.description!,
-              style: const TextStyle(color: Colors.white, fontSize: 12),
-            )
-          : null,
-      animationType: AnimationType.fromLeft,
-    ).show(context);
+    );
   }
 }
 

@@ -11,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 
-///TODO get the numbber mby because of the permission
 class InviteFriendPage extends HookConsumerWidget {
   const InviteFriendPage({super.key});
 
@@ -33,20 +32,20 @@ class InviteFriendPage extends HookConsumerWidget {
       }
     }
 
-    Future<void> fetchContacts(
-        {required ValueNotifier<List<Contact>> contactsNotifier}) async {
+    Future<void> fetchContacts({
+      required ValueNotifier<List<Contact>> contactsNotifier,
+    }) async {
       final contacts = await FlutterContacts.getContacts();
       contactsNotifier.value = contacts;
     }
 
-    Future<void> requestPermission(
-        {required ValueNotifier<PermissionStatus?> permissionNotifier}) async {
+    Future<void> requestPermission({
+      required ValueNotifier<PermissionStatus?> permissionNotifier,
+    }) async {
       final status = await Permission.contacts.request();
       permissionNotifier.value = status;
 
       if (status.isGranted) fetchContacts(contactsNotifier: contacts);
-
-      //  (status.isDenied)   showPermissionDeniedDialog(context);
     }
 
     useEffect(() {
@@ -79,7 +78,10 @@ class InviteFriendPage extends HookConsumerWidget {
                   _buildContactsHeadline(context),
                   permissionStatus.value!.isGranted
                       ? _buildContactList(
-                          context, contacts, navigateToNativeSmsSender)
+                          context,
+                          contacts,
+                          navigateToNativeSmsSender,
+                        )
                       : const JamErrorBox(
                           errorMessage:
                               'Could not fetch contacts.Permission denied',
@@ -96,8 +98,9 @@ class InviteFriendPage extends HookConsumerWidget {
     Future<void> Function() navigateToNativeSmsSender,
   ) {
     return ConstrainedBox(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.9),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
+      ),
       child: ListView.builder(
         itemCount: contacts.value.length,
         itemBuilder: (context, index) => ShakesOnNoLongPress(
@@ -108,10 +111,10 @@ class InviteFriendPage extends HookConsumerWidget {
                   ? Image.memory(contacts.value[index].photo!)
                   : const Icon(Icons.person),
             ),
-            title: Text(contacts.value.first.displayName),
+            title: Text(contacts.value[index].displayName),
             subtitle: Text(
-              contacts.value.first.phones.isNotEmpty
-                  ? contacts.value.first.phones.first.number
+              contacts.value[index].phones.isNotEmpty
+                  ? contacts.value[index].phones.first.number
                   : 'No phone number',
             ),
           ),
@@ -143,23 +146,3 @@ class InviteFriendPage extends HookConsumerWidget {
     );
   }
 }
-
-// Future<void> showPermissionDeniedDialog(BuildContext context) async {
-//   await showDialog(
-//     context: context,
-//     builder: (context) => AlertDialog(
-//       title: const Text('Permission Denied'),
-//       content: const Text('Please grant permission to access contacts in the app settings.'),
-//       actions: [
-//         TextButton(
-//           onPressed: () => Navigator.of(context).pop(),
-//           child: const Text('Cancel'),
-//         ),
-//         TextButton(
-//           onPressed: () => openAppSettings(),
-//           child: const Text('Open Settings'),
-//         ),
-//       ],
-//     ),
-//   );
-// }

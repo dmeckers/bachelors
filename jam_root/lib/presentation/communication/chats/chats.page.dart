@@ -9,6 +9,7 @@ import 'package:jam/globals.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:location/location.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ChatsPage extends HookConsumerWidget
     with ChattingProviders, ChatBuilderHelper, ProfileRepositoryProviders {
@@ -61,8 +62,30 @@ class ChatsPage extends HookConsumerWidget
       body: c$.maybeWhen(
         data: (chats) {
           if (chats.isEmpty) {
-            return const Center(
-              child: NotFoundPlaceholder(message: 'No chats found!'),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Center(
+                  child: NotFoundPlaceholder(message: 'No chats found!'),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Share.share('Check out this cool app: https://example.com');
+                  },
+                  child: const Text('Invite friends to app \u{1F4E4}'),
+                ),
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () => context.pushNamed(MapRoutes.map.name),
+                    child: const Text('Go to map \u{1F5FA}'),
+                  ),
+                )
+              ],
             );
           }
 

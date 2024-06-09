@@ -14,4 +14,10 @@ extension BuildContextExtensions on BuildContext {
 
     return null;
   }
+
+  popIfMounted() {
+    if (mounted) {
+      Navigator.of(this).pop();
+    }
+  }
 }

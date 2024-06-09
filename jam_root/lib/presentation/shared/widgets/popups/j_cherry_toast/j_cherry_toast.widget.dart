@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
-
-import 'j_cherry_toast.dart';
 
 // ignore: must_be_immutable
 class JCherryToast extends StatefulWidget {
@@ -13,6 +13,7 @@ class JCherryToast extends StatefulWidget {
   JCherryToast({
     super.key,
     this.title,
+    required this.snackbarQueue,
     required this.icon,
     required this.themeColor,
     this.iconColor = Colors.black,
@@ -51,6 +52,8 @@ class JCherryToast extends StatefulWidget {
     );
   }
 
+  final Queue<JSnackbarData> snackbarQueue;
+
   JCherryToast.success({
     super.key,
     this.title,
@@ -81,6 +84,7 @@ class JCherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
+    required this.snackbarQueue,
   }) {
     assert(
       title != null || description != null,
@@ -119,6 +123,7 @@ class JCherryToast extends StatefulWidget {
     this.constraints,
     this.disableToastAnimation = false,
     this.onToastClosed,
+    required this.snackbarQueue,
     this.onTap,
   }) {
     assert(
@@ -156,6 +161,7 @@ class JCherryToast extends StatefulWidget {
     this.height,
     this.width,
     this.constraints,
+    required this.snackbarQueue,
     this.disableToastAnimation = false,
     this.onToastClosed,
     this.onTap,
@@ -174,6 +180,7 @@ class JCherryToast extends StatefulWidget {
     this.action,
     this.actionHandler,
     this.description,
+    required this.snackbarQueue,
     this.backgroundColor = defaultBackgroundColor,
     this.shadowColor = defaultShadowColor,
     this.toastPosition = Position.top,
@@ -586,41 +593,60 @@ class _JCherryToastState extends State<JCherryToast>
           height: widget.height,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
               children: [
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    crossAxisAlignment:
-                        widget.description.isNotNull && widget.title.isNotNull
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        crossAxisAlignment: widget.description.isNotNull &&
+                                widget.title.isNotNull
                             ? CrossAxisAlignment.start
                             : CrossAxisAlignment.center,
-                    children: [
-                      widget.iconWidget ??
-                          (widget.displayIcon
-                              ? JCherryToastIcon(
-                                  color: widget.themeColor,
-                                  icon: widget.icon,
-                                  iconSize: widget.iconSize,
-                                  iconColor: widget.iconColor,
-                                  enableAnimation: widget.enableIconAnimation,
-                                )
-                              : const SizedBox()),
-                      renderToastContent(),
-                    ],
-                  ),
-                ),
-                if (widget.displayCloseButton)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                      right: 10,
+                        children: [
+                          widget.iconWidget ??
+                              (widget.displayIcon
+                                  ? JCherryToastIcon(
+                                      color: widget.themeColor,
+                                      icon: widget.icon,
+                                      iconSize: widget.iconSize,
+                                      iconColor: widget.iconColor,
+                                      enableAnimation:
+                                          widget.enableIconAnimation,
+                                    )
+                                  : const SizedBox()),
+                          renderToastContent(),
+                        ],
+                      ),
                     ),
-                    child: renderCloseButton(context),
-                  ),
+                    if (widget.displayCloseButton)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 10,
+                          right: 10,
+                        ),
+                        child: renderCloseButton(context),
+                      ),
+                  ],
+                ),
+                if (widget.snackbarQueue.isNotEmpty)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        widget.snackbarQueue.clear();
+                        _handleClose();
+                      },
+                      child: Text(
+                        'Close all ${widget.snackbarQueue.length}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )
               ],
             ),
           ),
@@ -634,20 +660,22 @@ class _JCherryToastState extends State<JCherryToast>
   ///
   InkWell renderCloseButton(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (!widget.disableToastAnimation &&
-            widget.animationType != AnimationType.fromLeft) {
-          slideController.reverse();
-        }
-        autoDismissTimer?.cancel();
-        widget.closeOverlay();
-      },
+      onTap: _handleClose,
       child: Icon(
         Icons.close,
         color: Colors.grey[500],
         size: 15,
       ),
     );
+  }
+
+  void _handleClose() {
+    if (!widget.disableToastAnimation &&
+        widget.animationType != AnimationType.fromLeft) {
+      slideController.reverse();
+    }
+    autoDismissTimer?.cancel();
+    widget.closeOverlay();
   }
 
   ///render the toast content (Title, Description and Action)
