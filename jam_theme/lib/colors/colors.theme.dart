@@ -39,8 +39,6 @@ const ColorScheme lightScheme = ColorScheme.light(
     onSecondary: lightOnSecondary,
     error: lightError,
     onError: lightOnError,
-    background: lightBackground,
-    onBackground: lightOnBackground,
     surface: lightSurface,
     onSurface: lightOnSurface);
 
@@ -62,7 +60,5 @@ const ColorScheme darkScheme = ColorScheme.dark(
     onSecondary: darkOnSecondary,
     error: darkError,
     onError: darkOnError,
-    background: darkBackground,
-    onBackground: darkOnBackground,
     surface: darkSurface,
     onSurface: darkOnSurface);

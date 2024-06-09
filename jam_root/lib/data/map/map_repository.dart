@@ -33,16 +33,16 @@ final class MapRepository extends MapRepositoryInterface
     double? userLongitude,
   }) async {
     final userId = getUserIdOrThrow();
+    final location = _ref.read(locationServiceProvider);
 
-    final usersLocation =
-        await _ref.read(locationServiceProvider).getLocation();
-
+    // final stopwatch = Stopwatch()..start();
     final response = (await supabase.rpc('get_users_and_jams', params: {
       'userid': userId,
-      'userlocation':
-          'POINT(${usersLocation.latitude} ${usersLocation.longitude})'
+      'userlocation': await location.getLocationInPoint()
     }) as Dynamics)
         .first as Json;
+    // final elapsedMilliseconds = stopwatch.elapsedMilliseconds;
+    // print('Query execution time: $elapsedMilliseconds ms');
 
     return _mapToLocationModels(response, userId);
   }

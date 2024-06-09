@@ -5,4 +5,5 @@ extension NumberExtensions on num {
   isMoreThan(num value) => this > value;
 
   isLessThan(num value) => this < value;
+  isLessOrEq(num value) => this <= value;
 }

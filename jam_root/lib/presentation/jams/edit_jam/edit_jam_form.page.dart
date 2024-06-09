@@ -12,7 +12,7 @@ class EditJamForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       appBar: SimpleAppBar(title: 'Form builder'),
       body: Center(
         child: Text('Edit jam form'),

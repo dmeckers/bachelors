@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +15,11 @@ class MapWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapState = ref.watch(mapStateViewModelProvider);
     final mapStateNotifier = ref.read(mapStateViewModelProvider.notifier);
+    useEffect(() {
+      ref.invalidate(mapPageLocationsStateProvider);
+
+      return null;
+    }, []);
 
     return asyncWrapped(
       ref: ref,

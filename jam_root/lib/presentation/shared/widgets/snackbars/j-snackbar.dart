@@ -1,4 +1,6 @@
 // ignore: file_names
+import 'dart:collection';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -7,51 +9,101 @@ import 'package:jam/presentation/presentation.dart';
 enum SnackbarInfoType { error, success, warning, info }
 
 class JSnackBar {
-  static void show(
-    BuildContext context, {
-    String? description,
-    SnackbarInfoType? type,
-    String? title,
-    String? avatarUrl,
-    Function? onTap,
-  }) {
-    JCherryToast(
-      title: title != null
+  static Queue<JSnackbarData> jSnackbarQueue = Queue<JSnackbarData>();
+  static bool isShowing = false;
+
+  static void show(BuildContext context, JSnackbarData data) {
+    jSnackbarQueue.add(data);
+
+    if (!isShowing) {
+      _show(context);
+    }
+  }
+
+  static void _show(BuildContext context) {
+    if (jSnackbarQueue.isEmpty) {
+      return;
+    }
+
+    final data = jSnackbarQueue.removeFirst();
+    isShowing = true;
+
+    return JCherryToast(
+      backgroundColor: Colors.black,
+      onToastClosed: () {
+        isShowing = false;
+        _show(context);
+      },
+      title: data.title != null
           ? Text(
-              title,
-              style: const TextStyle(color: Colors.black, fontSize: 14),
+              data.title!,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
             )
           : null,
-      icon: switch (type) {
+      icon: switch (data.type) {
         SnackbarInfoType.error => Icons.error,
         SnackbarInfoType.success => Icons.check,
         SnackbarInfoType.warning => Icons.warning,
         SnackbarInfoType.info => Icons.info,
         _ => Icons.info,
       },
-      onTap: onTap,
-      iconWidget: avatarUrl != null
+      iconColor: Colors.white,
+      onTap: data.onTap,
+      iconWidget: data.avatarUrl != null
           ? CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(avatarUrl),
+              backgroundImage: CachedNetworkImageProvider(data.avatarUrl!),
             )
           : null,
-      themeColor: switch (type) {
+      themeColor: switch (data.type) {
         SnackbarInfoType.error => Colors.red,
         SnackbarInfoType.success => Colors.green,
         SnackbarInfoType.warning => Colors.orange,
         SnackbarInfoType.info => Colors.blue,
         _ => Colors.blue,
       },
-      animationDuration: const Duration(milliseconds: 300),
+      animationDuration: const Duration(milliseconds: 3000),
       toastDuration: const Duration(seconds: 2),
       animationCurve: Curves.ease,
-      description: description != null
+      description: data.description != null
           ? Text(
-              description,
-              style: const TextStyle(color: Colors.black, fontSize: 12),
+              data.description!,
+              style: const TextStyle(color: Colors.white, fontSize: 12),
             )
           : null,
-      animationType: AnimationType.fromTop,
+      animationType: AnimationType.fromLeft,
     ).show(context);
   }
 }
+
+class JSnackbarData {
+  final String? description;
+  final SnackbarInfoType? type;
+  final String? title;
+  final String? avatarUrl;
+  final Function? onTap;
+
+  const JSnackbarData({
+    this.description,
+    this.type,
+    this.title,
+    this.avatarUrl,
+    this.onTap,
+  });
+}
+
+// a(){
+//   jSnackbarQueue.add(JSnackbarData(
+//     description: 'Failed to send password reset link',
+//     type: SnackbarInfoType.error,
+//   ));
+
+//   jSnackbarQueue.removeFirst()
+// }
+// final jsnackbarQueueStateProvider = StateProvider<Queue<JSnackbarData>>(
+//   (ref) => Queue<JSnackbarData>(),
+// );
+
+

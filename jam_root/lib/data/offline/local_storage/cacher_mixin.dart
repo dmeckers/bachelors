@@ -12,6 +12,7 @@ mixin class Storer {
     UserProfilePrivacySettingsModel:
         HiveConstants.LOCAL_DB_USER_PRIVACY_SETTINGS_KEY,
     JamCardView: HiveConstants.LOCAL_DB_JAM_CARD_VIEW_KEY,
+    MapData: HiveConstants.LOCAL_DB_LAST_CACHED_MAP_DATA_KEY,
   };
 
   Future<void> hivePut<T>(T value) async {

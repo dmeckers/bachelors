@@ -7,6 +7,7 @@ import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
   const SettingsPage({super.key, required this.profile});
@@ -14,9 +15,15 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
   final UserProfileModel profile;
 
   _handleTest(BuildContext context, WidgetRef ref) {
-    // const privateTokenk = '4GQGJRYV3TR45IBTWQ5A';
-
-    // http.get(url)
+    context.doIfMounted(
+      () => JSnackBar.show(
+        context,
+        const JSnackbarData(
+          description: 'Failed to send password reset link',
+          type: SnackbarInfoType.error,
+        ),
+      ),
+    );
   }
 
   @override

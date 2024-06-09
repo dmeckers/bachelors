@@ -25,6 +25,10 @@ final class HiveService {
     Hive.registerAdapter(JamModelAdapter());
     Hive.registerAdapter(JamJoinTypeEnumAdapter());
     Hive.registerAdapter(JamQrModeEnumAdapter());
+    Hive.registerAdapter(MapDataImplAdapter());
+    Hive.registerAdapter(JamLocationImplAdapter());
+    Hive.registerAdapter(UserLocationImplAdapter());
+    Hive.registerAdapter(LatLngAdapter());
 
     localDatabase = await Hive.openBox('localDatabase');
   }

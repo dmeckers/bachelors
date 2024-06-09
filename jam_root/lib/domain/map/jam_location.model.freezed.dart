@@ -20,16 +20,27 @@ JamLocation _$JamLocationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$JamLocation {
+  @HiveField(0)
   int get jamId => throw _privateConstructorUsedError;
+  @HiveField(1)
   String get name => throw _privateConstructorUsedError;
+  @HiveField(2)
   String get description => throw _privateConstructorUsedError;
+  @HiveField(3)
   String get locationName => throw _privateConstructorUsedError;
+  @HiveField(4)
   dynamic get date => throw _privateConstructorUsedError;
+  @HiveField(5)
   double get latitude => throw _privateConstructorUsedError;
+  @HiveField(6)
   double get longitude => throw _privateConstructorUsedError;
+  @HiveField(7)
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
+  @HiveField(8)
   String get creatorId => throw _privateConstructorUsedError;
+  @HiveField(9)
   JamJoinTypeEnum get joinType => throw _privateConstructorUsedError;
+  @HiveField(10)
   String? get creatorFcmToken => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker => throw _privateConstructorUsedError;
@@ -47,17 +58,17 @@ abstract class $JamLocationCopyWith<$Res> {
       _$JamLocationCopyWithImpl<$Res, JamLocation>;
   @useResult
   $Res call(
-      {int jamId,
-      String name,
-      String description,
-      String locationName,
-      dynamic date,
-      double latitude,
-      double longitude,
-      List<VibeModel> vibes,
-      String creatorId,
-      JamJoinTypeEnum joinType,
-      String? creatorFcmToken,
+      {@HiveField(0) int jamId,
+      @HiveField(1) String name,
+      @HiveField(2) String description,
+      @HiveField(3) String locationName,
+      @HiveField(4) dynamic date,
+      @HiveField(5) double latitude,
+      @HiveField(6) double longitude,
+      @HiveField(7) List<VibeModel> vibes,
+      @HiveField(8) String creatorId,
+      @HiveField(9) JamJoinTypeEnum joinType,
+      @HiveField(10) String? creatorFcmToken,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker});
 }
 
@@ -149,17 +160,17 @@ abstract class _$$JamLocationImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int jamId,
-      String name,
-      String description,
-      String locationName,
-      dynamic date,
-      double latitude,
-      double longitude,
-      List<VibeModel> vibes,
-      String creatorId,
-      JamJoinTypeEnum joinType,
-      String? creatorFcmToken,
+      {@HiveField(0) int jamId,
+      @HiveField(1) String name,
+      @HiveField(2) String description,
+      @HiveField(3) String locationName,
+      @HiveField(4) dynamic date,
+      @HiveField(5) double latitude,
+      @HiveField(6) double longitude,
+      @HiveField(7) List<VibeModel> vibes,
+      @HiveField(8) String creatorId,
+      @HiveField(9) JamJoinTypeEnum joinType,
+      @HiveField(10) String? creatorFcmToken,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker});
 }
 
@@ -243,19 +254,20 @@ class __$$JamLocationImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+@HiveType(typeId: HiveConstants.JAM_LOCATION_MODEL_TYPE_ID)
 class _$JamLocationImpl extends _JamLocation {
   const _$JamLocationImpl(
-      {required this.jamId,
-      required this.name,
-      required this.description,
-      required this.locationName,
-      required this.date,
-      required this.latitude,
-      required this.longitude,
-      required final List<VibeModel> vibes,
-      required this.creatorId,
-      required this.joinType,
-      this.creatorFcmToken,
+      {@HiveField(0) required this.jamId,
+      @HiveField(1) required this.name,
+      @HiveField(2) required this.description,
+      @HiveField(3) required this.locationName,
+      @HiveField(4) required this.date,
+      @HiveField(5) required this.latitude,
+      @HiveField(6) required this.longitude,
+      @HiveField(7) required final List<VibeModel> vibes,
+      @HiveField(8) required this.creatorId,
+      @HiveField(9) required this.joinType,
+      @HiveField(10) this.creatorFcmToken,
       @JsonKey(includeIfNull: false) this.marker})
       : _vibes = vibes,
         super._();
@@ -264,21 +276,29 @@ class _$JamLocationImpl extends _JamLocation {
       _$$JamLocationImplFromJson(json);
 
   @override
+  @HiveField(0)
   final int jamId;
   @override
+  @HiveField(1)
   final String name;
   @override
+  @HiveField(2)
   final String description;
   @override
+  @HiveField(3)
   final String locationName;
   @override
+  @HiveField(4)
   final dynamic date;
   @override
+  @HiveField(5)
   final double latitude;
   @override
+  @HiveField(6)
   final double longitude;
   final List<VibeModel> _vibes;
   @override
+  @HiveField(7)
   List<VibeModel> get vibes {
     if (_vibes is EqualUnmodifiableListView) return _vibes;
     // ignore: implicit_dynamic_type
@@ -286,10 +306,13 @@ class _$JamLocationImpl extends _JamLocation {
   }
 
   @override
+  @HiveField(8)
   final String creatorId;
   @override
+  @HiveField(9)
   final JamJoinTypeEnum joinType;
   @override
+  @HiveField(10)
   final String? creatorFcmToken;
   @override
   @JsonKey(includeIfNull: false)
@@ -359,17 +382,17 @@ class _$JamLocationImpl extends _JamLocation {
 
 abstract class _JamLocation extends JamLocation {
   const factory _JamLocation(
-          {required final int jamId,
-          required final String name,
-          required final String description,
-          required final String locationName,
-          required final dynamic date,
-          required final double latitude,
-          required final double longitude,
-          required final List<VibeModel> vibes,
-          required final String creatorId,
-          required final JamJoinTypeEnum joinType,
-          final String? creatorFcmToken,
+          {@HiveField(0) required final int jamId,
+          @HiveField(1) required final String name,
+          @HiveField(2) required final String description,
+          @HiveField(3) required final String locationName,
+          @HiveField(4) required final dynamic date,
+          @HiveField(5) required final double latitude,
+          @HiveField(6) required final double longitude,
+          @HiveField(7) required final List<VibeModel> vibes,
+          @HiveField(8) required final String creatorId,
+          @HiveField(9) required final JamJoinTypeEnum joinType,
+          @HiveField(10) final String? creatorFcmToken,
           @JsonKey(includeIfNull: false) final BitmapDescriptor? marker}) =
       _$JamLocationImpl;
   const _JamLocation._() : super._();
@@ -378,26 +401,37 @@ abstract class _JamLocation extends JamLocation {
       _$JamLocationImpl.fromJson;
 
   @override
+  @HiveField(0)
   int get jamId;
   @override
+  @HiveField(1)
   String get name;
   @override
+  @HiveField(2)
   String get description;
   @override
+  @HiveField(3)
   String get locationName;
   @override
+  @HiveField(4)
   dynamic get date;
   @override
+  @HiveField(5)
   double get latitude;
   @override
+  @HiveField(6)
   double get longitude;
   @override
+  @HiveField(7)
   List<VibeModel> get vibes;
   @override
+  @HiveField(8)
   String get creatorId;
   @override
+  @HiveField(9)
   JamJoinTypeEnum get joinType;
   @override
+  @HiveField(10)
   String? get creatorFcmToken;
   @override
   @JsonKey(includeIfNull: false)

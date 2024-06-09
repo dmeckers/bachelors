@@ -9,6 +9,7 @@ import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 class ProfileSettingsPage extends HookConsumerWidget
     with ProfileRepositoryProviders {
@@ -46,13 +47,23 @@ class ProfileSettingsPage extends HookConsumerWidget
             HeroAvatar(
               radius: 60,
               profile: userState.requireValue,
-              onTap: () => userState.requireValue.photoUrls?.isNotEmpty ?? false
-                  ? _showFullScreenImageViewer(
-                      context: context,
-                      images: userState.requireValue.photoUrls!,
-                      mainAvatar: userState.requireValue.avatar ?? '',
-                    )
-                  : null,
+              onTap: () {
+                final uploads = userState.requireValue.photoUrls ?? [];
+                final avatar = userState.requireValue.avatar;
+                final imageLinks = [
+                  ...{...uploads, avatar}
+                      .where((i) => i.isNotNullOrEmpty)
+                      .map((e) => e!)
+                ];
+
+                if (imageLinks.isEmpty) return;
+
+                _showFullScreenImageViewer(
+                  context: context,
+                  images: imageLinks,
+                  mainAvatar: avatar ?? '',
+                );
+              },
             ),
             Padding(
               padding:

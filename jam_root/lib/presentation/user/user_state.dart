@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:jam/config/config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -54,11 +55,11 @@ class UserState with Storer {
     _state.value = profile;
   }
 
-  void updateVibes({required List<VibeModel> vibes}) {
+  void updateVibes({required Vibes vibes}) {
     if (!_state.hasValue) return;
+
     final profile = _state.value.copyWith(vibes: vibes);
     _state.value = profile;
-    vibesRepo.updateVibes(vibes: vibes);
   }
 
   Future<void> deleteProfilePhoto({required String photoId}) async {

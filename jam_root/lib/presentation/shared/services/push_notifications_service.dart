@@ -108,14 +108,17 @@ class PushNotificationsService {
     String? routeName,
   ]) {
     final context = MAIN_PAGE_KEY.currentContext;
-    if (context == null) return;
+    if (context.isNull) return;
 
     JSnackBar.show(
-      context,
-      type: SnackbarInfoType.info,
-      description: message.data['body'],
-      onTap: () =>
-          routeName != null ? GoRouter.of(context).pushNamed(routeName) : {},
+      context!,
+      JSnackbarData(
+        type: SnackbarInfoType.info,
+        description: message.data['body'],
+        onTap: () => routeName.isNotNull
+            ? GoRouter.of(context).pushNamed(routeName!)
+            : {},
+      ),
     );
   }
 
@@ -148,16 +151,18 @@ class PushNotificationsService {
 
     JSnackBar.show(
       MAIN_PAGE_KEY.currentContext!,
-      type: SnackbarInfoType.info,
-      description: messageModel.messageText!.crop(20),
-      title: message.data['title'] ?? "New Message",
-      avatarUrl: message.data['avatar'] ??
-          ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-      onTap: () => router.pushNamed(
-        ChatRoutes.chat.name,
-        pathParameters: {
-          ChatRoutes.chat.pathParameter!: message.data['chatId']
-        },
+      JSnackbarData(
+        type: SnackbarInfoType.info,
+        description: messageModel.messageText!.crop(20),
+        title: message.data['title'] ?? "New Message",
+        avatarUrl: message.data['avatar'] ??
+            ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
+        onTap: () => router.pushNamed(
+          ChatRoutes.chat.name,
+          pathParameters: {
+            ChatRoutes.chat.pathParameter!: message.data['chatId']
+          },
+        ),
       ),
     );
   }

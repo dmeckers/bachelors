@@ -101,8 +101,10 @@ class FriendInvitesPage extends HookConsumerWidget {
     context.doIfMounted(
       () => JSnackBar.show(
         context,
-        description: 'Friend invite rejected.',
-        type: SnackbarInfoType.info,
+        JSnackbarData(
+          description: 'Friend invite rejected.',
+          type: SnackbarInfoType.info,
+        ),
       ),
     );
   }
@@ -131,8 +133,10 @@ class FriendInvitesPage extends HookConsumerWidget {
     context.doIfMounted(
       () => JSnackBar.show(
         context,
-        description: '${invite.username} is now your friend',
-        type: SnackbarInfoType.success,
+        JSnackbarData(
+          description: '${invite.username} is now your friend',
+          type: SnackbarInfoType.success,
+        ),
       ),
     );
   }

@@ -101,8 +101,10 @@ class AccountSettingsPage extends ConsumerWidget
                     context.doIfMounted(
                       () => JSnackBar.show(
                         context,
-                        description: 'Password changed successfully',
-                        type: SnackbarInfoType.success,
+                        const JSnackbarData(
+                          description: 'Password changed successfully',
+                          type: SnackbarInfoType.success,
+                        ),
                       ),
                     );
                   },

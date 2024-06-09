@@ -46,9 +46,18 @@ class InviteFriendToJamDialog extends ConsumerWidget {
                         participants: participants,
                         jam: jam,
                       )
-                    : const NotFoundPlaceholder(
-                        message: 'No one to invite to found',
-                        backgroundColor: Colors.black,
+                    : Material(
+                        child: InkWell(
+                          onTap: () => context.pop(),
+                          child: Ink(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            color: context.jColor.primaryContainer,
+                            child: const NotFoundPlaceholder(
+                              message: 'No one to invite to found',
+                            ),
+                          ),
+                        ),
                       );
               },
               loading: () => _buildLoader(),
@@ -230,8 +239,10 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
 
                 JSnackBar.show(
                   context,
-                  description: 'Invites to jam sent',
-                  type: SnackbarInfoType.info,
+                  const JSnackbarData(
+                    description: 'Invites to jam sent',
+                    type: SnackbarInfoType.info,
+                  ),
                 );
               },
               child: const Text(

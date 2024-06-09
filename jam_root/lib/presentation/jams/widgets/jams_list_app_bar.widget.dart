@@ -55,8 +55,11 @@ class JamListAppBarWidget extends HookConsumerWidget
                               ? context.pushNamed(JamRoutes.createNew.name)
                               : JSnackBar.show(
                                   context,
-                                  title:
-                                      'You can only create ${AppConfigConstants.MAX_JAM_PER_USER} jams at a time',
+                                  const JSnackbarData(
+                                    title: 'You can only create'
+                                        ' ${AppConfigConstants.MAX_JAM_PER_USER}'
+                                        'jams at a time',
+                                  ),
                                 );
                         },
                         icon: const Icon(

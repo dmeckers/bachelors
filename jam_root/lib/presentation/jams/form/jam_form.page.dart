@@ -107,9 +107,11 @@ class JamFormPage extends HookConsumerWidget {
                   context.doIfMounted(
                     () => JSnackBar.show(
                       context,
-                      title: 'Form submitted',
-                      type: SnackbarInfoType.success,
-                      onTap: () => Navigator.of(context).pop(),
+                      JSnackbarData(
+                        title: 'Form submitted',
+                        type: SnackbarInfoType.success,
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
                     ),
                   );
                 },

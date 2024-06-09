@@ -32,7 +32,7 @@ class BottomSheetLayout extends StatelessWidget {
       width: double.infinity,
       decoration: decoration ??
           BoxDecoration(
-            color: context.jColor.background,
+            color: context.jColor.surface,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),

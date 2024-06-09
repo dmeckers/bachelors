@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 import 'j_cherry_toast.dart';
 
@@ -23,7 +24,7 @@ class JCherryToast extends StatefulWidget {
     this.iconWidget,
     this.toastPosition = Position.top,
     this.animationDuration = const Duration(
-      milliseconds: 1500,
+      milliseconds: 3500,
     ),
     this.animationCurve = Curves.ease,
     this.animationType = AnimationType.fromLeft,
@@ -401,20 +402,24 @@ class _JCherryToastState extends State<JCherryToast>
 
     toastDecoration = BoxDecoration(
       color: widget.backgroundColor,
-      borderRadius: BorderRadius.circular(widget.borderRadius),
-      boxShadow: [
-        BoxShadow(
-          color: widget.shadowColor,
-          spreadRadius: 1,
-          blurRadius: 2,
-          offset: const Offset(0, 1), // changes position of shadow
-        ),
-      ],
+      border: Border.all(
+        color: Colors.white,
+        width: 1,
+      ),
+      // borderRadius: BorderRadius.circular(widget.borderRadius),
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: widget.shadowColor,
+      //     spreadRadius: 1,
+      //     blurRadius: 2,
+      //     offset: const Offset(0, 1), // changes position of shadow
+      //   ),
+      // ],
     );
     if (widget.autoDismiss) {
       autoDismissTimer = Timer(widget.toastDuration, () {
         if (!widget.disableToastAnimation) {
-          slideController.reverse();
+          // slideController.reverse();
         }
         Timer(widget.animationDuration, () {
           widget.closeOverlay();
@@ -432,6 +437,10 @@ class _JCherryToastState extends State<JCherryToast>
     }
     super.dispose();
   }
+
+  late Animation<Offset> _leftToCenterAnimation;
+  late Animation<Offset> _centerToRightAnimation;
+  late Animation<Offset> sequenceAnimation;
 
   ///Initialize animation parameters [slideController] and [offsetAnimation]
   void initAnimation() {
@@ -452,15 +461,40 @@ class _JCherryToastState extends State<JCherryToast>
     } else {
       switch (widget.animationType) {
         case AnimationType.fromLeft:
-          offsetAnimation = Tween<Offset>(
-            begin: const Offset(-2, 0),
-            end: const Offset(0, 0),
-          ).animate(
-            CurvedAnimation(
-              parent: slideController,
-              curve: widget.animationCurve,
-            ),
-          );
+          // offsetAnimation = Tween<Offset>(
+          //   begin: const Offset(-2, 0),
+          //   end: const Offset(0, 0),
+          // ).animate(
+          //   CurvedAnimation(
+          //     parent: slideController,
+          //     curve: widget.animationCurve,
+          //   ),
+          // );
+
+          offsetAnimation = TweenSequence(
+            <TweenSequenceItem<Offset>>[
+              TweenSequenceItem<Offset>(
+                tween: Tween<Offset>(
+                        begin: const Offset(-2, 0), end: const Offset(0, 0))
+                    .chain(CurveTween(curve: Curves.easeIn)),
+                weight: 1.0,
+              ),
+              TweenSequenceItem<Offset>(
+                tween: Tween<Offset>(
+                  begin: const Offset(0, 0),
+                  end: const Offset(0, 0),
+                ).chain(CurveTween(curve: Curves.easeOut)),
+                weight: 13.0,
+              ),
+              TweenSequenceItem<Offset>(
+                tween: Tween<Offset>(
+                        begin: const Offset(0, 0), end: const Offset(2, 0))
+                    .chain(CurveTween(curve: Curves.easeInOut)),
+                weight: 1.0,
+              ),
+            ],
+          ).animate(slideController);
+
           break;
         case AnimationType.fromRight:
           offsetAnimation = Tween<Offset>(
@@ -517,6 +551,18 @@ class _JCherryToastState extends State<JCherryToast>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.animationType == AnimationType.fromBottom) {
+      return AnimatedBuilder(
+        animation: offsetAnimation,
+        builder: (ctx, child) {
+          return Transform.translate(
+            offset: offsetAnimation.value,
+            child: renderJCherryToastContent(context),
+          );
+        },
+      );
+    }
+
     return SlideTransition(
       position: widget.disableToastAnimation
           ? disabledAnimationOffset
@@ -549,23 +595,20 @@ class _JCherryToastState extends State<JCherryToast>
                   flex: 2,
                   child: Row(
                     crossAxisAlignment:
-                        widget.description == null && widget.action == null
-                            ? CrossAxisAlignment.center
-                            : CrossAxisAlignment.start,
+                        widget.description.isNotNull && widget.title.isNotNull
+                            ? CrossAxisAlignment.start
+                            : CrossAxisAlignment.center,
                     children: [
-                      //TODO refactor `iconWidget` and `titleWidget` to avoid duplication
-                      if (widget.iconWidget != null)
-                        widget.iconWidget!
-                      else if (widget.displayIcon)
-                        JCherryToastIcon(
-                          color: widget.themeColor,
-                          icon: widget.icon,
-                          iconSize: widget.iconSize,
-                          iconColor: widget.iconColor,
-                          enableAnimation: widget.enableIconAnimation,
-                        )
-                      else
-                        Container(),
+                      widget.iconWidget ??
+                          (widget.displayIcon
+                              ? JCherryToastIcon(
+                                  color: widget.themeColor,
+                                  icon: widget.icon,
+                                  iconSize: widget.iconSize,
+                                  iconColor: widget.iconColor,
+                                  enableAnimation: widget.enableIconAnimation,
+                                )
+                              : const SizedBox()),
                       renderToastContent(),
                     ],
                   ),
@@ -592,16 +635,12 @@ class _JCherryToastState extends State<JCherryToast>
   InkWell renderCloseButton(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (!widget.disableToastAnimation) {
+        if (!widget.disableToastAnimation &&
+            widget.animationType != AnimationType.fromLeft) {
           slideController.reverse();
         }
         autoDismissTimer?.cancel();
-        Timer(
-          widget.animationDuration,
-          () {
-            widget.closeOverlay();
-          },
-        );
+        widget.closeOverlay();
       },
       child: Icon(
         Icons.close,
@@ -627,16 +666,18 @@ class _JCherryToastState extends State<JCherryToast>
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.end,
           children: [
-            if (widget.title != null) widget.title!,
-            if (widget.description != null)
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  widget.description!
-                ],
-              ),
+            widget.description!,
+            // if (widget.title != null) widget.title!,
+            // if (widget.description != null)
+            //   Column(
+            //     children: [
+            //       const SizedBox(
+            //         height: 5,
+            //       ),
+            //       widget.description!
+            //     ],
+            //   ),
+
             if (widget.action != null)
               Column(
                 children: [

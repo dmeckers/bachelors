@@ -60,4 +60,7 @@ class SpotJamLocation with _$SpotJamLocation implements LocationAbstactModel {
 
   @override
   LocationType get type => LocationType.spottedJam;
+
+  @override
+  LocationAbstactModel copyWithResolvedMarker() => copyWith(marker: marker);
 }

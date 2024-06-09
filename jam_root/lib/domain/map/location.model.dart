@@ -12,4 +12,6 @@ abstract class LocationAbstactModel {
   abstract final dynamic id;
   abstract final LocationType type;
   abstract final List<VibeModel> vibes;
+
+  LocationAbstactModel copyWithResolvedMarker();
 }

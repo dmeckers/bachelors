@@ -31,6 +31,17 @@ final class HiveConstants {
 
   static const LAST_MESSAGE_BOX_TYPE_ID = 63;
 
+  static const LOCAL_DB_LAST_CACHED_MAP_DATA_KEY = 'last_cached_map_data';
+  static const LAST_CACHED_MAP_DATA_TYPE_ID = 65;
+
+  static const LOCAL_DB_USER_LOCATION_MODEL_KEY = 'user_location_model';
+  static const USER_LOCATION_MODEL_TYPE_ID = 66;
+
+  static const LOCAL_DB_JAM_LOCATION_MODEL_KEY = 'jam_location_model';
+  static const JAM_LOCATION_MODEL_TYPE_ID = 67;
+
+  static const LAT_LNG_ADAPTER_TYPE_ID = 68;
+
   static getAllKeys() {
     return [
       LOCAL_DB_USER_PROFILE_KEY,
@@ -41,6 +52,9 @@ final class HiveConstants {
       LOCAL_DB_CHAT_STATE_KEY,
       LOCAL_DB_USER_PRIVACY_SETTINGS_KEY,
       LOCAL_DB_JAM_CARD_VIEW_KEY,
+      LOCAL_DB_LAST_CACHED_MAP_DATA_KEY,
+      LOCAL_DB_USER_LOCATION_MODEL_KEY,
+      LOCAL_DB_JAM_LOCATION_MODEL_KEY,
     ];
   }
 }

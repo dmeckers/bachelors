@@ -1,18 +1,15 @@
-<!-- Urgent -->
-<!-- Urgent -->
-
-> > > dialog + toast
-> > > images (for empty chat or add ivnite friends)
-> > > 4.jam vibe change (probably this will affect also map stream)
-> > > update map stream if it was open by new vibe ids (refetch) when vibes changed TO TEST
+> > > dialog + toast + images (for empty chat or add ivnite friends)
+> > > tutor
 > > > invites controls misssing (max participants , invites per member etc (must depend now from joinTypeEnum))
-> > > improve searching mechanism - how ?
-> > > distance doesnt work
+> > > device test
+
+<!-- edit vigbe on exit add modal to save chagnes -->
+
+klaster markerov
+invite frens
 
 <!-- Urgent -->
 <!-- Urgent -->
-
-device test
 
 <!-- Not urget -->
 <!-- Not urget -->
@@ -21,4 +18,5 @@ device test
 > > > WHAT WILL HAPPEN IF FRIEND REQUEST SENT FROM ONE AND OTHER IGNORING REQUESTS SENDS REQUEST TO FIRST PERSON
 
 <!-- Not urget -->
+
 <!-- jam chat? -->

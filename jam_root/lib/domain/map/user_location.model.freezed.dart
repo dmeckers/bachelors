@@ -20,14 +20,20 @@ UserLocation _$UserLocationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserLocation {
+  @HiveField(0)
   String get userId => throw _privateConstructorUsedError;
+  @HiveField(1)
   @JsonKey(readValue: _UserLocationJson.readName)
   String get name => throw _privateConstructorUsedError;
+  @HiveField(2)
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
+  @HiveField(3)
   double get latitude => throw _privateConstructorUsedError;
+  @HiveField(4)
   double get longitude => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker => throw _privateConstructorUsedError;
+  @HiveField(5)
   bool get isFriend => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,13 +49,13 @@ abstract class $UserLocationCopyWith<$Res> {
       _$UserLocationCopyWithImpl<$Res, UserLocation>;
   @useResult
   $Res call(
-      {String userId,
-      @JsonKey(readValue: _UserLocationJson.readName) String name,
-      List<VibeModel> vibes,
-      double latitude,
-      double longitude,
+      {@HiveField(0) String userId,
+      @HiveField(1) @JsonKey(readValue: _UserLocationJson.readName) String name,
+      @HiveField(2) List<VibeModel> vibes,
+      @HiveField(3) double latitude,
+      @HiveField(4) double longitude,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker,
-      bool isFriend});
+      @HiveField(5) bool isFriend});
 }
 
 /// @nodoc
@@ -115,13 +121,13 @@ abstract class _$$UserLocationImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String userId,
-      @JsonKey(readValue: _UserLocationJson.readName) String name,
-      List<VibeModel> vibes,
-      double latitude,
-      double longitude,
+      {@HiveField(0) String userId,
+      @HiveField(1) @JsonKey(readValue: _UserLocationJson.readName) String name,
+      @HiveField(2) List<VibeModel> vibes,
+      @HiveField(3) double latitude,
+      @HiveField(4) double longitude,
       @JsonKey(includeIfNull: false) BitmapDescriptor? marker,
-      bool isFriend});
+      @HiveField(5) bool isFriend});
 }
 
 /// @nodoc
@@ -179,15 +185,18 @@ class __$$UserLocationImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+@HiveType(typeId: HiveConstants.USER_LOCATION_MODEL_TYPE_ID)
 class _$UserLocationImpl extends _UserLocation {
   const _$UserLocationImpl(
-      {required this.userId,
-      @JsonKey(readValue: _UserLocationJson.readName) required this.name,
-      required final List<VibeModel> vibes,
-      required this.latitude,
-      required this.longitude,
+      {@HiveField(0) required this.userId,
+      @HiveField(1)
+      @JsonKey(readValue: _UserLocationJson.readName)
+      required this.name,
+      @HiveField(2) required final List<VibeModel> vibes,
+      @HiveField(3) required this.latitude,
+      @HiveField(4) required this.longitude,
       @JsonKey(includeIfNull: false) this.marker,
-      required this.isFriend})
+      @HiveField(5) required this.isFriend})
       : _vibes = vibes,
         super._();
 
@@ -195,12 +204,15 @@ class _$UserLocationImpl extends _UserLocation {
       _$$UserLocationImplFromJson(json);
 
   @override
+  @HiveField(0)
   final String userId;
   @override
+  @HiveField(1)
   @JsonKey(readValue: _UserLocationJson.readName)
   final String name;
   final List<VibeModel> _vibes;
   @override
+  @HiveField(2)
   List<VibeModel> get vibes {
     if (_vibes is EqualUnmodifiableListView) return _vibes;
     // ignore: implicit_dynamic_type
@@ -208,13 +220,16 @@ class _$UserLocationImpl extends _UserLocation {
   }
 
   @override
+  @HiveField(3)
   final double latitude;
   @override
+  @HiveField(4)
   final double longitude;
   @override
   @JsonKey(includeIfNull: false)
   final BitmapDescriptor? marker;
   @override
+  @HiveField(5)
   final bool isFriend;
 
   @override
@@ -267,34 +282,41 @@ class _$UserLocationImpl extends _UserLocation {
 
 abstract class _UserLocation extends UserLocation {
   const factory _UserLocation(
-      {required final String userId,
+      {@HiveField(0) required final String userId,
+      @HiveField(1)
       @JsonKey(readValue: _UserLocationJson.readName)
       required final String name,
-      required final List<VibeModel> vibes,
-      required final double latitude,
-      required final double longitude,
+      @HiveField(2) required final List<VibeModel> vibes,
+      @HiveField(3) required final double latitude,
+      @HiveField(4) required final double longitude,
       @JsonKey(includeIfNull: false) final BitmapDescriptor? marker,
-      required final bool isFriend}) = _$UserLocationImpl;
+      @HiveField(5) required final bool isFriend}) = _$UserLocationImpl;
   const _UserLocation._() : super._();
 
   factory _UserLocation.fromJson(Map<String, dynamic> json) =
       _$UserLocationImpl.fromJson;
 
   @override
+  @HiveField(0)
   String get userId;
   @override
+  @HiveField(1)
   @JsonKey(readValue: _UserLocationJson.readName)
   String get name;
   @override
+  @HiveField(2)
   List<VibeModel> get vibes;
   @override
+  @HiveField(3)
   double get latitude;
   @override
+  @HiveField(4)
   double get longitude;
   @override
   @JsonKey(includeIfNull: false)
   BitmapDescriptor? get marker;
   @override
+  @HiveField(5)
   bool get isFriend;
   @override
   @JsonKey(ignore: true)

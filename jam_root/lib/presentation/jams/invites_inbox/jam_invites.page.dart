@@ -111,8 +111,10 @@ class JamInvitesPage extends HookConsumerWidget {
     context.doIfMounted(
       () => JSnackBar.show(
         context,
-        description: 'Invite declined',
-        type: SnackbarInfoType.info,
+        const JSnackbarData(
+          description: 'Invite declined',
+          type: SnackbarInfoType.info,
+        ),
       ),
     );
 
@@ -134,8 +136,10 @@ class JamInvitesPage extends HookConsumerWidget {
     context.doIfMounted(
       () => JSnackBar.show(
         context,
-        description: 'Jam invite accepted',
-        type: SnackbarInfoType.success,
+        const JSnackbarData(
+          description: 'Jam invite accepted',
+          type: SnackbarInfoType.success,
+        ),
       ),
     );
 

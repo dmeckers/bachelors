@@ -28,7 +28,9 @@ class FriendInviteButton extends HookConsumerWidget {
         context.doIfMounted(
           () => JSnackBar.show(
             context,
-            title: 'You and ${viewedUser.profile.username} are now friends',
+            JSnackbarData(
+              title: 'You and ${viewedUser.profile.username} are now friends',
+            ),
           ),
         );
       },
@@ -102,7 +104,9 @@ class FriendInviteButton extends HookConsumerWidget {
         context.doIfMounted(
           () => JSnackBar.show(
             context,
-            title: 'Send friend request',
+            const JSnackbarData(
+              title: 'Send friend request',
+            ),
           ),
         );
       },

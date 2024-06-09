@@ -40,8 +40,6 @@ const ColorScheme cobraLightScheme = ColorScheme.light(
     onSecondary: cobraLightOnSecondary,
     error: cobraLightError,
     onError: cobraLightOnError,
-    background: cobraLightBackground,
-    onBackground: cobraLightOnBackground,
     surface: cobraLightSurface,
     onSurface: cobraLightOnSurface);
 
@@ -63,7 +61,5 @@ const ColorScheme cobraDarkScheme = ColorScheme.dark(
     onSecondary: cobraDarkOnSecondary,
     error: cobraDarkError,
     onError: cobraDarkOnError,
-    background: cobraDarkBackground,
-    onBackground: cobraDarkOnBackground,
     surface: cobraDarkSurface,
     onSurface: cobraDarkOnSurface);

@@ -179,12 +179,13 @@ final class JamsRepository extends JamRepositoryInterface
 
   @override
   Future<bool> joinJam({required int jamId}) async {
-    if (await isOnline(_ref)) return queue.queueJoin(jamId: jamId);
-
-    await supabase.from('jams_users').insert({
+    // if (await isOnline(_ref)) return queue.queueJoin(jamId: jamId);
+    final payload = {
       'user_id': getUserIdOrThrow(),
       'jam_id': jamId,
-    });
+    };
+
+    await supabase.from('jams_users').insert(payload);
     return true;
   }
 

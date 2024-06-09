@@ -109,8 +109,10 @@ class LoginPage extends HookConsumerWidget {
                           context.doIfMounted(
                             () => JSnackBar.show(
                               context,
-                              description: '$e',
-                              type: SnackbarInfoType.error,
+                              JSnackbarData(
+                                description: '$e',
+                                type: SnackbarInfoType.error,
+                              ),
                             ),
                           );
                         }

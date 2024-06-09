@@ -7,7 +7,7 @@ part of 'edit_vibes.controller.dart';
 // **************************************************************************
 
 String _$userEditVibesControllerHash() =>
-    r'ad6147d7fe429507cb475cc9991ee91ef33fddcf';
+    r'b20bf31ccc03e5e809ea2d3cee0f3baba37fd1d8';
 
 /// See also [UserEditVibesController].
 @ProviderFor(UserEditVibesController)

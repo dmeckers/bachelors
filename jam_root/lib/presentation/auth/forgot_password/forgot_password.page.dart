@@ -90,8 +90,10 @@ class ForgotPasswordPage extends HookConsumerWidget {
       context.doIfMounted(
         () => JSnackBar.show(
           context,
-          description: 'Failed to send password reset link',
-          type: SnackbarInfoType.error,
+          const JSnackbarData(
+            description: 'Failed to send password reset link',
+            type: SnackbarInfoType.error,
+          ),
         ),
       );
     }
@@ -99,8 +101,10 @@ class ForgotPasswordPage extends HookConsumerWidget {
     context.doIfMounted(
       () => JSnackBar.show(
         context,
-        description: 'Link for password reset sent to your email',
-        type: SnackbarInfoType.success,
+        const JSnackbarData(
+          description: 'Link for password reset sent to your email',
+          type: SnackbarInfoType.success,
+        ),
       ),
     );
   }

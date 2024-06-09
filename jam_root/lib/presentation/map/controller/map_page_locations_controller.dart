@@ -12,7 +12,7 @@ import 'package:jam_utils/jam_utils.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:location/location.dart' as lc;
 
-class MapPageLocationsController {
+class MapPageLocationsController with Storer {
   MapPageLocationsController(this._ref);
 
   final ProviderRef _ref;
@@ -25,6 +25,14 @@ class MapPageLocationsController {
     yield _state.value;
 
     final city = await _getRealtimChannelIdentifier(coords);
+    final cached = hiveGet<MapData>();
+
+    yield cached?.copyWith(
+            currentPosition: _state.value.currentPosition,
+            locations: [
+              ..._state.value.locations.map((el) => el.copyWithResolvedMarker())
+            ]) ??
+        _state.value;
 
     final location$ = _ref
         .read(locationServiceProvider)
@@ -32,11 +40,17 @@ class MapPageLocationsController {
         .debounceTime(const Duration(seconds: 5))
         .map((data) => LatLng(data.latitude ?? 0, data.longitude ?? 0))
         .doOnData(
-          (data) => _ref
-              .read(mapStateViewModelProvider.notifier)
-              .setUserCurrentLocation(data),
-        )
-        .startWith(_state.value.currentPosition);
+      (data) {
+        _ref
+            .read(mapStateViewModelProvider.notifier)
+            .setUserCurrentLocation(data);
+
+        localDatabase.put(
+          'LOCATION',
+          'Lat: ${data.latitude}, Lng: ${data.longitude}',
+        );
+      },
+    ).startWith(_state.value.currentPosition);
 
     final mapEvents$ = _ref
         .read(mapRealtimeProvider)
@@ -54,7 +68,11 @@ class MapPageLocationsController {
         ],
       ),
     ).listen(
-      (mapEvents$) => _state.value = mapEvents$,
+      (mapEvents$) {
+        if (_state.isPaused || _state.isClosed) return;
+
+        _state.value = mapEvents$;
+      },
     );
 
     yield* _state.stream;
@@ -129,16 +147,27 @@ class MapPageLocationsController {
     return LatLng(location.latitude!, location.longitude!);
   }
 
-  void dispose() => _state.close();
+  void dispose() {
+    // localDatabase.put(HiveConstants.LAST_CACHED_MAP_DATA, _state.value);
+    _state.close();
+  }
 }
 
 final locationServiceProvider = Provider<lc.Location>((ref) => lc.Location());
+
+extension Locationxtensions on lc.Location {
+  Future<String> getLocationInPoint() async {
+    // await requestService();
+    final location = await getLocation();
+    return 'POINT(${location.latitude} ${location.longitude})';
+  }
+}
 
 final mapPageLocationsStateProvider = Provider<MapPageLocationsController>(
   (ref) => MapPageLocationsController(ref),
 );
 
-final locations$ = StreamProvider<MapData>(
+final locations$ = StreamProvider.autoDispose<MapData>(
   (ref) => ref.read(mapPageLocationsStateProvider).locations$(),
 );
 

@@ -3,6 +3,59 @@
 part of 'user_location.model.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class UserLocationImplAdapter extends TypeAdapter<_$UserLocationImpl> {
+  @override
+  final int typeId = 66;
+
+  @override
+  _$UserLocationImpl read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return _$UserLocationImpl(
+      userId: fields[0] as String,
+      name: fields[1] as String,
+      vibes: (fields[2] as List).cast<VibeModel>(),
+      latitude: fields[3] as double,
+      longitude: fields[4] as double,
+      isFriend: fields[5] as bool,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, _$UserLocationImpl obj) {
+    writer
+      ..writeByte(6)
+      ..writeByte(0)
+      ..write(obj.userId)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(3)
+      ..write(obj.latitude)
+      ..writeByte(4)
+      ..write(obj.longitude)
+      ..writeByte(5)
+      ..write(obj.isFriend)
+      ..writeByte(2)
+      ..write(obj.vibes);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserLocationImplAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

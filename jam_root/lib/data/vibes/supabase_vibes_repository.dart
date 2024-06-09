@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/presentation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
@@ -65,30 +67,51 @@ final class SupabaseVibesRepository extends VibesRepositoryInterface
     }
   }
 
+  void fetchAndCacheDataInBackground() {
+    final location = _ref.read(locationServiceProvider);
+    final mapRepo = _ref.read(mapRepositoryProvider);
+
+    mapRepo.getUserAndJamsLocations().then((mapPoints) async {
+      final locationData = await location.getLocation();
+      final locationLatLng =
+          LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0);
+
+      final mapData = MapData(
+        currentPosition: locationLatLng,
+        locations: [...mapPoints.jams, ...mapPoints.users],
+      );
+
+      hivePut<MapData>(mapData).then((_) => debugPrint('Map data cached'));
+    });
+  }
+
   @override
   Future<void> updateVibes({required List<VibeModel> vibes}) async {
     final userId = getUserIdOrThrow();
 
-    if (!(await isOnline(_ref))) {
-      await PowerSync.db.execute(
-        'DELETE FROM users_vibes WHERE user_id = ?',
-        [userId],
-      );
+    // if (!(await isOnline(_ref))) {
+    //   await PowerSync.db.execute(
+    //     'DELETE FROM users_vibes WHERE user_id = ?',
+    //     [userId],
+    //   );
 
-      await PowerSync.db.executeBatch(
-        'INSERT INTO users_vibes (id , user_id, vibe_id) VALUES (? , ?, ?)',
-        vibes.map((e) => [const Uuid().v4(), userId, e.id]).toList(),
-      );
-    }
+    //   await PowerSync.db.executeBatch(
+    //     'INSERT INTO users_vibes (id , user_id, vibe_id) VALUES (? , ?, ?)',
+    //     vibes.map((e) => [const Uuid().v4(), userId, e.id]).toList(),
+    //   );
+    // }
+    final updateVibePayload = {
+      'user_id': userId,
+      'vibe_ids': [...vibes.map((e) => e.id)]
+    };
 
-    await supabase.rpc(UPDATE_RPC, params: {
-      'userid': userId,
-      'vibeids': vibes.map((e) => e.id).toList(),
-    });
+    await supabase.rpc(UPDATE_RPC, params: updateVibePayload);
 
     final cached = hiveGet<UserProfileModel>();
 
     cached.isNotNull && await hiveRefresh(cached!.copyWith(vibes: vibes));
+
+    fetchAndCacheDataInBackground();
   }
 
   @override

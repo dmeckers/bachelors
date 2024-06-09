@@ -19,10 +19,10 @@ class NotFoundPlaceholder extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          color: backgroundColor,
           width: MediaQuery.of(context).size.width * 0.5,
           height: MediaQuery.of(context).size.width * 0.5,
           decoration: const BoxDecoration(
+            color: Colors.transparent,
             image: DecorationImage(
               image: AssetImage(
                 ImagePathConstants.NOT_FOUND_JAR_PATH,

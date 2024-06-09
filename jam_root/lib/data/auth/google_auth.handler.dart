@@ -3,7 +3,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jam/config/config.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-// TODO TUT LOGIN I REGISTER MIXANULISJ BLJAT
 class GoogleAuthHandler {
   static Future<AuthResponse> login() async {
     final googleWebClientId =
@@ -32,16 +31,13 @@ class GoogleAuthHandler {
 
     final metadata = authResponse.user?.userMetadata;
 
-    if (metadata != null) {
-      await supabase.from('profiles').update({
-        'full_name': metadata['full_name'],
-        'username': metadata['name'],
-        'is_online': true,
-        'avatar': metadata['picture'],
-      }).eq('id', authResponse.user!.id);
-    }
-
-    // await hotQuickFix();
+    await supabase.rpc('upsert_google_user', params: {
+      'id': authResponse.user!.id,
+      'full_name': metadata!['full_name'],
+      'username': metadata['name'],
+      'avatar': metadata['picture'],
+      'is_online': true,
+    });
 
     return authResponse;
   }

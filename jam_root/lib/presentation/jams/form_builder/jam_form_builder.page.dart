@@ -148,7 +148,10 @@ class JamFormBuilderPage extends HookConsumerWidget {
                           jamId: jamModel!.id!,
                           form: formModel,
                         );
-                    JSnackBar.show(context, description: 'Form updated');
+                    JSnackBar.show(
+                      context,
+                      const JSnackbarData(description: 'Form updated'),
+                    );
                   }
 
                   context.pop();
