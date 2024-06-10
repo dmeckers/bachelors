@@ -1,7 +1,11 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
+import 'package:jam/presentation/presentation.dart';
+import 'package:location/location.dart';
+import 'package:jam_utils/jam_utils.dart';
 
 mixin class Storer {
   static const Map<Type, String> _typeKeys = {
@@ -42,6 +46,21 @@ mixin class Storer {
   Future<T> hiveRefreshAndReturn<T>(T value) async {
     await hiveRefresh<T>(value);
     return value;
+  }
+
+  static Future<void> hiveCacheLocation({required LocationData data}) async {
+    await localDatabase.put(
+      'LOCATION',
+      GeoPacker.toLatLngStringFromData(data: data),
+    );
+  }
+
+  static LatLng? hiveGetLocation() {
+    final cached = (localDatabase.get('LOCATION') as String?)?.extractCords();
+
+    if (cached.isNull) return null;
+
+    return LatLng(cached!.lat, cached.lon);
   }
 }
 

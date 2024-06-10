@@ -83,7 +83,7 @@ Future<JamModel> createJam(CreateJamRef ref, {required JamModel jam}) async {
 
   final coords = jam.location.extractCords();
 
-  ref.read(mapPageLocationsStateProvider).pushJam(
+  ref.read(mapWidgetStateControllerProvider).pushJam(
         jamLocation: jamModel.toLocationModel().copyWith(
               marker: JamMarker.getUserJamMarker(),
               latitude: coords.lat,

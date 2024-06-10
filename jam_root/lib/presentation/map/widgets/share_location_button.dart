@@ -36,9 +36,7 @@ class ShareLocationButton extends HookConsumerWidget {
             try {
               final location = await Location().getLocation();
 
-              ref
-                  .read(mapStateViewModelProvider.notifier)
-                  .setUserCurrentLocation(
+              ref.read(mapWidgetStateControllerProvider).setUserCurrentLocation(
                     LatLng(
                       location.latitude ?? 0,
                       location.longitude ?? 0,

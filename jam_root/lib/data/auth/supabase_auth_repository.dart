@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/presentation/presentation.dart';
+import 'package:jam_utils/jam_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:jam/application/application.dart';
@@ -9,7 +11,7 @@ import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
 class SupabaseAuthRepository
-    with ProfileRepositoryProviders
+    with ProfileRepositoryProviders, Storer
     implements AuthRepositoryInterface {
   @override
   Stream<AppUser> authStateChanges$() {
@@ -31,8 +33,9 @@ class SupabaseAuthRepository
         AuthChangeEvent.signedIn =>
           createSignedInUser(),
         AuthChangeEvent.signedOut => const AppUser.signedOut(),
-        AuthChangeEvent.initialSession =>
-          e.session != null ? createSignedInUser() : const AppUser.signedOut(),
+        AuthChangeEvent.initialSession => e.session.isNotNull
+            ? createSignedInUser()
+            : const AppUser.signedOut(),
         _ => const AppUser.signedOut(),
       };
     });
@@ -48,16 +51,11 @@ class SupabaseAuthRepository
       email: email,
     );
 
-    final userId = authResponse.user!.id;
-    final ref = ProviderContainer();
-    final user = await ref
-        .read(ProfileRepositoryProviders().userProfileRepository)
-        .getCurrentUserProfile();
+    if (authResponse.user.isNull) throw 'No user found.';
 
-    await localDatabase.put(
-      HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
-      user,
-    );
+    final userId = authResponse.user!.id;
+
+    await _cacheUserProfileAndLocation();
 
     return JUser(
       uid: userId,
@@ -65,6 +63,20 @@ class SupabaseAuthRepository
       email: authResponse.user!.email!,
       phone: authResponse.user!.phone!,
     );
+  }
+
+  Future<void> _cacheUserProfileAndLocation() async {
+    final ref = ProviderContainer();
+    final user = await ref.read(userProfileRepository).getCurrentUserProfile();
+    final locationData = await ref.read(locationServiceProvider).getLocation();
+
+    await hivePut<UserProfileModel>(user);
+    await localDatabase.put(
+      'LOCATION',
+      GeoPacker.toLatLngStringFromData(data: locationData),
+    );
+
+    ref.dispose();
   }
 
   @override

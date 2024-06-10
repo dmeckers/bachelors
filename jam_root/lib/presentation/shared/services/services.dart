@@ -2,6 +2,7 @@ export 'android_notificator.dart';
 export 'audio_player_service.dart';
 export 'bugsnag_service.dart';
 export 'enum_extensions.dart';
+export 'geo_packer.dart';
 export 'multi_async.dart';
 export 'online_status_observer.dart';
 export 'position_service.dart';

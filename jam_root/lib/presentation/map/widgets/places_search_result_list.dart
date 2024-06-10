@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -12,8 +13,13 @@ class MapPageSearchResultList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchedPlaces = ref.watch(
-      mapStateViewModelProvider.select((vm) => vm.placesSearchResults),
+    final searchedPlaces = ref.watch<List<Prediction>>(
+      locations$.select(
+        (vm) => vm.maybeWhen(
+          orElse: () => const [],
+          data: (data) => data.placesSearchResults,
+        ),
+      ),
     );
 
     return LayoutBuilder(
@@ -35,7 +41,7 @@ class MapPageSearchResultList extends ConsumerWidget {
                 final placeId = searchedPlaces[index].placeId;
 
                 ref
-                    .read(mapStateViewModelProvider.notifier)
+                    .read(mapWidgetStateControllerProvider)
                     .setPlacesSearchResults(const []);
 
                 if (placeId.isEmptyOrNull) return;
@@ -47,7 +53,8 @@ class MapPageSearchResultList extends ConsumerWidget {
                 if (response.result.geometry.isNull) return;
 
                 ref
-                    .read(mapStateViewModelProvider)
+                    .read(mapWidgetStateControllerProvider)
+                    .data
                     .googleMapsController
                     ?.animateCamera(
                       CameraUpdate.newLatLng(

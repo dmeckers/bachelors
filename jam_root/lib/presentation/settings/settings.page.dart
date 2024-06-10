@@ -95,10 +95,10 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
                   subtitle: 'Contact us , privacy policy , terms of use.',
                   onTap: () => context.pushNamed(SettingsRoutes.help.name),
                 ),
-                ElevatedButton(
-                  onPressed: () async => await _handleTest(context, ref),
-                  child: const Text('test'),
-                ),
+                // ElevatedButton(
+                //   onPressed: () async => await _handleTest(context, ref),
+                //   child: const Text('test'),
+                // ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () => ref.read(authRepositoryProvider).logout(),

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'map_page_states_controller.dart';
+part of 'map.widget_state_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator

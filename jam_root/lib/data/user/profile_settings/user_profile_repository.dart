@@ -74,28 +74,27 @@ final class UserProfileRepository
 
   @override
   Future<UserProfileModel> getUserProfileById({required String userId}) async {
-    final UserProfileModel profile;
-    if (!(await utils.isOnline(_ref))) {
-      profile = await _ref
-          .read(powersyncUserProfileServiceProvider)
-          .getUserProfileById(userId: userId);
-    } else {
-      {
-        final response = await supabase.rpc(
-          GET_USER_FULL_RPC,
-          params: {'user_id': userId},
-        ) as Dynamics;
+    // final UserProfileModel profile;
+    // if (!(await utils.isOnline(_ref))) {
+    //   profile = await _ref
+    //       .read(powersyncUserProfileServiceProvider)
+    //       .getUserProfileById(userId: userId);
+    // } else {
+    // }
+    final response = await supabase.rpc(GET_USER_FULL_RPC, params: {
+      'user_id': userId,
+    }) as Dynamics;
 
-        final rawData = response.first['data'] as Json;
-        final data = (rawData['user_info'] as Json)
-          ..flatten()
-          ..['vibes'] = rawData['vibes']
-          ..['friends'] = rawData['friends']
-          ..['jams'] = rawData['jams'];
+    const nestedKeys = ['vibes', 'friends', 'jams'];
+    final rawData = response.first['data'] as Json;
+    final rawUserInfo = rawData['user_info'] as Json;
 
-        profile = UserProfileModel.fromJson(data);
-      }
-    }
+    final json = nestedKeys.fold(
+      rawUserInfo,
+      (acc, key) => acc..addAll({key: rawData[key]}),
+    );
+
+    final profile = UserProfileModel.fromJson(json);
 
     return profile.copyWith(
       photoUrls: await images.getUserAvatars(userId: userId),

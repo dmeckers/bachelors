@@ -36,11 +36,10 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
         data: (data) {
           final jamData = data.first as JamModel;
           final userJamsData = data.last as List<JamModel>;
+          final isMember = userJamsData.any((jam) => jam.id! == jamData.id!);
+          final isOwner = getUserIdOrThrow() == jamData.creatorId;
 
-          final isUserAlreadyParticipates = userJamsData.any(
-                (element) => element.id! == jamData.id!,
-              ) ||
-              (getUserIdOrThrow() == jamLocation.creatorId);
+          final toShowDetails = isMember || isOwner;
 
           return SizedBox(
             height: 230,
@@ -70,9 +69,9 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
                   style: context.jText.bodySmall,
                 ),
                 const Spacer(),
-                isUserAlreadyParticipates
+                toShowDetails
                     ? _buildButtonForParticipatingUser(context)
-                    : _buildButton(isUserAlreadyParticipates, context, ref),
+                    : _buildButton(isMember, context, ref),
               ],
             ),
           );
@@ -92,17 +91,13 @@ class JamBottomSheet extends HookConsumerWidget with SupabaseUserGetter {
     WidgetRef ref,
   ) {
     return TextButton.icon(
-      onPressed: () {
-        final cb = switch (jamLocation.joinType) {
-          JamJoinTypeEnum.freeToJoin => _handleFreeToJoin,
-          JamJoinTypeEnum.freeToJoinAfterForm => _handleFreeToJoinWithForm,
-          JamJoinTypeEnum.freetoJoinAfterFormAndApprove => _handleJoinWithForm,
-          JamJoinTypeEnum.invitesOnly => _handleFreeToJoin,
-          JamJoinTypeEnum.requestToJoin => _handleRequestToJoin,
-        };
-
-        cb(context, ref);
-      },
+      onPressed: () => (switch (jamLocation.joinType) {
+        JamJoinTypeEnum.freeToJoin => _handleFreeToJoin,
+        JamJoinTypeEnum.freeToJoinAfterForm => _handleFreeToJoinWithForm,
+        JamJoinTypeEnum.freetoJoinAfterFormAndApprove => _handleJoinWithForm,
+        JamJoinTypeEnum.invitesOnly => _handleFreeToJoin,
+        JamJoinTypeEnum.requestToJoin => _handleRequestToJoin,
+      })(context, ref),
       icon: Icon(jamLocation.joinType.icon),
       label: Text(jamLocation.joinType.title),
     );

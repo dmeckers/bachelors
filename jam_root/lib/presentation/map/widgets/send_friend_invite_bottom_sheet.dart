@@ -176,25 +176,29 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
     required FriendShipStatusModel data,
   }) async {
     // TODO refactor later
-    final result = await Future.wait([
-      ref.read(socialRepositoryProvider).sendFriendInvite(userId: userId),
-      PushNotificationsService.sendNotification(
-        NotificationTypeEnum.sendFriendInviteNotifications,
-        {
-          'user_received': userId,
-          'user_fcm_token': data.profile.fcmToken,
-        },
-      )
-    ]);
-
-    context.doIfMounted(
-      () => showDialog(
-        context: context,
-        builder: (context) => OkPopup(
-          title: result.first as bool ? 'Invite sent' : 'Could not send invite',
-          onOkPressed: () => onInviteSent(),
+    try {
+      final result = await Future.wait([
+        ref.read(socialRepositoryProvider).sendFriendInvite(userId: userId),
+        PushNotificationsService.sendNotification(
+          NotificationTypeEnum.sendFriendInviteNotifications,
+          {
+            'user_received': userId,
+            'user_fcm_token': data.profile.fcmToken,
+          },
+        )
+      ]);
+      context.doIfMounted(
+        () => showDialog(
+          context: context,
+          builder: (context) => OkPopup(
+            title:
+                result.first as bool ? 'Invite sent' : 'Could not send invite',
+            onOkPressed: () => onInviteSent(),
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

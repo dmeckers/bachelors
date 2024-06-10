@@ -19,13 +19,14 @@ final class MapRepository extends MapRepositoryInterface
   Future<void> updateUserLocation({
     required double latitude,
     required double longitude,
-  }) async =>
-      await supabase
-          .from('user_locations')
-          .update({'location': 'POINT($latitude $longitude)'}).eq(
-        'id',
-        getUserIdOrThrow(),
-      );
+  }) async {
+    final point = GeoPacker.encodePoint(lat: latitude, lon: longitude);
+
+    return await supabase.from('user_locations').update({'location': point}).eq(
+      'id',
+      getUserIdOrThrow(),
+    );
+  }
 
   @override
   Future<UsersJamsLocations> getUserAndJamsLocations({
@@ -36,39 +37,47 @@ final class MapRepository extends MapRepositoryInterface
     final location = _ref.read(locationServiceProvider);
 
     // final stopwatch = Stopwatch()..start();
-    final response = (await supabase.rpc('get_users_and_jams', params: {
+    final payload = {
       'userid': userId,
       'userlocation': await location.getLocationInPoint()
-    }) as Dynamics)
-        .first as Json;
+    };
+
+    final response = await supabase.rpc('get_users_and_jams', params: payload);
+    final data = (response as Dynamics).first as Json;
     // final elapsedMilliseconds = stopwatch.elapsedMilliseconds;
     // print('Query execution time: $elapsedMilliseconds ms');
 
-    return _mapToLocationModels(response, userId);
+    return _mapToLocationModels(data, userId);
   }
 
   UsersJamsLocations _mapToLocationModels(Json response, String userId) {
-    final users = (response['users'] as List<dynamic>?)
-            ?.map((userRaw) => UserLocation.fromJson(userRaw).copyWith(
-                  marker: userRaw['is_friend']
-                      ? JamMarker.getFriendsMarker()
-                      : JamMarker.getUserMarker(),
-                ))
-            .toList() ??
-        const [];
+    final friendsMarker = JamMarker.getFriendsMarker();
+    final userMarker = JamMarker.getUserMarker();
+    final jamMarker = JamMarker.getJamMarker();
+    final userJamMarker = JamMarker.getUserJamMarker();
+    final rawUsers = response['users'] as List<dynamic>?;
+    final rawJams = response['jams'] as List<dynamic>?;
 
-    final jams = (response['jams'] as List<dynamic>?)
-            ?.map(
-              (jamRaw) => JamLocation.fromJson(jamRaw).copyWith(
-                marker: jamRaw['creator_id'] == userId
-                    ? JamMarker.getUserJamMarker()
-                    : JamMarker.getJamMarker(),
-              ),
-            )
-            .toList() ??
-        const [];
+    getUserMarker(bool isFriend) => isFriend ? friendsMarker : userMarker;
+    getJamMarker(bool isOwner) => isOwner ? userJamMarker : jamMarker;
 
-    return (users: users, jams: jams);
+    final users = rawUsers
+        ?.map(
+          (userRaw) => UserLocation.fromJson(userRaw).copyWith(
+            marker: getUserMarker(userRaw['is_friend'] as bool),
+          ),
+        )
+        .toList();
+
+    final jams = rawJams
+        ?.map(
+          (jamRaw) => JamLocation.fromJson(jamRaw).copyWith(
+            marker: getJamMarker(jamRaw['creator_id'] == userId),
+          ),
+        )
+        .toList();
+
+    return (users: users ?? const [], jams: jams ?? const []);
   }
 }
 

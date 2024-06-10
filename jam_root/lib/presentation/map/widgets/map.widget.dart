@@ -11,16 +11,18 @@ import 'package:jam_utils/jam_utils.dart';
 class MapWidget extends HookConsumerWidget {
   const MapWidget({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final mapState = ref.watch(mapStateViewModelProvider);
-    final mapStateNotifier = ref.read(mapStateViewModelProvider.notifier);
+  invalidateStateOnLoad(WidgetRef ref) {
     useEffect(() {
-      ref.invalidate(mapPageLocationsStateProvider);
+      ref.invalidate(mapWidgetStateControllerProvider);
 
       return null;
     }, []);
+  }
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mapStateController = ref.watch(mapWidgetStateControllerProvider);
+    invalidateStateOnLoad(ref);
     return asyncWrapped(
       ref: ref,
       presenter: (data) => GoogleMap(
@@ -32,22 +34,21 @@ class MapWidget extends HookConsumerWidget {
           position,
           ref,
         ),
-        onTap: (_) async {
-          ref.read(mapPageLocationsStateProvider).removeTempMarker();
-          final shouldHideBottomSheet =
-              mapState.showBottomSheet || mapState.showPutJamBottomSheet;
-          if (!shouldHideBottomSheet) {
-            return;
+        onTap: (position) async {
+          if (mapStateController.state.value.showBottomSheet) {
+            mapStateController.setShowBottomSheet(false);
+            Navigator.pop(context);
           }
-          Navigator.pop(context);
-          mapStateNotifier.setShowBottomSheet(false);
-          mapStateNotifier.setShowPutJamBottomSheet(false);
         },
         onMapCreated: (controller) {
-          mapStateNotifier.setGoogleMapsController(controller);
-          controller.animateCamera(
-            CameraUpdate.newLatLng(mapState.userCurrentLocation!),
-          );
+          mapStateController.setGoogleMapsController(controller);
+          if (mapStateController.mapData$.currentPosition.isNotNull) {
+            controller.animateCamera(
+              CameraUpdate.newLatLng(
+                mapStateController.mapData$.currentPosition,
+              ),
+            );
+          }
         },
         initialCameraPosition: const CameraPosition(
           target: LatLng(51.5074, 0.1278),
@@ -68,7 +69,7 @@ class MapWidget extends HookConsumerWidget {
     required WidgetRef ref,
   }) =>
       ref.watch(locations$).when(
-            data: (data) => presenter(data),
+            data: (data) => presenter(data.mapData),
             loading: () => const MapBackdrop(
               child: Center(
                 child: CircularProgressIndicator(),
@@ -86,22 +87,20 @@ class MapWidget extends HookConsumerWidget {
     LatLng position,
     WidgetRef ref,
   ) {
-    final mapState = ref.read(mapStateViewModelProvider);
-    final mapStateNotifier = ref.read(mapStateViewModelProvider.notifier);
+    final mapStateController = ref.read(mapWidgetStateControllerProvider);
 
-    ref.read(mapPageLocationsStateProvider).addTempMarker(
-          lat: position.latitude,
-          lon: position.longitude,
-        );
+    mapStateController.addTempMarker(
+      lat: position.latitude,
+      lon: position.longitude,
+    );
 
-    mapState.googleMapsController?.animateCamera(
+    mapStateController.data.googleMapsController?.animateCamera(
       CameraUpdate.newLatLngZoom(position, 18),
     );
 
-    if (mapState.showPutJamBottomSheet) return;
+    if (mapStateController.data.showBottomSheet) return;
 
-    mapStateNotifier.setShowBottomSheet(true);
-    mapStateNotifier.setShowPutJamBottomSheet(true);
+    mapStateController.setShowBottomSheet(true);
 
     showBottomSheet(
       context: context,
@@ -121,22 +120,10 @@ class _MapMarkersHelper {
     WidgetRef ref,
     MapData data,
   ) {
-    // final locationItemsMarkers = useMemoized(
-    //   () => data.locations.map((e) => _mapToMarker(context, e, ref)),
-    //   [data.locations],
-    // );
     final locationItemsMarkers = data.locations.map(
       (e) => _mapToMarker(context, e, ref),
     );
-    // final userMarker = useMemoized(
-    //   () => Marker(
-    //     markerId: const MarkerId('currentPosition'),
-    //     position: data.currentPosition,
-    //     icon: JamMarker.getCurrentUserMarker(),
-    //     infoWindow: const InfoWindow(title: 'Your location'),
-    //   ),
-    //   [data.currentPosition],
-    // );
+
     final userMarker = Marker(
       markerId: const MarkerId('currentPosition'),
       position: data.currentPosition,
@@ -146,23 +133,6 @@ class _MapMarkersHelper {
 
     final focusedPoint = data.focusedLocationPoint;
 
-    // final spotJamMarker = useMemoized(
-    //   () => focusedPoint.isNotNull
-    //       ? Marker(
-    //           markerId: MarkerId(focusedPoint!.id as String),
-    //           position: LatLng(
-    //             focusedPoint.latitude,
-    //             focusedPoint.longitude,
-    //           ),
-    //           icon: focusedPoint.marker ??
-    //               BitmapDescriptor.defaultMarkerWithHue(0),
-    //           infoWindow: InfoWindow(
-    //             title: data.focusedLocationPoint?.name ?? 'Spot Jam',
-    //           ),
-    //         )
-    //       : null,
-    //   [data.focusedLocationPoint],
-    // );
     final spotJamMarker = focusedPoint.isNotNull
         ? Marker(
             markerId: MarkerId(focusedPoint!.id as String),
@@ -181,7 +151,7 @@ class _MapMarkersHelper {
     return {
       ...locationItemsMarkers,
       userMarker,
-      if (spotJamMarker != null) spotJamMarker
+      if (spotJamMarker.isNotNull) spotJamMarker!
     };
   }
 
@@ -215,16 +185,16 @@ class _MapMarkersHelper {
     LocationAbstactModel location,
     WidgetRef ref,
   ) {
-    final mapStateNotifier = ref.read(mapStateViewModelProvider.notifier);
+    final mapStateController = ref.read(mapWidgetStateControllerProvider);
 
-    mapStateNotifier.setShowPutJamBottomSheet(true);
+    mapStateController.setShowBottomSheet(true);
     showBottomSheet(
       context: context,
       builder: (ctx) => JamBottomSheet(
         jamLocation: location as JamLocation,
         onActionPressed: () {
           Navigator.of(context).pop();
-          mapStateNotifier.setShowPutJamBottomSheet(false);
+          mapStateController.setShowBottomSheet(false);
         },
       ),
     );
@@ -235,7 +205,8 @@ class _MapMarkersHelper {
     LocationAbstactModel location,
     WidgetRef ref,
   ) {
-    final mapStateNotifier = ref.read(mapStateViewModelProvider.notifier);
+    final mapStateController = ref.read(mapWidgetStateControllerProvider);
+    mapStateController.setShowBottomSheet(true);
 
     showBottomSheet(
       context: context,
@@ -243,10 +214,9 @@ class _MapMarkersHelper {
         userId: location.id,
         onInviteSent: () {
           Navigator.of(context).pop();
-          mapStateNotifier.setShowBottomSheet(false);
+          mapStateController.setShowBottomSheet(false);
         },
       ),
     );
-    mapStateNotifier.setShowBottomSheet(false);
   }
 }

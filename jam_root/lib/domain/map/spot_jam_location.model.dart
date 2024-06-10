@@ -21,12 +21,13 @@ class SpotJamLocation with _$SpotJamLocation implements LocationAbstactModel {
 
   const SpotJamLocation._();
 
-  factory SpotJamLocation.generate(
-      {required String id,
-      required double latitude,
-      required double longitude,
-      required BitmapDescriptor marker,
-      String? locationName}) {
+  factory SpotJamLocation.generate({
+    required String id,
+    required double latitude,
+    required double longitude,
+    required BitmapDescriptor marker,
+    String? locationName,
+  }) {
     return SpotJamLocation(
       id: id,
       name: '',

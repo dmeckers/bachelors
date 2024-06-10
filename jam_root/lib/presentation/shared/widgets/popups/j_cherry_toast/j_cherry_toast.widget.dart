@@ -445,8 +445,6 @@ class _JCherryToastState extends State<JCherryToast>
     super.dispose();
   }
 
-  late Animation<Offset> _leftToCenterAnimation;
-  late Animation<Offset> _centerToRightAnimation;
   late Animation<Offset> sequenceAnimation;
 
   ///Initialize animation parameters [slideController] and [offsetAnimation]

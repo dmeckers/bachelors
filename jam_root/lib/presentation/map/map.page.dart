@@ -11,7 +11,7 @@ class MapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(() => () => ref.read(mapPageLocationsStateProvider).dispose());
+    useEffect(() => () => ref.read(mapWidgetStateControllerProvider).dispose());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -74,20 +74,23 @@ class MapPage extends HookConsumerWidget {
           ),
           child: IconButton(
             onPressed: () async {
-              final mapState = ref.read(mapStateViewModelProvider);
-              final position = mapState.userCurrentLocation;
-              final controller = mapState.googleMapsController;
+              final mapState = ref.read(mapWidgetStateControllerProvider);
+              final position = mapState.mapData$.currentPosition;
+              final controller = mapState.data.googleMapsController;
 
               controller?.animateCamera(
                 CameraUpdate.newCameraPosition(
                   CameraPosition(
-                    target: position ?? const LatLng(51.5074, 0.1278),
+                    target: position,
                     zoom: 14.4746,
                   ),
                 ),
               );
             },
-            icon: const Icon(Icons.my_location),
+            icon: const Icon(
+              Icons.my_location,
+              color: Colors.black,
+            ),
           ),
         ),
       );

@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
-import 'package:jam/config/constants/constants.dart';
 
 import 'package:jam/data/data.dart';
 import 'package:jam/globals.dart';
