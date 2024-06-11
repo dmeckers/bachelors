@@ -105,6 +105,7 @@ Future<void> deleteJam(DeleteJamRef ref, {required JamModel jam}) async {
   await ref.read(mapRealtimeProvider).fireEvent(
         JamDeletedMapEvent.fromModel(jam),
       );
+  ref.read(mapWidgetStateControllerProvider).removeJam('${jam.id}');
   ref.invalidate(userJamControllerProvider);
 }
 

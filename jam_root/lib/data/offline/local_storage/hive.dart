@@ -29,6 +29,8 @@ final class HiveService {
     Hive.registerAdapter(JamLocationImplAdapter());
     Hive.registerAdapter(UserLocationImplAdapter());
     Hive.registerAdapter(LatLngAdapter());
+    Hive.registerAdapter(SpotJamLocationImplAdapter());
+    Hive.registerAdapter(SearchPlaceResultImplAdapter());
 
     localDatabase = await Hive.openBox('localDatabase');
   }

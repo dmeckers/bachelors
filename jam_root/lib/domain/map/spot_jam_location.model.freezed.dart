@@ -16,14 +16,23 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SpotJamLocation {
+  @HiveField(0)
   String get id => throw _privateConstructorUsedError;
+  @HiveField(1)
   String get name => throw _privateConstructorUsedError;
+  @HiveField(2)
   String get description => throw _privateConstructorUsedError;
+  @HiveField(3)
   String get locationName => throw _privateConstructorUsedError;
-  dynamic get date => throw _privateConstructorUsedError;
+  @HiveField(4)
+  DateTime get date => throw _privateConstructorUsedError;
+  @HiveField(5)
   double get latitude => throw _privateConstructorUsedError;
+  @HiveField(6)
   double get longitude => throw _privateConstructorUsedError;
+  @HiveField(7)
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
+  @HiveField(8)
   String get creatorId => throw _privateConstructorUsedError;
   BitmapDescriptor? get marker => throw _privateConstructorUsedError;
 
@@ -39,15 +48,15 @@ abstract class $SpotJamLocationCopyWith<$Res> {
       _$SpotJamLocationCopyWithImpl<$Res, SpotJamLocation>;
   @useResult
   $Res call(
-      {String id,
-      String name,
-      String description,
-      String locationName,
-      dynamic date,
-      double latitude,
-      double longitude,
-      List<VibeModel> vibes,
-      String creatorId,
+      {@HiveField(0) String id,
+      @HiveField(1) String name,
+      @HiveField(2) String description,
+      @HiveField(3) String locationName,
+      @HiveField(4) DateTime date,
+      @HiveField(5) double latitude,
+      @HiveField(6) double longitude,
+      @HiveField(7) List<VibeModel> vibes,
+      @HiveField(8) String creatorId,
       BitmapDescriptor? marker});
 }
 
@@ -68,7 +77,7 @@ class _$SpotJamLocationCopyWithImpl<$Res, $Val extends SpotJamLocation>
     Object? name = null,
     Object? description = null,
     Object? locationName = null,
-    Object? date = freezed,
+    Object? date = null,
     Object? latitude = null,
     Object? longitude = null,
     Object? vibes = null,
@@ -92,10 +101,10 @@ class _$SpotJamLocationCopyWithImpl<$Res, $Val extends SpotJamLocation>
           ? _value.locationName
           : locationName // ignore: cast_nullable_to_non_nullable
               as String,
-      date: freezed == date
+      date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as DateTime,
       latitude: null == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -129,15 +138,15 @@ abstract class _$$SpotJamLocationImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
-      String name,
-      String description,
-      String locationName,
-      dynamic date,
-      double latitude,
-      double longitude,
-      List<VibeModel> vibes,
-      String creatorId,
+      {@HiveField(0) String id,
+      @HiveField(1) String name,
+      @HiveField(2) String description,
+      @HiveField(3) String locationName,
+      @HiveField(4) DateTime date,
+      @HiveField(5) double latitude,
+      @HiveField(6) double longitude,
+      @HiveField(7) List<VibeModel> vibes,
+      @HiveField(8) String creatorId,
       BitmapDescriptor? marker});
 }
 
@@ -156,7 +165,7 @@ class __$$SpotJamLocationImplCopyWithImpl<$Res>
     Object? name = null,
     Object? description = null,
     Object? locationName = null,
-    Object? date = freezed,
+    Object? date = null,
     Object? latitude = null,
     Object? longitude = null,
     Object? vibes = null,
@@ -180,10 +189,10 @@ class __$$SpotJamLocationImplCopyWithImpl<$Res>
           ? _value.locationName
           : locationName // ignore: cast_nullable_to_non_nullable
               as String,
-      date: freezed == date
+      date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as DateTime,
       latitude: null == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -210,37 +219,46 @@ class __$$SpotJamLocationImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+@HiveType(typeId: HiveConstants.SPOT_JAM_LOCATION_MODEL_TYPE_ID)
 class _$SpotJamLocationImpl extends _SpotJamLocation {
   const _$SpotJamLocationImpl(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.locationName,
-      required this.date,
-      required this.latitude,
-      required this.longitude,
-      required final List<VibeModel> vibes,
-      required this.creatorId,
+      {@HiveField(0) required this.id,
+      @HiveField(1) required this.name,
+      @HiveField(2) required this.description,
+      @HiveField(3) required this.locationName,
+      @HiveField(4) required this.date,
+      @HiveField(5) required this.latitude,
+      @HiveField(6) required this.longitude,
+      @HiveField(7) required final List<VibeModel> vibes,
+      @HiveField(8) required this.creatorId,
       this.marker})
       : _vibes = vibes,
         super._();
 
   @override
+  @HiveField(0)
   final String id;
   @override
+  @HiveField(1)
   final String name;
   @override
+  @HiveField(2)
   final String description;
   @override
+  @HiveField(3)
   final String locationName;
   @override
-  final dynamic date;
+  @HiveField(4)
+  final DateTime date;
   @override
+  @HiveField(5)
   final double latitude;
   @override
+  @HiveField(6)
   final double longitude;
   final List<VibeModel> _vibes;
   @override
+  @HiveField(7)
   List<VibeModel> get vibes {
     if (_vibes is EqualUnmodifiableListView) return _vibes;
     // ignore: implicit_dynamic_type
@@ -248,6 +266,7 @@ class _$SpotJamLocationImpl extends _SpotJamLocation {
   }
 
   @override
+  @HiveField(8)
   final String creatorId;
   @override
   final BitmapDescriptor? marker;
@@ -268,7 +287,7 @@ class _$SpotJamLocationImpl extends _SpotJamLocation {
                 other.description == description) &&
             (identical(other.locationName, locationName) ||
                 other.locationName == locationName) &&
-            const DeepCollectionEquality().equals(other.date, date) &&
+            (identical(other.date, date) || other.date == date) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -286,7 +305,7 @@ class _$SpotJamLocationImpl extends _SpotJamLocation {
       name,
       description,
       locationName,
-      const DeepCollectionEquality().hash(date),
+      date,
       latitude,
       longitude,
       const DeepCollectionEquality().hash(_vibes),
@@ -303,35 +322,44 @@ class _$SpotJamLocationImpl extends _SpotJamLocation {
 
 abstract class _SpotJamLocation extends SpotJamLocation {
   const factory _SpotJamLocation(
-      {required final String id,
-      required final String name,
-      required final String description,
-      required final String locationName,
-      required final dynamic date,
-      required final double latitude,
-      required final double longitude,
-      required final List<VibeModel> vibes,
-      required final String creatorId,
+      {@HiveField(0) required final String id,
+      @HiveField(1) required final String name,
+      @HiveField(2) required final String description,
+      @HiveField(3) required final String locationName,
+      @HiveField(4) required final DateTime date,
+      @HiveField(5) required final double latitude,
+      @HiveField(6) required final double longitude,
+      @HiveField(7) required final List<VibeModel> vibes,
+      @HiveField(8) required final String creatorId,
       final BitmapDescriptor? marker}) = _$SpotJamLocationImpl;
   const _SpotJamLocation._() : super._();
 
   @override
+  @HiveField(0)
   String get id;
   @override
+  @HiveField(1)
   String get name;
   @override
+  @HiveField(2)
   String get description;
   @override
+  @HiveField(3)
   String get locationName;
   @override
-  dynamic get date;
+  @HiveField(4)
+  DateTime get date;
   @override
+  @HiveField(5)
   double get latitude;
   @override
+  @HiveField(6)
   double get longitude;
   @override
+  @HiveField(7)
   List<VibeModel> get vibes;
   @override
+  @HiveField(8)
   String get creatorId;
   @override
   BitmapDescriptor? get marker;

@@ -1,21 +1,25 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
+import 'package:jam/config/constants/hive.config.dart';
 import 'package:jam/domain/domain.dart';
 
 part 'spot_jam_location.model.freezed.dart';
+part 'spot_jam_location.model.g.dart';
 
 @freezed
 class SpotJamLocation with _$SpotJamLocation implements LocationAbstactModel {
+  @HiveType(typeId: HiveConstants.SPOT_JAM_LOCATION_MODEL_TYPE_ID)
   const factory SpotJamLocation({
-    required String id,
-    required String name,
-    required String description,
-    required String locationName,
-    required dynamic date,
-    required double latitude,
-    required double longitude,
-    required List<VibeModel> vibes,
-    required String creatorId,
+    @HiveField(0) required String id,
+    @HiveField(1) required String name,
+    @HiveField(2) required String description,
+    @HiveField(3) required String locationName,
+    @HiveField(4) required DateTime date,
+    @HiveField(5) required double latitude,
+    @HiveField(6) required double longitude,
+    @HiveField(7) required List<VibeModel> vibes,
+    @HiveField(8) required String creatorId,
     BitmapDescriptor? marker,
   }) = _SpotJamLocation;
 

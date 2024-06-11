@@ -18,7 +18,7 @@ class MapPageAppBar extends HookConsumerWidget implements PreferredSizeWidget {
   }) async {
     final position = ref.watch(
       mapWidgetStateControllerProvider.select(
-        (vm) => vm.mapData$.currentPosition,
+        (vm) => vm.mapData$?.currentPosition,
       ),
     );
 
@@ -28,7 +28,8 @@ class MapPageAppBar extends HookConsumerWidget implements PreferredSizeWidget {
 
     final response = await ref.watch(placesProvider).autocomplete(
           searchTerm,
-          location: Location(lng: position.longitude, lat: position.latitude),
+          location: Location(
+              lng: position?.longitude ?? 0, lat: position?.latitude ?? 0),
           radius: 10000,
           strictbounds: true,
           language: S.delegate.supportedLocales.first.languageCode,

@@ -703,7 +703,7 @@ class _CreateJamProviderElement
   JamModel get jam => (origin as CreateJamProvider).jam;
 }
 
-String _$deleteJamHash() => r'7399659b10003ec4bad5ed1b1a249576d7f749c8';
+String _$deleteJamHash() => r'a2db06a5228e49c0635ffff28d6a5fa947ce36fa';
 
 /// See also [deleteJam].
 @ProviderFor(deleteJam)

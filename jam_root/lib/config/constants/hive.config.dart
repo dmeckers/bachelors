@@ -40,6 +40,13 @@ final class HiveConstants {
   static const LOCAL_DB_JAM_LOCATION_MODEL_KEY = 'jam_location_model';
   static const JAM_LOCATION_MODEL_TYPE_ID = 67;
 
+  static const LOCAL_DB_SPOT_JAM_LOCATION_MODEL_KEY = 'spot_jam_location_model';
+  static const SPOT_JAM_LOCATION_MODEL_TYPE_ID = 69;
+
+  static const LOCAL_DB_PLACE_SEARCH_RESULT_LOCATION_MODEL_KEY =
+      'search_place_result_location_model';
+  static const PLACE_SEARCH_RESULT_LOCATION_MODEL_TYPE_ID = 70;
+
   static const LAT_LNG_ADAPTER_TYPE_ID = 68;
 
   static getAllKeys() {

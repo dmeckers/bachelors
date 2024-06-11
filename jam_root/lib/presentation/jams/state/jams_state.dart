@@ -26,7 +26,7 @@ class JamsState with Storer {
 
     yield* _state.stream
         .doOnData(
-          (jams) => hiveRefresh<UserProfileModel>(
+          (jams) async => await hiveRefresh<UserProfileModel>(
             profile.copyWith(jams: jams),
           ),
         )

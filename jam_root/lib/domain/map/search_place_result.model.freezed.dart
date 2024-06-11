@@ -16,12 +16,19 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SearchPlaceResult {
+  @HiveField(0)
   String get id => throw _privateConstructorUsedError;
+  @HiveField(1)
   String get name => throw _privateConstructorUsedError;
+  @HiveField(2)
   double get latitude => throw _privateConstructorUsedError;
+  @HiveField(3)
   double get longitude => throw _privateConstructorUsedError;
+  @HiveField(4)
   List<VibeModel> get vibes => throw _privateConstructorUsedError;
+  @HiveField(5)
   String get creatorId => throw _privateConstructorUsedError;
+  @HiveField(6)
   LocationType get type => throw _privateConstructorUsedError;
   BitmapDescriptor? get marker => throw _privateConstructorUsedError;
 
@@ -37,13 +44,13 @@ abstract class $SearchPlaceResultCopyWith<$Res> {
       _$SearchPlaceResultCopyWithImpl<$Res, SearchPlaceResult>;
   @useResult
   $Res call(
-      {String id,
-      String name,
-      double latitude,
-      double longitude,
-      List<VibeModel> vibes,
-      String creatorId,
-      LocationType type,
+      {@HiveField(0) String id,
+      @HiveField(1) String name,
+      @HiveField(2) double latitude,
+      @HiveField(3) double longitude,
+      @HiveField(4) List<VibeModel> vibes,
+      @HiveField(5) String creatorId,
+      @HiveField(6) LocationType type,
       BitmapDescriptor? marker});
 }
 
@@ -115,13 +122,13 @@ abstract class _$$SearchPlaceResultImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
-      String name,
-      double latitude,
-      double longitude,
-      List<VibeModel> vibes,
-      String creatorId,
-      LocationType type,
+      {@HiveField(0) String id,
+      @HiveField(1) String name,
+      @HiveField(2) double latitude,
+      @HiveField(3) double longitude,
+      @HiveField(4) List<VibeModel> vibes,
+      @HiveField(5) String creatorId,
+      @HiveField(6) LocationType type,
       BitmapDescriptor? marker});
 }
 
@@ -184,31 +191,37 @@ class __$$SearchPlaceResultImplCopyWithImpl<$Res>
 
 /// @nodoc
 
+@HiveType(typeId: HiveConstants.PLACE_SEARCH_RESULT_LOCATION_MODEL_TYPE_ID)
 class _$SearchPlaceResultImpl extends _SearchPlaceResult {
   const _$SearchPlaceResultImpl(
-      {this.id = 'places',
-      required this.name,
-      required this.latitude,
-      required this.longitude,
-      final List<VibeModel> vibes = const [],
-      this.creatorId = '',
-      this.type = LocationType.placeSearchResult,
+      {@HiveField(0) this.id = 'places',
+      @HiveField(1) required this.name,
+      @HiveField(2) required this.latitude,
+      @HiveField(3) required this.longitude,
+      @HiveField(4) final List<VibeModel> vibes = const [],
+      @HiveField(5) this.creatorId = '',
+      @HiveField(6) this.type = LocationType.placeSearchResult,
       this.marker})
       : _vibes = vibes,
         super._();
 
   @override
   @JsonKey()
+  @HiveField(0)
   final String id;
   @override
+  @HiveField(1)
   final String name;
   @override
+  @HiveField(2)
   final double latitude;
   @override
+  @HiveField(3)
   final double longitude;
   final List<VibeModel> _vibes;
   @override
   @JsonKey()
+  @HiveField(4)
   List<VibeModel> get vibes {
     if (_vibes is EqualUnmodifiableListView) return _vibes;
     // ignore: implicit_dynamic_type
@@ -217,9 +230,11 @@ class _$SearchPlaceResultImpl extends _SearchPlaceResult {
 
   @override
   @JsonKey()
+  @HiveField(5)
   final String creatorId;
   @override
   @JsonKey()
+  @HiveField(6)
   final LocationType type;
   @override
   final BitmapDescriptor? marker;
@@ -261,29 +276,36 @@ class _$SearchPlaceResultImpl extends _SearchPlaceResult {
 
 abstract class _SearchPlaceResult extends SearchPlaceResult {
   const factory _SearchPlaceResult(
-      {final String id,
-      required final String name,
-      required final double latitude,
-      required final double longitude,
-      final List<VibeModel> vibes,
-      final String creatorId,
-      final LocationType type,
+      {@HiveField(0) final String id,
+      @HiveField(1) required final String name,
+      @HiveField(2) required final double latitude,
+      @HiveField(3) required final double longitude,
+      @HiveField(4) final List<VibeModel> vibes,
+      @HiveField(5) final String creatorId,
+      @HiveField(6) final LocationType type,
       final BitmapDescriptor? marker}) = _$SearchPlaceResultImpl;
   const _SearchPlaceResult._() : super._();
 
   @override
+  @HiveField(0)
   String get id;
   @override
+  @HiveField(1)
   String get name;
   @override
+  @HiveField(2)
   double get latitude;
   @override
+  @HiveField(3)
   double get longitude;
   @override
+  @HiveField(4)
   List<VibeModel> get vibes;
   @override
+  @HiveField(5)
   String get creatorId;
   @override
+  @HiveField(6)
   LocationType get type;
   @override
   BitmapDescriptor? get marker;
