@@ -200,6 +200,7 @@ class VibeSelectByCategoryWidget extends HookConsumerWidget {
                               focusedCategory.value = index;
                             },
                           RegisterChipState.focused => () {
+                              if (selectedVibes.length.isMoreThan(19)) return;
                               vmNotifier(ref).addVibe(vibe: selectedVibe);
                               focusedCategory.value = null;
                               markAsDirty();

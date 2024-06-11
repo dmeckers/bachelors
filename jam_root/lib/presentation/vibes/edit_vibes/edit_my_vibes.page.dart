@@ -47,7 +47,7 @@ class EditUserVibes extends HookConsumerWidget
 
     return PopScope(
       canPop: can,
-      onPopInvoked: (didPop) => onPop(context, ref, didPop),
+      onPopInvoked: (didPop) => onPop(context, ref, didChanges),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -60,22 +60,22 @@ class EditUserVibes extends HookConsumerWidget
         body: asyncWrapped(
           asyncVibes: ref.watch(userEditVibesControllerProvider),
           ref: ref,
-          presenter: (selectedVibes) => SingleChildScrollView(
-            child: Column(
-              children: [
-                Headline(context),
-                VibeSearchBar(
-                    onChange: (query) => debouncer(
-                          () => searchVibes(
-                            selectedVibes,
-                            query,
-                            ref,
-                            searchQuery,
-                          ),
-                        )),
-                ValidationErrors(context, selectedVibes),
-                SelectedVibeList(context, selectedVibes),
-                Expanded(
+          presenter: (selectedVibes) => Column(
+            children: [
+              Headline(context),
+              VibeSearchBar(
+                  onChange: (query) => debouncer(
+                        () => searchVibes(
+                          selectedVibes,
+                          query,
+                          ref,
+                          searchQuery,
+                        ),
+                      )),
+              ValidationErrors(context, selectedVibes),
+              SelectedVibeList(context, selectedVibes),
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -92,9 +92,9 @@ class EditUserVibes extends HookConsumerWidget
                     ],
                   ),
                 ),
-                SubmitButton(selectedVibes, ref, context)
-              ],
-            ),
+              ),
+              SubmitButton(selectedVibes, ref, context)
+            ],
           ),
         ),
       ),
@@ -154,26 +154,37 @@ class EditUserVibes extends HookConsumerWidget
   }
 }
 
-class _VibeSelectBySearch extends HookConsumerWidget {
+class _VibeSelectBySearch extends HookConsumerWidget
+    with SelectVibeWidgetsMixin {
   const _VibeSelectBySearch({required this.selectedVibes});
 
   final Vibes selectedVibes;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(userEditVibesControllerProvider.notifier);
     return ref.watch(searchVibesControllerProvider).maybeWhen(
           data: (queryResults) {
             return queryResults.isNotEmpty
                 ? ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 500),
                     child: ListView.builder(
-                      itemBuilder: (ctx, index) => VibeListTile(
-                        selectedVibes.any(
-                          (vibe) => vibe.name == queryResults[index].name,
-                        ),
-                        ref.read(userEditVibesControllerProvider.notifier),
-                        queryResults[index],
-                      ),
+                      itemBuilder: (ctx, index) {
+                        final vibe = queryResults[index];
+                        final hasSelected = selectedVibes.any(
+                          (v) => v.name == vibe.name,
+                        );
+                        return VibeListTile(
+                          onTap: () {
+                            if (selectedVibes.length.isMoreThan(20)) return;
+                            hasSelected
+                                ? notifier.removeVibe(vibe: vibe)
+                                : notifier.addVibe(vibe: vibe);
+                          },
+                          hasSelected: hasSelected,
+                          vibe: queryResults[index],
+                        );
+                      },
                       itemCount: queryResults.length,
                     ),
                   )
@@ -183,22 +194,5 @@ class _VibeSelectBySearch extends HookConsumerWidget {
             child: CircularProgressIndicator(),
           ),
         );
-  }
-
-  ListTile VibeListTile(
-    bool hasSelected,
-    UserEditVibesController notifier,
-    VibeModel vibe,
-  ) {
-    return ListTile(
-      onTap: () => hasSelected
-          ? notifier.removeVibe(vibe: vibe)
-          : notifier.addVibe(vibe: vibe),
-      leading: Icon(
-        hasSelected ? FontAwesomeIcons.check : FontAwesomeIcons.plus,
-        color: Colors.green,
-      ),
-      title: Text(vibe.name),
-    );
   }
 }
