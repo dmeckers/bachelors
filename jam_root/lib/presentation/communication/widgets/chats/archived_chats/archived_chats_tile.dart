@@ -27,8 +27,7 @@ class ArchivedChatsTile extends StatelessWidget {
         ),
         subtitle: Text(
           chats
-              .map(
-                  (e) => e.relatedContact.fullName ?? e.relatedContact.username)
+              .map((e) => e.relatedContact.fullName)
               .toList()
               .join(' ')
               .crop(70),

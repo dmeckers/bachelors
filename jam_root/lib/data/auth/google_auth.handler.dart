@@ -72,7 +72,7 @@ class GoogleAuthHandler {
     );
 
     await Storer().hivePut<UserProfileModel>(
-      UserProfileModel.fromJson(json).copyWith(isShowcased: false),
+      UserProfileModel.fromJson(json),
     );
 
     await _requestAndCacheLocation();

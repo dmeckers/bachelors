@@ -48,38 +48,6 @@ class AndroidNotificator {
     String? imageUrl,
     int chatId,
   ) async {
-    if (imageUrl == null) {
-      const AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails(
-        'personal_chat_message_channel',
-        'Default',
-        channelDescription: 'Default',
-        importance: Importance.max,
-        priority: Priority.high,
-        showWhen: false,
-      );
-
-      const NotificationDetails platformChannelSpecifics =
-          NotificationDetails(android: androidPlatformChannelSpecifics);
-
-      await plugin.show(
-        Random().nextInt(1000),
-        title,
-        body,
-        platformChannelSpecifics,
-        payload: 'chatId=$chatId',
-      );
-    }
-
-    final response = await http.get(Uri.parse(imageUrl!));
-
-    final tempDirectory = await getTemporaryDirectory();
-    final imagePath =
-        '${tempDirectory.path}/${Random().nextInt(1000)}_notification_avatar.png';
-    final imageFile = File(imagePath);
-
-    await imageFile.writeAsBytes(response.bodyBytes);
-
     // Create the Android notification details
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
@@ -89,7 +57,7 @@ class AndroidNotificator {
       importance: Importance.max,
       priority: Priority.high,
       showWhen: false,
-      largeIcon: FilePathAndroidBitmap(imagePath),
+      largeIcon: FilePathAndroidBitmap(await getImagePath(imageUrl)),
       category: AndroidNotificationCategory.message,
     );
 
@@ -105,5 +73,24 @@ class AndroidNotificator {
       platformChannelSpecifics,
       payload: 'chatId=$chatId',
     );
+  }
+
+  static Future<String> getImagePath(String? url) async {
+    const defaultPath = 'assets/images/default_avatar.png';
+
+    return url == null ? defaultPath : await createImageFileFromNetwork(url);
+  }
+
+  static Future createImageFileFromNetwork(String url) async {
+    final response = await http.get(Uri.parse(url));
+
+    final tempDirectory = await getTemporaryDirectory();
+    final imagePath =
+        '${tempDirectory.path}/${Random().nextInt(1000)}_notification_avatar.png';
+    final imageFile = File(imagePath);
+
+    await imageFile.writeAsBytes(response.bodyBytes);
+
+    return imagePath;
   }
 }

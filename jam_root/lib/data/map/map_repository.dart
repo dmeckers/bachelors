@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/application/application.dart';
@@ -5,15 +6,14 @@ import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:location/location.dart';
 
 final class MapRepository extends MapRepositoryInterface
     with SupabaseUserGetter {
-  MapRepository(this._ref);
+  MapRepository();
 
   static const GET_USERS_WITH_SAME_VIBES_LOCATIONS_RPC =
       'get_users_with_same_vibes_locations';
-
-  final ProviderRef _ref;
 
   @override
   Future<void> updateUserLocation({
@@ -33,21 +33,28 @@ final class MapRepository extends MapRepositoryInterface
     double? userLatitude,
     double? userLongitude,
   }) async {
-    final userId = getUserIdOrThrow();
-    final location = _ref.read(locationServiceProvider);
+    try {
+      final userId = getUserIdOrThrow();
 
-    // final stopwatch = Stopwatch()..start();
-    final payload = {
-      'userid': userId,
-      'userlocation': await location.getLocationInPoint()
-    };
+      // final stopwatch = Stopwatch()..start();
+      final lc = await Location.instance.getLocation();
+      final a = 'POINT(${lc.latitude} ${lc.longitude})';
 
-    final response = await supabase.rpc('get_users_and_jams', params: payload);
-    final data = (response as Dynamics).first as Json;
-    // final elapsedMilliseconds = stopwatch.elapsedMilliseconds;
-    // print('Query execution time: $elapsedMilliseconds ms');
+      final payload = {'userid': userId, 'userlocation': a};
 
-    return _mapToLocationModels(data, userId);
+      final response = await supabase.rpc(
+        'get_users_and_jams',
+        params: payload,
+      );
+      final data = (response as Dynamics).first as Json;
+      // final elapsedMilliseconds = stopwatch.elapsedMilliseconds;
+      // print('Query execution time: $elapsedMilliseconds ms');
+
+      return _mapToLocationModels(data, userId);
+    } catch (e) {
+      debugPrint('asdfjkal;');
+      rethrow;
+    }
   }
 
   UsersJamsLocations _mapToLocationModels(Json response, String userId) {
@@ -82,5 +89,5 @@ final class MapRepository extends MapRepositoryInterface
 }
 
 final mapRepositoryProvider = Provider<MapRepositoryInterface>(
-  (ref) => MapRepository(ref),
+  (ref) => MapRepository(),
 );

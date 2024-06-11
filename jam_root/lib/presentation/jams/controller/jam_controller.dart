@@ -1,7 +1,6 @@
 import 'package:jam/domain/events/map/jam_deleted_map_event.dart';
 import 'package:jam/domain/events/map/jam_updated_map_event.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:jam_utils/jam_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:jam/config/config.dart';
@@ -80,17 +79,18 @@ Future<JamModel> createJam(CreateJamRef ref, {required JamModel jam}) async {
       );
 
   ref.invalidate(userJamControllerProvider);
+  // await ref.read(mapWidgetStateControllerProvider).INVALIDATE();
 
-  final coords = jam.location.extractCords();
+  // final coords = jam.location.extractCords();
 
-  ref.read(mapWidgetStateControllerProvider).pushJam(
-        jamLocation: jamModel.toLocationModel().copyWith(
-              marker: JamMarker.getUserJamMarker(),
-              latitude: coords.lat,
-              longitude: coords.lon,
-            ),
-        popTempMarker: true,
-      );
+  // ref.read(mapWidgetStateControllerProvider).pushJam(
+  //       jamLocation: jamModel.toLocationModel().copyWith(
+  //             marker: JamMarker.getUserJamMarker(),
+  //             latitude: coords.lat,
+  //             longitude: coords.lon,
+  //           ),
+  //       popTempMarker: true,
+  //     );
 
   ref
       .read(mapRealtimeProvider)

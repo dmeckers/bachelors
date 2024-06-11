@@ -41,6 +41,7 @@ export async function sendNotification(
   avatar: string,
   notificationType: NotificationType,
 ) {
+  console.log("FCM Token:", fcmToken);
   const response = await fetch(
     "https://fcm.googleapis.com/v1/projects/jamm-10753/messages:send",
     {
@@ -69,6 +70,10 @@ export async function sendNotification(
   if (!response.ok) {
     const data = await response.json();
     console.error("Failed to send notification:", data);
+    console.error(
+      "Failed to send notification:",
+      data.error.details.fieldViolations,
+    );
     throw new Error("Failed to send notification");
   }
 }

@@ -102,9 +102,7 @@ class JamChatPage extends HookConsumerWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      messageUser.username ??
-                                          messageUser.fullName ??
-                                          'Anonymous',
+                                      messageUser.fullName,
                                       style: context.jText.bodySmall?.copyWith(
                                         color: context.jColor.tertiary,
                                       ),

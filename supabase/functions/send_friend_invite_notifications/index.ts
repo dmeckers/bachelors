@@ -38,6 +38,8 @@ Deno.serve(async (req) => {
     serviceAccount.private_key,
   );
 
+  console.log(payload.user_fcm_token);
+
   await sendNotificationWithData<FriendInviteNotificationPayload>(
     accessToken,
     payload.user_fcm_token,

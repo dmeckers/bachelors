@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,12 +54,10 @@ class FriendInvitesPage extends HookConsumerWidget {
     return ListTile(
       tileColor: context.jColor.primaryContainer,
       leading: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(
-          invite.avatar ?? ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-        ),
+        backgroundImage: invite.avatarImageProvdier,
         radius: 23,
       ),
-      title: Text(invite.username),
+      title: Text(invite.fullName),
       subtitle:
           Text(invite.sentAt.toNTimeAgo, style: context.jText.headlineSmall),
       trailing: Row(
@@ -134,7 +131,7 @@ class FriendInvitesPage extends HookConsumerWidget {
       () => JSnackBar.show(
         context,
         JSnackbarData(
-          description: '${invite.username} is now your friend',
+          description: '${invite.fullName} is now your friend',
           type: SnackbarInfoType.success,
         ),
       ),

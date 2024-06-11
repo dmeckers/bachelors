@@ -1,8 +1,20 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jam/config/config.dart';
 
 import 'package:jam/domain/domain.dart';
 
-enum LocationType { user, jam, spottedJam, placeSearchResult }
+@HiveType(typeId: HiveConstants.LOCATION_TYPE_TYPE_ID)
+enum LocationType {
+  @HiveField(0)
+  user,
+  @HiveField(1)
+  jam,
+  @HiveField(2)
+  spottedJam,
+  @HiveField(3)
+  placeSearchResult;
+}
 
 abstract class LocationAbstactModel {
   abstract final double latitude;

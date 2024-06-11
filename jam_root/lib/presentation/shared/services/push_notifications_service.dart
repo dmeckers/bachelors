@@ -71,9 +71,10 @@ class PushNotificationsService {
       messageModel.messageType == MessageType.text
           ? messageModel.messageText!.crop(25)
           : messageModel.messageType.name,
-      message.data['avatar'] ??
-          ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-      int.parse(message.data['chatId']),
+      message.data['avatar'],
+      int.parse(
+        message.data['chatId'],
+      ),
     );
   }
 
@@ -155,8 +156,7 @@ class PushNotificationsService {
         type: SnackbarInfoType.info,
         description: messageModel.messageText!.crop(20),
         title: message.data['title'] ?? "New Message",
-        avatarUrl: message.data['avatar'] ??
-            ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
+        avatarUrl: message.data['avatar'],
         onTap: () => router.pushNamed(
           ChatRoutes.chat.name,
           pathParameters: {

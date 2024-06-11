@@ -94,7 +94,7 @@ class UserState with Storer {
     supabase
         .from('profiles')
         .update({'is_introduced': true})
-        .eq('id', supaUser!.id)
+        .eq('id', profile.id)
         .then((d) => debugPrint('user is introduced'));
   }
 

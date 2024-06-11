@@ -25,24 +25,16 @@ Future<FriendShipStatusModel> checkRelationShipStatus(
         .read(socialRepositoryProvider)
         .getRelationshipStatus(userId: userId);
 
-class MapWidgetStateController
-    with Storer, MapWidgetStateLocationActions, MapWidgetStateActions {
+class MapWidgetStateController with Storer {
   MapWidgetStateController(this._ref);
 
   final ProviderRef _ref;
 
-  @override
   final state = BehaviorSubject<MapWidgetState>();
 
-  MapWidgetState get data =>
-      state.hasValue ? state.value : throw 'State hasn\'t been initialized yet';
+  MapWidgetState? get data => state.hasValue ? state.value : null;
 
-  @override
-  MapData get mapData$ => state.hasValue
-      ? state.value.mapData
-      : throw 'State hasn\'t been initialized yet';
-
-  late final StreamSubscription _mapDataSubscription;
+  MapData? get mapData$ => state.hasValue ? state.value.mapData : null;
 
   Stream<MapWidgetState> locations$() async* {
     final userCoords = await _initWithOwnLocation();
@@ -71,7 +63,7 @@ class MapWidgetStateController
         .get$(channelIdentifier: await _getRealtimChannelIdentifier(userCoords))
         .startWith((jams: [], users: []));
 
-    _mapDataSubscription = Rx.combineLatest2(
+    Rx.combineLatest2(
       location$,
       mapItems$,
       (location, mapData) => state.value.copyWith(
@@ -84,7 +76,7 @@ class MapWidgetStateController
       ),
     ).listen(
       (mapItems$) {
-        if (!state.isPaused && !state.isClosed) state.value = mapItems$;
+        state.value = mapItems$;
       },
     );
 
@@ -92,29 +84,36 @@ class MapWidgetStateController
   }
 
   Future<LatLngRecord?> _initWithOwnLocation() async {
-    var location = Storer.hiveGetLocation();
+    var location = hiveGet<MapData>();
 
     if (location.isNull) {
-      final locationService = _ref.read(locationServiceProvider);
-      final locationData = await locationService.getLocation();
-      location = LatLng(locationData.latitude!, locationData.longitude!);
-      await Storer.hiveCacheLocation(data: locationData);
+      final locationData = await lc.Location.instance.getLocation();
+      location = MapData(
+        currentPosition: locationData.toLatLng(),
+        locations: [],
+      );
+
+      await hivePut<MapData>(location);
     }
 
     state.value = MapWidgetState(
       mapData: MapData(
-        currentPosition: location!,
+        currentPosition: location!.currentPosition,
         locations: [],
       ),
     );
 
-    return (lat: location.latitude, lon: location.longitude);
+    return (
+      lat: location.currentPosition.latitude,
+      lon: location.currentPosition.latitude
+    );
   }
 
   Future<String?> _getRealtimChannelIdentifier(
     LatLngRecord? coords,
   ) async {
-    final location = mapData$.currentPosition;
+    final location = mapData$?.currentPosition ??
+        (await lc.Location.instance.getLocation()).toLatLng();
 
     final placeMarks = await placemarkFromCoordinates(
       location.latitude,
@@ -127,18 +126,149 @@ class MapWidgetStateController
   Future<void> _updateAndCacheLocation(LatLng data) async {
     if (!state.hasValue) return;
 
-    await hiveRefresh<MapData>(mapData$);
+    await hiveRefresh<MapData>(mapData$!);
 
     state.value = state.value.copyWith(
-      mapData: mapData$.copyWith(currentPosition: data),
+      mapData: mapData$!.copyWith(currentPosition: data),
     );
   }
 
   void dispose() {
+    _ref.read(mapRealtimeProvider).dispose();
     state.value.googleMapsController?.dispose();
     // state.close();
     // _mapDataSubscription.cancel();
   }
+
+  // #region MapWidgetStateActions
+  void setPlacesSearchResults(List<Prediction> placesSearchResults) {
+    if (!state.hasValue) return;
+    state.value =
+        state.value.copyWith(placesSearchResults: placesSearchResults);
+  }
+
+  void setSelectedPlaceLocation(LatLng? selectedPlaceLocation) {
+    if (!state.hasValue) return;
+    state.value =
+        state.value.copyWith(selectedPlaceLocation: selectedPlaceLocation);
+  }
+
+  void setGoogleMapsController(GoogleMapController? googleMapsController) {
+    if (!state.hasValue) return;
+    state.value =
+        state.value.copyWith(googleMapsController: googleMapsController);
+  }
+
+  void setShowBottomSheet(bool showBottomSheet) {
+    if (!state.hasValue) return;
+    state.value = state.value.copyWith(showBottomSheet: showBottomSheet);
+  }
+
+  void hideBottomSheetAndTempMarkers() {
+    if (!state.hasValue) return;
+
+    state.value = state.value.copyWith(
+      showBottomSheet: false,
+      mapData: mapData$!.withoutFocusedLocationPoint()
+        ..withoutSearchedPlaceLocation(),
+    );
+  }
+
+  void setUserCurrentLocation(LatLng? userCurrentLocation) {
+    if (!state.hasValue) return;
+
+    if (userCurrentLocation.isNotNull) {
+      state.value = state.value.copyWith(
+        mapData: mapData$!.copyWith(currentPosition: userCurrentLocation!),
+      );
+    }
+  }
+
+  final spotJamMarker = JamMarker.getSpotJamMarker();
+
+  void pushJam({
+    required JamLocation jamLocation,
+    bool popTempMarker = false,
+  }) {
+    if (!state.hasValue) return;
+
+    final updatedData = mapData$!.copyWith(
+      locations: [...mapData$!.locations, jamLocation],
+    );
+
+    state.value = state.value.copyWith(mapData: updatedData);
+
+    if (popTempMarker) removeTempMarker();
+  }
+
+  void removeTempMarker() {
+    if (state.hasValue) {
+      state.value = state.value.copyWith(
+        mapData: mapData$!.withoutFocusedLocationPoint(),
+      );
+    }
+  }
+
+  void addTempMarker({
+    required double lat,
+    required double lon,
+  }) {
+    if (!state.hasValue) return;
+
+    final spotLocation = SpotJamLocation.generate(
+      id: 'temp',
+      latitude: lat,
+      longitude: lon,
+      marker: spotJamMarker,
+    );
+
+    state.value = state.value.copyWith(
+      mapData: mapData$!.copyWith(
+        focusedLocationPoint: spotLocation,
+      ),
+    );
+  }
+
+  void removeJam(String id) {
+    if (!state.hasValue) return;
+
+    state.value = state.value.copyWith(
+      mapData: mapData$!.copyWith(
+        locations: [...mapData$!.locations.where((loc) => loc.id != id)],
+      ),
+    );
+  }
+
+  void removeTempMarkerIfPresent() {
+    if (mapData$?.focusedLocationPoint!.isNotNull ?? false) removeTempMarker();
+  }
+
+  void removePlaceSearchResultMarker() {
+    if (!state.hasValue) return;
+
+    state.value = state.value.copyWith(
+      mapData: mapData$!.withoutSearchedPlaceLocation(),
+    );
+  }
+
+  void addPlaceSearchResultMarker({
+    required double lat,
+    required double lon,
+    required String placeName,
+  }) {
+    if (!state.hasValue) return;
+
+    final searchResult = SearchPlaceResult.generate(
+      latitude: lat,
+      longitude: lon,
+      locationName: placeName,
+    );
+
+    state.value = state.value.copyWith(
+      mapData: mapData$!.copyWith(searchedPlaceLocation: searchResult),
+    );
+  }
+// #endregion
 }
 
 final locationServiceProvider = Provider<lc.Location>((ref) => lc.Location());
@@ -147,7 +277,7 @@ final mapWidgetStateControllerProvider = Provider<MapWidgetStateController>(
   (ref) => MapWidgetStateController(ref),
 );
 
-final locations$ = StreamProvider<MapWidgetState>(
+final locations$ = StreamProvider.autoDispose<MapWidgetState>(
   (ref) => ref.read(mapWidgetStateControllerProvider).locations$(),
 );
 
@@ -156,10 +286,3 @@ final placesProvider = Provider<GoogleMapsPlaces>(
     apiKey: dotenv.env[EnvironmentConstants.GOOGLE_MAPS_PLACES_API_KEY],
   ),
 );
-
-extension Locationxtensions on lc.Location {
-  Future<String> getLocationInPoint() async {
-    final location = await getLocation();
-    return 'POINT(${location.latitude} ${location.longitude})';
-  }
-}

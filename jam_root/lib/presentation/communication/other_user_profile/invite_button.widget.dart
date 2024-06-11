@@ -49,18 +49,21 @@ class FriendInviteButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final disableButton = useState(false);
     final toShow = useState(true);
+    final initialStatus = useState(viewedUser.status);
 
     if (toShow.value == false) return const SizedBox();
 
-    final widget = switch (viewedUser.status) {
+    final widget = switch (initialStatus.value) {
       RelationshipStatus.friends => const SizedBox(),
       RelationshipStatus.friendRequestSent => _buildRequestSentButton(),
       RelationshipStatus.friendRequestReceived =>
         _buildAddFriendsButton(context, ref, toShow),
-      RelationshipStatus.notFriends =>
-        _buildSendRequestButton(context, ref, disableButton),
+      RelationshipStatus.notFriends => _buildSendRequestButton(
+          context,
+          ref,
+          initialStatus,
+        ),
     };
 
     return Padding(
@@ -88,14 +91,11 @@ class FriendInviteButton extends HookConsumerWidget {
     );
   }
 
-  TextButton _buildSendRequestButton(
-    BuildContext context,
-    WidgetRef ref,
-    ValueNotifier<bool> disableButton,
-  ) {
+  TextButton _buildSendRequestButton(BuildContext context, WidgetRef ref,
+      ValueNotifier<RelationshipStatus> initialStatus) {
     return TextButton.icon(
       onPressed: () async {
-        disableButton.value = true;
+        initialStatus.value = RelationshipStatus.friendRequestSent;
 
         await ref
             .read(socialRepositoryProvider)
@@ -105,7 +105,7 @@ class FriendInviteButton extends HookConsumerWidget {
           () => JSnackBar.show(
             context,
             const JSnackbarData(
-              title: 'Send friend request',
+              description: 'Friend request sent!',
             ),
           ),
         );

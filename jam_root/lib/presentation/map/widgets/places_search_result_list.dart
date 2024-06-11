@@ -39,6 +39,8 @@ class MapPageSearchResultList extends ConsumerWidget {
             onTap: () async {
               final mapWidgetController =
                   ref.read(mapWidgetStateControllerProvider);
+
+              final gmC = ref.read(gmc);
               final placeId = searchedPlaces[index].placeId;
 
               mapWidgetController.setPlacesSearchResults(const []);
@@ -57,7 +59,7 @@ class MapPageSearchResultList extends ConsumerWidget {
                 placeName: searchedPlaces[index].description ?? 'nothing',
               );
 
-              mapWidgetController.data.googleMapsController?.animateCamera(
+              gmC?.animateCamera(
                 CameraUpdate.newLatLngZoom(
                   LatLng(
                     response.result.geometry!.location.lat,

@@ -114,7 +114,7 @@ class ChatsPage extends HookConsumerWidget
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Center(
-                  child: NotFoundPlaceholder(message: 'No chats found!'),
+                  child: NotFoundPlaceholder(message: 'No chats found'),
                 ),
                 const SizedBox(
                   height: 30,

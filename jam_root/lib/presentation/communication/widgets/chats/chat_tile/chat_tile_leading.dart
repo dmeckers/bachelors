@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 
@@ -23,9 +21,7 @@ class ChatTileLeading extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: AVATAR_RADIUS,
-          backgroundImage: CachedNetworkImageProvider(
-            friend.avatar ?? ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-          ),
+          backgroundImage: friend.avatarImageProvider,
         ),
         Visibility(
           visible: isSelected || friend.isOnlineAndActive,

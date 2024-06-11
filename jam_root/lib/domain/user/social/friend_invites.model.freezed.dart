@@ -27,7 +27,7 @@ mixin _$FriendInviteModel {
   @HiveField(6)
   String get userSent => throw _privateConstructorUsedError;
   @HiveField(2)
-  String get username => throw _privateConstructorUsedError;
+  String get fullName => throw _privateConstructorUsedError;
   @HiveField(3)
   String? get avatar => throw _privateConstructorUsedError;
   @HiveField(4)
@@ -51,7 +51,7 @@ abstract class $FriendInviteModelCopyWith<$Res> {
       {@HiveField(0) int id,
       @HiveField(1) String userReceived,
       @HiveField(6) String userSent,
-      @HiveField(2) String username,
+      @HiveField(2) String fullName,
       @HiveField(3) String? avatar,
       @HiveField(4) String status,
       @HiveField(5) DateTime sentAt});
@@ -73,7 +73,7 @@ class _$FriendInviteModelCopyWithImpl<$Res, $Val extends FriendInviteModel>
     Object? id = null,
     Object? userReceived = null,
     Object? userSent = null,
-    Object? username = null,
+    Object? fullName = null,
     Object? avatar = freezed,
     Object? status = null,
     Object? sentAt = null,
@@ -91,9 +91,9 @@ class _$FriendInviteModelCopyWithImpl<$Res, $Val extends FriendInviteModel>
           ? _value.userSent
           : userSent // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
+      fullName: null == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
               as String,
       avatar: freezed == avatar
           ? _value.avatar
@@ -123,7 +123,7 @@ abstract class _$$FriendInviteModelImplCopyWith<$Res>
       {@HiveField(0) int id,
       @HiveField(1) String userReceived,
       @HiveField(6) String userSent,
-      @HiveField(2) String username,
+      @HiveField(2) String fullName,
       @HiveField(3) String? avatar,
       @HiveField(4) String status,
       @HiveField(5) DateTime sentAt});
@@ -143,7 +143,7 @@ class __$$FriendInviteModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? userReceived = null,
     Object? userSent = null,
-    Object? username = null,
+    Object? fullName = null,
     Object? avatar = freezed,
     Object? status = null,
     Object? sentAt = null,
@@ -161,9 +161,9 @@ class __$$FriendInviteModelImplCopyWithImpl<$Res>
           ? _value.userSent
           : userSent // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
+      fullName: null == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
               as String,
       avatar: freezed == avatar
           ? _value.avatar
@@ -190,7 +190,7 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
       {@HiveField(0) required this.id,
       @HiveField(1) required this.userReceived,
       @HiveField(6) required this.userSent,
-      @HiveField(2) required this.username,
+      @HiveField(2) required this.fullName,
       @HiveField(3) this.avatar,
       @HiveField(4) required this.status,
       @HiveField(5) required this.sentAt})
@@ -210,7 +210,7 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
   final String userSent;
   @override
   @HiveField(2)
-  final String username;
+  final String fullName;
   @override
   @HiveField(3)
   final String? avatar;
@@ -223,7 +223,7 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
 
   @override
   String toString() {
-    return 'FriendInviteModel(id: $id, userReceived: $userReceived, userSent: $userSent, username: $username, avatar: $avatar, status: $status, sentAt: $sentAt)';
+    return 'FriendInviteModel(id: $id, userReceived: $userReceived, userSent: $userSent, fullName: $fullName, avatar: $avatar, status: $status, sentAt: $sentAt)';
   }
 
   @override
@@ -236,8 +236,8 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
                 other.userReceived == userReceived) &&
             (identical(other.userSent, userSent) ||
                 other.userSent == userSent) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
+            (identical(other.fullName, fullName) ||
+                other.fullName == fullName) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.sentAt, sentAt) || other.sentAt == sentAt));
@@ -246,7 +246,7 @@ class _$FriendInviteModelImpl extends _FriendInviteModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, userReceived, userSent,
-      username, avatar, status, sentAt);
+      fullName, avatar, status, sentAt);
 
   @JsonKey(ignore: true)
   @override
@@ -268,7 +268,7 @@ abstract class _FriendInviteModel extends FriendInviteModel {
       {@HiveField(0) required final int id,
       @HiveField(1) required final String userReceived,
       @HiveField(6) required final String userSent,
-      @HiveField(2) required final String username,
+      @HiveField(2) required final String fullName,
       @HiveField(3) final String? avatar,
       @HiveField(4) required final String status,
       @HiveField(5) required final DateTime sentAt}) = _$FriendInviteModelImpl;
@@ -288,7 +288,7 @@ abstract class _FriendInviteModel extends FriendInviteModel {
   String get userSent;
   @override
   @HiveField(2)
-  String get username;
+  String get fullName;
   @override
   @HiveField(3)
   String? get avatar;

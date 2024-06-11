@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -162,11 +161,7 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
     return Material(
       child: ListTile(
         tileColor: context.jColor.primaryContainer,
-        leading: CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(
-            friend.avatar ?? ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-          ),
-        ),
+        leading: CircleAvatar(backgroundImage: friend.avatarImageProvider),
         title: Text(
           friend.username ?? 'User',
           style: context.jText.bodyMedium?.copyWith(color: fontColor),

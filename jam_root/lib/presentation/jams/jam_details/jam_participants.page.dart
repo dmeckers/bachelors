@@ -194,6 +194,12 @@ class JamParticipantsPage extends HookConsumerWidget {
         ? context.jColor.primary
         : context.jColor.secondary;
 
+    final (avatarPath, hasAvatar) = user.avatarUrlWithPlaceholder;
+
+    final avatar = hasAvatar
+        ? CachedNetworkImageProvider(avatarPath)
+        : AssetImage(avatarPath) as ImageProvider<Object>;
+
     return ListTile(
       onTap: () => Navigator.push(
         context,
@@ -203,27 +209,18 @@ class JamParticipantsPage extends HookConsumerWidget {
           ),
         ),
       ),
-      leading: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(
-          user.avatarUrlWithPlaceholder,
-        ),
-      ),
-      title: Text(
-        user.username?.crop(20) ?? user.fullName?.crop(20) ?? 'Unknown user',
-      ),
+      leading: CircleAvatar(backgroundImage: avatar),
+      title: Text(user.fullName.crop(20)),
       subtitle: Text(
         'Last seen at ${user.lastActiveAt.nameWithoutYear}',
         style: const TextStyle(fontSize: 12),
       ),
-      trailing: joinRequest.isNull
-          ? null
-          : TextButton.icon(
+      trailing: joinRequest.isNotNull
+          ? TextButton.icon(
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) => FilledFormPage(
-                    joinRequest: joinRequest,
-                  ),
+                  builder: (ctx) => FilledFormPage(joinRequest: joinRequest),
                 ),
               ),
               icon: Icon(
@@ -238,7 +235,8 @@ class JamParticipantsPage extends HookConsumerWidget {
                   color: color,
                 ),
               ),
-            ),
+            )
+          : null,
     );
   }
 }

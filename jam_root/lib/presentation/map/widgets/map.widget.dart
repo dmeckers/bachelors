@@ -7,22 +7,18 @@ import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_utils/jam_utils.dart';
+import 'package:location/location.dart';
+
+final gmc = StateProvider<GoogleMapController?>((ref) => null);
 
 class MapWidget extends HookConsumerWidget {
-  const MapWidget({super.key});
+  const MapWidget({super.key, required this.giveMeFuckingController});
 
-  invalidateStateOnLoad(WidgetRef ref) {
-    useEffect(() {
-      ref.invalidate(mapWidgetStateControllerProvider);
-
-      return null;
-    }, []);
-  }
+  final Function(GoogleMapController controller) giveMeFuckingController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapStateController = ref.watch(mapWidgetStateControllerProvider);
-    invalidateStateOnLoad(ref);
+    final gugu = useState<GoogleMapController?>(null);
     return asyncWrapped(
       ref: ref,
       presenter: (data) => GoogleMap(
@@ -34,21 +30,15 @@ class MapWidget extends HookConsumerWidget {
           position,
           ref,
         ),
-        onTap: (position) async => await onMapTap(
-          context,
-          position,
-          ref,
-          mapStateController,
-        ),
-        onMapCreated: (controller) {
-          mapStateController.setGoogleMapsController(controller);
-          if (mapStateController.mapData$.currentPosition.isNotNull) {
-            controller.animateCamera(
-              CameraUpdate.newLatLng(
-                mapStateController.mapData$.currentPosition,
-              ),
-            );
-          }
+        onTap: (position) async =>
+            await onMapTap(context, position, ref, gugu.value),
+        onMapCreated: (controller) async {
+          gugu.value = controller;
+          giveMeFuckingController(controller);
+          final location = (await Location.instance.getLocation()).toLatLng();
+          controller.animateCamera(
+            CameraUpdate.newLatLngZoom(location, 20),
+          );
         },
         initialCameraPosition: const CameraPosition(
           target: LatLng(51.5074, 0.1278),
@@ -86,11 +76,15 @@ class MapWidget extends HookConsumerWidget {
     BuildContext context,
     LatLng position,
     WidgetRef ref,
-    MapWidgetStateController mapStateController,
+    GoogleMapController? gugu,
   ) async {
+    final mapStateController = ref.watch(mapWidgetStateControllerProvider);
     mapStateController.setPlacesSearchResults(const []);
 
     if (!mapStateController.state.value.showBottomSheet) {
+      gugu?.animateCamera(
+        CameraUpdate.newLatLngZoom(position, 18),
+      );
       return await _handleNewJamLocationMapTap(
         context,
         position,
@@ -114,11 +108,7 @@ class MapWidget extends HookConsumerWidget {
       lon: position.longitude,
     );
 
-    mapStateController.data.googleMapsController?.animateCamera(
-      CameraUpdate.newLatLngZoom(position, 18),
-    );
-
-    if (mapStateController.data.showBottomSheet) return;
+    if (mapStateController.data?.showBottomSheet ?? true) return;
 
     mapStateController.setShowBottomSheet(true);
 

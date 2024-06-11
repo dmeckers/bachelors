@@ -1,7 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/application/application.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
@@ -38,13 +39,10 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
             children: [
               CircleAvatar(
                 radius: 27,
-                backgroundImage: CachedNetworkImageProvider(
-                  otherUser.profile.avatar ??
-                      ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-                ),
+                backgroundImage: otherUser.profile.avatarImageProvider,
               ),
               Text(
-                otherUser.profile.username ?? 'User',
+                otherUser.profile.fullName,
                 style: context.jText.headlineMedium,
               ),
               Text(
@@ -74,35 +72,44 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
     WidgetRef ref,
   ) {
     final currentUser = ref.watch(userStateProvider).getLastValue();
+    final common = currentUser.vibes.intersectById(otherUser.profile.vibes);
 
     return Column(
       children: [
-        otherUser.status == RelationshipStatus.notFriends
+        otherUser.status != RelationshipStatus.friends
             ? SizedBox(
                 height: 100,
                 child: Text(
-                  'Vibes in common: ${currentUser.vibes.intersection(otherUser.profile.vibes).map((e) => e.name).join(', ')}',
+                  'Vibes in common: ${common.map((e) => e.name).join(', ')}',
                   style: context.jText.bodySmall,
                 ),
               )
             : const SizedBox(),
-        _buildButton(
-          currentUser,
-          otherUser,
-          context,
-          ref,
+        _FriendBottomSheetButton(
+          data: otherUser,
+          userId: userId,
+          onInviteSent: onInviteSent,
         )
       ],
     );
   }
+}
 
-  ButtonWithLoader _buildButton(
-    UserProfileModel profileData,
-    FriendShipStatusModel data,
-    BuildContext context,
-    WidgetRef ref,
-  ) {
-    final styles = switch (data.status) {
+class _FriendBottomSheetButton extends HookConsumerWidget {
+  const _FriendBottomSheetButton({
+    required this.data,
+    required this.onInviteSent,
+    required this.userId,
+  });
+  final String userId;
+  final FriendShipStatusModel data;
+  final void Function() onInviteSent;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final friendShipStatusState = useState(data.status);
+
+    final styles = switch (friendShipStatusState.value) {
       RelationshipStatus.notFriends => (
           text: 'Send friend invite',
           color: Colors.green
@@ -128,7 +135,12 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
             await _handleAddFriends(context, ref, data: data);
             break;
           case RelationshipStatus.notFriends:
-            await _handleSendFriendInvite(context, ref, data: data);
+            await _handleSendFriendInvite(
+              context,
+              ref,
+              data: data,
+              notifier: friendShipStatusState,
+            );
             break;
           case RelationshipStatus.friendRequestSent:
             break;
@@ -174,9 +186,11 @@ class SendFriendInviteBottomSheet extends HookConsumerWidget
     BuildContext context,
     WidgetRef ref, {
     required FriendShipStatusModel data,
+    required ValueNotifier<RelationshipStatus> notifier,
   }) async {
-    // TODO refactor later
     try {
+      notifier.value = RelationshipStatus.friendRequestSent;
+
       final result = await Future.wait([
         ref.read(socialRepositoryProvider).sendFriendInvite(userId: userId),
         PushNotificationsService.sendNotification(

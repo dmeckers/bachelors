@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -86,11 +85,7 @@ class ContactSelectorPage extends HookConsumerWidget {
       Stack(
         children: [
           CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-              e.avatar?.isNotEmpty ?? false
-                  ? e.avatar!
-                  : ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-            ),
+            backgroundImage: e.avatarImageProvider,
           ),
           if (selectedUsers.value.any((element) => element.$1 == e))
             const Positioned(

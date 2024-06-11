@@ -1,13 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
-import 'package:jam_utils/jam_utils.dart';
 
 class HeroAvatar extends HookConsumerWidget
     with ChattingProviders, ProfileRepositoryProviders {
@@ -51,11 +48,7 @@ class HeroAvatar extends HookConsumerWidget
           child: Stack(
             children: [
               CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(
-                  profile.avatar.isEmptyOrNull
-                      ? ImagePathConstants.DEFAULT_AVATAR_IMAGE_BUCKET_URL
-                      : profile.avatar!,
-                ),
+                backgroundImage: profile.avatarImageProvider,
                 maxRadius: radius,
               ),
               Visibility(

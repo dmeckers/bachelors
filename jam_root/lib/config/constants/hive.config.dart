@@ -49,6 +49,8 @@ final class HiveConstants {
 
   static const LAT_LNG_ADAPTER_TYPE_ID = 68;
 
+  static const LOCATION_TYPE_TYPE_ID = 71;
+
   static getAllKeys() {
     return [
       LOCAL_DB_USER_PROFILE_KEY,

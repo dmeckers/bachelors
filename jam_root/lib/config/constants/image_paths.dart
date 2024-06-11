@@ -7,8 +7,9 @@ final class ImagePathConstants {
   static const DEFAULT_JAM_MARKER_IMAGE_PATH = 'assets/images/pizza.png';
   static const DEFAULT_JAM_IMAGE_BUCKET_URL =
       "https://iftwgsudzkdfekfwxmti.supabase.co/storage/v1/object/public/shared/jams/default_background.jpg";
-  static const DEFAULT_AVATAR_IMAGE_BUCKET_URL =
-      "https://iftwgsudzkdfekfwxmti.supabase.co/storage/v1/object/public/shared/avatars/default.jpeg";
+
+  static const DEFAULT_AVATAR_IMAGE_PATH = "assets/images/default_avatar.webp";
+
   static const ERROR_JAR_1 = 'assets/images/error_jar_1.webp';
   static const ERROR_JAR_2 = 'assets/images/error_jar_2.webp';
   static const ERROR_JAR_3 = 'assets/images/error_jar_3.webp';
@@ -19,6 +20,7 @@ final class ImagePathConstants {
   static const NOT_FOUND_JAR_INVERTED_PATH =
       'assets/images/dunno_inverted.webp';
   static const NO_INTERNET_CONNECTION = 'assets/images/no_internet.webp';
+
   static const DEFAULT_LOGIN_BACKGROUND_IMAGE_PATH =
       'assets/images/hiking.webp';
 

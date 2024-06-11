@@ -25,11 +25,7 @@ class OtherUserProfilePage extends HookConsumerWidget
         child: asyncUserInfo.when(
           data: (viewedProfile) {
             return Scaffold(
-              appBar: SimpleAppBar(
-                title: viewedProfile.profile.username ??
-                    viewedProfile.profile.fullName ??
-                    '',
-              ),
+              appBar: SimpleAppBar(title: viewedProfile.profile.fullName),
               body: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
@@ -57,8 +53,7 @@ class OtherUserProfilePage extends HookConsumerWidget
                     ShakesOnNoLongPress(
                       child: ListTile(
                         leading: const Icon(Icons.person),
-                        title:
-                            Text(viewedProfile.profile.fullName ?? 'No Name'),
+                        title: Text(viewedProfile.profile.fullName),
                         subtitle: Text(
                           'Name',
                           style: context.jText.headlineSmall,

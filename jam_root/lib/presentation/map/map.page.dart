@@ -5,24 +5,29 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/data/data.dart';
 
 import 'package:jam/presentation/presentation.dart';
+import 'package:location/location.dart';
 
 class MapPage extends HookConsumerWidget {
   const MapPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(() => () => ref.read(mapWidgetStateControllerProvider).dispose());
+    final gugu = useState<GoogleMapController?>(null);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const MapPageAppBar(),
       body: Stack(
         children: [
-          const MapWidget(),
+          MapWidget(
+            giveMeFuckingController: (ctrl) {
+              gugu.value = ctrl;
+            },
+          ),
           const MapPageSearchResultList(),
           _buildSomething(),
           _buildSomething(isLeft: false),
-          _buildGetCurrentPositionButton(ref),
+          _buildGetCurrentPositionButton(ref, gugu.value),
           _buildMapFab(),
         ],
       ),
@@ -53,6 +58,7 @@ class MapPage extends HookConsumerWidget {
 
   Positioned _buildGetCurrentPositionButton(
     WidgetRef ref,
+    GoogleMapController? gugu,
   ) =>
       Positioned(
         bottom: 15,
@@ -75,10 +81,10 @@ class MapPage extends HookConsumerWidget {
           child: IconButton(
             onPressed: () async {
               final mapState = ref.read(mapWidgetStateControllerProvider);
-              final position = mapState.mapData$.currentPosition;
-              final controller = mapState.data.googleMapsController;
+              final position = mapState.mapData$?.currentPosition ??
+                  (await Location.instance.getLocation()).toLatLng();
 
-              controller?.animateCamera(
+              gugu?.animateCamera(
                 CameraUpdate.newCameraPosition(
                   CameraPosition(
                     target: position,

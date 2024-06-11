@@ -82,16 +82,20 @@ class SupabaseAuthRepository
   @override
   Future<void> logout() async {
     final connectivity = await Connectivity().checkConnectivity();
-    final updateOnline = supabase.from('profiles').update(
-      {
-        'is_online': false,
-        'last_sign_in_at': '${DateTime.now()}',
-      },
-    ).eq('id', supaUser!.id);
+    await MAP$.cancel();
+
+    if (supaUser.isNotNull) {
+      await supabase.from('profiles').update(
+        {
+          'is_online': false,
+          'last_sign_in_at': '${DateTime.now()}',
+        },
+      ).eq('id', supaUser!.id);
+    }
 
     return connectivity == ConnectivityResult.none
         ? supabase.auth.signOut(scope: SignOutScope.local)
-        : Future.wait([updateOnline, supaAuth.signOut()]);
+        : supaAuth.signOut();
   }
 
   @override

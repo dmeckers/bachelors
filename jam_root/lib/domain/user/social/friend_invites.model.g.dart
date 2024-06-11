@@ -20,7 +20,7 @@ class FriendInviteModelAdapter extends TypeAdapter<_$FriendInviteModelImpl> {
       id: fields[0] as int,
       userReceived: fields[1] as String,
       userSent: fields[6] as String,
-      username: fields[2] as String,
+      fullName: fields[2] as String,
       avatar: fields[3] as String?,
       status: fields[4] as String,
       sentAt: fields[5] as DateTime,
@@ -38,7 +38,7 @@ class FriendInviteModelAdapter extends TypeAdapter<_$FriendInviteModelImpl> {
       ..writeByte(6)
       ..write(obj.userSent)
       ..writeByte(2)
-      ..write(obj.username)
+      ..write(obj.fullName)
       ..writeByte(3)
       ..write(obj.avatar)
       ..writeByte(4)
@@ -68,7 +68,7 @@ _$FriendInviteModelImpl _$$FriendInviteModelImplFromJson(
       id: json['id'] as int,
       userReceived: json['user_received'] as String,
       userSent: json['user_sent'] as String,
-      username: json['username'] as String,
+      fullName: json['full_name'] as String,
       avatar: json['avatar'] as String?,
       status: json['status'] as String,
       sentAt: DateTime.parse(json['sent_at'] as String),
@@ -80,7 +80,7 @@ Map<String, dynamic> _$$FriendInviteModelImplToJson(
       'id': instance.id,
       'user_received': instance.userReceived,
       'user_sent': instance.userSent,
-      'username': instance.username,
+      'full_name': instance.fullName,
       'avatar': instance.avatar,
       'status': instance.status,
       'sent_at': instance.sentAt.toIso8601String(),

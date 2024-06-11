@@ -92,7 +92,7 @@ final class SocialRepository
                   user_received ,
                   user_sent ,
                   profiles!friend_invites_user_sent_fkey(
-                    username,
+                    full_name,
                     avatar
                   )
                 """)

@@ -692,7 +692,7 @@ class _JCherryToastState extends State<JCherryToast>
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.end,
           children: [
-            widget.description!,
+            widget.description ?? const Text(''),
             // if (widget.title != null) widget.title!,
             // if (widget.description != null)
             //   Column(

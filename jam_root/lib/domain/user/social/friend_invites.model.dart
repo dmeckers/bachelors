@@ -16,7 +16,7 @@ abstract class FriendInviteModel
     @HiveField(0) required int id,
     @HiveField(1) required String userReceived,
     @HiveField(6) required String userSent,
-    @HiveField(2) required String username,
+    @HiveField(2) required String fullName,
     @HiveField(3) String? avatar,
     @HiveField(4) required String status,
     @HiveField(5) required DateTime sentAt,

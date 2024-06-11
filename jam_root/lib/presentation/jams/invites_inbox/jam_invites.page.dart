@@ -40,11 +40,7 @@ class JamInvitesPage extends HookConsumerWidget {
                           children: [
                             CircleAvatar(
                               radius: 15,
-                              backgroundImage: NetworkImage(
-                                sender.avatar ??
-                                    ImagePathConstants
-                                        .DEFAULT_AVATAR_IMAGE_BUCKET_URL,
-                              ),
+                              backgroundImage: sender.avatarImageProvider,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -62,9 +58,7 @@ class JamInvitesPage extends HookConsumerWidget {
                             icon: const Icon(Icons.remove_red_eye_outlined),
                             onPressed: () => context.pushNamed(
                               JamRoutes.details.name,
-                              pathParameters: {
-                                'jamId': invite.jamId.toString()
-                              },
+                              pathParameters: {'jamId': '${invite.jamId}'},
                             ),
                           ),
                           IconButton(

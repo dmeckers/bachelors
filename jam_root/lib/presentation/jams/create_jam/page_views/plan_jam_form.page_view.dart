@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
-import 'package:jam/data/jams/jam_repository.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_theme/jam_theme.dart';
@@ -345,7 +344,9 @@ class PlanJamFormPage extends HookConsumerWidget {
   ) async {
     if (!canSubmit) return;
     final model = viewModel.castToModelIfValid()!.filledWithDefaults;
-    await ref.read(jamRepositoryProvider).createJam(jamModel: model);
+
+    await ref.read(createJamProvider(jam: model).future);
+
     await ref.read(jamsStateProvider).invalidate();
 
     context.doIfMounted(
