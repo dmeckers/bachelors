@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jam/data/data.dart';
 
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class ChatExtraInputModeBar extends HookConsumerWidget with ChattingProviders {
-  const ChatExtraInputModeBar({super.key, required this.chatId});
+class ChatExtraInputModeBar extends HookConsumerWidget
+    with ChattingProviders, Storer {
+  const ChatExtraInputModeBar({
+    super.key,
+    required this.chatId,
+    required this.chatModel,
+  });
 
   final int chatId;
+  final ChatModel chatModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
       currentChatStateProvider(chatId).select((value) => value.state),
     );
+
     final textInputCache = ref.watch(userTextInputFieldCache);
 
-    if (state?.model == null) return const SizedBox();
+    if (state?.model.isNull ?? true) return const SizedBox();
+
+// TODO
+    final widgetAttributes = state!.inputMode!.getWidgetAttrivutes;
+    final user = hiveGet<UserProfileModel>();
+    final replyTo = state.model?.senderId == user?.id
+        ? user?.fullName
+        : chatModel.relatedContact.fullName;
 
     return Container(
       width: double.infinity,
@@ -30,9 +45,7 @@ class ChatExtraInputModeBar extends HookConsumerWidget with ChattingProviders {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Icon(state!.inputMode == ChatInputMode.reply
-                ? Icons.reply
-                : Icons.edit),
+            child: Icon(widgetAttributes.icon, size: 15),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -40,9 +53,7 @@ class ChatExtraInputModeBar extends HookConsumerWidget with ChattingProviders {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  state.inputMode == ChatInputMode.reply
-                      ? "Reply to ${state.model?.senderName}"
-                      : 'Editing',
+                  widgetAttributes.title(replyTo),
                   style: context.jText.headlineSmall,
                 ),
                 const SizedBox(height: 3),

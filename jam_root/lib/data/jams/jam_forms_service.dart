@@ -59,7 +59,7 @@ class JamFormsService
     await PushNotificationsService.sendNotification(
         NotificationTypeEnum.sendJamFormSubmittedJoinedNotification, {
       'creator_fcm_token': creatorFcmToken,
-      'joined_user_name': '${user?.username ?? user?.fullName} ',
+      'joined_user_name': '${user?.fullName} ',
     });
   }
 

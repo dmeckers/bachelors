@@ -59,7 +59,7 @@ class ChatAppBar extends ConsumerWidget
       ),
       bodyWidgets: [
         Text(
-          chat.relatedContact.username ?? 'User',
+          chat.relatedContact.fullName,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

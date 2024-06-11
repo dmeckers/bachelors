@@ -82,7 +82,7 @@ class SupabaseAuthRepository
   @override
   Future<void> logout() async {
     final connectivity = await Connectivity().checkConnectivity();
-    await MAP$.cancel();
+    await MAP$?.cancel();
 
     if (supaUser.isNotNull) {
       await supabase.from('profiles').update(

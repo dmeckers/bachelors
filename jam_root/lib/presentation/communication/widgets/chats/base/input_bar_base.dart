@@ -49,7 +49,10 @@ class ChatInputBarBase extends HookConsumerWidget {
             autocorrect: true,
           ),
         ),
-        const ChatMessageInputBarAttachButton(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+          child: Icon(Icons.attach_file),
+        ),
         contact.isNotNull
             ? SendMessageButton(
                 chatId: chatId,

@@ -7,7 +7,7 @@ import 'package:timeago/timeago.dart' as timeago;
 // }
 
 extension DateTimeConverter on DateTime {
-  get toNTimeAgo => timeago.format(DateTime.now(), locale: 'en_short');
+  get toNTimeAgo => timeago.format(this, locale: 'en_short');
 
   String get atTime => DateFormat('HH:mm').format(this);
 

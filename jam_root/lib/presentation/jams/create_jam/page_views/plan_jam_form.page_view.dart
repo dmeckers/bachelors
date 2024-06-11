@@ -89,40 +89,33 @@ class PlanJamFormPage extends HookConsumerWidget {
                   JamFormBuilderTile(
                     jam: jam,
                   ),
-                SizedBox(
-                  height: 120,
-                  child: Stack(
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
                     children: [
-                      _buildWatchingJamJar(),
-                      Row(
-                        children: [
-                          _buildSectionTitle(
-                            'Extra information',
-                            rightPadding: 20,
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: InkWell(
-                              onTap: () =>
-                                  showExtraInfo.value = !showExtraInfo.value,
-                              child: Ink(
-                                width: 120,
-                                color: Colors.black,
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  showExtraInfo.value
-                                      ? 'Show less'
-                                      : 'Show more',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                      _buildSectionTitle(
+                        'Extra information',
+                        rightPadding: 20,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: InkWell(
+                          onTap: () =>
+                              showExtraInfo.value = !showExtraInfo.value,
+                          child: Ink(
+                            width: 120,
+                            color: Colors.black,
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              showExtraInfo.value ? 'Show less' : 'Show more',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -193,7 +186,7 @@ class PlanJamFormPage extends HookConsumerWidget {
       child: Row(
         children: [
           const Text(
-            'Use QR codes for check-in',
+            'Use QR codes for check-in (unimplemented)',
             style: TextStyle(fontSize: 14),
           ),
           const SizedBox(width: 10),

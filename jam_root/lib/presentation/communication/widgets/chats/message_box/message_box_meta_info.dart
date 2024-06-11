@@ -14,42 +14,43 @@ class MessageBoxMetaInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(width: 6),
-
-        /// pinned part
-        if (message.isPinned)
-          Transform.rotate(
-            angle: 0.8,
-            child: const Icon(
-              Icons.push_pin_outlined,
-              size: 11,
-            ),
-          ),
+        iconIfPinned(),
         if (message.isPinned) const SizedBox(width: 6),
-
-        /// edited part
-        if (message.isEdited)
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Text(
-              'Edited',
-              style: context.jText.bodySmall?.copyWith(fontSize: 8),
-            ),
-          ),
+        infoIfEdited(context),
         if (message.isEdited) const SizedBox(width: 6),
-
-        /// time
-        Text(
-          message.sentAt.atTime,
-          style: context.jText.bodySmall?.copyWith(fontSize: 11),
-        ),
+        timeWhenSent(context),
         const SizedBox(width: 6),
-
-        /// status part
         if (message.fromMe) Icon((message.messageStatus?.toIcon()), size: 11)
       ],
+    );
+  }
+
+  Widget iconIfPinned() => message.isPinned
+      ? Transform.rotate(
+          angle: 0.8,
+          child: const Icon(
+            Icons.push_pin_outlined,
+            size: 11,
+          ),
+        )
+      : const SizedBox();
+
+  infoIfEdited(BuildContext context) => message.isEdited
+      ? Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: Text(
+            'Edited',
+            style: context.jText.bodySmall?.copyWith(fontSize: 8),
+          ),
+        )
+      : const SizedBox();
+
+  timeWhenSent(BuildContext context) {
+    return Text(
+      message.sentAt.atTime,
+      style: context.jText.bodySmall?.copyWith(fontSize: 11),
     );
   }
 }

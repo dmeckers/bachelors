@@ -10,7 +10,7 @@ import 'package:jam_utils/jam_utils.dart';
 
 class ChatTile extends ConsumerWidget with ChattingProviders {
   final ChatModel chatModel;
-  final MAX_MESSAGE_LENGTH = 50;
+  final MAX_MESSAGE_LENGTH = 25;
   const ChatTile({
     super.key,
     required this.chatModel,
@@ -63,7 +63,10 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
           isSelected: selectedChats.contains(chatModel),
           friend: chatModel.relatedContact,
         ),
-        title: _showChatTitle(context),
+        title: Text(
+          chatModel.relatedContact.fullName,
+          style: context.jText.headlineMedium,
+        ),
         subtitle: _showChatLastMessage(context, chatState),
         trailing: ChatTileTrailing(chatModel: chatModel),
       ),
@@ -107,7 +110,6 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
 
   Widget _showChatLastMessage(BuildContext context, ChatState? state) {
     final lastMessage = chatModel.lastMessage;
-    // final chatState = chatModel.state;
     if (chatModel.chatEventType == ChatEventType.typing) {
       return Text(
         'Typing...',
@@ -120,7 +122,7 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
       return RichText(
         text: TextSpan(children: [
           TextSpan(
-            text: "${chatModel.relatedContact.username} \t",
+            text: "${chatModel.relatedContact.fullName} \t",
             style:
                 context.jText.bodySmall?.copyWith(fontStyle: FontStyle.italic),
           ),
@@ -156,7 +158,7 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
         text: TextSpan(
           children: [
             TextSpan(
-              text: 'You: ',
+              text: 'You:\t\t',
               style: context.jText.bodySmall
                   ?.copyWith(fontStyle: FontStyle.italic),
             ),
@@ -175,25 +177,6 @@ class ChatTile extends ConsumerWidget with ChattingProviders {
       style: context.jText.bodySmall?.copyWith(fontStyle: FontStyle.italic),
     );
   }
-
-  Row _showChatTitle(BuildContext context) => Row(
-        children: [
-          Text(
-            chatModel.relatedContact.username ?? 'User',
-            style: context.jText.headlineMedium,
-          ),
-          // Visibility(
-          //     visible: chatModel.isMuted,
-          //     child: const Padding(
-          //       padding: EdgeInsets.only(left: 5),
-          //       child: Icon(
-          //         Icons.volume_off,
-          //         color: Color.fromARGB(255, 130, 129, 129),
-          //         size: 15,
-          //       ),
-          //     ))
-        ],
-      );
 
   String _messageDescirption(LastMessageModel message) =>
       switch (message.messageType) {

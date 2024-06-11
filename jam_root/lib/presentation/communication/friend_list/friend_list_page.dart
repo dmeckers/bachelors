@@ -63,7 +63,7 @@ class FriendListPage extends HookConsumerWidget with ColorHelper {
         ),
         tileColor: context.jColor.secondaryContainer,
         title: Text(
-          user.username ?? 'User',
+          user.fullName,
           style: context.jText.bodyMedium?.copyWith(
             color: ColorHelper.colorContrast(context.jColor.secondaryContainer),
           ),

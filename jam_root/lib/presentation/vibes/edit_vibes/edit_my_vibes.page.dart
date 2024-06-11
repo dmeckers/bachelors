@@ -70,6 +70,7 @@ class EditUserVibes extends HookConsumerWidget
                           searchQuery,
                         ),
                       )),
+              Legend(),
               ValidationErrors(context, selectedVibes),
               SelectedVibeList(context, selectedVibes),
               Expanded(
@@ -108,6 +109,7 @@ class EditUserVibes extends HookConsumerWidget
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ButtonWithLoader(
+        size: const Size(200, 50),
         onPressed: () async {
           if (selectedVibes.isEmpty) return;
           await ref

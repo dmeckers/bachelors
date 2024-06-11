@@ -44,7 +44,7 @@ class JamInvitesPage extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Invited by: ${sender.username}',
+                              'Invited by: ${sender.fullName}',
                               style: context.jText.headlineMedium,
                             ),
                           ],

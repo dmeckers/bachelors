@@ -22,9 +22,7 @@ class ChatMessagesList extends HookConsumerWidget
     required this.chat,
   }) : keys = List<Key>.generate(
           messages.length,
-          (index) => Key(
-            messages[index].id.toString(),
-          ),
+          (index) => Key('${messages[index].id}'),
         );
 
   final List<Key> keys;

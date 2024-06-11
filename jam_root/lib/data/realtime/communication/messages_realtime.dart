@@ -9,7 +9,7 @@ import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 
 class MessagesRealtimeService
-    with SupabaseUserGetter
+    with SupabaseUserGetter, Storer
     implements MessagesRealtimeInterface {
   BehaviorSubject<Messages>? _controller;
 
@@ -27,13 +27,9 @@ class MessagesRealtimeService
       'message_offset': 0,
     }) as Dynamics;
 
-    final decrypted = messages
-        .map(
-          (e) => MessageModel.fromJson(
-            e['message'],
-          ),
-        )
-        .toList();
+    final decrypted = [
+      ...messages.map((e) => MessageModel.fromJson(e['message']))
+    ];
 
     _controller!.add(decrypted);
 
@@ -96,6 +92,9 @@ class MessagesRealtimeService
         payload.newRecord['message_type'] != MessageType.event.name) {
       return;
     }
+
+    // hiveGet<UserProfileModel>()
+
     pushMessage(
       MessageModel.fromJson(payload.newRecord..['from_me'] = false),
     );

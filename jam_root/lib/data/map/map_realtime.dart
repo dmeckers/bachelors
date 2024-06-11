@@ -10,7 +10,7 @@ import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
 import 'package:jam/domain/domain.dart';
 
-late StreamSubscription MAP$;
+StreamSubscription? MAP$;
 
 class MapRealtime
     with Storer, SupabaseUserGetter

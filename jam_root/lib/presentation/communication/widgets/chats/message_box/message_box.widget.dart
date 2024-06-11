@@ -32,18 +32,20 @@ class ActionlessMessageBox extends ConsumerWidget with ChattingProviders {
   Widget build(BuildContext context, WidgetRef ref) {
     return MessageBoxBaseWrapper(
       message: message,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message.messageText ?? '',
-            style: context.jText.bodySmall,
-          ),
-          const SizedBox(height: 6),
-          MessageBoxMetaInfo(message: message)
-        ],
+      child: IntrinsicWidth(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              message.messageText ?? '',
+              style: context.jText.bodySmall,
+            ),
+            const SizedBox(height: 6),
+            MessageBoxMetaInfo(message: message)
+          ],
+        ),
       ),
     );
   }

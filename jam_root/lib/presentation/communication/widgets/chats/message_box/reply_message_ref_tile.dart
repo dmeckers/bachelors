@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
-import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
+class ReplyMessageRefTile extends ConsumerWidget
+    with ChattingProviders, Storer {
   const ReplyMessageRefTile({
     super.key,
     required this.message,
@@ -26,13 +26,11 @@ class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ref.watch(autoScrollCtrlProvider);
-    //this is so bad
-    final repliedToName = repliedMessage.senderName ??
-        (repliedMessage.senderId == chat.relatedContact.id
-            ? chat.relatedContact.fullName
-            : localDatabase
-                .get(HiveConstants.LOCAL_DB_USER_PROFILE_KEY)
-                .fullName);
+    final userFullname = hiveGet<UserProfileModel>()?.fullName;
+
+    final replyTo = repliedMessage.senderId == chat.relatedContact.id
+        ? chat.relatedContact.fullName
+        : userFullname;
 
     return Container(
       constraints: const BoxConstraints(maxHeight: 45),
@@ -67,7 +65,7 @@ class ReplyMessageRefTile extends ConsumerWidget with ChattingProviders {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
-                    "Reply to: $repliedToName",
+                    "Reply to: $replyTo",
                     style: context.jText.bodySmall?.copyWith(fontSize: 12),
                   ),
                 ),

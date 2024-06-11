@@ -15,7 +15,7 @@ class ChatTileTrailing extends StatelessWidget with ChattingProviders {
     final lastMessage = chatModel.lastMessage;
 
     return SizedBox(
-      width: 120,
+      width: 45,
       height: 80,
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
@@ -36,8 +36,6 @@ class ChatTileTrailing extends StatelessWidget with ChattingProviders {
                   Text(lastMessage.sentAt.toNTimeAgo),
                 ],
               ),
-            if (lastMessage == null && chatModel.clearedAt != null)
-              Text(chatModel.clearedAt!.toNTimeAgo),
             if (chatModel.isPinned)
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
@@ -52,10 +50,6 @@ class ChatTileTrailing extends StatelessWidget with ChattingProviders {
   Widget _buildPinnedIcon(BuildContext context) => Transform.rotate(
         angle: 45 * pi / 180,
         child: const CircleAvatar(
-          // backgroundColor: chatModel.isMuted
-          //     ? context.jTheme.disabledColor
-          //     : context.jTheme.colorScheme.onPrimaryContainer,
-          // backgroundColor: context.jTheme.colorScheme.onPrimaryContainer,
           maxRadius: 12,
           minRadius: 10,
           child: Icon(

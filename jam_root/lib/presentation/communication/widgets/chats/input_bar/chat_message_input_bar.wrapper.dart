@@ -13,7 +13,7 @@ class ChatMesssageInputBarWrapper extends StatelessWidget {
       decoration: BoxDecoration(color: context.jTheme.primaryColor),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: children,
       ),

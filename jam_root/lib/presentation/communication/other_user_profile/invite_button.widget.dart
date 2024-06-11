@@ -29,7 +29,7 @@ class FriendInviteButton extends HookConsumerWidget {
           () => JSnackBar.show(
             context,
             JSnackbarData(
-              title: 'You and ${viewedUser.profile.username} are now friends',
+              title: 'You and ${viewedUser.profile.fullName} are now friends',
             ),
           ),
         );

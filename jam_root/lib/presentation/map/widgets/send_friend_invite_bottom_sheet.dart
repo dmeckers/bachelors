@@ -175,7 +175,7 @@ class _FriendBottomSheetButton extends HookConsumerWidget {
       () => showDialog(
         context: context,
         builder: (context) => OkPopup(
-          title: 'You and ${data.profile.username} are now friends!',
+          title: 'You and ${data.profile.fullName} are now friends!',
           onOkPressed: () => onInviteSent(),
         ),
       ),

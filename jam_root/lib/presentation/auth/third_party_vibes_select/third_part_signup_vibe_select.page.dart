@@ -58,6 +58,7 @@ class ThirdPartySignUpVibeSelect extends HookConsumerWidget
                   ),
                 ),
               ),
+              Legend(),
               ValidationErrors(context, selectedVibes),
               SelectedVibeList(context, selectedVibes),
               Expanded(
@@ -105,6 +106,7 @@ class ThirdPartySignUpVibeSelect extends HookConsumerWidget
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: ButtonWithLoader(
+        size: const Size(200, 50),
         onPressed: () async {
           if (selectedVibes.isEmpty) return;
 

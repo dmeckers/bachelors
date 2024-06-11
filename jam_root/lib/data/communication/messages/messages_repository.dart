@@ -43,24 +43,25 @@ final class MessagesRepository
     required UserProfileModel receiver,
     required int chatId,
   }) async {
-    final userId = getUserIdOrThrow();
-    if (!(await _isOnline())) {
-      final messageModel = await chatQueue.queueSendText(
-        chatId: chatId,
-        message: message,
-        receiver: receiver,
-      );
-      //TODO: Implement the following method
-      messagesRealtime.pushMessage(
-        messageModel.copyWith(
-          senderId: userId,
-          chatId: chatId,
-          messageStatus: MessageDeliveryStatus.unread,
-        ),
-      );
+    final user = _ref.read(storerProvider).hiveGet<UserProfileModel>()!;
+    // if (!(await _isOnline())) {
+    //   final messageModel = await chatQueue.queueSendText(
+    //     chatId: chatId,
+    //     message: message,
+    //     receiver: receiver,
+    //   );
+    //   //TODO: Implement the following method
+    //   messagesRealtime.pushMessage(
+    //     messageModel.copyWith(
+    //       senderId: user.id,
+    //       chatId: chatId,
+    //       senderName: user.fullName,
+    //       messageStatus: MessageDeliveryStatus.unread,
+    //     ),
+    //   );
 
-      return messageModel;
-    }
+    //   return messageModel;
+    // }
 
     final id = await supabase.rpc(SEND_DEFAULT_TEXT_MESSAGE_RPC, params: {
       'chat_id': chatId,
@@ -71,14 +72,12 @@ final class MessagesRepository
     messagesRealtime.pushMessage(
       message.copyWith(
         id: id,
-        senderId: userId,
+        senderId: user.id,
         chatId: chatId,
+        senderName: user.fullName,
         messageStatus: MessageDeliveryStatus.unread,
       ),
     );
-
-    final user = localDatabase.get(HiveConstants.LOCAL_DB_USER_PROFILE_KEY)
-        as UserProfileModel?;
 
     PushNotificationsService.sendNotification(
       NotificationTypeEnum.sendMessageNotification,
@@ -86,10 +85,10 @@ final class MessagesRepository
         'fcm_token': receiver.fcmToken,
         'message': message.messageText!,
         'chat_id': chatId,
-        'sender_id': userId,
-        'avatar': user?.avatar,
+        'sender_id': user.id,
+        'avatar': user.avatar,
         'message_type': 'text',
-        'sender_name': user?.username,
+        'sender_name': user.fullName,
       },
     );
 
@@ -148,12 +147,10 @@ final class MessagesRepository
 
     yield cahced?.cast<MessageModel>() ?? [];
 
-    final stream = await _isOnline()
-        ? messagesRealtime.get$(
-            channelIdentifier: chat.id.toString(),
-            data: chat,
-          )
-        : _ref.read(powerSyncMessageServiceProvider).messages$(chat.id);
+    final stream = messagesRealtime.get$(
+      channelIdentifier: '${chat.id}',
+      data: chat,
+    );
 
     chatCache.cacheChatPageIndex(chatId: chat.id, pageIndex: 0);
     chatCache.cacheTotalPages(chatId: chat.id, totalPages: 0);
@@ -166,23 +163,33 @@ final class MessagesRepository
     required MessageModel message,
     required bool forEveryone,
   }) async {
-    if (!(await _isOnline())) {
-      return chatQueue.queuePin(
-        message: message,
-        forEveryone: forEveryone,
-      );
-    }
+    // if (!(await _isOnline())) {
+    //   return chatQueue.queuePin(
+    //     message: message,
+    //     forEveryone: forEveryone,
+    //   );
+    // }
 
     if (forEveryone) {
       final senderName = await _getSenderName(message.senderId!);
-      await supabase.from('messages').insert(
-        {
-          'message_text': "$senderName pinned a message",
-          'chat_id': message.chatId,
-          'sender_id': message.senderId,
-          'message_type': MessageType.event.name,
-          'sent_at': DateTime.now().toString(),
-        },
+      await supabase.rpc('send_event_message', params: {
+        'message_text': "$senderName pinned a message",
+        'chat_id': message.chatId,
+      });
+
+      final user = _ref.read(storerProvider).hiveGet<UserProfileModel>()!;
+
+      messagesRealtime.pushMessage(
+        MessageModel(
+          chatId: message.chatId,
+          messageText: "$senderName pinned a message",
+          senderId: user.id,
+          senderName: user.fullName,
+          messageStatus: MessageDeliveryStatus.read,
+          messageType: MessageType.event,
+          sentAt: DateTime.now(),
+          fromMe: true,
+        ),
       );
     }
 
@@ -217,12 +224,6 @@ final class MessagesRepository
 
   @override
   Future<Messages> getPinnedMessages({required ChatModel chat}) async {
-    if (!await _isOnline()) {
-      return _ref
-          .read(powerSyncMessageServiceProvider)
-          .getPinnedMessages(chat: chat);
-    }
-
     return await supabase
         .from('messages')
         .select('* ,  message_status(message_status)')
@@ -236,7 +237,7 @@ final class MessagesRepository
                   e.replaceKeyValue(
                     key: 'message_status',
                     value: e['message_status'].first['message_status'],
-                  ),
+                  )..['from_me'] = e['sender_id'] == getUserIdOrThrow(),
                 ),
               )
               .toList(),

@@ -37,7 +37,9 @@ class DestructiveDialog extends HookWidget {
   }
 
   Widget _buildModalContent(
-          BuildContext context, ValueNotifier<bool?> extraCondition) =>
+    BuildContext context,
+    ValueNotifier<bool?> extraCondition,
+  ) =>
       extraConditionMessage != null
           ? ConstrainedBox(
               constraints: BoxConstraints(
@@ -50,18 +52,14 @@ class DestructiveDialog extends HookWidget {
                 children: [
                   Text(subtitle, style: const TextStyle(fontSize: 14)),
                   const Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                          value: extraCondition.value ?? false,
-                          onChanged: (value) =>
-                              extraCondition.value = value as bool),
-                      Text(
-                        extraConditionMessage!,
-                        style: const TextStyle(fontSize: 14),
-                      )
-                    ],
+                  CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: extraCondition.value ?? false,
+                    onChanged: (value) => extraCondition.value = value as bool,
+                    title: Text(
+                      extraConditionMessage!,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   )
                 ],
               ),

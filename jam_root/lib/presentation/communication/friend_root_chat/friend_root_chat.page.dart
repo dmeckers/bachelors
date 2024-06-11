@@ -50,7 +50,10 @@ class FriendRootChatPage extends ConsumerWidget with ChattingProviders {
                 ),
               ),
               if (chatState?.inputMode != ChatInputMode.standart)
-                ChatExtraInputModeBar(chatId: chat.id),
+                ChatExtraInputModeBar(
+                  chatId: chat.id,
+                  chatModel: chat,
+                ),
               MessageInputBar(
                 chatId: chat.id,
                 contact: chat.relatedContact,

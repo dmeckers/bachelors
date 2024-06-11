@@ -38,6 +38,28 @@ mixin SelectVibeWidgetsMixin {
             )
           : const SizedBox();
 
+  Widget Legend() => const Padding(
+        padding: EdgeInsets.symmetric(vertical: 6.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(width: 10),
+            Icon(Icons.circle, color: Colors.orange, size: 14),
+            Text('- Focused', style: TextStyle(fontSize: 12)),
+            SizedBox(width: 20),
+            Icon(Icons.circle, color: Colors.green, size: 14),
+            Text(' Selected', style: TextStyle(fontSize: 12)),
+            SizedBox(width: 20),
+            Icon(Icons.circle, color: Colors.red, size: 14),
+            Text('- To remove', style: TextStyle(fontSize: 12)),
+            SizedBox(width: 20),
+            Icon(Icons.circle_outlined, color: Colors.black, size: 14),
+            Text('- Not selected', style: TextStyle(fontSize: 12)),
+            SizedBox(width: 10),
+          ],
+        ),
+      );
+
   Widget asyncWrapped({
     required Widget Function(Vibes) presenter,
     required WidgetRef ref,

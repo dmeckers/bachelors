@@ -163,7 +163,7 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
         tileColor: context.jColor.primaryContainer,
         leading: CircleAvatar(backgroundImage: friend.avatarImageProvider),
         title: Text(
-          friend.username ?? 'User',
+          friend.fullName,
           style: context.jText.bodyMedium?.copyWith(color: fontColor),
         ),
         trailing: isParticipating

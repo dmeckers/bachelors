@@ -58,6 +58,7 @@ class RegisetVibeSelectPageView extends HookConsumerWidget
                       ),
                     ),
                   ),
+                  Legend(),
                   ValidationErrors(context, selectedVibes),
                   SelectedVibeList(context, selectedVibes),
                   AnimatedSwitcher(
@@ -136,23 +137,6 @@ class RegisetVibeSelectPageView extends HookConsumerWidget
           )
         ],
       ),
-    );
-  }
-
-  SearchBar _searchBar(
-    void Function(String)? onChanged,
-  ) {
-    return SearchBar(
-      constraints: const BoxConstraints(
-        maxHeight: 60,
-        minHeight: 60,
-      ),
-      leading: const Icon(Icons.search),
-      shape: WidgetStateProperty.all(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      )),
-      hintText: 'Find topics you like',
-      onChanged: onChanged,
     );
   }
 }

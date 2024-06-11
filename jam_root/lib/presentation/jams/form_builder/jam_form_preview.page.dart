@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
@@ -45,8 +46,8 @@ class JamFormPreviewPage extends ConsumerWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Submit'),
+                onPressed: () => context.pop(),
+                child: const Text('Go back to the builder'),
               ),
             )
           ],

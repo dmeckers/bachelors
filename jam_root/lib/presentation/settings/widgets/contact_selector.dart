@@ -32,6 +32,15 @@ class ContactSelectorPage extends HookConsumerWidget {
     final filter = useState('');
     final debouncer = useDebouncer(duration: const Duration(milliseconds: 300));
 
+    Widget mapUserToListTile(UserProfileModel e) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: ListTile(
+            leading: _buildLeading(e, selectedUsers),
+            onTap: () => toggleSelection(selectedUsers, e),
+            title: Text(e.fullName),
+          ),
+        );
+
     return Scaffold(
       appBar: SimpleAppBar(title: title),
       body: Column(
@@ -43,19 +52,15 @@ class ContactSelectorPage extends HookConsumerWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: friends
-                    .where((element) => filter.value.isNotEmpty
-                        ? element.username?.contains(filter.value) ?? false
-                        : true)
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: ListTile(
-                            leading: _buildLeading(e, selectedUsers),
-                            onTap: () => toggleSelection(selectedUsers, e),
-                            title: Text(e.username ?? 'User'),
-                          ),
-                        ))
-                    .toList(),
+                children: [
+                  ...friends
+                      .where(
+                        (element) => filter.value.isNotEmpty
+                            ? element.fullName.contains(filter.value)
+                            : true,
+                      )
+                      .map(mapUserToListTile)
+                ],
               ),
             ),
           )
@@ -110,7 +115,7 @@ class ContactSelectorPage extends HookConsumerWidget {
             spacing: 10,
             children: selectedUsers.value
                 .map((e) => Chip(
-                    label: Text(e.$1.username ?? 'User',
+                    label: Text(e.$1.fullName,
                         style: const TextStyle(fontSize: 12)),
                     shape: const StadiumBorder(),
                     padding: const EdgeInsets.all(2),

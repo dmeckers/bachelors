@@ -52,7 +52,10 @@ class MessageInputBar extends HookConsumerWidget
           icon: const Icon(Icons.tag_faces_sharp),
         ),
         _buildBar(stopTypingDebouncer, isTyping, debounced),
-        const ChatMessageInputBarAttachButton(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+          child: Icon(Icons.attach_file),
+        ),
         SendMessageButton(
           chatId: chatId,
           contact: contact,
