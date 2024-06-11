@@ -48,7 +48,8 @@ class ChatRealtimeService
         )
         .switchMap((streams) => CombineLatestStream.list(streams))
         .map(
-          (chats) => chats.where((chat) => chat.toHide == false).toList(),
+          (chats) =>
+              chats.where((chat) => chat.toHide == false).toSet().toList(),
         )
         .asBroadcastStream();
   }

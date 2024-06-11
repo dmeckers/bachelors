@@ -35,6 +35,7 @@ class JamListWidget extends HookConsumerWidget {
       child: RefreshIndicator(
         onRefresh: () async {
           await ref.read(jamsStateProvider).invalidate();
+          ref.invalidate(getJamInvitesProvider);
         },
         child: ListView.builder(
           itemBuilder: (ctx, i) => switch (viewState) {

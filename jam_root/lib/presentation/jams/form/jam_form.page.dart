@@ -21,10 +21,19 @@ class JamFormPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formData = useRef<BaseJamFormModel?>(null);
+    // final formData = useRef<BaseJamFormModel?>(null);
     final formKey = useMemoized(() => GlobalKey<FormState>());
+    final debouncer = useDebouncer(duration: const Duration(milliseconds: 500));
+    final formDataState = useState<BaseJamFormModel?>(null);
+
+    ref.listen(getJamFormProvider(jamId: jamId), (prev, next) {
+      if (next.hasValue) {
+        formDataState.value = next.requireValue;
+      }
+    });
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const SimpleAppBar(title: 'Jam form'),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -32,34 +41,33 @@ class JamFormPage extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: ref.watch(getJamFormProvider(jamId: jamId)).when(
-                    data: (data) {
-                      formData.value = data;
-                      return Form(
-                        key: formKey,
-                        child: ListView(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 20.0),
-                              child: Text(
-                                data.title,
-                                textAlign: TextAlign.center,
-                              ),
+              child: formDataState.value.isNotNull
+                  ? Form(
+                      key: formKey,
+                      child: ListView(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Text(
+                              formDataState.value!.title,
+                              textAlign: TextAlign.center,
                             ),
-                            ...data.elements.map(
-                              (e) => switch (e.type) {
-                                JamFormElementType.checkboxInput =>
-                                  const Text('checkbox'),
-                                JamFormElementType.dateInput =>
-                                  const Text('date input'),
-                                JamFormElementType.radioInput =>
-                                  const Text('radio input'),
-                                JamFormElementType.textInput => _FormField(
-                                    data: e,
-                                    onChanged: (v) => formData.value!.copyWith(
+                          ),
+                          ...formDataState.value!.elements.map(
+                            (e) => switch (e.type) {
+                              JamFormElementType.checkboxInput =>
+                                const Text('checkbox'),
+                              JamFormElementType.dateInput =>
+                                const Text('date input'),
+                              JamFormElementType.radioInput =>
+                                const Text('radio input'),
+                              JamFormElementType.textInput => _FormField(
+                                  data: e,
+                                  onChanged: (v) => debouncer(
+                                    () => formDataState.value =
+                                        formDataState.value!.copyWith(
                                       elements: [
-                                        ...(formData.value?.elements.map(
+                                        ...(formDataState.value?.elements.map(
                                               (el) => el.id == e.id
                                                   ? el.copyWith(value: v)
                                                   : el,
@@ -68,52 +76,68 @@ class JamFormPage extends HookConsumerWidget {
                                       ],
                                     ),
                                   ),
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    error: (e, s) => const JamErrorBox(
-                      errorMessage: 'Whoops! Something went wrong.',
-                    ),
-                    loading: () => const SizedBox(),
-                  ),
+                                ),
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  : const CircularProgressIndicator(),
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () async {
-                  if (!formKey.currentState!.validate()) {
+                  if (formDataState.value!.elements.any(
+                    (e) =>
+                        e.isRequired && (e.value == null || e.value!.isEmpty),
+                  )) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please fill in all required fields'),
+                      ),
+                    );
                     return;
                   }
 
                   final forms = ref.read(jamFormsServiceProvider);
 
-                  formKey.currentState!.save();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Submitting form...'),
+                    ),
+                  );
 
                   toJoin
                       ? await forms.submitFormAndJoin(
                           jamId: jamId,
                           creatorFcmToken: jamCreatorFcmToken,
-                          form: formData.value!,
+                          form: formDataState.value!,
                         )
                       : await forms.submitFormAndSendRequest(
                           jamId: jamId,
                           creatorFcmToken: jamCreatorFcmToken,
-                          form: formData.value!,
+                          form: formDataState.value!,
                         );
 
-                  context.doIfMounted(
-                    () => JSnackBar.show(
-                      context,
-                      JSnackbarData(
-                        title: 'Form submitted',
-                        type: SnackbarInfoType.success,
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
+                  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                    const SnackBar(
+                      content: Text('Form submitted'),
                     ),
                   );
+
+                  context.popIfMounted();
+
+                  // context.doIfMounted(
+                  //   () => JSnackBar.show(
+                  //     context,
+                  //     JSnackbarData(
+                  //       title: 'Form submitted',
+                  //       type: SnackbarInfoType.success,
+                  //       onTap: () => Navigator.of(context).pop(),
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: const Text('Submit'),
               ),

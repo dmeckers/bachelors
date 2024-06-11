@@ -46,23 +46,27 @@ class SupabaseAuthRepository
     required String email,
     required String password,
   }) async {
-    final authResponse = await supaAuth.signInWithPassword(
-      password: password,
-      email: email,
-    );
+    try {
+      final authResponse = await supaAuth.signInWithPassword(
+        password: password,
+        email: email,
+      );
 
-    if (authResponse.user.isNull) throw 'No user found.';
+      if (authResponse.user.isNull) throw 'No user found.';
 
-    final userId = authResponse.user!.id;
+      final userId = authResponse.user!.id;
 
-    await _cacheUserProfileAndLocation();
+      await _cacheUserProfileAndLocation();
 
-    return JUser(
-      uid: userId,
-      displayName: authResponse.user!.email!,
-      email: authResponse.user!.email!,
-      phone: authResponse.user!.phone!,
-    );
+      return JUser(
+        uid: userId,
+        displayName: authResponse.user!.email!,
+        email: authResponse.user!.email!,
+        phone: authResponse.user!.phone!,
+      );
+    } catch (e) {
+      throw 'Error logging in.';
+    }
   }
 
   Future<void> _cacheUserProfileAndLocation() async {

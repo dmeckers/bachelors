@@ -150,7 +150,8 @@ class _FriendBottomSheetButton extends HookConsumerWidget {
               pathParameters: {
                 'chatId': '${data.profile.rootChatId}',
               },
-              extra: data.profile,
+              extra: ChatModel(
+                  id: data.profile.rootChatId!, relatedContact: data.profile),
             );
           default:
         }

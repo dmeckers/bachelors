@@ -28,12 +28,17 @@ class JamInvitesPage extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final invite = invitesState.value[index];
                   final sender = invite.sender;
+                  final inviteToText = 'Invite to: ${invite.jamName}'
+                      '${invite.jamName.endsWith('jam') ? '' : ' jam'}';
                   return ShakesOnNoLongPress(
                     child: ListTile(
                       tileColor: context.jColor.primary.withAlpha(
                           ((255 / invitesState.value.length) * index) ~/ 3),
                       isThreeLine: true,
-                      title: Text('Invite to: ${invite.jamName}'),
+                      title: Text(
+                        inviteToText,
+                        style: context.jText.bodyMedium,
+                      ),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Row(
@@ -45,7 +50,7 @@ class JamInvitesPage extends HookConsumerWidget {
                             const SizedBox(width: 8),
                             Text(
                               'Invited by: ${sender.fullName}',
-                              style: context.jText.headlineMedium,
+                              style: context.jText.headlineSmall,
                             ),
                           ],
                         ),
@@ -63,21 +68,35 @@ class JamInvitesPage extends HookConsumerWidget {
                           ),
                           IconButton(
                             icon: const Icon(Icons.check),
-                            onPressed: () async => await _handleJamInviteAccept(
-                              context,
-                              ref,
-                              invitesState,
-                              invite,
-                            ),
+                            onPressed: () async {
+                              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                                const SnackBar(
+                                  content: Text('Invite Accepted'),
+                                ),
+                              );
+                              await _handleJamInviteAccept(
+                                context,
+                                ref,
+                                invitesState,
+                                invite,
+                              );
+                            },
                           ),
                           IconButton(
                             icon: const Icon(Icons.close),
-                            onPressed: () async => _handleJamInviteReject(
-                              context,
-                              ref,
-                              invitesState,
-                              invite,
-                            ),
+                            onPressed: () async {
+                              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                                const SnackBar(
+                                  content: Text('Invite Declined'),
+                                ),
+                              );
+                              await _handleJamInviteReject(
+                                context,
+                                ref,
+                                invitesState,
+                                invite,
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -97,20 +116,20 @@ class JamInvitesPage extends HookConsumerWidget {
     JamInviteModel rejected,
   ) async {
     _removeInviteFromList(invites, rejected);
-
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Future.microtask(() {
+    //     JSnackBar.show(
+    //       context,
+    //       const JSnackbarData(
+    //         description: 'Invite declined',
+    //         type: SnackbarInfoType.info,
+    //       ),
+    //     );
+    //   });
+    // });
     await ref
         .read(socialRepositoryProvider)
         .rejectJamInvite(inviteId: rejected.id);
-
-    context.doIfMounted(
-      () => JSnackBar.show(
-        context,
-        const JSnackbarData(
-          description: 'Invite declined',
-          type: SnackbarInfoType.info,
-        ),
-      ),
-    );
 
     ref.invalidate(getJamInvitesProvider);
   }
@@ -122,21 +141,15 @@ class JamInvitesPage extends HookConsumerWidget {
     JamInviteModel accepted,
   ) async {
     _removeInviteFromList(invites, accepted);
+    // Future.microtask(() {
 
+    // });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {});
     await ref
         .read(socialRepositoryProvider)
         .acceptJamInvite(inviteId: accepted.id);
 
-    context.doIfMounted(
-      () => JSnackBar.show(
-        context,
-        const JSnackbarData(
-          description: 'Jam invite accepted',
-          type: SnackbarInfoType.success,
-        ),
-      ),
-    );
-
+    await ref.read(jamsStateProvider).invalidate();
     ref.invalidate(getJamInvitesProvider);
   }
 

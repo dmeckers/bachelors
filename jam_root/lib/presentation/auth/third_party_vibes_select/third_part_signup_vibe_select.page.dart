@@ -106,7 +106,7 @@ class ThirdPartySignUpVibeSelect extends HookConsumerWidget
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: ButtonWithLoader(
-        size: const Size(200, 50),
+        size: const Size(250, 50),
         onPressed: () async {
           if (selectedVibes.isEmpty) return;
 
@@ -117,9 +117,7 @@ class ThirdPartySignUpVibeSelect extends HookConsumerWidget
           userVibesState.value = selectedVibes;
           context.doIfMounted(() => context.goNamed(HomeRoutes.home.name));
         },
-        text: selectedVibes.isNotEmpty
-            ? 'Save Vibes'
-            : 'Select at least one vibe',
+        text: selectedVibes.isNotEmpty ? 'Save' : 'Select at least one vibe',
       ),
     );
   }

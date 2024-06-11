@@ -30,54 +30,38 @@ final class ChatRepository
 
   @override
   Future<void> archiveChats({required Chats selectedChats}) async {
-    return !(await isOnline(_ref))
-        ? queue.queueArchiveChats(
-            selectedChats: selectedChats,
-          )
-        : await supabase
-            .from('users_chats')
-            .update({'is_archived': true})
-            .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
-            .eq('user_id', getUserIdOrThrow());
+    return await supabase
+        .from('users_chats')
+        .update({'is_archived': true})
+        .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
+        .eq('user_id', getUserIdOrThrow());
   }
 
   @override
   Future<void> pinChats({required Chats selectedChats}) async {
-    return !(await isOnline(_ref))
-        ? queue.queuePinChats(
-            selectedChats: selectedChats,
-          )
-        : await supabase
-            .from('users_chats')
-            .update({'is_pinned': true})
-            .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
-            .eq('user_id', getUserIdOrThrow());
+    return await supabase
+        .from('users_chats')
+        .update({'is_pinned': true})
+        .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
+        .eq('user_id', getUserIdOrThrow());
   }
 
   @override
   Future<void> unarchiveChats({required Chats selectedChats}) async {
-    return !(await isOnline(_ref))
-        ? queue.queueUnarchiveChats(
-            selectedChats: selectedChats,
-          )
-        : await supabase
-            .from('users_chats')
-            .update({'is_archived': false})
-            .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
-            .eq('user_id', getUserIdOrThrow());
+    return await supabase
+        .from('users_chats')
+        .update({'is_archived': false})
+        .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
+        .eq('user_id', getUserIdOrThrow());
   }
 
   @override
   Future<void> unpinChats({required Chats selectedChats}) async {
-    return !(await isOnline(_ref))
-        ? queue.queueUnpinChats(
-            selectedChats: selectedChats,
-          )
-        : await supabase
-            .from('users_chats')
-            .update({'is_pinned': false})
-            .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
-            .eq('user_id', getUserIdOrThrow());
+    return await supabase
+        .from('users_chats')
+        .update({'is_pinned': false})
+        .inFilter('chat_id', selectedChats.map((e) => e.id).toList())
+        .eq('user_id', getUserIdOrThrow());
   }
 
   @override

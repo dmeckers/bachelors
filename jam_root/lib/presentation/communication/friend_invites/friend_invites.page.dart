@@ -118,14 +118,14 @@ class FriendInvitesPage extends HookConsumerWidget {
     final chatId = await supabase.rpc(
       'get_chat_with_user',
       params: {
-        'user_id': invite.userReceived,
+        'user_id': invite.userSent,
         'current_user_id': supaAuth.currentUser!.id,
       },
     );
 
     final chatRealtime = ref.read(chatRealtimeServiceProvider);
     await chatRealtime.pushChatAndSubscribe(chatId);
-    chatRealtime.fireEvent(TrackChatEvent(chatId, invite.userReceived));
+    // chatRealtime.fireEvent(TrackChatEvent(chatId, invite.userReceived));
 
     context.doIfMounted(
       () => JSnackBar.show(

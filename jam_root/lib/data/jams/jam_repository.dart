@@ -167,14 +167,10 @@ final class JamsRepository extends JamRepositoryInterface
   Future<Jams> getActiveParticipatedJamsByUserId({
     required String userId,
   }) async {
-    return !(await isOnline(_ref))
-        ? await _ref
-            .read(powersyncJamServiceProvider)
-            .getActiveParticipatedJamsByUserId(userId: userId)
-        : await supabase.rpc(
-            GET_PARTICIPATED_JAMS,
-            params: {'user_id': userId},
-          ).withConverter(_jamConverter);
+    return await supabase.rpc(
+      GET_PARTICIPATED_JAMS,
+      params: {'user_id': userId},
+    ).withConverter(_jamConverter);
   }
 
   @override

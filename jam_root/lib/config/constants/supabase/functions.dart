@@ -37,3 +37,26 @@ enum NotificationTypeEnum {
     };
   }
 }
+
+enum PushNotificationType {
+  friendInvite,
+  jamInvite,
+  joinFormSubmitted,
+  joinFormSubmittedJoined,
+  jamRequestAccepted,
+  messageNotification;
+
+  static PushNotificationType parse(String string) {
+    return switch (string) {
+      'friend_invite' => PushNotificationType.friendInvite,
+      'message_notification' => PushNotificationType.messageNotification,
+      'jam_invite' => PushNotificationType.jamInvite,
+      'send_jam_form_submitted_joined_notification' =>
+        PushNotificationType.joinFormSubmitted,
+      'jam_form_submitted' => PushNotificationType.joinFormSubmitted,
+      'send_jam_request_accepted_notification' =>
+        PushNotificationType.jamRequestAccepted,
+      _ => throw Exception('Unknown push notification type: $string'),
+    };
+  }
+}

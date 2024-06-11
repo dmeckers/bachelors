@@ -132,13 +132,13 @@ class ChatsPage extends HookConsumerWidget
                     child: const Text('Go to map \u{1F5FA}'),
                   ),
                 ),
-                SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () async => await supaAuth.signOut(),
-                    child: const Text('logoit'),
-                  ),
-                )
+                // SizedBox(
+                //   width: 200,
+                //   child: ElevatedButton(
+                //     onPressed: () async => await supaAuth.signOut(),
+                //     child: const Text('logoit'),
+                //   ),
+                // )
               ],
             );
           }

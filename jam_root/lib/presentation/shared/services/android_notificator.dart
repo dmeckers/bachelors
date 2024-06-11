@@ -44,10 +44,10 @@ class AndroidNotificator {
 
   static Future show(
     String title,
-    String body,
+    String body, [
     String? imageUrl,
-    int chatId,
-  ) async {
+    int? chatId,
+  ]) async {
     // Create the Android notification details
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jam/globals.dart';
-import 'package:jam/presentation/push_notifications/push_notification_type.enum.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:jam/config/config.dart';
@@ -17,6 +16,8 @@ class PushNotificationsService {
       firebaseMessagingBackgroundHandler,
     );
   }
+
+  static Set<String> shownNotificationIds = {};
 
   // static Future initFirebaseOnAppOpenStrategy() async {
   //   // FirebaseMessaging.instance.
@@ -51,31 +52,67 @@ class PushNotificationsService {
       debugPrint('Already initialized');
     }
 
-    final userId = supabase.auth.currentUser?.id;
-
-    if (message.data.isEmpty || message.data['senderId'] == userId) {
+    if (shownNotificationIds.contains(message.messageId)) {
       return;
     }
 
-    final messageModel = MessageModel(
-      fromMe: false,
-      messageText: message.data['body'],
-      senderId: message.data['senderId'],
-      sentAt: DateTime.now(),
-      chatId: int.parse(message.data['chatId']),
-      messageType: MessageType.parse(message.data['messageType']),
-    );
+    shownNotificationIds.add(message.messageId ?? message.data['body']);
 
-    AndroidNotificator.show(
-      message.data['title'] ?? "New Message",
-      messageModel.messageType == MessageType.text
-          ? messageModel.messageText!.crop(25)
-          : messageModel.messageType.name,
-      message.data['avatar'],
-      int.parse(
-        message.data['chatId'],
-      ),
-    );
+    if (message.data.isEmpty || message.data['notificationType'] == null) {
+      return;
+    }
+
+    (switch (PushNotificationType.parse(message.data['notificationType'])) {
+      PushNotificationType.friendInvite => () {
+          AndroidNotificator.show(
+            message.data['title'] ?? "Invite Notification",
+            message.data['body'] ?? 'New friend invite',
+          );
+        },
+      PushNotificationType.messageNotification => () {
+          final messageModel = MessageModel(
+            fromMe: false,
+            messageText: message.data['body'],
+            senderId: message.data['senderId'],
+            sentAt: DateTime.now(),
+            chatId: int.parse(message.data['chatId']),
+            messageType: MessageType.parse(message.data['messageType']),
+          );
+
+          AndroidNotificator.show(
+            message.data['title'] ?? "New Message",
+            messageModel.messageType == MessageType.text
+                ? messageModel.messageText!.crop(25)
+                : messageModel.messageType.name,
+            message.data['avatar'],
+            int.parse(message.data['chatId']),
+          );
+        },
+      PushNotificationType.jamInvite => () {
+          AndroidNotificator.show(
+            message.data['title'] ?? "Invite Notification",
+            message.data['body'] ?? 'New Jam invite',
+          );
+        },
+      PushNotificationType.jamRequestAccepted => () {
+          AndroidNotificator.show(
+            message.data['title'] ?? "Jam Request Accepted",
+            message.data['body'] ?? 'Your jam request has been accepted',
+          );
+        },
+      PushNotificationType.joinFormSubmitted => () {
+          AndroidNotificator.show(
+            message.data['title'] ?? "Jam Request Submitted",
+            message.data['body'] ?? 'New jam request submitted',
+          );
+        },
+      PushNotificationType.joinFormSubmittedJoined => () {
+          AndroidNotificator.show(
+            message.data['title'] ?? "Jam Request Submitted",
+            message.data['body'] ?? 'New jam request submitted',
+          );
+        },
+    })();
   }
 
   static initFirebaseMessagingForegroundHandler() {
@@ -85,10 +122,21 @@ class PushNotificationsService {
           return;
         }
 
+        if (shownNotificationIds.contains(message.messageId)) {
+          return;
+        }
+
+        shownNotificationIds.add(message.messageId ?? message.data['body']);
+
         final notificitationType =
             PushNotificationType.parse(message.data['notificationType']);
 
         switch (notificitationType) {
+          case PushNotificationType.joinFormSubmitted:
+          case PushNotificationType.joinFormSubmittedJoined:
+          case PushNotificationType.jamRequestAccepted:
+            _simplePushNotificationHandler(message);
+            break;
           case PushNotificationType.friendInvite:
             _simplePushNotificationHandler(
               message,

@@ -5,7 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/config.dart';
 import 'package:jam/data/data.dart';
+import 'package:jam/domain/vibes/vibe.model.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
 class RegisetVibeSelectPageView extends HookConsumerWidget
@@ -122,20 +124,29 @@ class RegisetVibeSelectPageView extends HookConsumerWidget
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: ButtonWithLoader(
-              size: const Size(200, 50),
-              onPressed: () async => await ref
-                  .read(registerModelStateNotifierProvider.notifier)
-                  .handleRegister(
-                    model: ref.read(registerModelStateNotifierProvider),
-                  ),
-              text: 'Sign Up',
-              withSuccessGradient: true,
-            ),
-          )
+          SubmitButton(selectedVibes, ref, context)
         ],
+      ),
+    );
+  }
+
+  Padding SubmitButton(
+      List<VibeModel> selectedVibes, WidgetRef ref, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: ButtonWithLoader(
+        size: const Size(250, 50),
+        onPressed: () async {
+          if (selectedVibes.isEmpty) return;
+
+          await ref
+              .read(registerModelStateNotifierProvider.notifier)
+              .handleRegister(
+                model: ref.read(registerModelStateNotifierProvider),
+              );
+        },
+        text: selectedVibes.isNotEmpty ? 'Sign Up' : 'Select at least one vibe',
+        color: context.jColor.inversePrimary,
       ),
     );
   }

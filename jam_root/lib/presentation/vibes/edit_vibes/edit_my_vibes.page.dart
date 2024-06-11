@@ -109,7 +109,7 @@ class EditUserVibes extends HookConsumerWidget
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ButtonWithLoader(
-        size: const Size(200, 50),
+        size: const Size(250, 50),
         onPressed: () async {
           if (selectedVibes.isEmpty) return;
           await ref
@@ -120,9 +120,7 @@ class EditUserVibes extends HookConsumerWidget
           canPop.value = true;
           context.popIfMounted();
         },
-        text: selectedVibes.isNotEmpty
-            ? 'Save Vibes'
-            : 'Select at least one vibe',
+        text: selectedVibes.isNotEmpty ? 'Save' : 'Select at least one vibe',
       ),
     );
   }
