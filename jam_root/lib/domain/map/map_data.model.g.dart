@@ -45,17 +45,20 @@ class MapDataImplAdapter extends TypeAdapter<_$MapDataImpl> {
       currentPosition: fields[0] as LatLng,
       locations: (fields[1] as List).cast<LocationAbstactModel>(),
       focusedLocationPoint: fields[2] as LocationAbstactModel?,
+      searchedPlaceLocation: fields[3] as LocationAbstactModel?,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$MapDataImpl obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.currentPosition)
       ..writeByte(2)
       ..write(obj.focusedLocationPoint)
+      ..writeByte(3)
+      ..write(obj.searchedPlaceLocation)
       ..writeByte(1)
       ..write(obj.locations);
   }

@@ -9,7 +9,8 @@ import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
 import 'package:jam_utils/jam_utils.dart';
 
-class RegisetVibeSelectPageView extends HookConsumerWidget with Storer {
+class RegisetVibeSelectPageView extends HookConsumerWidget
+    with Storer, SelectVibeWidgetsMixin {
   const RegisetVibeSelectPageView({super.key});
 
   static const MAX_VIBES_AMOUNT = 20;
@@ -18,13 +19,13 @@ class RegisetVibeSelectPageView extends HookConsumerWidget with Storer {
     Vibes selectedVibes,
     String value,
     WidgetRef ref,
-    Debouncer debouncer,
+    ValueNotifier<String?> searchQuery,
   ) {
-    debouncer(() {
-      if (selectedVibes.length >= MAX_VIBES_AMOUNT || value.isEmpty) return;
+    searchQuery.value = value;
 
-      ref.read(vibesControllerProvider.notifier).searchVibes(query: value);
-    });
+    if (selectedVibes.length >= MAX_VIBES_AMOUNT || value.isEmpty) return;
+
+    ref.read(vibesControllerProvider.notifier).searchVibes(query: value);
   }
 
   @override
@@ -47,40 +48,19 @@ class RegisetVibeSelectPageView extends HookConsumerWidget with Storer {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Select at least one thing you like',
-                      style: context.jText.headlineLarge,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _searchBar(
-                      (value) {
-                        searchQuery.value = value;
-                        searchVibes(selectedVibes, value, ref, debouncer);
-                      },
-                    ),
-                  ),
-                  if (selectedVibes.length >= MAX_VIBES_AMOUNT)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, top: 4.0, bottom: 100),
-                      child: Text(
-                        'You can select up to $MAX_VIBES_AMOUNT vibes',
-                        style: context.jText.headlineSmall
-                            ?.copyWith(color: Colors.red),
+                  Headline(context),
+                  VibeSearchBar(
+                    onChange: (query) => debouncer(
+                      () => searchVibes(
+                        selectedVibes,
+                        query,
+                        ref,
+                        searchQuery,
                       ),
                     ),
-                  if (selectedVibes.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Selected Vibes: ${selectedVibes.map((el) => el.name).join(',')}',
-                        style: context.jText.headlineSmall,
-                      ),
-                    ),
+                  ),
+                  ValidationErrors(context, selectedVibes),
+                  SelectedVibeList(context, selectedVibes),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     transitionBuilder: (child, animation) => FadeTransition(

@@ -28,7 +28,7 @@ class MapPageAppBar extends HookConsumerWidget implements PreferredSizeWidget {
 
     final response = await ref.watch(placesProvider).autocomplete(
           searchTerm,
-          location: Location(lng: position!.longitude, lat: position.latitude),
+          location: Location(lng: position.longitude, lat: position.latitude),
           radius: 10000,
           strictbounds: true,
           language: S.delegate.supportedLocales.first.languageCode,

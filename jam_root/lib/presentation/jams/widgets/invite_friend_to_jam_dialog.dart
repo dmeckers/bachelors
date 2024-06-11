@@ -151,7 +151,11 @@ class _SendInviteFriendListPicker extends HookConsumerWidget {
     final fontColor = ColorHelper.colorContrast(context.jColor.primary);
     final isParticipating = [
       ...participants,
-      UserProfileModel(id: jam.creatorId!, lastActiveAt: DateTime.now())
+      UserProfileModel(
+        id: jam.creatorId!,
+        lastActiveAt: DateTime.now(),
+        fullName: 'Me',
+      )
     ].any((e) => e.id == friend.id);
     final isInvited = invites.any((e) => e.invitedUserId == friend.id);
 

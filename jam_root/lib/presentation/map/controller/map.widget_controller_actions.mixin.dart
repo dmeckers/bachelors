@@ -69,6 +69,32 @@ mixin MapWidgetStateLocationActions {
   void removeTempMarkerIfPresent() {
     if (mapData$.focusedLocationPoint!.isNotNull) removeTempMarker();
   }
+
+  void removePlaceSearchResultMarker() {
+    if (!state.hasValue) return;
+
+    state.value = state.value.copyWith(
+      mapData: mapData$.withoutSearchedPlaceLocation(),
+    );
+  }
+
+  void addPlaceSearchResultMarker({
+    required double lat,
+    required double lon,
+    required String placeName,
+  }) {
+    if (!state.hasValue) return;
+
+    final searchResult = SearchPlaceResult.generate(
+      latitude: lat,
+      longitude: lon,
+      locationName: placeName,
+    );
+
+    state.value = state.value.copyWith(
+      mapData: mapData$.copyWith(searchedPlaceLocation: searchResult),
+    );
+  }
 }
 
 mixin MapWidgetStateActions {
@@ -77,25 +103,41 @@ mixin MapWidgetStateActions {
   MapData get mapData$;
 
   void setPlacesSearchResults(List<Prediction> placesSearchResults) {
+    if (!state.hasValue) return;
     state.value =
         state.value.copyWith(placesSearchResults: placesSearchResults);
   }
 
   void setSelectedPlaceLocation(LatLng? selectedPlaceLocation) {
+    if (!state.hasValue) return;
     state.value =
         state.value.copyWith(selectedPlaceLocation: selectedPlaceLocation);
   }
 
   void setGoogleMapsController(GoogleMapController? googleMapsController) {
+    if (!state.hasValue) return;
     state.value =
         state.value.copyWith(googleMapsController: googleMapsController);
   }
 
   void setShowBottomSheet(bool showBottomSheet) {
+    if (!state.hasValue) return;
     state.value = state.value.copyWith(showBottomSheet: showBottomSheet);
   }
 
+  void hideBottomSheetAndTempMarkers() {
+    if (!state.hasValue) return;
+
+    state.value = state.value.copyWith(
+      showBottomSheet: false,
+      mapData: mapData$.withoutFocusedLocationPoint()
+        ..withoutSearchedPlaceLocation(),
+    );
+  }
+
   void setUserCurrentLocation(LatLng? userCurrentLocation) {
+    if (!state.hasValue) return;
+
     if (userCurrentLocation.isNotNull) {
       state.value = state.value.copyWith(
         mapData: mapData$.copyWith(currentPosition: userCurrentLocation!),

@@ -19,7 +19,7 @@ class ProfileModelAdapter extends TypeAdapter<_$UserProfileModelImpl> {
     return _$UserProfileModelImpl(
       id: fields[0] as String,
       username: fields[1] as String?,
-      fullName: fields[2] as String?,
+      fullName: fields[2] as String,
       photoUrls: (fields[3] as List?)?.cast<String>(),
       profileStatus: fields[4] as String?,
       friends: (fields[5] as List).cast<UserProfileModel>(),
@@ -31,13 +31,14 @@ class ProfileModelAdapter extends TypeAdapter<_$UserProfileModelImpl> {
       rootChatId: fields[12] as int?,
       publicKey: fields[13] as String?,
       lastActiveAt: fields[14] as DateTime,
+      isShowcased: fields[15] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$UserProfileModelImpl obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,6 +57,8 @@ class ProfileModelAdapter extends TypeAdapter<_$UserProfileModelImpl> {
       ..write(obj.publicKey)
       ..writeByte(14)
       ..write(obj.lastActiveAt)
+      ..writeByte(15)
+      ..write(obj.isShowcased)
       ..writeByte(3)
       ..write(obj.photoUrls)
       ..writeByte(5)
@@ -88,7 +91,7 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
     _$UserProfileModelImpl(
       id: json['id'] as String,
       username: json['username'] as String?,
-      fullName: json['full_name'] as String?,
+      fullName: json['full_name'] as String,
       isOnline: json['is_online'] as bool? ?? false,
       status: $enumDecodeNullable(_$ContactStatusEnumMap, json['status']) ??
           ContactStatus.normal,
@@ -116,6 +119,7 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
           _ProfileJsonTransformer.readIsChatHidden(json, 'is_chat_hidden')
               as bool?,
       fcmToken: json['fcm_token'] as String?,
+      isShowcased: json['is_showcased'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$UserProfileModelImplToJson(
@@ -128,6 +132,7 @@ Map<String, dynamic> _$$UserProfileModelImplToJson(
       'profile_status': instance.profileStatus,
       'avatar': instance.avatar,
       'last_active_at': instance.lastActiveAt.toIso8601String(),
+      'is_showcased': instance.isShowcased,
     };
 
 const _$ContactStatusEnumMap = {

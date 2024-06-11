@@ -35,49 +35,50 @@ class MapPageSearchResultList extends ConsumerWidget {
             color: Colors.black,
           ),
           itemCount: searchedPlaces.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              onTap: () async {
-                final placeId = searchedPlaces[index].placeId;
+          itemBuilder: (context, index) => ListTile(
+            onTap: () async {
+              final mapWidgetController =
+                  ref.read(mapWidgetStateControllerProvider);
+              final placeId = searchedPlaces[index].placeId;
 
-                ref
-                    .read(mapWidgetStateControllerProvider)
-                    .setPlacesSearchResults(const []);
+              mapWidgetController.setPlacesSearchResults(const []);
 
-                if (placeId.isEmptyOrNull) return;
+              if (placeId.isEmptyOrNull) return;
 
-                final response = await ref
-                    .watch(placesProvider)
-                    .getDetailsByPlaceId(placeId!);
+              final response =
+                  await ref.watch(placesProvider).getDetailsByPlaceId(placeId!);
+              final placeGeometry = response.result.geometry;
 
-                if (response.result.geometry.isNull) return;
+              if (placeGeometry.isNull) return;
 
-                ref
-                    .read(mapWidgetStateControllerProvider)
-                    .data
-                    .googleMapsController
-                    ?.animateCamera(
-                      CameraUpdate.newLatLng(
-                        LatLng(
-                          response.result.geometry!.location.lat,
-                          response.result.geometry!.location.lng,
-                        ),
-                      ),
-                    );
-              },
-              leading: const Icon(
-                Icons.location_on,
-                color: Colors.black,
-              ),
-              title: Text(
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
+              mapWidgetController.addPlaceSearchResultMarker(
+                lat: placeGeometry!.location.lat,
+                lon: placeGeometry.location.lng,
+                placeName: searchedPlaces[index].description ?? 'nothing',
+              );
+
+              mapWidgetController.data.googleMapsController?.animateCamera(
+                CameraUpdate.newLatLngZoom(
+                  LatLng(
+                    response.result.geometry!.location.lat,
+                    response.result.geometry!.location.lng,
+                  ),
+                  25,
                 ),
-                searchedPlaces[index].description ?? 'nothing',
+              );
+            },
+            leading: const Icon(
+              Icons.location_on,
+              color: Colors.black,
+            ),
+            title: Text(
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 15,
               ),
-            );
-          },
+              searchedPlaces[index].description ?? 'nothing',
+            ),
+          ),
         ),
       ),
     );

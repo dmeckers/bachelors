@@ -34,12 +34,12 @@ class MapWidget extends HookConsumerWidget {
           position,
           ref,
         ),
-        onTap: (position) async {
-          if (mapStateController.state.value.showBottomSheet) {
-            mapStateController.setShowBottomSheet(false);
-            Navigator.pop(context);
-          }
-        },
+        onTap: (position) async => await onMapTap(
+          context,
+          position,
+          ref,
+          mapStateController,
+        ),
         onMapCreated: (controller) {
           mapStateController.setGoogleMapsController(controller);
           if (mapStateController.mapData$.currentPosition.isNotNull) {
@@ -56,7 +56,7 @@ class MapWidget extends HookConsumerWidget {
         ),
         compassEnabled: false,
         cameraTargetBounds: CameraTargetBounds(
-          PositionService.getBounds(data.currentPosition, 0.5),
+          GeoPacker.getBounds(data.currentPosition, 0.5),
         ),
         minMaxZoomPreference: const MinMaxZoomPreference(10, 16),
         markers: _MapMarkersHelper.getMarkers(context, ref, data),
@@ -81,6 +81,26 @@ class MapWidget extends HookConsumerWidget {
               ),
             ),
           );
+
+  onMapTap(
+    BuildContext context,
+    LatLng position,
+    WidgetRef ref,
+    MapWidgetStateController mapStateController,
+  ) async {
+    mapStateController.setPlacesSearchResults(const []);
+
+    if (!mapStateController.state.value.showBottomSheet) {
+      return await _handleNewJamLocationMapTap(
+        context,
+        position,
+        ref,
+      );
+    }
+
+    mapStateController.hideBottomSheetAndTempMarkers();
+    Navigator.pop(context);
+  }
 
   _handleNewJamLocationMapTap(
     BuildContext context,
@@ -131,6 +151,21 @@ class _MapMarkersHelper {
       infoWindow: const InfoWindow(title: 'Your location'),
     );
 
+    final searchedPlaceMarker = data.searchedPlaceLocation.isNotNull
+        ? Marker(
+            markerId: const MarkerId('currentPosition'),
+            position: LatLng(
+              data.searchedPlaceLocation!.latitude,
+              data.searchedPlaceLocation!.longitude,
+            ),
+            icon: BitmapDescriptor.defaultMarkerWithHue(0),
+            infoWindow: InfoWindow(
+              title: data.searchedPlaceLocation!.name.split(',').first,
+            ),
+          )
+        : null;
+    // final   data. = Marker(markerId: const MarkerId)
+
     final focusedPoint = data.focusedLocationPoint;
 
     final spotJamMarker = focusedPoint.isNotNull
@@ -151,7 +186,8 @@ class _MapMarkersHelper {
     return {
       ...locationItemsMarkers,
       userMarker,
-      if (spotJamMarker.isNotNull) spotJamMarker!
+      if (spotJamMarker.isNotNull) spotJamMarker!,
+      if (searchedPlaceMarker.isNotNull) searchedPlaceMarker!
     };
   }
 
@@ -163,19 +199,22 @@ class _MapMarkersHelper {
     return Marker(
       markerId: MarkerId(location.id.toString()),
       position: LatLng(location.latitude, location.longitude),
-      infoWindow: InfoWindow(title: location.name),
+      infoWindow: InfoWindow(
+          title: '${location.name}${switch (location.type) {
+        LocationType.jam => ' (Jam)',
+        LocationType.user => ' (User)',
+        LocationType.spottedJam => '',
+        LocationType.placeSearchResult => ' (Place)',
+      }}'),
       icon: location.marker ?? BitmapDescriptor.defaultMarkerWithHue(0),
       onTap: () {
-        switch (location.type) {
-          case LocationType.jam:
-            _handleJamLocationMarkerTap(context, location, ref);
-            break;
-          case LocationType.spottedJam:
-            break;
-          case LocationType.user:
-            _handleUserLocationMarkerTap(context, location, ref);
-            break;
-        }
+        final handler = switch (location.type) {
+          LocationType.jam => _handleJamLocationMarkerTap,
+          LocationType.user => _handleUserLocationMarkerTap,
+          LocationType.spottedJam => null,
+          LocationType.placeSearchResult => null,
+        };
+        handler?.call(context, location, ref);
       },
     );
   }

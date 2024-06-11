@@ -45,10 +45,12 @@ class PlanJamFormPage extends HookConsumerWidget {
                   style: context.jText.displayMedium
                       ?.copyWith(fontFamily: rubickFamily),
                 ),
-                const SizedBox(height: 60),
                 _buildSectionTitle('Title'),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 20,
+                  ),
                   child: JFormTextInput(
                     labelText: 'Jam name',
                     onChange: vmNotifier.updateName,
@@ -72,8 +74,9 @@ class PlanJamFormPage extends HookConsumerWidget {
                     ),
                     leading: const Icon(Icons.link),
                     onTap: () => showDialog(
-                        context: context,
-                        builder: (ctx) => const JamJoinTypePickerDialog()),
+                      context: context,
+                      builder: (ctx) => const JamJoinTypePickerDialog(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -88,7 +91,7 @@ class PlanJamFormPage extends HookConsumerWidget {
                     jam: jam,
                   ),
                 SizedBox(
-                  height: 130,
+                  height: 120,
                   child: Stack(
                     children: [
                       _buildWatchingJamJar(),
@@ -130,9 +133,15 @@ class PlanJamFormPage extends HookConsumerWidget {
                   child: Column(
                     children: [
                       _buildEnableQrs(viewModel, useQrState),
-                      _inputHeading(context, 'Name of the place'),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: _inputHeading(context, 'Name of the place'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 25,
+                          horizontal: 10.0,
+                        ),
                         child: JFormTextInput(
                           labelText: 'Place name',
                           onChange: vmNotifier.updateLocationName,
@@ -142,7 +151,8 @@ class PlanJamFormPage extends HookConsumerWidget {
                       ),
                       _inputHeading(context, 'Extra information'),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 10.0),
                         child: JFormTextInput(
                           labelText: 'Extra information',
                           onChange: vmNotifier.updateName,
@@ -151,17 +161,22 @@ class PlanJamFormPage extends HookConsumerWidget {
                         ),
                       ),
                       _inputHeading(context, 'Background image'),
-                      JamImagePicker(jamModel: jam),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 20.0,
+                        ),
+                        child: JamImagePicker(jamModel: jam),
+                      ),
                     ],
                   ),
                 ),
-                if (jam.isNotNull)
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: _buildSubmitUpdateButton(viewModel, context, ref),
-                  )
-                else
-                  _buildSubmitButton(viewModel, context, ref),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: jam.isNotNull
+                      ? _buildSubmitUpdateButton(viewModel, context, ref)
+                      : _buildSubmitButton(viewModel, context, ref),
+                )
               ],
             ),
           ),
@@ -277,7 +292,7 @@ class PlanJamFormPage extends HookConsumerWidget {
 
   Positioned _buildWatchingJamJar() {
     return Positioned(
-      top: -30,
+      top: -35,
       right: 80,
       child: Container(
         width: 120,

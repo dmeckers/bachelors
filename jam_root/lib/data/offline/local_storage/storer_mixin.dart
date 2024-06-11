@@ -56,11 +56,9 @@ mixin class Storer {
   }
 
   static LatLng? hiveGetLocation() {
-    final cached = (localDatabase.get('LOCATION') as String?)?.extractCords();
+    final cached = localDatabase.get('LOCATION') as String?;
 
-    if (cached.isNull) return null;
-
-    return LatLng(cached!.lat, cached.lon);
+    return cached.isNull ? null : GeoPacker.latLngFromString(cached!);
   }
 }
 

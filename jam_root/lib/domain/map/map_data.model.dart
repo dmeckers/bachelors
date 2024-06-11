@@ -15,6 +15,7 @@ class MapData with _$MapData {
     @HiveField(0) required LatLng currentPosition,
     @HiveField(1) required List<LocationAbstactModel> locations,
     @HiveField(2) LocationAbstactModel? focusedLocationPoint,
+    @HiveField(3) LocationAbstactModel? searchedPlaceLocation,
   }) = _MapData;
 
   const MapData._();
@@ -23,6 +24,12 @@ class MapData with _$MapData {
         currentPosition: currentPosition,
         locations: locations,
         focusedLocationPoint: null,
+      );
+
+  MapData withoutSearchedPlaceLocation() => MapData(
+        currentPosition: currentPosition,
+        locations: locations,
+        searchedPlaceLocation: null,
       );
 }
 

@@ -6,9 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jam/config/config.dart';
 
 import 'package:jam/data/data.dart';
+import 'package:jam/domain/domain.dart';
 import 'package:jam/globals.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
+import 'package:jam_utils/jam_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -23,7 +25,6 @@ class ShowcasedAppBar extends ConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedChats = ref.watch(selectedChatsProvider);
-
     return Showcase(
       key: _showcaseKey1,
       title: 'Welcome user to the prototype presentation!',
@@ -57,32 +58,36 @@ class ShowcasedAppBar extends ConsumerWidget
 }
 
 class ChatsPage extends HookConsumerWidget
-    with ChattingProviders, ChatBuilderHelper, ProfileRepositoryProviders {
+    with
+        ChattingProviders,
+        ChatBuilderHelper,
+        ProfileRepositoryProviders,
+        Storer {
   const ChatsPage({super.key});
+
+  _showCaseIfWasnYet(BuildContext context) {
+    useEffect(() {
+      final user = hiveGet<UserProfileModel>();
+
+      if (user.isNull || user!.isShowcased) return;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([
+          _showcaseKey1,
+          _showcaseKey2,
+        ]);
+      });
+
+      return null;
+    }, []);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c$ = ref.watch(chatsState$);
 
     _initOnlineStatusObserver(ref);
-
-    useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        supabase
-            .from('profiles')
-            .select('is_introduced')
-            .eq('id', supaUser!.id)
-            .then((res) {
-          if (res.first['is_introduced']) return;
-
-          ShowCaseWidget.of(context).startShowCase([
-            _showcaseKey1,
-            _showcaseKey2,
-          ]);
-        });
-      });
-      return null;
-    });
+    _showCaseIfWasnYet(context);
 
     return Scaffold(
       backgroundColor: context.jTheme.primaryColor,
@@ -125,6 +130,13 @@ class ChatsPage extends HookConsumerWidget
                   child: ElevatedButton(
                     onPressed: () => context.pushNamed(MapRoutes.map.name),
                     child: const Text('Go to map \u{1F5FA}'),
+                  ),
+                ),
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () async => await supaAuth.signOut(),
+                    child: const Text('logoit'),
                   ),
                 )
               ],

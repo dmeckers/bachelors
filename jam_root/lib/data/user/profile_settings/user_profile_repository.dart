@@ -81,9 +81,10 @@ final class UserProfileRepository
     //       .getUserProfileById(userId: userId);
     // } else {
     // }
-    final response = await supabase.rpc(GET_USER_FULL_RPC, params: {
-      'user_id': userId,
-    }) as Dynamics;
+    final response = await supabase.rpc(
+      GET_USER_FULL_RPC,
+      params: {'user_id': userId},
+    ) as Dynamics;
 
     const nestedKeys = ['vibes', 'friends', 'jams'];
     final rawData = response.first['data'] as Json;

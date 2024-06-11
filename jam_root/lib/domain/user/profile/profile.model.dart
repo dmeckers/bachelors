@@ -18,7 +18,7 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
   const factory UserProfileModel({
     @HiveField(0) required String id,
     @HiveField(1) String? username,
-    @HiveField(2) String? fullName,
+    @HiveField(2) required String fullName,
 
     ///
     /// Bucket links to user's photos
@@ -126,6 +126,15 @@ class UserProfileModel with _$UserProfileModel implements Identifiable {
       includeToJson: false,
     )
     String? fcmToken,
+
+    ///
+    /// Utility field for showcaser
+    /// @see pubscpec.yaml 'showcaseview;
+    ///
+    @HiveField(15)
+    @JsonKey(includeIfNull: false)
+    @Default(true)
+    bool isShowcased,
   }) = _UserProfileModel;
 
   const UserProfileModel._();

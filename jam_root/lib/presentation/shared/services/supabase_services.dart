@@ -44,22 +44,7 @@ class SupabaseServices {
 
         switch (event.event) {
           case AuthChangeEvent.signedIn:
-            final ref = ProviderContainer();
-            final userRepo = ref
-                .read(profileRepositoryProvidersProvider)
-                .userProfileRepository;
-
-            ref.read(userRepo).getCurrentUserProfile().then(
-              (user) {
-                localDatabase.put(
-                  HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
-                  user,
-                );
-              },
-            );
-
             await initNotifications();
-            ref.dispose();
             break;
           case AuthChangeEvent.signedOut:
             await _logoutHook();

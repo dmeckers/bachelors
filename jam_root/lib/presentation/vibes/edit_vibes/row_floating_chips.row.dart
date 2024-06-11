@@ -34,7 +34,7 @@ class RowFloatingChips extends HookWidget {
               animation: controller,
               builder: (context, child) {
                 return Transform.translate(
-                  offset: Offset(0, (controller.value - 0.5) * 20),
+                  offset: Offset(0, (controller.value - 0.5) * 10),
                   child: chip,
                 );
               },

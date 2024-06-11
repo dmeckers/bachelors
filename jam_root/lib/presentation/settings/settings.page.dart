@@ -53,9 +53,7 @@ class SettingsPage extends HookConsumerWidget with ProfileRepositoryProviders {
                   horizontalTitleGap: 6,
                   contentPadding: const EdgeInsets.symmetric(vertical: 5),
                   title: Text(
-                    userState.requireValue.username ??
-                        userState.requireValue.fullName ??
-                        'User name',
+                    userState.requireValue.fullName,
                     style: context.jText.bodyMedium,
                   ),
                   subtitle: Padding(

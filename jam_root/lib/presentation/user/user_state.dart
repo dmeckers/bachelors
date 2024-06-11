@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:jam/config/config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,9 +27,7 @@ class UserState with Storer {
     _state.value = currentUser;
 
     yield* _state.stream
-        .doOnData(
-          (userModel) => hiveRefresh<UserProfileModel>(userModel),
-        )
+        .doOnData(hiveRefresh<UserProfileModel>)
         .asBroadcastStream();
   }
 
@@ -83,6 +82,20 @@ class UserState with Storer {
     final profile = _state.value.copyWith(avatar: fileName);
     _state.value = profile;
     userRepo.images.setMainAvatar(fileName);
+  }
+
+  void updateIsShowCased(bool isShowCased) {
+    if (!_state.hasValue) return;
+
+    final profile = _state.value.copyWith(isShowcased: isShowCased);
+
+    _state.value = profile;
+
+    supabase
+        .from('profiles')
+        .update({'is_introduced': true})
+        .eq('id', supaUser!.id)
+        .then((d) => debugPrint('user is introduced'));
   }
 
   UserProfileModel getLastValue() =>

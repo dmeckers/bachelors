@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:jam/config/aliases/models.dart';
-import 'package:jam/data/vibes/powersync_vibes_service.dart';
 import 'package:jam/presentation/presentation.dart';
+import 'package:jam/presentation/user/user_state.dart';
 import 'package:jam_theme/jam_theme.dart';
 import 'package:jam_ui/jam_ui.dart';
 
@@ -12,7 +12,15 @@ class PickVibePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vibes = ref.watch(getVibesProvider);
+    final vibes = ref.watch<Vibes>(
+      user$.select(
+        (user) => user.maybeMap(
+          data: (data) => data.value.vibes,
+          orElse: () => [],
+        ),
+      ),
+    );
+
     final viewModel = ref.watch(freshJamViewModelStateProvider);
 
     return PopScope(
@@ -27,24 +35,23 @@ class PickVibePage extends HookConsumerWidget {
             const Text('Pick at least one'),
             const SizedBox(height: 20),
             Center(
-              child: vibes.maybeWhen(
-                data: (data) => SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.75,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildTags(viewModel),
-                      _buildSelectors(viewModel, data, ref),
-                      Flexible(
-                        flex: 1,
-                        child: _buildButton(ref: ref, viewModel: viewModel),
-                      )
-                    ],
-                  ),
-                ),
-                orElse: () => const Text('loading'),
+                child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildTags(viewModel),
+                  _buildSelectors(viewModel, vibes, ref),
+                  Flexible(
+                    flex: 1,
+                    child: _buildButton(
+                      ref: ref,
+                      viewModel: viewModel,
+                    ),
+                  )
+                ],
               ),
-            ),
+            )),
           ],
         )),
       ),

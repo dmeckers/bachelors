@@ -24,6 +24,9 @@ mixin _$MapData {
   @HiveField(2)
   LocationAbstactModel? get focusedLocationPoint =>
       throw _privateConstructorUsedError;
+  @HiveField(3)
+  LocationAbstactModel? get searchedPlaceLocation =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MapDataCopyWith<MapData> get copyWith => throw _privateConstructorUsedError;
@@ -37,7 +40,8 @@ abstract class $MapDataCopyWith<$Res> {
   $Res call(
       {@HiveField(0) LatLng currentPosition,
       @HiveField(1) List<LocationAbstactModel> locations,
-      @HiveField(2) LocationAbstactModel? focusedLocationPoint});
+      @HiveField(2) LocationAbstactModel? focusedLocationPoint,
+      @HiveField(3) LocationAbstactModel? searchedPlaceLocation});
 }
 
 /// @nodoc
@@ -56,6 +60,7 @@ class _$MapDataCopyWithImpl<$Res, $Val extends MapData>
     Object? currentPosition = null,
     Object? locations = null,
     Object? focusedLocationPoint = freezed,
+    Object? searchedPlaceLocation = freezed,
   }) {
     return _then(_value.copyWith(
       currentPosition: null == currentPosition
@@ -69,6 +74,10 @@ class _$MapDataCopyWithImpl<$Res, $Val extends MapData>
       focusedLocationPoint: freezed == focusedLocationPoint
           ? _value.focusedLocationPoint
           : focusedLocationPoint // ignore: cast_nullable_to_non_nullable
+              as LocationAbstactModel?,
+      searchedPlaceLocation: freezed == searchedPlaceLocation
+          ? _value.searchedPlaceLocation
+          : searchedPlaceLocation // ignore: cast_nullable_to_non_nullable
               as LocationAbstactModel?,
     ) as $Val);
   }
@@ -84,7 +93,8 @@ abstract class _$$MapDataImplCopyWith<$Res> implements $MapDataCopyWith<$Res> {
   $Res call(
       {@HiveField(0) LatLng currentPosition,
       @HiveField(1) List<LocationAbstactModel> locations,
-      @HiveField(2) LocationAbstactModel? focusedLocationPoint});
+      @HiveField(2) LocationAbstactModel? focusedLocationPoint,
+      @HiveField(3) LocationAbstactModel? searchedPlaceLocation});
 }
 
 /// @nodoc
@@ -101,6 +111,7 @@ class __$$MapDataImplCopyWithImpl<$Res>
     Object? currentPosition = null,
     Object? locations = null,
     Object? focusedLocationPoint = freezed,
+    Object? searchedPlaceLocation = freezed,
   }) {
     return _then(_$MapDataImpl(
       currentPosition: null == currentPosition
@@ -115,6 +126,10 @@ class __$$MapDataImplCopyWithImpl<$Res>
           ? _value.focusedLocationPoint
           : focusedLocationPoint // ignore: cast_nullable_to_non_nullable
               as LocationAbstactModel?,
+      searchedPlaceLocation: freezed == searchedPlaceLocation
+          ? _value.searchedPlaceLocation
+          : searchedPlaceLocation // ignore: cast_nullable_to_non_nullable
+              as LocationAbstactModel?,
     ));
   }
 }
@@ -126,7 +141,8 @@ class _$MapDataImpl extends _MapData {
   const _$MapDataImpl(
       {@HiveField(0) required this.currentPosition,
       @HiveField(1) required final List<LocationAbstactModel> locations,
-      @HiveField(2) this.focusedLocationPoint})
+      @HiveField(2) this.focusedLocationPoint,
+      @HiveField(3) this.searchedPlaceLocation})
       : _locations = locations,
         super._();
 
@@ -145,10 +161,13 @@ class _$MapDataImpl extends _MapData {
   @override
   @HiveField(2)
   final LocationAbstactModel? focusedLocationPoint;
+  @override
+  @HiveField(3)
+  final LocationAbstactModel? searchedPlaceLocation;
 
   @override
   String toString() {
-    return 'MapData(currentPosition: $currentPosition, locations: $locations, focusedLocationPoint: $focusedLocationPoint)';
+    return 'MapData(currentPosition: $currentPosition, locations: $locations, focusedLocationPoint: $focusedLocationPoint, searchedPlaceLocation: $searchedPlaceLocation)';
   }
 
   @override
@@ -161,12 +180,18 @@ class _$MapDataImpl extends _MapData {
             const DeepCollectionEquality()
                 .equals(other._locations, _locations) &&
             (identical(other.focusedLocationPoint, focusedLocationPoint) ||
-                other.focusedLocationPoint == focusedLocationPoint));
+                other.focusedLocationPoint == focusedLocationPoint) &&
+            (identical(other.searchedPlaceLocation, searchedPlaceLocation) ||
+                other.searchedPlaceLocation == searchedPlaceLocation));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentPosition,
-      const DeepCollectionEquality().hash(_locations), focusedLocationPoint);
+  int get hashCode => Object.hash(
+      runtimeType,
+      currentPosition,
+      const DeepCollectionEquality().hash(_locations),
+      focusedLocationPoint,
+      searchedPlaceLocation);
 
   @JsonKey(ignore: true)
   @override
@@ -179,7 +204,8 @@ abstract class _MapData extends MapData {
   const factory _MapData(
           {@HiveField(0) required final LatLng currentPosition,
           @HiveField(1) required final List<LocationAbstactModel> locations,
-          @HiveField(2) final LocationAbstactModel? focusedLocationPoint}) =
+          @HiveField(2) final LocationAbstactModel? focusedLocationPoint,
+          @HiveField(3) final LocationAbstactModel? searchedPlaceLocation}) =
       _$MapDataImpl;
   const _MapData._() : super._();
 
@@ -192,6 +218,9 @@ abstract class _MapData extends MapData {
   @override
   @HiveField(2)
   LocationAbstactModel? get focusedLocationPoint;
+  @override
+  @HiveField(3)
+  LocationAbstactModel? get searchedPlaceLocation;
   @override
   @JsonKey(ignore: true)
   _$$MapDataImplCopyWith<_$MapDataImpl> get copyWith =>

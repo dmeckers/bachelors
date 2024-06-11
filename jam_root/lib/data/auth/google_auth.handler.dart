@@ -58,7 +58,6 @@ class GoogleAuthHandler {
       params: {
         'id': userId,
         'full_name': metadata!['full_name'],
-        'username': metadata['name'],
         'avatar': metadata['picture'],
       },
     ) as Dynamics;
@@ -72,7 +71,10 @@ class GoogleAuthHandler {
       (acc, key) => acc..addAll({key: rawData[key]}),
     );
 
-    await Storer().hivePut<UserProfileModel>(UserProfileModel.fromJson(json));
+    await Storer().hivePut<UserProfileModel>(
+      UserProfileModel.fromJson(json).copyWith(isShowcased: false),
+    );
+
     await _requestAndCacheLocation();
   }
 

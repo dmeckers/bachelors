@@ -108,35 +108,25 @@ class SupabaseAuthRepository
         emailRedirectTo: kIsWeb ? null : 'dmeckers://confirm-email-callback',
       );
 
-      final updateProfileData = supabase.from('profiles').update({
-        'is_online': true,
+      if (authResponse.user.isNull) throw 'No user found.';
+
+      final userId = authResponse.user!.id;
+
+      await supabase.rpc('on_user_register', params: {
+        'vibe_ids': [...vibes.map((e) => '${e.id}')],
         'full_name': name,
-        'username': name,
-      }).eq(
-        'id',
-        supaUser!.id,
-      );
+        'user_id': userId,
+      });
 
-      final userId = authResponse.user?.id;
-
-      final putUserInHive = localDatabase.put(
-        HiveConstants.LOCAL_DB_USER_PROFILE_KEY,
+      await hivePut<UserProfileModel>(
         UserProfileModel(
-          id: userId ?? '',
+          id: userId,
           lastActiveAt: DateTime.now(),
-          username: name,
           fullName: name,
           vibes: vibes,
+          isShowcased: false,
         ),
       );
-
-      await Future.wait([
-        supabase.rpc('post_vibes', params: {
-          'vibe_ids': [...vibes.map((e) => '${e.id}')]
-        }),
-        updateProfileData,
-        putUserInHive
-      ]);
     } on AuthException catch (exception) {
       switch (int.parse(exception.statusCode!)) {
         case 429:

@@ -25,7 +25,7 @@ mixin _$UserProfileModel {
   @HiveField(1)
   String? get username => throw _privateConstructorUsedError;
   @HiveField(2)
-  String? get fullName => throw _privateConstructorUsedError;
+  String get fullName => throw _privateConstructorUsedError;
 
   ///
   /// Bucket links to user's photos
@@ -127,6 +127,14 @@ mixin _$UserProfileModel {
   @JsonKey(includeIfNull: false, includeToJson: false)
   String? get fcmToken => throw _privateConstructorUsedError;
 
+  ///
+  /// Utility field for showcaser
+  /// @see pubscpec.yaml 'showcaseview;
+  ///
+  @HiveField(15)
+  @JsonKey(includeIfNull: false)
+  bool get isShowcased => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserProfileModelCopyWith<UserProfileModel> get copyWith =>
@@ -142,7 +150,7 @@ abstract class $UserProfileModelCopyWith<$Res> {
   $Res call(
       {@HiveField(0) String id,
       @HiveField(1) String? username,
-      @HiveField(2) String? fullName,
+      @HiveField(2) String fullName,
       @HiveField(3)
       @JsonKey(
           includeIfNull: false,
@@ -174,7 +182,8 @@ abstract class $UserProfileModelCopyWith<$Res> {
           includeIfNull: false,
           includeToJson: false)
       bool? isChatHidden,
-      @JsonKey(includeIfNull: false, includeToJson: false) String? fcmToken});
+      @JsonKey(includeIfNull: false, includeToJson: false) String? fcmToken,
+      @HiveField(15) @JsonKey(includeIfNull: false) bool isShowcased});
 }
 
 /// @nodoc
@@ -192,7 +201,7 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
   $Res call({
     Object? id = null,
     Object? username = freezed,
-    Object? fullName = freezed,
+    Object? fullName = null,
     Object? photoUrls = freezed,
     Object? isOnline = null,
     Object? status = null,
@@ -208,6 +217,7 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
     Object? lastActiveAt = null,
     Object? isChatHidden = freezed,
     Object? fcmToken = freezed,
+    Object? isShowcased = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -218,10 +228,10 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String?,
-      fullName: freezed == fullName
+      fullName: null == fullName
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       photoUrls: freezed == photoUrls
           ? _value.photoUrls
           : photoUrls // ignore: cast_nullable_to_non_nullable
@@ -282,6 +292,10 @@ class _$UserProfileModelCopyWithImpl<$Res, $Val extends UserProfileModel>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      isShowcased: null == isShowcased
+          ? _value.isShowcased
+          : isShowcased // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -297,7 +311,7 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
   $Res call(
       {@HiveField(0) String id,
       @HiveField(1) String? username,
-      @HiveField(2) String? fullName,
+      @HiveField(2) String fullName,
       @HiveField(3)
       @JsonKey(
           includeIfNull: false,
@@ -329,7 +343,8 @@ abstract class _$$UserProfileModelImplCopyWith<$Res>
           includeIfNull: false,
           includeToJson: false)
       bool? isChatHidden,
-      @JsonKey(includeIfNull: false, includeToJson: false) String? fcmToken});
+      @JsonKey(includeIfNull: false, includeToJson: false) String? fcmToken,
+      @HiveField(15) @JsonKey(includeIfNull: false) bool isShowcased});
 }
 
 /// @nodoc
@@ -345,7 +360,7 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? username = freezed,
-    Object? fullName = freezed,
+    Object? fullName = null,
     Object? photoUrls = freezed,
     Object? isOnline = null,
     Object? status = null,
@@ -361,6 +376,7 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
     Object? lastActiveAt = null,
     Object? isChatHidden = freezed,
     Object? fcmToken = freezed,
+    Object? isShowcased = null,
   }) {
     return _then(_$UserProfileModelImpl(
       id: null == id
@@ -371,10 +387,10 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String?,
-      fullName: freezed == fullName
+      fullName: null == fullName
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       photoUrls: freezed == photoUrls
           ? _value._photoUrls
           : photoUrls // ignore: cast_nullable_to_non_nullable
@@ -435,6 +451,10 @@ class __$$UserProfileModelImplCopyWithImpl<$Res>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      isShowcased: null == isShowcased
+          ? _value.isShowcased
+          : isShowcased // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -447,7 +467,7 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   const _$UserProfileModelImpl(
       {@HiveField(0) required this.id,
       @HiveField(1) this.username,
-      @HiveField(2) this.fullName,
+      @HiveField(2) required this.fullName,
       @HiveField(3)
       @JsonKey(
           includeIfNull: false,
@@ -481,7 +501,8 @@ class _$UserProfileModelImpl extends _UserProfileModel {
           includeIfNull: false,
           includeToJson: false)
       this.isChatHidden,
-      @JsonKey(includeIfNull: false, includeToJson: false) this.fcmToken})
+      @JsonKey(includeIfNull: false, includeToJson: false) this.fcmToken,
+      @HiveField(15) @JsonKey(includeIfNull: false) this.isShowcased = true})
       : _photoUrls = photoUrls,
         _friends = friends,
         _jams = jams,
@@ -500,7 +521,7 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   final String? username;
   @override
   @HiveField(2)
-  final String? fullName;
+  final String fullName;
 
   ///
   /// Bucket links to user's photos
@@ -670,9 +691,18 @@ class _$UserProfileModelImpl extends _UserProfileModel {
   @JsonKey(includeIfNull: false, includeToJson: false)
   final String? fcmToken;
 
+  ///
+  /// Utility field for showcaser
+  /// @see pubscpec.yaml 'showcaseview;
+  ///
+  @override
+  @HiveField(15)
+  @JsonKey(includeIfNull: false)
+  final bool isShowcased;
+
   @override
   String toString() {
-    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt, isChatHidden: $isChatHidden, fcmToken: $fcmToken)';
+    return 'UserProfileModel(id: $id, username: $username, fullName: $fullName, photoUrls: $photoUrls, isOnline: $isOnline, status: $status, profileStatus: $profileStatus, friends: $friends, jams: $jams, chats: $chats, vibes: $vibes, avatar: $avatar, lastSignInAt: $lastSignInAt, rootChatId: $rootChatId, publicKey: $publicKey, lastActiveAt: $lastActiveAt, isChatHidden: $isChatHidden, fcmToken: $fcmToken, isShowcased: $isShowcased)';
   }
 
   @override
@@ -708,31 +738,35 @@ class _$UserProfileModelImpl extends _UserProfileModel {
             (identical(other.isChatHidden, isChatHidden) ||
                 other.isChatHidden == isChatHidden) &&
             (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken));
+                other.fcmToken == fcmToken) &&
+            (identical(other.isShowcased, isShowcased) ||
+                other.isShowcased == isShowcased));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      username,
-      fullName,
-      const DeepCollectionEquality().hash(_photoUrls),
-      isOnline,
-      status,
-      profileStatus,
-      const DeepCollectionEquality().hash(_friends),
-      const DeepCollectionEquality().hash(_jams),
-      const DeepCollectionEquality().hash(_chats),
-      const DeepCollectionEquality().hash(_vibes),
-      avatar,
-      lastSignInAt,
-      rootChatId,
-      publicKey,
-      lastActiveAt,
-      isChatHidden,
-      fcmToken);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        username,
+        fullName,
+        const DeepCollectionEquality().hash(_photoUrls),
+        isOnline,
+        status,
+        profileStatus,
+        const DeepCollectionEquality().hash(_friends),
+        const DeepCollectionEquality().hash(_jams),
+        const DeepCollectionEquality().hash(_chats),
+        const DeepCollectionEquality().hash(_vibes),
+        avatar,
+        lastSignInAt,
+        rootChatId,
+        publicKey,
+        lastActiveAt,
+        isChatHidden,
+        fcmToken,
+        isShowcased
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -753,7 +787,7 @@ abstract class _UserProfileModel extends UserProfileModel {
   const factory _UserProfileModel(
       {@HiveField(0) required final String id,
       @HiveField(1) final String? username,
-      @HiveField(2) final String? fullName,
+      @HiveField(2) required final String fullName,
       @HiveField(3)
       @JsonKey(
           includeIfNull: false,
@@ -788,7 +822,10 @@ abstract class _UserProfileModel extends UserProfileModel {
           includeToJson: false)
       final bool? isChatHidden,
       @JsonKey(includeIfNull: false, includeToJson: false)
-      final String? fcmToken}) = _$UserProfileModelImpl;
+      final String? fcmToken,
+      @HiveField(15)
+      @JsonKey(includeIfNull: false)
+      final bool isShowcased}) = _$UserProfileModelImpl;
   const _UserProfileModel._() : super._();
 
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) =
@@ -802,7 +839,7 @@ abstract class _UserProfileModel extends UserProfileModel {
   String? get username;
   @override
   @HiveField(2)
-  String? get fullName;
+  String get fullName;
   @override
 
   ///
@@ -917,6 +954,15 @@ abstract class _UserProfileModel extends UserProfileModel {
   ///
   @JsonKey(includeIfNull: false, includeToJson: false)
   String? get fcmToken;
+  @override
+
+  ///
+  /// Utility field for showcaser
+  /// @see pubscpec.yaml 'showcaseview;
+  ///
+  @HiveField(15)
+  @JsonKey(includeIfNull: false)
+  bool get isShowcased;
   @override
   @JsonKey(ignore: true)
   _$$UserProfileModelImplCopyWith<_$UserProfileModelImpl> get copyWith =>

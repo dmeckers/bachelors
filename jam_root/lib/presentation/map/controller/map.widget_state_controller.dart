@@ -136,8 +136,8 @@ class MapWidgetStateController
 
   void dispose() {
     state.value.googleMapsController?.dispose();
-    state.close();
-    _mapDataSubscription.cancel();
+    // state.close();
+    // _mapDataSubscription.cancel();
   }
 }
 
