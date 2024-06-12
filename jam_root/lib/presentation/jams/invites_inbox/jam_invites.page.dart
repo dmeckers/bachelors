@@ -8,7 +8,6 @@ import 'package:jam/data/data.dart';
 import 'package:jam/domain/domain.dart';
 import 'package:jam/presentation/presentation.dart';
 import 'package:jam_ui/jam_ui.dart';
-import 'package:jam_utils/jam_utils.dart';
 
 class JamInvitesPage extends HookConsumerWidget {
   const JamInvitesPage({super.key, required this.invites});

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jam_utils/jam_utils.dart';
 
 import 'package:jam/application/application.dart';
 import 'package:jam/config/config.dart';
@@ -12,15 +11,12 @@ final class ChatRepository
     with SupabaseUserGetter
     implements ChatRepositoryInterface {
   const ChatRepository(
-    this._ref,
     this.queue,
     this.cache,
   );
 
   static const GET_CHATS_RPC = 'get_root_personal_chats_with_meta';
   static const GET_CHAT_RPC = 'get_one_root_chat';
-
-  final ProviderRef _ref;
 
   @override
   final ChatCacheInterface cache;
@@ -99,7 +95,6 @@ final class ChatRepository
 
 final chatRepositoryProvider = Provider<ChatRepositoryInterface>(
   (ref) => ChatRepository(
-    ref,
     ref.read(chatQueueProvider),
     ref.read(chatCacheProvider),
   ),

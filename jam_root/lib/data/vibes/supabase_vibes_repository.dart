@@ -102,7 +102,7 @@ final class SupabaseVibesRepository extends VibesRepositoryInterface
     // }
     final updateVibePayload = {
       'user_id': userId,
-      'vibe_ids': [...vibes.map((e) => e.id)]
+      'vibe_ids': [...vibes.map((e) => e.id).toSet()]
     };
 
     await supabase.rpc(UPDATE_RPC, params: updateVibePayload);

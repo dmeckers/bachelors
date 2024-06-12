@@ -158,6 +158,9 @@ class JamParticipantsPage extends HookConsumerWidget {
 
     return ListView(
       children: [
+        Text(
+          'TODO add animated hint to tell user to swipe to either sides to accept or reject the request',
+        ),
         ...pending.map(
           (e) => JamJoinRequestDismissibleTile(
             request: e,
