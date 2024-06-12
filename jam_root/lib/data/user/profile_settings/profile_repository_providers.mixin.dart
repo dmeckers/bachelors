@@ -30,10 +30,7 @@ final _privacySettingsQueueProvider = Provider<PrivacySettingsQueue>(
 
 final _userPrivacyRepositoryProvider =
     Provider<UserPrivacySettingsRepositoryInterface>(
-  (ref) => UserPrivacySettingsRepository(
-    ref,
-    ref.read(_privacySettingsQueueProvider),
-  ),
+  (ref) => UserPrivacySettingsRepository(),
 );
 
 final _currentUserProfileProvider = FutureProvider<UserProfileModel>(
