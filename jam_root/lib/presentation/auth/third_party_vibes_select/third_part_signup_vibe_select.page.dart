@@ -29,7 +29,7 @@ class ThirdPartySignUpVibeSelect extends HookConsumerWidget
     final userVibesState = useState([]);
     final canPop = useState(userVibesState.value.isNotEmpty);
     final searchQuery = useState<String?>(null);
-    // supaAuth.signOut().then((z) => {});
+    // supaAuth.signOut().then((z) => {});s
 
     return PopScope(
       canPop: canPop.value,

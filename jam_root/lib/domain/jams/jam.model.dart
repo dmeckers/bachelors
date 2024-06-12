@@ -216,11 +216,9 @@ extension JamModelExtension on JamModel {
   }
 
   String get backgroundUrlWithPlaceholder {
-    final user = supabase.auth.currentUser;
-
-    return user == null || backgroundUrl.isEmptyOrNull
+    return backgroundUrl.isEmptyOrNull
         ? ImagePathConstants.DEFAULT_JAM_IMAGE_BUCKET_URL
         : supaBucket
-            .getPublicUrl('jams/${user.id}/jams_backgrounds/$backgroundUrl');
+            .getPublicUrl('jams/$creatorId/jams_backgrounds/$backgroundUrl');
   }
 }
