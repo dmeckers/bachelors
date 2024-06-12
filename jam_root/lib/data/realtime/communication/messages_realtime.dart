@@ -104,7 +104,9 @@ class MessagesRealtimeService
     if (payload.newRecord['sender_id'] == getUserIdOrThrow()) {
       return;
     }
-    pushUpdateMessage(MessageModel.fromJson(payload.newRecord));
+    pushUpdateMessage(MessageModel.fromJson(
+      payload.newRecord..['from_me'] = false,
+    ));
   }
 
   @override
